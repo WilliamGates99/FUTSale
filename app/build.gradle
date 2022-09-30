@@ -1,0 +1,189 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
+//    id 'com.google.gms.google-services' // Google Services plugin
+    id 'dagger.hilt.android.plugin'
+    id 'applovin-quality-service'
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+applovin {
+    apiKey "\"${properties.getProperty("APPLOVIN_API_KEY")}\""
+}
+
+android {
+    namespace 'com.xeniac.fifaultimateteamcoin.dsfut.sell.fut'
+    compileSdk 33
+    buildToolsVersion '33.0.0'
+
+    defaultConfig {
+        applicationId "com.xeniac.fifaultimateteamcoin.sell.fut.dsfut"
+        minSdk 21
+        targetSdk 33
+        versionCode 1 // TODO UPGRADE FOR RELEASE
+        versionName '1.0.0' // TODO UPGRADE FOR RELEASE
+
+        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_WARRANTIES_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_WARRANTIES_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
+        buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
+        buildConfigField "String", "TAPSELL_WARRANTIES_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_WARRANTIES_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "TAPSELL_SETTINGS_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "URL_APP_STORE", "\"${properties.getProperty("URL_PLAY_STORE")}\""
+        buildConfigField "String", "PACKAGE_NAME_APP_STORE", "\"${properties.getProperty("PACKAGE_NAME_PLAY_STORE")}\""
+
+        testInstrumentationRunner "com.xeniac.warrantyroster_manager.HiltTestRunner"
+    }
+
+    buildTypes {
+        debug {
+            versionNameSuffix '- debug'
+            applicationIdSuffix '.debug'
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    bundle {
+        language {
+            /**
+             * Specifies that the app bundle should not support configuration APKs for language resources.
+             * These resources are instead packaged with each base and dynamic feature APK.
+             */
+            enableSplit false
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    // Navigation Component
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
+
+    // Dagger - Hilt
+    implementation 'com.google.dagger:hilt-android:2.44'
+    kapt 'com.google.dagger:hilt-compiler:2.44'
+
+    // Activity KTX for Injecting ViewModels into Fragments
+    implementation 'androidx.activity:activity-ktx:1.6.0'
+
+    // Architectural Components
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // Preferences DataStore
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10'
+
+    // Timber Library
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Lottie Library
+    implementation 'com.airbnb.android:lottie:5.2.0'
+
+    // Google Play In-App Reviews API
+    implementation 'com.google.android.play:review-ktx:2.0.0'
+
+    // AppLovin Libraries
+    implementation 'com.applovin:applovin-sdk:11.5.1'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
+
+    // Google AdMob Library
+    implementation 'com.google.android.gms:play-services-ads:21.2.0'
+
+    // Tapsell Library
+    implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.1.7'
+
+    // Local Unit Test Libraries
+    testImplementation 'com.google.truth:truth:1.1.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+
+    // Instrumentation Test Libraries
+    androidTestImplementation 'com.google.truth:truth:1.1.3'
+    androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.5.2'
+    // Espresso 3.4.0 has runtime issues
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.44'
+    debugImplementation 'androidx.fragment:fragment-testing:1.5.3'
+}
+
+task copyReleaseApk(type: Copy) {
+    def sourceDir = "${rootDir}/app/release/app-release.apk"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK"
+    def versionName = "${android.defaultConfig.versionName}"
+
+    from sourceDir
+    into destDir
+
+    rename "app-release.apk", "DSFUT ${versionName}.apk"
+}
+
+task copyReleaseBundle(type: Copy) {
+    def sourceDir = "${rootDir}/app/release/app-release.aab"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK"
+    def versionName = "${android.defaultConfig.versionName}"
+
+    from sourceDir
+    into destDir
+
+    rename "app-release.aab", "DSFUT ${versionName}.aab"
+}
+
+task copyObfuscationFolder(type: Copy) {
+    def sourceDir = "${rootDir}/app/obfuscation"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK\\obfuscation"
+
+    from sourceDir
+    into destDir
+}
+
+task copyReleaseFiles() {
+    dependsOn("copyReleaseApk", "copyReleaseBundle", "copyObfuscationFolder")
+}
