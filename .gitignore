@@ -1,0 +1,14 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+/app/release
+/app/obfuscation
+/app/src/main/dbschemas
+/app/google-services.json
+.safedk
