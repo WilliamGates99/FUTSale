@@ -17,12 +17,12 @@ applovin {
 }
 
 android {
-    namespace 'com.xeniac.fifaultimateteamcoin.dsfut.sell.fut'
+    namespace 'com.xeniac.fifaultimateteamcoin_dsfut_sell_fut'
     compileSdk 33
     buildToolsVersion '33.0.0'
 
     defaultConfig {
-        applicationId "com.xeniac.fifaultimateteamcoin.sell.fut.dsfut"
+        applicationId "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk 21
         targetSdk 33
         versionCode 1 // TODO UPGRADE FOR RELEASE
@@ -38,7 +38,7 @@ android {
         buildConfigField "String", "URL_APP_STORE", "\"${properties.getProperty("URL_PLAY_STORE")}\""
         buildConfigField "String", "PACKAGE_NAME_APP_STORE", "\"${properties.getProperty("PACKAGE_NAME_PLAY_STORE")}\""
 
-        testInstrumentationRunner "com.xeniac.warrantyroster_manager.HiltTestRunner"
+        testInstrumentationRunner "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
     }
 
     buildTypes {

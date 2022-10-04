@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin.sell.fut.fut
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.sell.fut.fut
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

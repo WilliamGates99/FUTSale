@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin.sell.fut.fut
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.sell.fut.fut
 
 import org.junit.Test
 
