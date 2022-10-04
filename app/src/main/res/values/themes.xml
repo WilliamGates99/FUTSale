@@ -16,7 +16,7 @@
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.FifaUltimateTeamCoin.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/appIconBackground</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">@drawable/ic_splash_logo_xeniac</item>
