@@ -12,8 +12,12 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:colorEdgeEffect">@color/skyBlue</item>
         <item name="snackbarStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar</item>
-        <item name="snackbarTextViewStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar.TextView</item>
-        <item name="snackbarButtonStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton</item>
+        <item name="snackbarTextViewStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.TextView
+        </item>
+        <item name="snackbarButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
+        </item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 

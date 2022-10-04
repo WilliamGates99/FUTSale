@@ -11,15 +11,21 @@
         <item name="android:statusBarColor">@color/statusBarV21</item>
         <item name="android:colorEdgeEffect">@color/skyBlue</item>
         <item name="snackbarStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar</item>
-        <item name="snackbarTextViewStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar.TextView</item>
-        <item name="snackbarButtonStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton</item>
+        <item name="snackbarTextViewStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.TextView
+        </item>
+        <item name="snackbarButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
+        </item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/appIconBackground</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">@drawable/ic_splash_logo_xeniac</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
+            @drawable/ic_splash_logo_xeniac
+        </item>
         <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin.OnBoarding</item>
     </style>
 
@@ -56,9 +62,13 @@
         <item name="boxStrokeErrorColor">@color/red</item>
         <item name="errorTextColor">@color/red</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="errorTextAppearance">@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Error</item>
+        <item name="errorTextAppearance">
+            @style/Theme.FifaUltimateTeamCoin.TextInputLayout.Error
+        </item>
         <item name="helperTextTextColor">@color/grayDark</item>
-        <item name="helperTextTextAppearance">@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Helper</item>
+        <item name="helperTextTextAppearance">
+            @style/Theme.FifaUltimateTeamCoin.TextInputLayout.Helper
+        </item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.TextInputLayout.Error" parent="Widget.MaterialComponents.TextView">
@@ -161,9 +171,15 @@
 
     <style name="Theme.FifaUltimateTeamCoin.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="alertDialogStyle">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Style</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Title</item>
-        <item name="materialAlertDialogBodyTextStyle">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Body</item>
-        <item name="android:checkedTextViewStyle">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Choice</item>
+        <item name="materialAlertDialogTitleTextStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Title
+        </item>
+        <item name="materialAlertDialogBodyTextStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Body
+        </item>
+        <item name="android:checkedTextViewStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Choice
+        </item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Style" parent="MaterialAlertDialog.MaterialComponents">
