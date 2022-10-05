@@ -7,6 +7,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.DsfutApi
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_NAME_SETTINGS
 import dagger.Module
 import dagger.Provides
@@ -16,6 +19,11 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.DecimalFormat
 import javax.inject.Singleton
 
@@ -31,6 +39,39 @@ object AppModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME_SETTINGS) }
         )
+
+    @Provides
+    fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int {
+        var currentAppTheme = 0
+
+        CoroutineScope(Dispatchers.IO).launch {
+            currentAppTheme = preferencesRepository.getCurrentAppTheme()
+        }
+
+        return currentAppTheme
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofitInstance(): Retrofit {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.RETROFIT_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDsfutApi(retrofitInstance: Retrofit): DsfutApi =
+        retrofitInstance.create(DsfutApi::class.java)
 
     @Singleton
     @Provides

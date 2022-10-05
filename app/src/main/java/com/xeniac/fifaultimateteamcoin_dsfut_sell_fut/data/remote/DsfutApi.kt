@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.api
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.DsfutResponse
 import retrofit2.Response
