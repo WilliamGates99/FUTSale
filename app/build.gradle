@@ -68,6 +68,13 @@ android {
         jvmTarget = '1.8'
     }
 
+    kapt {
+        /**
+         * Allow references to generated code
+         */
+        correctErrorTypes true
+    }
+
     bundle {
         language {
             /**
