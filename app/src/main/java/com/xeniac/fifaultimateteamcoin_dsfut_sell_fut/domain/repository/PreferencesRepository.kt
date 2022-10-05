@@ -6,10 +6,6 @@ interface PreferencesRepository {
 
     suspend fun getCurrentAppTheme(): Int
 
-    suspend fun getCurrentAppLanguage(): String
-
-    suspend fun getCurrentAppCountry(): String
-
     suspend fun getRateAppDialogChoice(): Int
 
     suspend fun getPreviousRequestTimeInMillis(): Long
@@ -17,10 +13,6 @@ interface PreferencesRepository {
     suspend fun isUserLoggedIn(value: Boolean)
 
     suspend fun setCurrentAppTheme(index: Int)
-
-    suspend fun setCurrentAppLanguage(language: String)
-
-    suspend fun setCurrentAppCountry(country: String)
 
     suspend fun setRateAppDialogChoice(value: Int)
 

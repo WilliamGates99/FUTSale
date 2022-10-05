@@ -28,6 +28,8 @@ android {
         versionCode 1 // TODO UPGRADE FOR RELEASE
         versionName '1.0.0' // TODO UPGRADE FOR RELEASE
 
+        resConfigs "en_US", "en_GB", "fa_IR"
+
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
         buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
         buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
@@ -79,7 +81,7 @@ android {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0-rc01'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
@@ -120,7 +122,7 @@ dependencies {
     implementation 'com.google.android.play:review-ktx:2.0.0'
 
     // AppLovin Libraries
-    implementation 'com.applovin:applovin-sdk:11.5.1'
+    implementation 'com.applovin:applovin-sdk:11.5.2'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
 
