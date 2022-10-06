@@ -26,7 +26,7 @@
         app:itemRippleColor="@color/grayMedium"
         app:itemTextAppearanceActive="@style/Theme.FifaUltimateTeamCoin.BottomNavigationView.Text"
         app:itemTextColor="@color/color_bottom_nav"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fcv"
         app:menu="@menu/menu_bottom_nav" />
