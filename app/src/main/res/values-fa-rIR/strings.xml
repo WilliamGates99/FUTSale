@@ -7,4 +7,9 @@
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
     <!--    <string name="error_btn_confirm">تایید</string>-->
+
+    <string name="main_menu_title_pick_up">انتخاب</string>
+    <string name="main_menu_title_profile">پروفایل</string>
+    <string name="main_menu_title_settings">تنظیمات</string>
+
 </resources>

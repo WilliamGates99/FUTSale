@@ -7,4 +7,9 @@
     <string name="error_intent_app_not_found">There is no app on the phone to handle this action.</string>
     <string name="error_btn_retry">Retry</string>
     <!--    <string name="error_btn_confirm">Confirm</string>-->
+
+    <string name="main_menu_title_pick_up">Pick Up</string>
+    <string name="main_menu_title_profile">Profile</string>
+    <string name="main_menu_title_settings">Settings</string>
+
 </resources>
