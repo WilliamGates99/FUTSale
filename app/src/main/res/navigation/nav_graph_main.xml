@@ -3,28 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/pickUpFragment">
+    app:startDestination="@id/onBoardingFragment">
 
     <action
-        android:id="@+id/action_to_onBoardingFragment"
-        app:destination="@id/onBoardingFragment"
+        android:id="@+id/action_to_pickUpFragment"
+        app:destination="@id/pickUpFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/pickUpFragment"
         app:popUpToInclusive="true" />
 
     <fragment
         android:id="@+id/onBoardingFragment"
         android:name="com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFragment"
         android:label="OnBoardingFragment"
-        tools:layout="@layout/fragment_onboarding">
-        <action
-            android:id="@+id/action_onBoardingFragment_to_pickUpFragment"
-            app:destination="@id/pickUpFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/pickUpFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_onboarding" />
 
     <fragment
         android:id="@+id/pickUpFragment"

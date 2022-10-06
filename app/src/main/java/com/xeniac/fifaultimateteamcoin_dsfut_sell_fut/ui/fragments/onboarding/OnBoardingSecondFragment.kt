@@ -29,6 +29,8 @@ class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_seconds) 
         _binding = null
     }
 
+    // TODO BACK PRESSED CALLBACK TO SWIPE TO PREVIOUS VIEWPAGER PAGE
+
     private fun skipOnClick() = binding.btnBack.setOnClickListener {
         // ViewPager items start from 0
         viewPager.currentItem = 0
