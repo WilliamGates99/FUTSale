@@ -10,6 +10,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SECRET_KEY_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_THEME_KEY
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,11 +29,13 @@ class PreferencesRepositoryImp @Inject constructor(
         val SECRET_KEY = stringPreferencesKey(DATASTORE_SECRET_KEY_KEY)
     }
 
-    override suspend fun isOnBoardingCompleted(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
-    } catch (e: Exception) {
-        Timber.e("isOnBoardingCompleted Exception: $e")
-        false
+    override fun isOnBoardingCompletedSynchronously(): Boolean = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
+        } catch (e: Exception) {
+            Timber.e("isOnBoardingCompletedSynchronously Exception: $e")
+            false
+        }
     }
 
     override suspend fun getCurrentAppTheme(): Int = try {

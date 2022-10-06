@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository
 
 interface PreferencesRepository {
 
-    suspend fun isOnBoardingCompleted(): Boolean
+     fun isOnBoardingCompletedSynchronously(): Boolean
 
     suspend fun getCurrentAppTheme(): Int
 

@@ -51,17 +51,9 @@ object AppModule {
         return currentAppTheme
     }
 
-    @Singleton
     @Provides
-    fun provideIsOnBoardingCompleted(preferencesRepository: PreferencesRepository): Boolean {
-        var isOnBoardingCompleted = false
-
-        CoroutineScope(Dispatchers.IO).launch {
-            isOnBoardingCompleted = preferencesRepository.isOnBoardingCompleted()
-        }
-
-        return isOnBoardingCompleted
-    }
+    fun provideIsOnBoardingCompleted(preferencesRepository: PreferencesRepository): Boolean =
+        preferencesRepository.isOnBoardingCompletedSynchronously()
 
     @Singleton
     @Provides
