@@ -3,9 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_LOGGED_IN_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_ONBOARDING_COMPLETED_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PARTNER_ID_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_RATE_APP_DIALOG_CHOICE_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SECRET_KEY_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_THEME_KEY
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -16,18 +18,20 @@ class PreferencesRepositoryImp @Inject constructor(
 ) : PreferencesRepository {
 
     private object PreferencesKeys {
-        val IS_USER_LOGGED_IN = booleanPreferencesKey(DATASTORE_IS_LOGGED_IN_KEY)
+        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey(DATASTORE_IS_ONBOARDING_COMPLETED_KEY)
         val CURRENT_APP_THEME = intPreferencesKey(DATASTORE_THEME_KEY)
         val RATE_APP_DIALOG_CHOICE = intPreferencesKey(DATASTORE_RATE_APP_DIALOG_CHOICE_KEY)
         val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey(
             DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
         )
+        val PARTNER_ID = stringPreferencesKey(DATASTORE_PARTNER_ID_KEY)
+        val SECRET_KEY = stringPreferencesKey(DATASTORE_SECRET_KEY_KEY)
     }
 
-    override suspend fun isUserLoggedIn(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_USER_LOGGED_IN] ?: false
+    override suspend fun isOnBoardingCompleted(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
     } catch (e: Exception) {
-        Timber.e("isUserLoggedIn Exception: $e")
+        Timber.e("isOnBoardingCompleted Exception: $e")
         false
     }
 
@@ -52,14 +56,28 @@ class PreferencesRepositoryImp @Inject constructor(
         0L
     }
 
-    override suspend fun isUserLoggedIn(value: Boolean) {
+    override suspend fun getPartnerId(): String? = try {
+        settingsDataStore.data.first()[PreferencesKeys.PARTNER_ID]
+    } catch (e: Exception) {
+        Timber.e("getPartnerId Exception: $e")
+        null
+    }
+
+    override suspend fun getSecretKey(): String? = try {
+        settingsDataStore.data.first()[PreferencesKeys.SECRET_KEY]
+    } catch (e: Exception) {
+        Timber.e("getSecretKey Exception: $e")
+        null
+    }
+
+    override suspend fun isOnBoardingCompleted(value: Boolean) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.IS_USER_LOGGED_IN] = value
-                Timber.i("isUserLoggedIn edited to $value")
+                it[PreferencesKeys.IS_ONBOARDING_COMPLETED] = value
+                Timber.i("isOnBoardingCompleted edited to $value")
             }
         } catch (e: Exception) {
-            Timber.e("isUserLoggedIn Exception: $e")
+            Timber.e("isOnBoardingCompleted Exception: $e")
         }
     }
 
@@ -93,6 +111,28 @@ class PreferencesRepositoryImp @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e("setPreviousRequestTimeInMillis Exception: $e")
+        }
+    }
+
+    override suspend fun setPartnerId(partnerId: String) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.PARTNER_ID] = partnerId
+                Timber.i("PartnerId edited to $partnerId")
+            }
+        } catch (e: Exception) {
+            Timber.e("setPartnerId Exception: $e")
+        }
+    }
+
+    override suspend fun setSecretKey(secretKey: String) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.PARTNER_ID] = secretKey
+                Timber.i("Secret Key edited to $secretKey")
+            }
+        } catch (e: Exception) {
+            Timber.e("setSecretKey Exception: $e")
         }
     }
 }

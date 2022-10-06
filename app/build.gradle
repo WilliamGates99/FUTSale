@@ -125,6 +125,9 @@ dependencies {
     // Lottie Library
     implementation 'com.airbnb.android:lottie:5.2.0'
 
+    // Dots Indicator Library
+    implementation 'com.tbuonomo:dotsindicator:4.3'
+
     // Google Play In-App Reviews API
     implementation 'com.google.android.play:review-ktx:2.0.0'
 

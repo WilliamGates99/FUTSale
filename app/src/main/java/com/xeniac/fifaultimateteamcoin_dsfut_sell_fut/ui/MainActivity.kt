@@ -1,13 +1,31 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.LayoutPickUpBinding
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.NavGraphMainDirections
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import javax.inject.Inject
 
-class MainActivity: AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: LayoutPickUpBinding
+    private lateinit var binding: ActivityMainBinding
+
+    private var shouldShowSplashScreen = true
+
+    private lateinit var navController: NavController
+
+    @set:Inject
+    var isOnBoardingCompleted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,24 +33,109 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun splashScreen() {
-//        val splashScreen = installSplashScreen()
-        installSplashScreen()
-//        splashScreen.setKeepOnScreenCondition { shouldShowSplashScreen }
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { shouldShowSplashScreen }
 
-//        if (viewModel.isUserLoggedIn()) {
-//            shouldShowSplashScreen = false
-//            Intent(this, MainActivity::class.java).apply {
-//                startActivity(this)
-//                finish()
+        isOnBoardingCompleted=true
+        Timber.i("isOnBoardingCompleted=$isOnBoardingCompleted")
+
+        if (isOnBoardingCompleted) {
+            init()
+            mainActivityInit()
+        } else {
+            init()
+            onBoardingScreensInit()
+            setBottomNavViewVisibility(false)
+        }
+    }
+
+    private fun init() {
+        shouldShowSplashScreen = false
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(binding.fcv.id) as NavHostFragment
+        navController = navHostFragment.navController
+    }
+
+    private fun onBoardingScreensInit() {
+        navController.navigate(NavGraphMainDirections.actionToOnBoardingFragment())
+    }
+
+    fun mainActivityInit() {
+//        theme.applyStyle(R.style.Theme_FifaUltimateTeamCoin, true)
+        setTheme(R.style.Theme_FifaUltimateTeamCoin)
+        navController.graph.setStartDestination(R.id.pickUpFragment)
+
+        setBottomNavViewVisibility(true)
+        setupBottomNavView()
+    }
+
+    fun setBottomNavViewVisibility(shouldShow: Boolean) {
+        binding.bnv.visibility = if (shouldShow) VISIBLE else GONE
+    }
+
+    private fun setupBottomNavView() {
+        NavigationUI.setupWithNavController(binding.bnv, navController)
+        binding.bnv.setOnItemReselectedListener { /* NO-OP */ }
+
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            when (destination.id) {
+//                R.id.warrantiesFragment -> showNavBar()
+//                R.id.settingsFragment -> showNavBar()
+//                R.id.warrantyDetailsFragment -> hideNavBar()
+//                R.id.addWarrantyFragment -> hideNavBar()
+//                R.id.editWarrantyFragment -> hideNavBar()
+//                R.id.changeEmailFragment -> hideNavBar()
+//                R.id.changePasswordFragment -> hideNavBar()
+//                else -> showNavBar()
 //            }
-//        } else {
-//            shouldShowSplashScreen = false
-            landingInit()
 //        }
     }
 
+    /*
     private fun landingInit() {
+//        theme.applyStyle(R.style.Theme_FifaUltimateTeamCoin, true)
         binding = LayoutPickUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val locales = AppCompatDelegate.getApplicationLocales()
+        val localesString = locales.toLanguageTags()
+        binding.t3.text = localesString
+
+
+        binding.apply {
+            btnFa.setOnClickListener {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("fa-IR"))
+//
+//                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("fa")) {
+//                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
+//                    finish()
+//                }
+            }
+
+            btnUs.setOnClickListener {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en-US"))
+//
+//                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("en")) {
+//                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
+//                    finish()
+//                }
+            }
+
+            btnUk.setOnClickListener {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en-GB"))
+
+                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("en")) {
+                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
+                    finish()
+                }
+            }
+        }
     }
+     */
 }

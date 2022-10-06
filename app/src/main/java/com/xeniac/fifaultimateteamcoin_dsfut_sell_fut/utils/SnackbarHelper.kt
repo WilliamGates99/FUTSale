@@ -9,6 +9,14 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 object SnackbarHelper {
 
+    fun showSomethingWentWrongError(context: Context, view: View): Snackbar = Snackbar.make(
+        view,
+        context.getString(R.string.error_something_went_wrong),
+        LENGTH_LONG
+    ).apply {
+        show()
+    }
+
     fun showNetworkConnectionError(
         context: Context,
         view: View,

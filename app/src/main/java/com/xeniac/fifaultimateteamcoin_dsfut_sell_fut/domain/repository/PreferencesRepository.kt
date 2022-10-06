@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository
 
 interface PreferencesRepository {
 
-    suspend fun isUserLoggedIn(): Boolean
+    suspend fun isOnBoardingCompleted(): Boolean
 
     suspend fun getCurrentAppTheme(): Int
 
@@ -10,11 +10,19 @@ interface PreferencesRepository {
 
     suspend fun getPreviousRequestTimeInMillis(): Long
 
-    suspend fun isUserLoggedIn(value: Boolean)
+    suspend fun getPartnerId(): String?
+
+    suspend fun getSecretKey(): String?
+
+    suspend fun isOnBoardingCompleted(value: Boolean)
 
     suspend fun setCurrentAppTheme(index: Int)
 
     suspend fun setRateAppDialogChoice(value: Int)
 
     suspend fun setPreviousRequestTimeInMillis(timeInMillis: Long)
+
+    suspend fun setPartnerId(partnerId: String)
+
+    suspend fun setSecretKey(secretKey: String)
 }

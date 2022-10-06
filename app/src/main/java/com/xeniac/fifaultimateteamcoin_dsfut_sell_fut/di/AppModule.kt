@@ -53,6 +53,18 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideIsOnBoardingCompleted(preferencesRepository: PreferencesRepository): Boolean {
+        var isOnBoardingCompleted = false
+
+        CoroutineScope(Dispatchers.IO).launch {
+            isOnBoardingCompleted = preferencesRepository.isOnBoardingCompleted()
+        }
+
+        return isOnBoardingCompleted
+    }
+
+    @Singleton
+    @Provides
     fun provideRetrofitInstance(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)

@@ -3,8 +3,34 @@
     <string name="app_name">FIFA Ultimate Team Coin</string>
 
     <string name="error_network_connection">Unable to connect to the internet.</string>
+    <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
     <string name="error_intent_app_not_found">There is no app on the phone to handle this action.</string>
     <string name="error_btn_retry">Retry</string>
     <!--    <string name="error_btn_confirm">Confirm</string>-->
+
+    <string name="main_menu_title_pick_up">Pick Up</string>
+    <string name="main_menu_title_profile">Profile</string>
+    <string name="main_menu_title_settings">Settings</string>
+
+    <string name="onboarding_btn_skip">Skip</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_first_title">Selling Coins Has Made Easy</string>
+    <string name="onboarding_first_description">This application uses the DSFUT API for trading FUT coins. Here you can quickly sell your coins and immediately get paid for them.</string>
+    <string name="onboarding_second_title">Pick Up A Player</string>
+    <string name="onboarding_second_description">After choosing your game platform, click the Auto Pick Up button to start looking for a player. Then wait until a player pops.</string>
+    <string name="onboarding_third_title">Buy A Player</string>
+    <string name="onboarding_third_description">Go to the transfer page of the game and find the player card in the market, and then buy it within 3 minutes.</string>
+
+    <string name="onboarding_fourth_title">You need to enter your DSFUT account\'s partner ID and secret key to use the application.</string>
+    <string name="onboarding_fourth_title_partner_id">Partner ID</string>
+    <string name="onboarding_fourth_hint_partner_id">Enter your partner ID</string>
+    <string name="onboarding_fourth_title_secret_key">Secret Key</string>
+    <string name="onboarding_fourth_hint_secret_key">Enter your secret key</string>
+    <string name="onboarding_fourth_btn_register">If you don\'t have a DSFUT account, <font fgcolor="#1C53F4"><b>click here</b></font> to create one.</string>
+    <string name="onboarding_fourth_btn_start">Get Started</string>
+    <string name="onboarding_fourth_error_blank_partner_id">Enter your partner ID!</string>
+    <string name="onboarding_fourth_error_blank_secret_key">Enter your secret key!</string>
+
 </resources>
