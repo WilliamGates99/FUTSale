@@ -44,7 +44,7 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix '- debug'
+            versionNameSuffix ' - debug'
             applicationIdSuffix '.debug'
         }
 
