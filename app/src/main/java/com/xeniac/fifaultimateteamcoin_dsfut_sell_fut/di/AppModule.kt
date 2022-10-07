@@ -19,7 +19,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,15 +40,8 @@ object AppModule {
         )
 
     @Provides
-    fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int {
-        var currentAppTheme = 0
-
-        CoroutineScope(Dispatchers.IO).launch {
-            currentAppTheme = preferencesRepository.getCurrentAppTheme()
-        }
-
-        return currentAppTheme
-    }
+    fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int =
+        preferencesRepository.getCurrentAppThemeSynchronously()
 
     @Provides
     fun provideIsOnBoardingCompleted(preferencesRepository: PreferencesRepository): Boolean =

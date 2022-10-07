@@ -38,6 +38,15 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
+    override fun getCurrentAppThemeSynchronously(): Int = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
+        } catch (e: Exception) {
+            Timber.e("getCurrentAppThemeSynchronously Exception: $e")
+            0
+        }
+    }
+
     override suspend fun getCurrentAppTheme(): Int = try {
         settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
     } catch (e: Exception) {
