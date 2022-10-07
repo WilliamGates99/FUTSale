@@ -8,10 +8,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.NavGraphMainDirections
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             navigateToPickUpFragment()
         } else {
             init()
+            setStatusBarColor()
             setBottomNavViewVisibility(false)
         }
     }
@@ -61,15 +62,15 @@ class MainActivity : AppCompatActivity() {
 
     fun navigateToPickUpFragment() {
         navController.graph.setStartDestination(R.id.pickUpFragment)
-        navController.navigate(OnBoardingFragmentDirections.actionToPickUpFragment())
+        navController.navigate(NavGraphMainDirections.actionToPickUpFragment())
 
-        // TODO FIX CHANGE THEME ISSUE
-        // MAYBE SET BACKGROUND AND STATUS BAR COLOR OF ONBOARDING PROGRAMATICALLY
-//        theme.applyStyle(R.style.Theme_FifaUltimateTeamCoin, true)
-        setTheme(R.style.Theme_FifaUltimateTeamCoin)
-
+        setStatusBarColor()
         setBottomNavViewVisibility(true)
         setupBottomNavView()
+    }
+
+    private fun setStatusBarColor() {
+
     }
 
     fun setBottomNavViewVisibility(shouldShow: Boolean) {
@@ -80,61 +81,14 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bnv, navController)
         binding.bnv.setOnItemReselectedListener { /* NO-OP */ }
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.warrantiesFragment -> showNavBar()
-//                R.id.settingsFragment -> showNavBar()
-//                R.id.warrantyDetailsFragment -> hideNavBar()
-//                R.id.addWarrantyFragment -> hideNavBar()
-//                R.id.editWarrantyFragment -> hideNavBar()
-//                R.id.changeEmailFragment -> hideNavBar()
-//                R.id.changePasswordFragment -> hideNavBar()
-//                else -> showNavBar()
-//            }
-//        }
-    }
-
-    /*
-    private fun landingInit() {
-//        theme.applyStyle(R.style.Theme_FifaUltimateTeamCoin, true)
-        binding = LayoutPickUpBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val locales = AppCompatDelegate.getApplicationLocales()
-        val localesString = locales.toLanguageTags()
-        binding.t3.text = localesString
-
-
-        binding.apply {
-            btnFa.setOnClickListener {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-//                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("fa-IR"))
-//
-//                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("fa")) {
-//                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
-//                    finish()
-//                }
-            }
-
-            btnUs.setOnClickListener {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en-US"))
-//
-//                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("en")) {
-//                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
-//                    finish()
-//                }
-            }
-
-            btnUk.setOnClickListener {
-                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en-GB"))
-
-                if (Build.VERSION.SDK_INT < 33 && !localesString.contains("en")) {
-                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
-                    finish()
-                }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.pickUpFragment -> setBottomNavViewVisibility(true)
+                R.id.profileFragment -> setBottomNavViewVisibility(true)
+                R.id.settingsFragment -> setBottomNavViewVisibility(true)
+                // R.id.playerDetailsFragment->setBottomNavViewVisibility(false) TODO UNCOMMENT AFTER ADDING PLAYER DETAILS FRAGMENT
+                else -> setBottomNavViewVisibility(true)
             }
         }
     }
-     */
 }
