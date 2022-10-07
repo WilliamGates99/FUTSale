@@ -9,6 +9,7 @@ object Constants {
 
     // DataStore Constants
     const val DATASTORE_NAME_SETTINGS = "settings"
+    const val DATASTORE_NAME_SETTINGS_TEST = "settings_test"
     const val DATASTORE_IS_ONBOARDING_COMPLETED_KEY = "isOnBoardingCompleted"
     const val DATASTORE_THEME_KEY = "theme"
     const val DATASTORE_RATE_APP_DIALOG_CHOICE_KEY = "rateAppDialogChoice"
