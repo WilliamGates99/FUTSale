@@ -1,10 +1,14 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -44,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             navigateToPickUpFragment()
         } else {
             init()
-            setStatusBarColor()
+            setStatusBarColor(true)
             setBottomNavViewVisibility(false)
         }
     }
@@ -64,13 +68,30 @@ class MainActivity : AppCompatActivity() {
         navController.graph.setStartDestination(R.id.pickUpFragment)
         navController.navigate(NavGraphMainDirections.actionToPickUpFragment())
 
-        setStatusBarColor()
+        setStatusBarColor(false)
         setBottomNavViewVisibility(true)
         setupBottomNavView()
     }
 
-    private fun setStatusBarColor() {
+    private fun setStatusBarColor(isOnBoarding: Boolean) {
+        val isDarkTheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            resources.configuration.isNightModeActive
+        } else {
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        }
 
+        WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = !isDarkTheme
+
+        if (isOnBoarding) {
+            window.statusBarColor = ContextCompat.getColor(this, R.color.skyBlue)
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                window.statusBarColor = ContextCompat.getColor(this, R.color.statusBar)
+            } else {
+                window.statusBarColor = ContextCompat.getColor(this, R.color.statusBarV21)
+            }
+        }
     }
 
     fun setBottomNavViewVisibility(shouldShow: Boolean) {
