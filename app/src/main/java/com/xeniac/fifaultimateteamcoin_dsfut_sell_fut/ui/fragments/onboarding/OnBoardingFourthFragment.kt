@@ -11,9 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.NavGraphMainDirections
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingFourthBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
@@ -91,7 +89,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
         tiEditPartnerId.setOnFocusChangeListener { _, isFocused ->
             if (isFocused) {
                 tiLayoutPartnerId.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.background)
+                    ContextCompat.getColor(requireContext(), R.color.skyBlue)
             } else {
                 tiLayoutPartnerId.boxBackgroundColor =
                     ContextCompat.getColor(requireContext(), R.color.grayLight)
@@ -101,7 +99,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
         tiEditSecretKey.setOnFocusChangeListener { _, isFocused ->
             if (isFocused) {
                 tiLayoutSecretKey.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.background)
+                    ContextCompat.getColor(requireContext(), R.color.skyBlue)
             } else {
                 tiLayoutSecretKey.boxBackgroundColor =
                     ContextCompat.getColor(requireContext(), R.color.grayLight)
@@ -157,8 +155,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                     Status.LOADING -> showLoadingAnimation()
                     Status.SUCCESS -> {
                         hideLoadingAnimation()
-                        navigateToPickUpFragment()
-                        (requireActivity() as MainActivity).mainActivityInit()
+                        (requireActivity() as MainActivity).navigateToPickUpFragment()
                     }
                     Status.ERROR -> {
                         hideLoadingAnimation()
@@ -190,10 +187,6 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                 }
             }
         }
-
-    private fun navigateToPickUpFragment() = findNavController().navigate(
-        NavGraphMainDirections.actionToPickUpFragment()
-    )
 
     private fun showLoadingAnimation() = binding.apply {
         tiEditPartnerId.isEnabled = false

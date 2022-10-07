@@ -8,17 +8,20 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.NavGraphMainDirections
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
 
     private var shouldShowSplashScreen = true
 
@@ -36,15 +39,11 @@ class MainActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { shouldShowSplashScreen }
 
-        isOnBoardingCompleted=true
-        Timber.i("isOnBoardingCompleted=$isOnBoardingCompleted")
-
         if (isOnBoardingCompleted) {
             init()
-            mainActivityInit()
+            navigateToPickUpFragment()
         } else {
             init()
-            onBoardingScreensInit()
             setBottomNavViewVisibility(false)
         }
     }
@@ -60,14 +59,14 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
     }
 
-    private fun onBoardingScreensInit() {
-        navController.navigate(NavGraphMainDirections.actionToOnBoardingFragment())
-    }
+    fun navigateToPickUpFragment() {
+        navController.graph.setStartDestination(R.id.pickUpFragment)
+        navController.navigate(OnBoardingFragmentDirections.actionToPickUpFragment())
 
-    fun mainActivityInit() {
+        // TODO FIX CHANGE THEME ISSUE
+        // MAYBE SET BACKGROUND AND STATUS BAR COLOR OF ONBOARDING PROGRAMATICALLY
 //        theme.applyStyle(R.style.Theme_FifaUltimateTeamCoin, true)
         setTheme(R.style.Theme_FifaUltimateTeamCoin)
-        navController.graph.setStartDestination(R.id.pickUpFragment)
 
         setBottomNavViewVisibility(true)
         setupBottomNavView()
