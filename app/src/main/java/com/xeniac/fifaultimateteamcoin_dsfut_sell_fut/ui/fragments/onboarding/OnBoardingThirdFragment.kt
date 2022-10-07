@@ -12,7 +12,7 @@ class OnBoardingThirdFragment : Fragment(R.layout.fragment_onboarding_third) {
     private var _binding: FragmentOnboardingThirdBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewPager: ViewPager2
+    private var viewPager: ViewPager2? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,11 +31,11 @@ class OnBoardingThirdFragment : Fragment(R.layout.fragment_onboarding_third) {
 
     private fun skipOnClick() = binding.btnBack.setOnClickListener {
         // ViewPager items start from 0
-        viewPager.currentItem = 1
+        viewPager?.currentItem = 1
     }
 
     private fun nextOnClick() = binding.btnNext.setOnClickListener {
         // ViewPager items start from 0
-        viewPager.currentItem = 3
+        viewPager?.currentItem = 3
     }
 }

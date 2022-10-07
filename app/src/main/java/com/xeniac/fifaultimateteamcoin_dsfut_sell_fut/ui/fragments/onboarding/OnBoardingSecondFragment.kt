@@ -5,18 +5,18 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingSecondsBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingSecondBinding
 
-class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_seconds) {
+class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_second) {
 
-    private var _binding: FragmentOnboardingSecondsBinding? = null
+    private var _binding: FragmentOnboardingSecondBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewPager: ViewPager2
+    private var viewPager: ViewPager2? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentOnboardingSecondsBinding.bind(view)
+        _binding = FragmentOnboardingSecondBinding.bind(view)
 
         viewPager = requireActivity().findViewById(R.id.viewpager)
 
@@ -29,15 +29,13 @@ class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_seconds) 
         _binding = null
     }
 
-    // TODO BACK PRESSED CALLBACK TO SWIPE TO PREVIOUS VIEWPAGER PAGE
-
     private fun skipOnClick() = binding.btnBack.setOnClickListener {
         // ViewPager items start from 0
-        viewPager.currentItem = 0
+        viewPager?.currentItem = 0
     }
 
     private fun nextOnClick() = binding.btnNext.setOnClickListener {
         // ViewPager items start from 0
-        viewPager.currentItem = 2
+        viewPager?.currentItem = 2
     }
 }
