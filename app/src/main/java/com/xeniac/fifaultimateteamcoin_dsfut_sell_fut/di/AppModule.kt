@@ -43,10 +43,6 @@ object AppModule {
     fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int =
         preferencesRepository.getCurrentAppThemeSynchronously()
 
-    @Provides
-    fun provideIsOnBoardingCompleted(preferencesRepository: PreferencesRepository): Boolean =
-        preferencesRepository.isOnBoardingCompletedSynchronously()
-
     @Singleton
     @Provides
     fun provideRetrofitInstance(): Retrofit {

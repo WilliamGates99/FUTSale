@@ -26,7 +26,12 @@
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
             @drawable/ic_splash_logo_xeniac
         </item>
-        <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin</item>
+        <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin.OnBoarding</item>
+    </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
+        <item name="android:colorBackground">@color/skyBlue</item>
+        <item name="android:statusBarColor">@color/skyBlue</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.Snackbar" parent="Widget.MaterialComponents.Snackbar">

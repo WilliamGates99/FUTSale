@@ -21,4 +21,10 @@
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 
+    <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
+        <item name="android:colorBackground">@color/skyBlue</item>
+        <item name="android:statusBarColor">@color/skyBlue</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+
 </resources>

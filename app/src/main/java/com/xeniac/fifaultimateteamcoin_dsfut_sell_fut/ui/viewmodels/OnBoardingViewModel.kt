@@ -10,6 +10,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPU
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,8 +20,26 @@ class OnBoardingViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
+    private val _isOnBoardingCompletedLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val isOnBoardingCompletedLiveData: LiveData<Boolean> = _isOnBoardingCompletedLiveData
+
     private val _onBoardingLiveData: MutableLiveData<Event<Resource<Nothing>>> = MutableLiveData()
     val onBoardingLiveData: LiveData<Event<Resource<Nothing>>> = _onBoardingLiveData
+
+    fun getIsOnBoardingCompleted() = viewModelScope.launch(Dispatchers.IO) {
+        safeGetIsOnBoardingCompleted()
+    }
+
+    private suspend fun safeGetIsOnBoardingCompleted() {
+        try {
+            val isOnBoardingCompleted = preferencesRepository.isOnBoardingCompleted()
+            _isOnBoardingCompletedLiveData.postValue(isOnBoardingCompleted)
+            Timber.i("isOnBoardingCompleted = $isOnBoardingCompleted")
+        } catch (e: Exception) {
+            Timber.e("safeGetIsOnBoardingCompleted Exception: ${e.message}")
+            _onBoardingLiveData.postValue(Event(Resource.error(e.message.toString())))
+        }
+    }
 
     fun checkOnBoardingInputs(partnerId: String, secretKey: String) {
         if (partnerId.isBlank()) {
@@ -36,7 +55,7 @@ class OnBoardingViewModel @Inject constructor(
         completeOnBoarding(partnerId, secretKey)
     }
 
-    fun completeOnBoarding(partnerId: String, secretKey: String) = viewModelScope.launch {
+    private fun completeOnBoarding(partnerId: String, secretKey: String) = viewModelScope.launch {
         safeCompleteOnBoarding(partnerId, secretKey)
     }
 

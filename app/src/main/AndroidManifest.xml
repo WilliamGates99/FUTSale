@@ -22,7 +22,7 @@
         tools:targetApi="tiramisu">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.OnBoardingActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.FifaUltimateTeamCoin.SplashScreen">
@@ -31,6 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FifaUltimateTeamCoin" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

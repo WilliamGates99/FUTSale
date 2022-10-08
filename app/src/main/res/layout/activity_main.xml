@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_rounded_bottom_nav"
-        android:visibility="gone"
         app:itemIconTint="@color/color_bottom_nav"
         app:itemRippleColor="@color/grayMedium"
         app:itemTextAppearanceActive="@style/Theme.FifaUltimateTeamCoin.BottomNavigationView.Text"

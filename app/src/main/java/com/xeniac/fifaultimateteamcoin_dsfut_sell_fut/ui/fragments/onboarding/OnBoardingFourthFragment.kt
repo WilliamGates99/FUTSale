@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
@@ -155,7 +156,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                     Status.LOADING -> showLoadingAnimation()
                     Status.SUCCESS -> {
                         hideLoadingAnimation()
-                        (requireActivity() as MainActivity).navigateToPickUpFragment()
+                        navigateToMainActivity()
                     }
                     Status.ERROR -> {
                         hideLoadingAnimation()
@@ -187,6 +188,11 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                 }
             }
         }
+
+    private fun navigateToMainActivity() {
+        startActivity(Intent(requireContext(), MainActivity::class.java))
+        requireActivity().finish()
+    }
 
     private fun showLoadingAnimation() = binding.apply {
         tiEditPartnerId.isEnabled = false
