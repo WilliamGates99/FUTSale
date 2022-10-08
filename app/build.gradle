@@ -6,15 +6,15 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 //    id 'com.google.gms.google-services' // Google Services plugin
     id 'dagger.hilt.android.plugin'
-    id 'applovin-quality-service'
+//    id 'applovin-quality-service'
 }
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
-applovin {
-    apiKey "\"${properties.getProperty("APPLOVIN_API_KEY")}\""
-}
+//applovin {
+//    apiKey "\"${properties.getProperty("APPLOVIN_API_KEY")}\""
+//}
 
 android {
     namespace 'com.xeniac.fifaultimateteamcoin_dsfut_sell_fut'
@@ -31,11 +31,11 @@ android {
         resConfigs "en_US", "en_GB", "fa_IR"
 
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
-        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
-        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
-        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
-        buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
-        buildConfigField "String", "TAPSELL_SETTINGS_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")}\""
+//        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
+//        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
+//        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
+//        buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
+//        buildConfigField "String", "TAPSELL_SETTINGS_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")}\""
 //        buildConfigField "String", "URL_APP_STORE", "\"${properties.getProperty("URL_PLAY_STORE")}\""
 //        buildConfigField "String", "PACKAGE_NAME_APP_STORE", "\"${properties.getProperty("PACKAGE_NAME_PLAY_STORE")}\""
 
@@ -131,7 +131,8 @@ dependencies {
     // Google Play In-App Reviews API
     implementation 'com.google.android.play:review-ktx:2.0.0'
 
-    // AppLovin Libraries
+    /*
+    // Applovin Libraries
     implementation 'com.applovin:applovin-sdk:11.5.2'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
@@ -141,6 +142,7 @@ dependencies {
 
     // Tapsell Library
     implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.1.7'
+     */
 
     // Local Unit Test Libraries
     testImplementation 'com.google.truth:truth:1.1.3'
@@ -167,29 +169,29 @@ dependencies {
 
 task copyReleaseApk(type: Copy) {
     def sourceDir = "${rootDir}/app/release/app-release.apk"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
     def versionName = "${android.defaultConfig.versionName}"
 
     from sourceDir
     into destDir
 
-    rename "app-release.apk", "DSFUT ${versionName}.apk"
+    rename "app-release.apk", "FIFA Ultimate Team Coin ${versionName}.apk"
 }
 
 task copyReleaseBundle(type: Copy) {
     def sourceDir = "${rootDir}/app/release/app-release.aab"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
     def versionName = "${android.defaultConfig.versionName}"
 
     from sourceDir
     into destDir
 
-    rename "app-release.aab", "DSFUT ${versionName}.aab"
+    rename "app-release.aab", "FIFA Ultimate Team Coin ${versionName}.aab"
 }
 
 task copyObfuscationFolder(type: Copy) {
     def sourceDir = "${rootDir}/app/obfuscation"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\DSFUT\\APK\\obfuscation"
+    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK\\obfuscation"
 
     from sourceDir
     into destDir
