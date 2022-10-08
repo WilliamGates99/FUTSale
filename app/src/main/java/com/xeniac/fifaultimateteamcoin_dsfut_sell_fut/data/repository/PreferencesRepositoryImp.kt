@@ -138,7 +138,7 @@ class PreferencesRepositoryImp @Inject constructor(
     override suspend fun setSecretKey(secretKey: String) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.PARTNER_ID] = secretKey
+                it[PreferencesKeys.SECRET_KEY] = secretKey
                 Timber.i("Secret Key edited to $secretKey")
             }
         } catch (e: Exception) {
