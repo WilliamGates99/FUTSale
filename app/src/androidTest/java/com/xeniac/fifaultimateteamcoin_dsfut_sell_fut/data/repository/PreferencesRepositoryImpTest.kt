@@ -54,8 +54,8 @@ class PreferencesRepositoryImpTest {
 
     /**
      * Fetch Initial Preferences Test Cases:
-     * isOnBoardingCompletedSynchronously -> false
      * getCurrentAppThemeSynchronously -> 0
+     * isOnBoardingCompleted -> false
      * getCurrentAppTheme -> 0
      * getRateAppDialogChoice -> 0
      * getPreviousRequestTimeInMillis -> 0L
@@ -67,10 +67,8 @@ class PreferencesRepositoryImpTest {
     fun fetchInitialSynchronousPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
-        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
         val initialCurrentAppTheme = testRepository.getCurrentAppThemeSynchronously()
 
-        assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
     }
 
@@ -78,12 +76,14 @@ class PreferencesRepositoryImpTest {
     fun fetchInitialPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
+        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         val initialCurrentAppTheme = testRepository.getCurrentAppTheme()
         val initialRateAppDialogChoice = testRepository.getRateAppDialogChoice()
         val initialPreviousRequestTimeInMillis = testRepository.getPreviousRequestTimeInMillis()
         val initialPartnerId = testRepository.getPartnerId()
         val initialSecretKey = testRepository.getSecretKey()
 
+        assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
         assertThat(initialRateAppDialogChoice).isEqualTo(0)
         assertThat(initialPreviousRequestTimeInMillis).isEqualTo(0L)
@@ -107,7 +107,7 @@ class PreferencesRepositoryImpTest {
 
         testRepository.isOnBoardingCompleted(true)
 
-        val isOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
+        val isOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         assertThat(isOnBoardingCompleted).isTrue()
     }
 
