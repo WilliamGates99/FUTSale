@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingSecondBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.OnBoardingActivity
 
 class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_second) {
 
@@ -18,9 +19,11 @@ class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_second) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentOnboardingSecondBinding.bind(view)
 
-        viewPager = requireActivity().findViewById(R.id.viewpager)
+        (activity as OnBoardingActivity?)?.let {
+            viewPager = it.findViewById(R.id.viewpager)
+        }
 
-        skipOnClick()
+        backOnClick()
         nextOnClick()
     }
 
@@ -29,7 +32,7 @@ class OnBoardingSecondFragment : Fragment(R.layout.fragment_onboarding_second) {
         _binding = null
     }
 
-    private fun skipOnClick() = binding.btnBack.setOnClickListener {
+    private fun backOnClick() = binding.btnBack.setOnClickListener {
         // ViewPager items start from 0
         viewPager?.currentItem = 0
     }
