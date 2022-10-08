@@ -6,12 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ui.OnBoardingActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_8dp"
+        android:layout_marginTop="@dimen/margin_24dp"
+        app:dotsColor="@color/grayDark"
+        app:dotsCornerRadius="@dimen/radius_8dp"
+        app:dotsSize="@dimen/width_6dp"
+        app:dotsSpacing="@dimen/margin_2dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewpager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:progressMode="false"
+        app:selectedDotColor="@color/blue" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph_onboarding" />
+        android:layout_height="@dimen/height_0dp"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/indicator" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
