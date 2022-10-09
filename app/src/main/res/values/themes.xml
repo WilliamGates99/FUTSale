@@ -2,6 +2,7 @@
 
     <style name="Theme.FifaUltimateTeamCoin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/navyBlue</item>
         <item name="colorOnPrimary">@color/whiteStatic</item>
@@ -17,6 +18,7 @@
         <item name="snackbarButtonStyle">
             @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
         </item>
+        <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 
@@ -79,6 +81,12 @@
     <style name="Theme.FifaUltimateTeamCoin.TextInputLayout.Helper" parent="Widget.MaterialComponents.TextView">
         <item name="android:fontFamily">@font/localized_semi_bold</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
+    </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="useMaterialThemeColors">true</item>
+        <item name="android:minWidth">@dimen/min_width_0dp</item>
+        <item name="android:minHeight">@dimen/min_height_0dp</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button" parent="Widget.MaterialComponents.CircularProgressIndicator.Small">

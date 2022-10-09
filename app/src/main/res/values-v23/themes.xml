@@ -2,6 +2,7 @@
 
     <style name="Theme.FifaUltimateTeamCoin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/navyBlue</item>
         <item name="colorOnPrimary">@color/whiteStatic</item>
@@ -18,6 +19,7 @@
         <item name="snackbarButtonStyle">
             @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
         </item>
+        <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
 

@@ -33,4 +33,31 @@
     <string name="onboarding_fourth_error_blank_partner_id">Enter your partner ID!</string>
     <string name="onboarding_fourth_error_blank_secret_key">Enter your secret key!</string>
 
+    <string name="settings_text_title">Settings</string>
+    <string name="settings_title_settings">Settings</string>
+    <string name="settings_title_miscellaneous">Miscellaneous</string>
+    <string name="settings_text_settings_language">Language</string>
+    <string name="settings_text_settings_language_default">System Default</string>
+    <string name="settings_text_settings_language_english_us">English (US)</string>
+    <string name="settings_text_settings_language_english_gb">English (UK)</string>
+    <string name="settings_text_settings_language_persian_ir">Persian</string>
+    <string name="settings_text_settings_theme">Theme</string>
+    <string name="settings_text_settings_theme_default">System Default</string>
+    <string name="settings_text_settings_theme_light">Light</string>
+    <string name="settings_text_settings_theme_dark">Dark</string>
+    <string name="settings_text_settings_notification_sound">Notification Sound</string>
+    <string name="settings_text_settings_notification_vibrate">Notification Vibrate</string>
+    <string name="settings_text_miscellaneous_donate">Donate</string>
+    <string name="settings_text_miscellaneous_improve_translations">Improve Translations</string>
+    <string name="settings_text_miscellaneous_rate_us">Rate Us</string>
+    <string name="settings_text_miscellaneous_privacy_policy">Privacy Policy</string>
+    <string name="settings_ad_indicator" translatable="false">Ad</string>
+    <string name="settings_dialog_item_language_default">System Default</string>
+    <string name="settings_dialog_item_language_english_us">English (United States)</string>
+    <string name="settings_dialog_item_language_english_gb">English (United Kingdom)</string>
+    <string name="settings_dialog_item_language_persian_ir">Persian</string>
+    <string name="settings_dialog_item_theme_default">System Default</string>
+    <string name="settings_dialog_item_theme_light">Light</string>
+    <string name="settings_dialog_item_theme_dark">Dark</string>
+
 </resources>
