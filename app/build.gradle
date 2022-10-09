@@ -57,6 +57,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 
     compileOptions {
@@ -166,6 +167,7 @@ dependencies {
     debugImplementation 'androidx.fragment:fragment-testing:1.5.3'
 }
 
+// TODO USE VARIABLES FOR THE STRINGS
 task copyReleaseApk(type: Copy) {
     def sourceDir = "${rootDir}/app/release/app-release.apk"
     def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
