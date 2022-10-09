@@ -55,7 +55,7 @@ class OnBoardingViewModel @Inject constructor(
         completeOnBoarding(partnerId, secretKey)
     }
 
-    private fun completeOnBoarding(partnerId: String, secretKey: String) = viewModelScope.launch {
+    fun completeOnBoarding(partnerId: String, secretKey: String) = viewModelScope.launch {
         safeCompleteOnBoarding(partnerId, secretKey)
     }
 
