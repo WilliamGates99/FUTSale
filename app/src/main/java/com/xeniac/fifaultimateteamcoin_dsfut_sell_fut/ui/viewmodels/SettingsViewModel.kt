@@ -150,7 +150,6 @@ class SettingsViewModel @Inject constructor(
 
     private fun safeChangeCurrentLocale(index: Int) {
         when (index) {
-            // TODO DEFAULT LANGUAGE HAS ISSUE
             0 -> AppCompatDelegate.setApplicationLocales(LocaleListCompat.getAdjustedDefault())
             1 -> AppCompatDelegate.setApplicationLocales(
                 LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_UNITED_STATES)
