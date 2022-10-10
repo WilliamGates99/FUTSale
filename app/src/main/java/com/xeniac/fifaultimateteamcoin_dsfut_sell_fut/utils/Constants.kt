@@ -19,15 +19,6 @@ object Constants {
     const val DATASTORE_PARTNER_ID_KEY = "partnerId"
     const val DATASTORE_SECRET_KEY_KEY = "secretKey"
 
-    // App Language Constants
-    const val LOCALE_LANGUAGE_ENGLISH = "en"
-    const val LOCALE_LANGUAGE_PERSIAN = "fa"
-
-    // App Country Constants
-    const val LOCALE_COUNTRY_UNITED_STATES = "US"
-    const val LOCALE_COUNTRY_IRAN = "IR"
-    const val LOCALE_COUNTRY_GREAT_BRITAIN = "GB"
-
     // App Locale Constants
     const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
