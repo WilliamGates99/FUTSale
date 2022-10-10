@@ -143,11 +143,9 @@
             android:layout_marginHorizontal="@dimen/margin_3dp"
             android:layout_marginTop="@dimen/margin_3dp"
             android:layout_marginBottom="@dimen/margin_75dp"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:focusable="true"
             android:fontFamily="@font/localized_light"
             android:gravity="center_vertical|start"
+            android:maxWidth="@dimen/max_width_1000dp"
             android:maxLines="2"
             android:text="@string/onboarding_fourth_btn_register"
             android:textAlignment="gravity"
@@ -156,9 +154,9 @@
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/btn_start"
-            app:layout_constraintEnd_toEndOf="@+id/btn_start"
+            app:layout_constraintEnd_toEndOf="@+id/ti_layout_secret_key"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@+id/btn_start"
+            app:layout_constraintStart_toStartOf="@+id/ti_layout_secret_key"
             app:layout_constraintTop_toBottomOf="@+id/ti_layout_secret_key" />
 
         <com.google.android.material.button.MaterialButton
