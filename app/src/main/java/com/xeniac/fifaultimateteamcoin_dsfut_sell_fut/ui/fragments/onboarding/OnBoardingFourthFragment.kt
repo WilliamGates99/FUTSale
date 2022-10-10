@@ -146,7 +146,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
         val partnerId = binding.tiEditPartnerId.text.toString().trim()
         val secretKey = binding.tiEditSecretKey.text.toString().trim()
 
-        viewModel.checkOnBoardingInputs(partnerId, secretKey)
+        viewModel.validateFourthScreenInputs(partnerId, secretKey)
     }
 
     private fun onBoardingObserver() =

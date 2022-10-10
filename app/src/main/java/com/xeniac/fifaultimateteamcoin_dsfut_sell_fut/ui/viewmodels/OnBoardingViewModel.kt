@@ -41,7 +41,7 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    fun checkOnBoardingInputs(partnerId: String, secretKey: String) {
+    fun validateFourthScreenInputs(partnerId: String, secretKey: String) {
         if (partnerId.isBlank()) {
             _onBoardingLiveData.postValue(Event(Resource.error(ERROR_INPUT_BLANK_PARTNER_ID)))
             return
