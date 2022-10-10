@@ -145,23 +145,19 @@
 
                         <View
                             android:id="@+id/divider_settings_theme"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_settings_language" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_settings_theme"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_settings_theme">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -218,20 +214,16 @@
 
                         <View
                             android:id="@+id/divider_settings_notification_sound"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_settings_theme" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_settings_notification_sound"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_sound">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -281,20 +273,16 @@
 
                         <View
                             android:id="@+id/divider_settings_notification_vibrate"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_sound" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_settings_notification_vibrate"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_vibrate">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -341,6 +329,27 @@
                                 app:layout_constraintVertical_bias="0.5" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/divider_settings_ad_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/height_1dp"
+                            android:background="@color/grayLight"
+                            app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_vibrate" />
+
+                        <FrameLayout
+                            android:id="@+id/fl_settings_ad_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_ad_container" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:id="@+id/group_settings_ad_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:constraint_referenced_ids="divider_settings_ad_container,fl_settings_ad_container" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -435,23 +444,19 @@
 
                         <View
                             android:id="@+id/divider_miscellaneous_improve_translations"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_donate" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_miscellaneous_improve_translations"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_improve_translations">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -500,23 +505,19 @@
 
                         <View
                             android:id="@+id/divider_miscellaneous_rate_us"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_improve_translations" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_miscellaneous_rate_us"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_rate_us">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -565,24 +566,20 @@
 
                         <View
                             android:id="@+id/divider_miscellaneous_privacy_policy"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
                             android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_rate_us" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_miscellaneous_privacy_policy"
-                            android:layout_width="@dimen/width_0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_privacy_policy">
 
                             <com.google.android.material.imageview.ShapeableImageView
@@ -630,25 +627,25 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <View
-                            android:id="@+id/divider_settings_ad_container"
-                            android:layout_width="@dimen/width_0dp"
+                            android:id="@+id/divider_miscellaneous_ad_container"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
-                            android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_privacy_policy" />
 
                         <FrameLayout
-                            android:id="@+id/fl_ad_container_native"
-                            android:layout_width="@dimen/width_0dp"
+                            android:id="@+id/fl_miscellaneous_ad_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_ad_container" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:id="@+id/group_miscellaneous_ad_container"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_ad_container" />
+                            app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
