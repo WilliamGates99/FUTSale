@@ -57,6 +57,8 @@ class PreferencesRepositoryImpTest {
      * getCurrentAppThemeSynchronously -> 0
      * isOnBoardingCompleted -> false
      * getCurrentAppTheme -> 0
+     * isNotificationSoundActive -> true
+     * isNotificationVibrateActive -> true
      * getRateAppDialogChoice -> 0
      * getPreviousRequestTimeInMillis -> 0L
      * getPartnerId -> null
@@ -78,6 +80,8 @@ class PreferencesRepositoryImpTest {
 
         val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         val initialCurrentAppTheme = testRepository.getCurrentAppTheme()
+        val initialIsNotificationSoundActive = testRepository.isNotificationSoundActive()
+        val initialIsNotificationVibrateActive = testRepository.isNotificationVibrateActive()
         val initialRateAppDialogChoice = testRepository.getRateAppDialogChoice()
         val initialPreviousRequestTimeInMillis = testRepository.getPreviousRequestTimeInMillis()
         val initialPartnerId = testRepository.getPartnerId()
@@ -85,6 +89,8 @@ class PreferencesRepositoryImpTest {
 
         assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
+        assertThat(initialIsNotificationSoundActive).isTrue()
+        assertThat(initialIsNotificationVibrateActive).isTrue()
         assertThat(initialRateAppDialogChoice).isEqualTo(0)
         assertThat(initialPreviousRequestTimeInMillis).isEqualTo(0L)
         assertThat(initialPartnerId).isNull()
@@ -95,6 +101,8 @@ class PreferencesRepositoryImpTest {
      * Write Preferences Test Cases:
      * isOnBoardingCompleted
      * setCurrentAppTheme
+     * isNotificationSoundActive
+     * isNotificationVibrateActive
      * setRateAppDialogChoice
      * setPreviousRequestTimeInMillis
      * setPartnerId
@@ -120,6 +128,26 @@ class PreferencesRepositoryImpTest {
 
         val currentAppTheme = testRepository.getCurrentAppTheme()
         assertThat(currentAppTheme).isEqualTo(testValue)
+    }
+
+    @Test
+    fun writeIsNotificationSoundActive() = testScope.runTest {
+        testDataStore.edit { it.clear() }
+
+        testRepository.isNotificationSoundActive(false)
+
+        val isNotificationSoundActive = testRepository.isNotificationSoundActive()
+        assertThat(isNotificationSoundActive).isFalse()
+    }
+
+    @Test
+    fun writeIsNotificationVibrateActive() = testScope.runTest {
+        testDataStore.edit { it.clear() }
+
+        testRepository.isNotificationVibrateActive(false)
+
+        val isNotificationVibrateActive = testRepository.isNotificationVibrateActive()
+        assertThat(isNotificationVibrateActive).isFalse()
     }
 
     @Test

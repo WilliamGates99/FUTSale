@@ -3,6 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_ONBOARDING_COMPLETED_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PARTNER_ID_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
@@ -21,6 +23,12 @@ class PreferencesRepositoryImp @Inject constructor(
     private object PreferencesKeys {
         val IS_ONBOARDING_COMPLETED = booleanPreferencesKey(DATASTORE_IS_ONBOARDING_COMPLETED_KEY)
         val CURRENT_APP_THEME = intPreferencesKey(DATASTORE_THEME_KEY)
+        val IS_NOTIFICATION_SOUND_ACTIVE = booleanPreferencesKey(
+            DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY
+        )
+        val IS_NOTIFICATION_VIBRATE_ACTIVE = booleanPreferencesKey(
+            DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY
+        )
         val RATE_APP_DIALOG_CHOICE = intPreferencesKey(DATASTORE_RATE_APP_DIALOG_CHOICE_KEY)
         val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey(
             DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
@@ -52,6 +60,20 @@ class PreferencesRepositoryImp @Inject constructor(
         0
     }
 
+    override suspend fun isNotificationSoundActive(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ACTIVE] ?: true
+    } catch (e: Exception) {
+        Timber.e("isNotificationSoundActive Exception: $e")
+        true
+    }
+
+    override suspend fun isNotificationVibrateActive(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ACTIVE] ?: true
+    } catch (e: Exception) {
+        Timber.e("isNotificationVibrateActive Exception: $e")
+        true
+    }
+
     override suspend fun getRateAppDialogChoice(): Int = try {
         settingsDataStore.data.first()[PreferencesKeys.RATE_APP_DIALOG_CHOICE] ?: 0
     } catch (e: Exception) {
@@ -80,11 +102,11 @@ class PreferencesRepositoryImp @Inject constructor(
         null
     }
 
-    override suspend fun isOnBoardingCompleted(value: Boolean) {
+    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.IS_ONBOARDING_COMPLETED] = value
-                Timber.i("isOnBoardingCompleted edited to $value")
+                it[PreferencesKeys.IS_ONBOARDING_COMPLETED] = isCompleted
+                Timber.i("isOnBoardingCompleted edited to $isCompleted")
             }
         } catch (e: Exception) {
             Timber.e("isOnBoardingCompleted Exception: $e")
@@ -99,6 +121,28 @@ class PreferencesRepositoryImp @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e("setCurrentAppTheme Exception: $e")
+        }
+    }
+
+    override suspend fun isNotificationSoundActive(isActive: Boolean) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.IS_NOTIFICATION_SOUND_ACTIVE] = isActive
+                Timber.i("isNotificationSoundActive edited to $isActive")
+            }
+        } catch (e: Exception) {
+            Timber.e("isNotificationSoundActive Exception: $e")
+        }
+    }
+
+    override suspend fun isNotificationVibrateActive(isActive: Boolean) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ACTIVE] = isActive
+                Timber.i("isNotificationVibrateActive edited to $isActive")
+            }
+        } catch (e: Exception) {
+            Timber.e("isNotificationVibrateActive Exception: $e")
         }
     }
 
