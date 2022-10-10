@@ -351,6 +351,13 @@
                             android:visibility="gone"
                             app:constraint_referenced_ids="divider_settings_ad_container,fl_settings_ad_container" />
 
+                        <!--TODO REMOVE AFTER ADDING NOTIFICATION FUNCTIONALITY-->
+                        <androidx.constraintlayout.widget.Group
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:constraint_referenced_ids="divider_settings_notification_sound,divider_settings_notification_vibrate,cl_settings_notification_sound,cl_settings_notification_vibrate" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -646,6 +653,13 @@
                             android:layout_height="wrap_content"
                             android:visibility="gone"
                             app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
+
+                        <!--TODO REMOVE AFTER ADDING FUNCTIONALITIES-->
+                        <androidx.constraintlayout.widget.Group
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:constraint_referenced_ids="divider_miscellaneous_rate_us,cl_miscellaneous_donate,cl_miscellaneous_rate_us" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

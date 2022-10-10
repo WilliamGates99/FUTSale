@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,8 +34,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         subscribeToObservers()
         getCurrentLanguage()
         getCurrentTheme()
-        getIsNotificationSoundActive()
-        getIsNotificationVibrateActive()
+//        getIsNotificationSoundActive()
+//        getIsNotificationVibrateActive()
         languageOnClick()
         themeOnClick()
         notificationSoundOnClick()
@@ -167,7 +166,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun notificationSoundOnClick() =
         binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(requireContext(), "isChecked = $isChecked", Toast.LENGTH_SHORT).show()
             /* TODO ADD FUNCTIONALITY
             when (isChecked) {
                 true -> {}
@@ -178,7 +176,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun notificationVibrateOnClick() =
         binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(requireContext(), "isChecked = $isChecked", Toast.LENGTH_SHORT).show()
             /* TODO ADD FUNCTIONALITY
             when (isChecked) {
                 true -> {}
