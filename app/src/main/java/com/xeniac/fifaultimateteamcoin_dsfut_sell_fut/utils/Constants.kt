@@ -12,6 +12,8 @@ object Constants {
     const val DATASTORE_NAME_SETTINGS_TEST = "settings_test"
     const val DATASTORE_IS_ONBOARDING_COMPLETED_KEY = "isOnBoardingCompleted"
     const val DATASTORE_THEME_KEY = "theme"
+    const val DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY = "isNotificationSoundActive"
+    const val DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY = "isNotificationVibrateActive"
     const val DATASTORE_RATE_APP_DIALOG_CHOICE_KEY = "rateAppDialogChoice"
     const val DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY = "previousRequestTimeInMillis"
     const val DATASTORE_PARTNER_ID_KEY = "partnerId"
