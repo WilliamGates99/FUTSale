@@ -89,6 +89,13 @@ class SettingsViewModel @Inject constructor(
                     _currentLocaleIndexLiveData.postValue(Event(3))
                     Timber.i("Current locale index is 3")
                 }
+                else -> {
+                    _currentLanguageLiveData.postValue(
+                        Event(UiText.StringResource(R.string.settings_text_settings_language_default))
+                    )
+                    _currentLocaleIndexLiveData.postValue(Event(0))
+                    Timber.i("Current locale index is 0")
+                }
             }
         }
     }
@@ -143,7 +150,8 @@ class SettingsViewModel @Inject constructor(
 
     private fun safeChangeCurrentLocale(index: Int) {
         when (index) {
-            0 -> AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+            // TODO DEFAULT LANGUAGE HAS ISSUE
+            0 -> AppCompatDelegate.setApplicationLocales(LocaleListCompat.getAdjustedDefault())
             1 -> AppCompatDelegate.setApplicationLocales(
                 LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_UNITED_STATES)
             )
