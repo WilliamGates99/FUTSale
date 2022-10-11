@@ -60,308 +60,301 @@
                     android:textAllCaps="true"
                     android:textColor="@color/navyBlue"
                     android:textSize="@dimen/text_size_16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/cv_settings"
+                    app:layout_constraintBottom_toTopOf="@+id/cl_settings"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintVertical_chainStyle="packed" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_settings"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_8dp"
                     android:layout_marginTop="@dimen/margin_8dp"
+                    android:animateLayoutChanges="true"
+                    android:background="@drawable/shape_rounded_settings_layout"
                     android:elevation="@dimen/elevation_2dp"
-                    app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="@dimen/radius_12dp"
                     app:layout_constraintBottom_toTopOf="@+id/tv_title_miscellaneous"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title_settings">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_settings_language"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true">
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_settings_language"
-                            android:layout_width="match_parent"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_settings_language"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_language"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_language"
+                            android:layout_width="@dimen/width_0dp"
                             android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_settings_language"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_language"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_settings_language_current"
+                            app:layout_constraintStart_toEndOf="@+id/iv_settings_language"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_language"
+                            app:layout_constraintVertical_bias="0.5" />
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_settings_language"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_language"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_language"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_settings_language"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_language"
-                                app:layout_constraintEnd_toStartOf="@+id/tv_settings_language_current"
-                                app:layout_constraintStart_toEndOf="@+id/iv_settings_language"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_language"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_language_current"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_bold"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@{currentLanguage}"
-                                android:textAlignment="gravity"
-                                android:textAllCaps="true"
-                                android:textColor="@color/grayDark"
-                                android:textSize="@dimen/text_size_12sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_language"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_language"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_settings_theme"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_settings_language" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_settings_theme"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_theme">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_settings_theme"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_theme"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_theme"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_settings_theme"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_theme"
-                                app:layout_constraintEnd_toStartOf="@+id/tv_settings_theme_current"
-                                app:layout_constraintStart_toEndOf="@+id/iv_settings_theme"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_theme"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_theme_current"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_bold"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@{currentTheme}"
-                                android:textAlignment="gravity"
-                                android:textAllCaps="true"
-                                android:textColor="@color/grayDark"
-                                android:textSize="@dimen/text_size_12sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_theme"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_theme"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_settings_notification_sound"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_settings_theme" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_settings_notification_sound"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_sound">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_settings_notification_sound"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_notification_sound"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_notification_sound"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:labelFor="@+id/switch_settings_notification_sound"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_settings_notification_sound"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_sound"
-                                app:layout_constraintEnd_toStartOf="@+id/switch_settings_notification_sound"
-                                app:layout_constraintStart_toEndOf="@+id/iv_settings_notification_sound"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_sound"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/switch_settings_notification_sound"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:checked="@{isNotificationSoundOn}"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_sound"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_sound"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_settings_notification_vibrate"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_sound" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_settings_notification_vibrate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_vibrate">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_settings_notification_vibrate"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_notification_vibrate"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_settings_notification_vibrate"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:labelFor="@id/switch_settings_notification_vibrate"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_settings_notification_vibrate"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_vibrate"
-                                app:layout_constraintEnd_toStartOf="@+id/switch_settings_notification_vibrate"
-                                app:layout_constraintStart_toEndOf="@+id/iv_settings_notification_vibrate"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_vibrate"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/switch_settings_notification_vibrate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:checked="@{isNotificationVibrateOn}"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_vibrate"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_vibrate"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_settings_ad_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_vibrate" />
-
-                        <FrameLayout
-                            android:id="@+id/fl_settings_ad_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_settings_ad_container" />
-
-                        <androidx.constraintlayout.widget.Group
-                            android:id="@+id/group_settings_ad_container"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_language_current"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_settings_ad_container,fl_settings_ad_container" />
-
-                        <!--TODO REMOVE AFTER ADDING NOTIFICATION FUNCTIONALITY-->
-                        <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_settings_notification_sound,divider_settings_notification_vibrate,cl_settings_notification_sound,cl_settings_notification_vibrate" />
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_bold"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="@{currentLanguage}"
+                            android:textAlignment="gravity"
+                            android:textAllCaps="true"
+                            android:textColor="@color/grayDark"
+                            android:textSize="@dimen/text_size_12sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_language"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_language"
+                            app:layout_constraintVertical_bias="0.5" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                    <View
+                        android:id="@+id/divider_settings_theme"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_settings_language" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_settings_theme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_settings_theme">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_settings_theme"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_theme"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_theme"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_settings_theme"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_theme"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_settings_theme_current"
+                            app:layout_constraintStart_toEndOf="@+id/iv_settings_theme"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_theme"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_theme_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_bold"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="@{currentTheme}"
+                            android:textAlignment="gravity"
+                            android:textAllCaps="true"
+                            android:textColor="@color/grayDark"
+                            android:textSize="@dimen/text_size_12sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_theme"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_theme"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_settings_notification_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_settings_theme" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_settings_notification_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_sound">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_settings_notification_sound"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_notification_sound"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_notification_sound"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:labelFor="@+id/switch_settings_notification_sound"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_settings_notification_sound"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_sound"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_settings_notification_sound"
+                            app:layout_constraintStart_toEndOf="@+id/iv_settings_notification_sound"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_sound"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switch_settings_notification_sound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:checked="@{isNotificationSoundOn}"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_sound"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_sound"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_settings_notification_vibrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_sound" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_settings_notification_vibrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_settings_notification_vibrate">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_settings_notification_vibrate"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_notification_vibrate"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_settings_notification_vibrate"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:labelFor="@id/switch_settings_notification_vibrate"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_settings_notification_vibrate"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_vibrate"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_settings_notification_vibrate"
+                            app:layout_constraintStart_toEndOf="@+id/iv_settings_notification_vibrate"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_vibrate"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switch_settings_notification_vibrate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:checked="@{isNotificationVibrateOn}"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_settings_notification_vibrate"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_settings_notification_vibrate"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_settings_ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_settings_notification_vibrate" />
+
+                    <FrameLayout
+                        android:id="@+id/fl_settings_ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_settings_ad_container" />
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/group_settings_ad_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="divider_settings_ad_container,fl_settings_ad_container" />
+
+                    <!--TODO REMOVE AFTER ADDING NOTIFICATION FUNCTIONALITY-->
+                    <androidx.constraintlayout.widget.Group
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="divider_settings_notification_sound,divider_settings_notification_vibrate,cl_settings_notification_sound,cl_settings_notification_vibrate" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_title_miscellaneous"
@@ -376,296 +369,289 @@
                     android:textAllCaps="true"
                     android:textColor="@color/navyBlue"
                     android:textSize="@dimen/text_size_16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/cv_miscellaneous"
-                    app:layout_constraintTop_toBottomOf="@+id/cv_settings" />
+                    app:layout_constraintBottom_toTopOf="@+id/cl_miscellaneous"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_settings" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_miscellaneous"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_miscellaneous"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_8dp"
                     android:layout_marginTop="@dimen/margin_8dp"
                     android:layout_marginBottom="@dimen/margin_8dp"
+                    android:animateLayoutChanges="true"
+                    android:background="@drawable/shape_rounded_settings_layout"
                     android:elevation="@dimen/elevation_2dp"
-                    app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="@dimen/radius_12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title_miscellaneous">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_miscellaneous_donate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true">
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_miscellaneous_donate"
-                            android:layout_width="match_parent"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_donate"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_donate"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_miscellaneous_donate"
+                            android:layout_width="@dimen/width_0dp"
                             android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_miscellaneous_donate"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_donate"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_donate_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_donate"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_donate"
+                            app:layout_constraintVertical_bias="0.5" />
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_donate"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_donate"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_miscellaneous_donate"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_miscellaneous_donate"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_donate"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_donate_arrow"
-                                app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_donate"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_donate"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_donate_arrow"
-                                android:layout_width="@dimen/width_18dp"
-                                android:layout_height="@dimen/height_18dp"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:src="@drawable/ic_open_arrow"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_donate"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_donate"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_miscellaneous_improve_translations"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_donate" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_miscellaneous_improve_translations"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_improve_translations">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_improve_translations"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_improve_translations"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_miscellaneous_improve_translations"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_miscellaneous_improve_translations"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_improve_translations"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_improve_translations_arrow"
-                                app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_improve_translations"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_improve_translations"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_improve_translations_arrow"
-                                android:layout_width="@dimen/width_18dp"
-                                android:layout_height="@dimen/height_18dp"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:src="@drawable/ic_open_arrow"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_improve_translations"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_improve_translations"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_miscellaneous_rate_us"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_improve_translations" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_miscellaneous_rate_us"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_rate_us">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_rate_us"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_rate_us"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_miscellaneous_rate_us"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_miscellaneous_rate_us"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_rate_us"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_rate_us_arrow"
-                                app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_rate_us"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_rate_us"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_rate_us_arrow"
-                                android:layout_width="@dimen/width_18dp"
-                                android:layout_height="@dimen/height_18dp"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:src="@drawable/ic_open_arrow"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_rate_us"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_rate_us"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_miscellaneous_privacy_policy"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            android:visibility="gone"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_rate_us" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_miscellaneous_privacy_policy"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingVertical="@dimen/padding_12dp"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_privacy_policy">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_privacy_policy"
-                                android:layout_width="@dimen/width_26dp"
-                                android:layout_height="@dimen/height_26dp"
-                                android:layout_marginStart="@dimen/margin_12dp"
-                                android:background="@color/navyBlue10"
-                                android:src="@drawable/ic_settings_privacy_policy"
-                                app:contentPadding="@dimen/padding_4dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_miscellaneous_privacy_policy"
-                                android:layout_width="@dimen/width_0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/margin_12dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/localized_semi_bold"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="1"
-                                android:text="@string/settings_text_miscellaneous_privacy_policy"
-                                android:textAlignment="gravity"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_privacy_policy"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_privacy_policy_arrow"
-                                app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_privacy_policy"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_privacy_policy"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_miscellaneous_privacy_policy_arrow"
-                                android:layout_width="@dimen/width_18dp"
-                                android:layout_height="@dimen/height_18dp"
-                                android:layout_marginEnd="@dimen/margin_12dp"
-                                android:src="@drawable/ic_open_arrow"
-                                app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_privacy_policy"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_privacy_policy"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <View
-                            android:id="@+id/divider_miscellaneous_ad_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_1dp"
-                            android:background="@color/grayLight"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_privacy_policy" />
-
-                        <FrameLayout
-                            android:id="@+id/fl_miscellaneous_ad_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_ad_container" />
-
-                        <androidx.constraintlayout.widget.Group
-                            android:id="@+id/group_miscellaneous_ad_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
-
-                        <!--TODO REMOVE AFTER ADDING FUNCTIONALITIES-->
-                        <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_miscellaneous_rate_us,cl_miscellaneous_donate,cl_miscellaneous_rate_us" />
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_donate_arrow"
+                            android:layout_width="@dimen/width_18dp"
+                            android:layout_height="@dimen/height_18dp"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:src="@drawable/ic_open_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_donate"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_donate"
+                            app:layout_constraintVertical_bias="0.5" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                    <View
+                        android:id="@+id/divider_miscellaneous_improve_translations"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_donate" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_miscellaneous_improve_translations"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_improve_translations">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_improve_translations"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_improve_translations"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_miscellaneous_improve_translations"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_miscellaneous_improve_translations"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_improve_translations"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_improve_translations_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_improve_translations"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_improve_translations"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_improve_translations_arrow"
+                            android:layout_width="@dimen/width_18dp"
+                            android:layout_height="@dimen/height_18dp"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:src="@drawable/ic_open_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_improve_translations"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_improve_translations"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_miscellaneous_rate_us"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_improve_translations" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_miscellaneous_rate_us"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_rate_us">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_rate_us"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_rate_us"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_miscellaneous_rate_us"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_miscellaneous_rate_us"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_rate_us"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_rate_us_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_rate_us"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_rate_us"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_rate_us_arrow"
+                            android:layout_width="@dimen/width_18dp"
+                            android:layout_height="@dimen/height_18dp"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:src="@drawable/ic_open_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_rate_us"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_rate_us"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_miscellaneous_privacy_policy"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_rate_us" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_miscellaneous_privacy_policy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingVertical="@dimen/padding_12dp"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_privacy_policy">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_privacy_policy"
+                            android:layout_width="@dimen/width_26dp"
+                            android:layout_height="@dimen/height_26dp"
+                            android:layout_marginStart="@dimen/margin_12dp"
+                            android:background="@color/navyBlue10"
+                            android:src="@drawable/ic_settings_privacy_policy"
+                            app:contentPadding="@dimen/padding_4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_miscellaneous_privacy_policy"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_12dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/localized_semi_bold"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:text="@string/settings_text_miscellaneous_privacy_policy"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_privacy_policy"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_miscellaneous_privacy_policy_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/iv_miscellaneous_privacy_policy"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_privacy_policy"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_miscellaneous_privacy_policy_arrow"
+                            android:layout_width="@dimen/width_18dp"
+                            android:layout_height="@dimen/height_18dp"
+                            android:layout_marginEnd="@dimen/margin_12dp"
+                            android:src="@drawable/ic_open_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_miscellaneous_privacy_policy"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_miscellaneous_privacy_policy"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_miscellaneous_ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_1dp"
+                        android:background="@color/grayLight"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_privacy_policy" />
+
+                    <FrameLayout
+                        android:id="@+id/fl_miscellaneous_ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider_miscellaneous_ad_container" />
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/group_miscellaneous_ad_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
+
+                    <!--TODO REMOVE AFTER ADDING FUNCTIONALITIES-->
+                    <androidx.constraintlayout.widget.Group
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="divider_miscellaneous_rate_us,cl_miscellaneous_donate,cl_miscellaneous_rate_us" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
