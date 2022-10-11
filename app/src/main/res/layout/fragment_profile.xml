@@ -57,7 +57,7 @@
                         <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/lav_header"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/height_180dp"
+                            android:layout_height="@dimen/height_150dp"
                             android:layout_marginHorizontal="@dimen/margin_16dp"
                             android:layout_marginTop="@dimen/margin_24dp"
                             app:layout_constraintTop_toTopOf="parent"
@@ -119,9 +119,9 @@
                             app:layout_constraintTop_toTopOf="@+id/ti_layout_partner_id"
                             app:layout_constraintVertical_bias="0.5"
                             app:lottie_autoPlay="true"
-                            app:lottie_speed="0.2"
-                            app:lottie_loop="false"
-                            app:lottie_rawRes="@raw/anim_profile_saved" />
+                            app:lottie_rawRes="@raw/anim_profile_saved"
+                            app:lottie_repeatCount="0"
+                            app:lottie_speed="0.4" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_title_secret_key"
@@ -179,8 +179,9 @@
                             app:layout_constraintTop_toTopOf="@+id/ti_layout_secret_key"
                             app:layout_constraintVertical_bias="0.5"
                             app:lottie_autoPlay="true"
-                            app:lottie_loop="true"
-                            app:lottie_rawRes="@raw/anim_profile_saved" />
+                            app:lottie_rawRes="@raw/anim_profile_saved"
+                            app:lottie_repeatCount="0"
+                            app:lottie_speed="0.4" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -501,7 +502,7 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_16sp"
                                 app:layout_constraintBottom_toBottomOf="@+id/iv_links_notifications_pc"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_links_notifications_console_arrow"
+                                app:layout_constraintEnd_toStartOf="@+id/iv_links_notifications_pc_arrow"
                                 app:layout_constraintStart_toEndOf="@+id/iv_links_notifications_pc"
                                 app:layout_constraintTop_toTopOf="@+id/iv_links_notifications_pc"
                                 app:layout_constraintVertical_bias="0.5" />

@@ -35,6 +35,7 @@
     <dimen name="height_52dp">52dp</dimen>
     <dimen name="height_86dp">86dp</dimen>
     <dimen name="height_125dp">125dp</dimen>
+    <dimen name="height_150dp">150dp</dimen>
     <dimen name="height_180dp">180dp</dimen>
     <dimen name="height_250dp">250dp</dimen>
 
