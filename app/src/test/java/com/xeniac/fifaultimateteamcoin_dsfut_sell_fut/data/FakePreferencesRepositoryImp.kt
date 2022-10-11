@@ -6,6 +6,8 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     private var isOnBoardingCompleted = false
     private var currentAppTheme = 0
+    private var isNotificationSoundActive = true
+    private var isNotificationVibrateActive = true
     private var rateAppDialogChoice = 0
     private var previousRequestTimeInMillis = 0L
     private var storedPartnerId: String? = null
@@ -17,6 +19,10 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override suspend fun getCurrentAppTheme(): Int = currentAppTheme
 
+    override suspend fun isNotificationSoundActive(): Boolean = isNotificationSoundActive
+
+    override suspend fun isNotificationVibrateActive(): Boolean = isNotificationVibrateActive
+
     override suspend fun getRateAppDialogChoice(): Int = rateAppDialogChoice
 
     override suspend fun getPreviousRequestTimeInMillis(): Long = previousRequestTimeInMillis
@@ -25,12 +31,20 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override suspend fun getSecretKey(): String? = storedSecretKey
 
-    override suspend fun isOnBoardingCompleted(value: Boolean) {
-        isOnBoardingCompleted = value
+    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
+        isOnBoardingCompleted = isCompleted
     }
 
     override suspend fun setCurrentAppTheme(index: Int) {
         currentAppTheme = index
+    }
+
+    override suspend fun isNotificationSoundActive(isActive: Boolean) {
+        isNotificationSoundActive = isActive
+    }
+
+    override suspend fun isNotificationVibrateActive(isActive: Boolean) {
+        isNotificationVibrateActive = isActive
     }
 
     override suspend fun setRateAppDialogChoice(value: Int) {
