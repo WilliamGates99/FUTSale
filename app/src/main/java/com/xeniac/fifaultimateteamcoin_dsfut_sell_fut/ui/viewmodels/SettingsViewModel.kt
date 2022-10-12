@@ -152,37 +152,37 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun safeChangeCurrentLocale(index: Int) {
-        var newLayoutDirection = 0
+        var isActivityRestartNeeded = false
 
         when (index) {
             0 -> {
                 val defaultLocale = LocaleListCompat.getAdjustedDefault()[0]
-                defaultLocale?.layoutDirection?.let {
-                    newLayoutDirection = it
-                }
+                val newLayoutDirection = defaultLocale?.layoutDirection ?: -1
+                isActivityRestartNeeded = isActivityRestartNeeded(newLayoutDirection)
                 AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
             }
             1 -> {
-                newLayoutDirection = LayoutDirection.LTR
+                isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.LTR)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_UNITED_STATES)
                 )
             }
             2 -> {
-                newLayoutDirection = LayoutDirection.LTR
+                isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.LTR)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_GREAT_BRITAIN)
                 )
             }
             3 -> {
-                newLayoutDirection = LayoutDirection.RTL
+                isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.RTL)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_PERSIAN_IRAN)
                 )
             }
         }
 
-        _changeCurrentLocaleLiveData.postValue(Event(isActivityRestartNeeded(newLayoutDirection)))
+        _changeCurrentLocaleLiveData.postValue(Event(isActivityRestartNeeded))
+        Timber.i("isActivityRestartNeeded = $isActivityRestartNeeded}")
         Timber.i("App locale index changed to $index")
     }
 
