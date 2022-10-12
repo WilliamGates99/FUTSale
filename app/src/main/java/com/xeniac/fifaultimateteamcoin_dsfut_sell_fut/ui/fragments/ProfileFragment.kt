@@ -149,7 +149,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         viewModel.partnerIdLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { partnerId ->
                 binding.partnerId = partnerId
-                playPartnerIdAnimationSaved()
             }
         }
 
@@ -159,7 +158,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         viewModel.secretKeyLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { secretKey ->
                 binding.secretKey = secretKey
-                playSecretKeyAnimationSaved()
             }
         }
 
