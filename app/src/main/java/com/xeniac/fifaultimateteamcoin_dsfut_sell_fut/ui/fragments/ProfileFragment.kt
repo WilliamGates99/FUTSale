@@ -167,7 +167,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         var job: Job? = null
 
         binding.tiEditPartnerId.addTextChangedListener { newPartnerId ->
+            playPartnerIdAnimationTyping()
             job?.cancel()
+
             job = MainScope().launch {
                 delay(DELAY_TIME_PARTNER_ID)
                 viewModel.updatePartnerId(newPartnerId)
@@ -198,7 +200,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         var job: Job? = null
 
         binding.tiEditSecretKey.addTextChangedListener { newSecretKey ->
+            playSecretKeyAnimationTyping()
             job?.cancel()
+
             job = MainScope().launch {
                 delay(DELAY_TIME_SECRET_KEY)
                 viewModel.updateSecretKey(newSecretKey)
