@@ -1,7 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -132,16 +131,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun changeCurrentLocaleObserver() =
         viewModel.changeCurrentLocaleLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { newLocaleIndex ->
-                if (Build.VERSION.SDK_INT >= 33) {
-                    viewModel.getCurrentLanguage()
-                } else {
-                    if (currentLocaleIndex != newLocaleIndex) {
-                        requireActivity().apply {
-                            startActivity(Intent(this, MainActivity::class.java))
-                            finish()
-                        }
+            responseEvent.getContentIfNotHandled()?.let { isActivityRestartNeeded ->
+                if (isActivityRestartNeeded) {
+                    requireActivity().apply {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
                     }
+                } else {
+                    viewModel.getCurrentLanguage()
                 }
             }
         }
