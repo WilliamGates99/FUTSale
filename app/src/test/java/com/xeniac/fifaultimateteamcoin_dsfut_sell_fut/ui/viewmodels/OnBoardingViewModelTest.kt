@@ -44,7 +44,7 @@ class OnBoardingViewModelTest {
     fun validateFourthScreenInputsWithBlankInputs_returnsError() {
         testViewModel.validateFourthScreenInputs("", "")
 
-        val responseEvent = testViewModel.onBoardingLiveData.getOrAwaitValue()
+        val responseEvent = testViewModel.completeOnBoardingLiveData.getOrAwaitValue()
         assertThat(responseEvent.getContentIfNotHandled()?.status).isEqualTo(Status.ERROR)
     }
 
@@ -52,7 +52,7 @@ class OnBoardingViewModelTest {
     fun validateFourthScreenInputsWithValidInputs_returnsSuccess() {
         testViewModel.validateFourthScreenInputs("123", "abc")
 
-        val responseEvent = testViewModel.onBoardingLiveData.getOrAwaitValue()
+        val responseEvent = testViewModel.completeOnBoardingLiveData.getOrAwaitValue()
         assertThat(responseEvent.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
     }
 
