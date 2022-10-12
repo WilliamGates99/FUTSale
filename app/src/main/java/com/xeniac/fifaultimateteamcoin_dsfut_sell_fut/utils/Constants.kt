@@ -3,6 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 object Constants {
     // Web URLs TODO CHANGE URLS
     const val URL_DSFUT = "https://dsfut.net"
+    const val URL_DSFUT_WALLET = "https://dsfut.net/wallet"
+    const val URL_DSFUT_PLAYERS = "https://dsfut.net/players"
+    const val URL_DSFUT_STATISTICS = "https://dsfut.net/stats"
+    const val URL_DSFUT_NOTIFICATIONS_CONSOLE = "https://t.me/dsfut_ps"
+    const val URL_DSFUT_NOTIFICATIONS_PC = "https://t.me/dsfutnet_pc"
     const val URL_PRIVACY_POLICY = "https://xeniacdev.github.io/WarrantyRoster/privacy_policy"
     const val URL_DONATE = "https://xeniacdev.github.io/WarrantyRoster/donate"
     const val URL_CROWDIN = "https://crowdin.com/project/warranty-roster"
@@ -24,22 +29,27 @@ object Constants {
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
     const val LOCALE_PERSIAN_IRAN = "fa-IR"
 
+    // Lottie Animation Speeds
+    const val ANIM_SPEED_PROFILE_SAVED = 0.4F
+    const val ANIM_SPEED_PROFILE_TYPING = 1F
+
+    // Delay Times
+    const val DELAY_TIME_PARTNER_ID = 1000L
+    const val DELAY_TIME_SECRET_KEY = 1000L
+
     // OnBoarding Input Errors
     const val ERROR_INPUT_BLANK_PARTNER_ID = "Partner ID is blank"
     const val ERROR_INPUT_BLANK_SECRET_KEY = "Secret Key is blank"
-//    const val ERROR_INPUT_BLANK_NEW_PASSWORD = "New Password is blank"
-//    const val ERROR_INPUT_BLANK_RETYPE_PASSWORD = "Retype Password is blank"
-//    const val ERROR_INPUT_EMAIL_INVALID = "Invalid email"
-//    const val ERROR_INPUT_EMAIL_SAME = "New Email is the same as current email"
-//    const val ERROR_INPUT_PASSWORD_SHORT = "Password is too short"
-//    const val ERROR_INPUT_PASSWORD_NOT_MATCH = "Password and Retype Password do not match"
 
-//    // Response Errors
+    // Response Errors
 //    const val ERROR_NETWORK_CONNECTION =
 //        "A network error (such as timeout, interrupted connection or unreachable host) has occurred"
-//    const val ERROR_EMPTY_SEARCH_RESULT_LIST = "Search result list is empty"
 
-    // Login Fragment SaveInstanceState Keys
+    // OnBoarding Fragment SaveInstanceState Keys
     const val SAVE_INSTANCE_ONBOARDING_PARTNER_ID = "save_instance_onboarding_partner_id"
     const val SAVE_INSTANCE_ONBOARDING_SECRET_KEY = "save_instance_onboarding_secret_key"
+
+    // Profile Fragment SaveInstanceState Keys
+    const val SAVE_INSTANCE_PROFILE_PARTNER_ID = "save_instance_profile_partner_id"
+    const val SAVE_INSTANCE_PROFILE_SECRET_KEY = "save_instance_profile_secret_key"
 }
