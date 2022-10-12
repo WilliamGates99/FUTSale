@@ -9,15 +9,22 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 object SnackbarHelper {
 
-    fun showSomethingWentWrongError(context: Context, view: View): Snackbar = Snackbar.make(
-        view,
-        context.getString(R.string.error_something_went_wrong),
-        LENGTH_LONG
-    ).apply {
-        show()
-    }
+    fun normalErrorSnackbar(view: View, message: String): Snackbar = Snackbar.make(
+        view, message, LENGTH_LONG
+    )
 
-    fun showNetworkConnectionError(
+    fun actionErrorSnackbar(
+        view: View,
+        message: String,
+        actionBtn: String,
+        action: () -> Unit
+    ): Snackbar = Snackbar.make(
+        view,
+        message,
+        LENGTH_INDEFINITE
+    ).setAction(actionBtn) { action() }
+
+    fun networkConnectionErrorSnackbar(
         context: Context,
         view: View,
         action: () -> Unit
@@ -25,24 +32,13 @@ object SnackbarHelper {
         view,
         context.getString(R.string.error_network_connection),
         LENGTH_INDEFINITE
-    ).apply {
-        setAction(context.getString(R.string.error_btn_retry)) {
-            action()
-        }
-        show()
-    }
+    ).setAction(context.getString(R.string.error_btn_retry)) { action() }
 
-    fun showNetworkFailureError(context: Context, view: View): Snackbar = Snackbar.make(
-        view,
-        context.getString(R.string.error_network_failure),
-        LENGTH_LONG
-    ).apply {
-        show()
+    fun showIntentAppNotFoundError(context: Context, view: View) {
+        Snackbar.make(
+            view,
+            context.getString(R.string.error_intent_app_not_found),
+            LENGTH_LONG
+        ).show()
     }
-
-    fun showIntentAppNotFoundError(context: Context, view: View) = Snackbar.make(
-        view,
-        context.getString(R.string.error_intent_app_not_found),
-        LENGTH_LONG
-    ).show()
 }

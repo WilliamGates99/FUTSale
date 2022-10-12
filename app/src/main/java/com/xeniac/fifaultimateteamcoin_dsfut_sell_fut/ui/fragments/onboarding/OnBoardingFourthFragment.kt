@@ -23,7 +23,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTA
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Status
 
 class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
@@ -150,7 +150,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
     }
 
     private fun onBoardingObserver() =
-        viewModel.onBoardingLiveData.observe(viewLifecycleOwner) { responseEvent ->
+        viewModel.completeOnBoardingLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
                 when (response.status) {
                     Status.LOADING -> showLoadingAnimation()
@@ -160,27 +160,31 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                     }
                     Status.ERROR -> {
                         hideLoadingAnimation()
-                        response.message?.let {
-                            when {
-                                it.contains(ERROR_INPUT_BLANK_PARTNER_ID) -> {
-                                    binding.tiLayoutPartnerId.error =
-                                        requireContext().getString(R.string.onboarding_fourth_error_blank_partner_id)
-                                    binding.tiLayoutPartnerId.requestFocus()
-                                    binding.tiLayoutPartnerId.boxStrokeColor =
-                                        ContextCompat.getColor(requireContext(), R.color.red)
-                                }
-                                it.contains(ERROR_INPUT_BLANK_SECRET_KEY) -> {
-                                    binding.tiLayoutSecretKey.error =
-                                        requireContext().getString(R.string.onboarding_fourth_error_blank_secret_key)
-                                    binding.tiLayoutSecretKey.requestFocus()
-                                    binding.tiLayoutSecretKey.boxStrokeColor =
-                                        ContextCompat.getColor(requireContext(), R.color.red)
-                                }
-                                else -> {
-                                    snackbar = showSomethingWentWrongError(
-                                        requireContext(),
-                                        requireView()
-                                    )
+                        response.message?.let { message ->
+                            message.asString(requireContext()).let {
+                                when {
+                                    it.contains(ERROR_INPUT_BLANK_PARTNER_ID) -> {
+                                        binding.apply {
+                                            tiLayoutPartnerId.error = requireContext()
+                                                .getString(R.string.onboarding_fourth_error_blank_partner_id)
+                                            tiLayoutPartnerId.requestFocus()
+                                            tiLayoutPartnerId.boxStrokeColor = ContextCompat
+                                                .getColor(requireContext(), R.color.red)
+                                        }
+                                    }
+                                    it.contains(ERROR_INPUT_BLANK_SECRET_KEY) -> {
+                                        binding.apply {
+                                            tiLayoutSecretKey.error = requireContext()
+                                                .getString(R.string.onboarding_fourth_error_blank_secret_key)
+                                            tiLayoutSecretKey.requestFocus()
+                                            tiLayoutSecretKey.boxStrokeColor = ContextCompat
+                                                .getColor(requireContext(), R.color.red)
+                                        }
+                                    }
+                                    else -> {
+                                        snackbar = normalErrorSnackbar(requireView(), it)
+                                        snackbar?.show()
+                                    }
                                 }
                             }
                         }

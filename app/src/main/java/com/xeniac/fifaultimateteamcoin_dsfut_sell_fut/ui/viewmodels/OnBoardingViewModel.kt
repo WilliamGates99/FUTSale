@@ -9,6 +9,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPU
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPUT_BLANK_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,8 +24,9 @@ class OnBoardingViewModel @Inject constructor(
     private val _isOnBoardingCompletedLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isOnBoardingCompletedLiveData: LiveData<Boolean> = _isOnBoardingCompletedLiveData
 
-    private val _onBoardingLiveData: MutableLiveData<Event<Resource<Nothing>>> = MutableLiveData()
-    val onBoardingLiveData: LiveData<Event<Resource<Nothing>>> = _onBoardingLiveData
+    private val _completeOnBoardingLiveData:
+            MutableLiveData<Event<Resource<Nothing>>> = MutableLiveData()
+    val completeOnBoardingLiveData: LiveData<Event<Resource<Nothing>>> = _completeOnBoardingLiveData
 
     fun getIsOnBoardingCompleted() = viewModelScope.launch(Dispatchers.IO) {
         safeGetIsOnBoardingCompleted()
@@ -36,19 +38,23 @@ class OnBoardingViewModel @Inject constructor(
             _isOnBoardingCompletedLiveData.postValue(isOnBoardingCompleted)
             Timber.i("isOnBoardingCompleted = $isOnBoardingCompleted")
         } catch (e: Exception) {
+            _isOnBoardingCompletedLiveData.postValue(false)
             Timber.e("safeGetIsOnBoardingCompleted Exception: ${e.message}")
-            _onBoardingLiveData.postValue(Event(Resource.error(e.message.toString())))
         }
     }
 
     fun validateFourthScreenInputs(partnerId: String, secretKey: String) {
         if (partnerId.isBlank()) {
-            _onBoardingLiveData.postValue(Event(Resource.error(ERROR_INPUT_BLANK_PARTNER_ID)))
+            _completeOnBoardingLiveData.postValue(
+                Event(Resource.error(UiText.DynamicString(ERROR_INPUT_BLANK_PARTNER_ID)))
+            )
             return
         }
 
         if (secretKey.isBlank()) {
-            _onBoardingLiveData.postValue(Event(Resource.error(ERROR_INPUT_BLANK_SECRET_KEY)))
+            _completeOnBoardingLiveData.postValue(
+                Event(Resource.error(UiText.DynamicString(ERROR_INPUT_BLANK_SECRET_KEY)))
+            )
             return
         }
 
@@ -60,16 +66,17 @@ class OnBoardingViewModel @Inject constructor(
     }
 
     private suspend fun safeCompleteOnBoarding(partnerId: String, secretKey: String) {
-        _onBoardingLiveData.postValue(Event(Resource.loading()))
+        _completeOnBoardingLiveData.postValue(Event(Resource.loading()))
         try {
             preferencesRepository.setPartnerId(partnerId)
             preferencesRepository.setSecretKey(secretKey)
             preferencesRepository.isOnBoardingCompleted(true)
-            _onBoardingLiveData.postValue(Event(Resource.success(null)))
-            Timber.i("DSFUT data saved successfully.")
+            _completeOnBoardingLiveData.postValue(Event(Resource.success()))
+            Timber.i("Profile data saved successfully.")
         } catch (e: Exception) {
-            Timber.e("safeCompleteOnBoarding Exception: ${e.message}")
-            _onBoardingLiveData.postValue(Event(Resource.error(e.message.toString())))
+            val message = UiText.DynamicString(e.message.toString())
+            _completeOnBoardingLiveData.postValue(Event(Resource.error(message)))
+            Timber.e("safeCompleteOnBoarding Exception: ${message.value}")
         }
     }
 }
