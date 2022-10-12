@@ -168,22 +168,32 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun setPartnerId(partnerId: String) {
+    override suspend fun setPartnerId(partnerId: String?) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.PARTNER_ID] = partnerId
-                Timber.i("PartnerId edited to $partnerId")
+                if (partnerId.isNullOrBlank()) {
+                    it.remove(PreferencesKeys.PARTNER_ID)
+                    Timber.i("PartnerId removed")
+                } else {
+                    it[PreferencesKeys.PARTNER_ID] = partnerId
+                    Timber.i("PartnerId edited to $partnerId")
+                }
             }
         } catch (e: Exception) {
             Timber.e("setPartnerId Exception: $e")
         }
     }
 
-    override suspend fun setSecretKey(secretKey: String) {
+    override suspend fun setSecretKey(secretKey: String?) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.SECRET_KEY] = secretKey
-                Timber.i("Secret Key edited to $secretKey")
+                if (secretKey.isNullOrBlank()) {
+                    it.remove(PreferencesKeys.SECRET_KEY)
+                    Timber.i("SecretKey removed")
+                } else {
+                    it[PreferencesKeys.SECRET_KEY] = secretKey
+                    Timber.i("SecretKey edited to $secretKey")
+                }
             }
         } catch (e: Exception) {
             Timber.e("setSecretKey Exception: $e")

@@ -32,7 +32,7 @@ interface PreferencesRepository {
 
     suspend fun setPreviousRequestTimeInMillis(timeInMillis: Long)
 
-    suspend fun setPartnerId(partnerId: String)
+    suspend fun setPartnerId(partnerId: String?)
 
-    suspend fun setSecretKey(secretKey: String)
+    suspend fun setSecretKey(secretKey: String?)
 }

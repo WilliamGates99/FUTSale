@@ -55,11 +55,11 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
         previousRequestTimeInMillis = timeInMillis
     }
 
-    override suspend fun setPartnerId(partnerId: String) {
+    override suspend fun setPartnerId(partnerId: String?) {
         storedPartnerId = partnerId
     }
 
-    override suspend fun setSecretKey(secretKey: String) {
+    override suspend fun setSecretKey(secretKey: String?) {
         storedSecretKey = secretKey
     }
 }
