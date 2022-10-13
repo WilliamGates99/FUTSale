@@ -184,7 +184,7 @@
 
     <style name="Theme.FifaUltimateTeamCoin.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="titleTextAppearance">@style/Theme.FifaUltimateTeamCoin.Toolbar.Title</item>
-        <item name="android:background">@drawable/shape_rounded_toolbar</item>
+        <item name="android:background">@drawable/shape_rounded_bottom_12dp</item>
         <item name="android:elevation">@dimen/elevation_3dp</item>
         <item name="titleCentered">true</item>
         <item name="contentInsetEnd">@dimen/content_inset_12dp</item>
