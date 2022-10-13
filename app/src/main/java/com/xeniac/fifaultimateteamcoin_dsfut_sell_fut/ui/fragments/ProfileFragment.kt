@@ -170,7 +170,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
             job = MainScope().launch {
                 delay(DELAY_TIME_PARTNER_ID)
-                viewModel.updatePartnerId(newPartnerId)
+                viewModel.updatePartnerId(newPartnerId?.toString()?.trim())
             }
         }
     }
@@ -203,7 +203,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
             job = MainScope().launch {
                 delay(DELAY_TIME_SECRET_KEY)
-                viewModel.updateSecretKey(newSecretKey)
+                viewModel.updateSecretKey(newSecretKey?.toString()?.trim())
             }
         }
     }

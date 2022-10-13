@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
-import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -55,21 +54,15 @@ class ProfileViewModel @Inject constructor(
         Timber.i("Secret key is $secretKey")
     }
 
-    fun updatePartnerId(newPartnerId: Editable?) = viewModelScope.launch {
+    fun updatePartnerId(newPartnerId: String?) = viewModelScope.launch {
         safeUpdatePartnerId(newPartnerId)
     }
 
-    private suspend fun safeUpdatePartnerId(newPartnerId: Editable?) {
+    private suspend fun safeUpdatePartnerId(newPartnerId: String?) {
         _updatePartnerIdLiveData.postValue(Event(Resource.loading()))
         try {
-            if (newPartnerId.isNullOrBlank()) {
-                preferencesRepository.setPartnerId(null)
-                _updatePartnerIdLiveData.postValue(Event(Resource.success()))
-            } else {
-                val updatedPartnerId = newPartnerId.toString().trim()
-                preferencesRepository.setPartnerId(updatedPartnerId)
-                _updatePartnerIdLiveData.postValue(Event(Resource.success()))
-            }
+            preferencesRepository.setPartnerId(newPartnerId)
+            _updatePartnerIdLiveData.postValue(Event(Resource.success()))
             Timber.i("PartnerId updated successfully.")
         } catch (e: Exception) {
             val message = UiText.StringResource(R.string.error_something_went_wrong)
@@ -78,21 +71,15 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateSecretKey(newSecretKey: Editable?) = viewModelScope.launch {
+    fun updateSecretKey(newSecretKey: String?) = viewModelScope.launch {
         safeUpdateSecretKey(newSecretKey)
     }
 
-    private suspend fun safeUpdateSecretKey(newSecretKey: Editable?) {
+    private suspend fun safeUpdateSecretKey(newSecretKey: String?) {
         _updateSecretKeyLiveData.postValue(Event(Resource.loading()))
         try {
-            if (newSecretKey.isNullOrBlank()) {
-                preferencesRepository.setSecretKey(null)
-                _updateSecretKeyLiveData.postValue(Event(Resource.success()))
-            } else {
-                val updatedSecretKey = newSecretKey.toString().trim()
-                preferencesRepository.setSecretKey(updatedSecretKey)
-                _updateSecretKeyLiveData.postValue(Event(Resource.success()))
-            }
+            preferencesRepository.setSecretKey(newSecretKey)
+            _updateSecretKeyLiveData.postValue(Event(Resource.success()))
             Timber.i("SecretKey updated successfully.")
         } catch (e: Exception) {
             val message = UiText.StringResource(R.string.error_something_went_wrong)

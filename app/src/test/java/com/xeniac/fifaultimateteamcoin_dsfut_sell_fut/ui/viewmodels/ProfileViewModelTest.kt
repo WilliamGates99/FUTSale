@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
-import android.text.Editable
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
@@ -11,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
 class ProfileViewModelTest {
@@ -51,9 +49,7 @@ class ProfileViewModelTest {
 
     @Test
     fun updatePartnerId_returnsSuccess() {
-        val editableFactory = mock(Editable.Factory::class.java)
-        val newPartnerId = editableFactory.newEditable("123")
-        testViewModel.updatePartnerId(newPartnerId)
+        testViewModel.updatePartnerId("123")
 
         val responseEvent = testViewModel.updatePartnerIdLiveData.getOrAwaitValue()
 
@@ -62,12 +58,32 @@ class ProfileViewModelTest {
 
     @Test
     fun updateSecretKey_returnsSuccess() {
-        val editableFactory = mock(Editable.Factory::class.java)
-        val newSecretKey = editableFactory.newEditable("abc123")
-        testViewModel.updateSecretKey(newSecretKey)
+        testViewModel.updateSecretKey("abc123")
 
         val responseEvent = testViewModel.updateSecretKeyLiveData.getOrAwaitValue()
 
         assertThat(responseEvent.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
+    }
+
+    @Test
+    fun updatePartnerId_returnsSavedPartnerId() {
+        val newPartnerId = "123"
+        testViewModel.updatePartnerId(newPartnerId)
+        testViewModel.getPartnerId()
+
+        val responseEvent = testViewModel.partnerIdLiveData.getOrAwaitValue()
+
+        assertThat(responseEvent.getContentIfNotHandled()).isEqualTo(newPartnerId)
+    }
+
+    @Test
+    fun updateSecretKey_returnsSavedSecretKey() {
+        val newSecretKey = "abc123"
+        testViewModel.updateSecretKey(newSecretKey)
+        testViewModel.getSecretKey()
+
+        val responseEvent = testViewModel.secretKeyLiveData.getOrAwaitValue()
+
+        assertThat(responseEvent.getContentIfNotHandled()).isEqualTo(newSecretKey)
     }
 }
