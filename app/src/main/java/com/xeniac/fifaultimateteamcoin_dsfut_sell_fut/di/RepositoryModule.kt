@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.MainRepositoryImp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.DsfutRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.PreferencesRepositoryImp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.MainRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import dagger.Binds
 import dagger.Module
@@ -16,9 +16,9 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindMainRepository(
-        mainRepositoryImp: MainRepositoryImp
-    ): MainRepository
+    abstract fun bindDsfutRepository(
+        dsfutRepositoryImp: DsfutRepositoryImp
+    ): DsfutRepository
 
     @Binds
     @Singleton
