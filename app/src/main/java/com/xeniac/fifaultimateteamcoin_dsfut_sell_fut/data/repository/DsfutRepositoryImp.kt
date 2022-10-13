@@ -5,10 +5,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRep
 import javax.inject.Inject
 
 class DsfutRepositoryImp @Inject constructor(
-    private val dsfutApi: Lazy<DsfutApi>
+    private val dsfutApi: DsfutApi
 ) : DsfutRepository {
 
     override suspend fun pickUpPlayer(
         feedUrl: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
-    ) = dsfutApi.value.pickUpPlayer(feedUrl, minPrice, maxPrice, takeAfter)
+    ) = dsfutApi.pickUpPlayer(feedUrl, minPrice, maxPrice, takeAfter)
 }
