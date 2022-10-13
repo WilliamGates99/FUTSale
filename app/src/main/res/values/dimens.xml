@@ -35,7 +35,6 @@
     <dimen name="height_52dp">52dp</dimen>
     <dimen name="height_86dp">86dp</dimen>
     <dimen name="height_125dp">125dp</dimen>
-    <dimen name="height_150dp">150dp</dimen>
     <dimen name="height_180dp">180dp</dimen>
     <dimen name="height_250dp">250dp</dimen>
 
@@ -89,14 +88,22 @@
     <dimen name="radius_4dp">4dp</dimen>
     <dimen name="radius_8dp">8dp</dimen>
     <dimen name="radius_12dp">12dp</dimen>
+    <dimen name="radius_16dp">16dp</dimen>
     <dimen name="radius_20dp">20dp</dimen>
     <dimen name="radius_40dp">40dp</dimen>
     <dimen name="radius_50percent">50%</dimen>
 
-    <!--Miscellaneous-->
+    <!--Min Width & Height-->
     <dimen name="min_width_0dp">0dp</dimen>
     <dimen name="min_height_0dp">0dp</dimen>
+
+    <!--Max Width & Height-->
+    <dimen name="max_width_200dp">200dp</dimen>
     <dimen name="max_width_1000dp">1000dp</dimen>
+    <dimen name="max_height_150dp">150dp</dimen>
+    <dimen name="max_height_200dp">200dp</dimen>
+
+    <!--Miscellaneous-->
     <dimen name="content_inset_0dp">0dp</dimen>
     <dimen name="content_inset_8dp">8dp</dimen>
     <dimen name="content_inset_12dp">12dp</dimen>
