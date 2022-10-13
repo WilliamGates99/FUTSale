@@ -6,7 +6,7 @@ import androidx.core.os.LocaleListCompat
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.FakePreferencesRepositoryImp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi

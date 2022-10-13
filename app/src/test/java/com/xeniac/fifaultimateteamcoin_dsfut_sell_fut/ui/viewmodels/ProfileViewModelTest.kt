@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.FakePreferencesRepositoryImp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Status
 import kotlinx.coroutines.ExperimentalCoroutinesApi
