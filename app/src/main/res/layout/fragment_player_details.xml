@@ -10,8 +10,12 @@
             type="String" />
 
         <variable
+            name="title"
+            type="String" />
+
+        <variable
             name="rating"
-            type="Integer" />
+            type="String" />
 
         <variable
             name="position"
@@ -19,11 +23,11 @@
 
         <variable
             name="priceStart"
-            type="Integer" />
+            type="String" />
 
         <variable
             name="priceNow"
-            type="Integer" />
+            type="String" />
 
     </data>
 
@@ -110,6 +114,7 @@
                     android:fontFamily="@font/localized_extra_bold"
                     android:gravity="center"
                     android:maxLines="2"
+                    android:text="@{title}"
                     android:textAlignment="gravity"
                     android:textColor="@color/green"
                     android:textSize="@dimen/text_size_16sp"

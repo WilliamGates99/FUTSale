@@ -52,12 +52,11 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     }
 
     private fun setPlayerDetails(player: Player) = binding.apply {
-        tvTitle.text = requireContext().getString(R.string.player_details_text_title, player.name)
-
-        rating = player.rating
+        title = requireContext().getString(R.string.player_details_text_title, player.name)
+        rating = player.rating.toString()
         position = player.position
-        priceStart = player.startPrice
-        priceNow = player.buyNowPrice
+        priceStart = player.startPrice.toString()
+        priceNow = player.buyNowPrice.toString()
     }
 
     private fun subscribeToObservers() {
