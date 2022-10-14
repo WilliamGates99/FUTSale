@@ -54,10 +54,10 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     private fun setPlayerDetails(player: Player) = binding.apply {
         tvTitle.text = requireContext().getString(R.string.player_details_text_title, player.name)
 
-        tvRating.text = player.rating.toString()
-        tvPosition.text = player.position
-        tvPriceStart.text = player.startPrice.toString()
-        tvPriceNow.text = player.buyNowPrice.toString()
+        rating = player.rating
+        position = player.position
+        priceStart = player.startPrice
+        priceNow = player.buyNowPrice
     }
 
     private fun subscribeToObservers() {
@@ -69,7 +69,7 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
             responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
                 val minutes = decimalFormat.format(millisUntilFinished / 60000)
                 val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
-                binding.tvTimer.text = requireContext().getString(
+                binding.time = requireContext().getString(
                     R.string.player_details_text_timer, minutes, seconds
                 )
             }
