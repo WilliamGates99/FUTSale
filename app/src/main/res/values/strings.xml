@@ -75,6 +75,7 @@
     <string name="profile_text_links_notifications_pc">PC Players Notifications</string>
 
     <string name="player_details_text_title">%s was picked up successfully.</string>
+    <string name="player_details_text_timer">%1$s:%2$s</string>
     <string name="player_details_title_rating">Rating</string>
     <string name="player_details_title_position">Position</string>
     <string name="player_details_title_price_start">Start Price</string>

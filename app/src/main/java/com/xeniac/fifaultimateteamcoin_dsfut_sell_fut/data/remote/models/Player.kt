@@ -1,5 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Player(
     val assetID: Int,
     val buyNowPrice: Int,
@@ -11,4 +15,4 @@ data class Player(
     val startPrice: Int,
     val tradeID: Long,
     val transactionID: Int
-)
+) : Parcelable
