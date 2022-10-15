@@ -4,6 +4,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="shouldShowPlayerCard"
+            type="Boolean" />
+
         <variable
             name="time"
             type="String" />
@@ -64,7 +70,7 @@
                     android:layout_marginTop="@dimen/margin_negative16dp"
                     android:background="@drawable/shape_rounded_latest_player"
                     android:elevation="@dimen/elevation_8dp"
-                    android:visibility="visible">
+                    android:visibility="@{shouldShowPlayerCard ? View.VISIBLE : View.GONE}">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_player_rating_position"
