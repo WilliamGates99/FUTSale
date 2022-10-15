@@ -70,7 +70,7 @@
                     android:layout_marginTop="@dimen/margin_negative16dp"
                     android:background="@drawable/shape_rounded_latest_player"
                     android:elevation="@dimen/elevation_8dp"
-                    android:visibility="@{shouldShowPlayerCard ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{shouldShowPlayerCard ? View.VISIBLE : View.GONE, default=gone}">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_player_rating_position"
