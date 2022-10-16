@@ -132,9 +132,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
 
     private fun autoPickUpOnClick() = binding.btnPickAuto.setOnClickListener {
         if (isAutoPickActive) {
-            getAutoPickUpInputs()
-        } else {
             cancelAutoPickUp()
+        } else {
+            getAutoPickUpInputs()
         }
     }
 
@@ -152,6 +152,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         val maxPriceInput = tiEditPriceMax.text?.toString()
         val takeAfterInput = tiEditTakeAfter.text?.toString()
 
+        isAutoPickActive = true
         viewModel.validateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
     }
 
@@ -167,15 +168,21 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                         }
                     }
                     Status.ERROR -> {
-                        hideAutoPickLoadingAnimation()
                         response.message?.let {
                             when (it.asString(requireContext())) {
                                 requireContext().getString(R.string.pick_up_error_dsfut_empty) -> {
-                                    isAutoPickActive = true
-                                    Timber.i("Auto pick player spam goes brrrrrrr…")
-                                    getAutoPickUpInputs()
+                                    when (isAutoPickActive) {
+                                        true -> {
+                                            Timber.i("Auto pick player spam goes brrrrrrr…")
+                                            getAutoPickUpInputs()
+                                        }
+                                        else -> {
+                                            /* NO-OP */
+                                        }
+                                    }
                                 }
                                 else -> {
+                                    hideAutoPickLoadingAnimation()
                                     snackbar = normalErrorSnackbar(
                                         requireView(), it.asString(requireContext())
                                     )

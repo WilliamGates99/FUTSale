@@ -304,6 +304,7 @@ class PickUpViewModel @Inject constructor(
             _autoPickPlayerLiveData.postValue(
                 Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_canceled)))
             )
+            Timber.i("Auto pick player canceled.")
         } catch (e: Exception) {
             _autoPickPlayerLiveData.postValue(Event(Resource.error(UiText.DynamicString(e.message.toString()))))
             Timber.e("safeCancelAutoPickPlayer exception: ${e.message}")
