@@ -47,11 +47,20 @@
     <string name="pick_up_hint_take_after">4 Seconds</string>
     <string name="pick_up_helper_optional">Optional</string>
     <string name="pick_up_btn_pick_auto">Auto Pick Up</string>
+    <string name="pick_up_btn_pick_auto_cancel">Cancel</string>
     <string name="pick_up_btn_pick_once">Pick Once</string>
     <string name="pick_up_title_player_price_start">Start Price</string>
     <string name="pick_up_title_player_price_now">Buy Now Price</string>
     <string name="pick_up_text_player_rating_position" translatable="false">%1$s\n%2$s</string>
     <string name="pick_up_text_player_timer" translatable="false">%1$s:%2$s</string>
+    <string name="pick_up_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
+    <string name="pick_up_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_error_dsfut_block">You have been temporarily blocked due to picking up a player and not redeeming it.</string>
+    <string name="pick_up_error_dsfut_empty">There are no players available for redemption.</string>
+    <string name="pick_up_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
+    <string name="pick_up_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
+    <string name="pick_up_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
+    <string name="pick_up_error_dsfut_canceled">Auto pick player canceled.</string>
 
     <string name="profile_text_title">Profile</string>
     <string name="profile_title_partner_id">Partner ID</string>

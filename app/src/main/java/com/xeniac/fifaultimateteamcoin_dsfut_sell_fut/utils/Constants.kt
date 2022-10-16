@@ -23,11 +23,16 @@ object Constants {
     const val DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY = "previousRequestTimeInMillis"
     const val DATASTORE_PARTNER_ID_KEY = "partnerId"
     const val DATASTORE_SECRET_KEY_KEY = "secretKey"
+    const val DATASTORE_SELECTED_PLATFORM_KEY = "selectedPlatform"
 
     // App Locale Constants
     const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
     const val LOCALE_PERSIAN_IRAN = "fa-IR"
+
+    // Platform Constants
+    const val SELECTED_PLATFORM_CONSOLE = "cons"
+    const val SELECTED_PLATFORM_PC = "pc"
 
     // Lottie Animation Speeds
     const val ANIM_SPEED_PROFILE_SAVED = 0.4F
@@ -36,14 +41,20 @@ object Constants {
     // Delay Times
     const val DELAY_TIME_PARTNER_ID = 1000L
     const val DELAY_TIME_SECRET_KEY = 1000L
+    const val DELAY_TIME_AUTO_PICK_UP = 500L
 
-    // OnBoarding Input Errors
+    // Input Errors
     const val ERROR_INPUT_BLANK_PARTNER_ID = "Partner ID is blank"
     const val ERROR_INPUT_BLANK_SECRET_KEY = "Secret Key is blank"
 
     // Response Errors
-//    const val ERROR_NETWORK_CONNECTION =
-//        "A network error (such as timeout, interrupted connection or unreachable host) has occurred"
+    const val ERROR_NETWORK_CONNECTION =
+        "A network error (such as timeout, interrupted connection or unreachable host) has occurred"
+    const val ERROR_DSFUT_BLOCK = "block"
+    const val ERROR_DSFUT_EMPTY = "empty"
+    const val ERROR_DSFUT_LIMIT = "limit"
+    const val ERROR_DSFUT_MAINTENANCE = "maintenance"
+    const val ERROR_DSFUT_THROTTLE = "throttle"
 
     // OnBoarding Fragment SaveInstanceState Keys
     const val SAVE_INSTANCE_ONBOARDING_PARTNER_ID = "save_instance_onboarding_partner_id"
