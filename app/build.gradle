@@ -31,6 +31,7 @@ android {
         resConfigs "en_US", "en_GB", "fa_IR"
 
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
+        buildConfigField "String", "RETROFIT_FEED_URL", "\"${properties.getProperty("RETROFIT_FEED_URL")}\""
 //        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
 //        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
 //        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""

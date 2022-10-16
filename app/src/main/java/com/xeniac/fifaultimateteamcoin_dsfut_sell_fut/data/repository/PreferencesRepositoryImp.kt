@@ -10,7 +10,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_RATE_APP_DIALOG_CHOICE_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SECRET_KEY_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SELECTED_PLATFORM_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_THEME_KEY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -35,6 +37,7 @@ class PreferencesRepositoryImp @Inject constructor(
         )
         val PARTNER_ID = stringPreferencesKey(DATASTORE_PARTNER_ID_KEY)
         val SECRET_KEY = stringPreferencesKey(DATASTORE_SECRET_KEY_KEY)
+        val SELECTED_PLATFORM = stringPreferencesKey(DATASTORE_SELECTED_PLATFORM_KEY)
     }
 
     override fun getCurrentAppThemeSynchronously(): Int = runBlocking {
@@ -100,6 +103,14 @@ class PreferencesRepositoryImp @Inject constructor(
     } catch (e: Exception) {
         Timber.e("getSecretKey Exception: $e")
         null
+    }
+
+    override suspend fun getSelectedPlatform(): String = try {
+        settingsDataStore.data
+            .first()[PreferencesKeys.SELECTED_PLATFORM] ?: SELECTED_PLATFORM_CONSOLE
+    } catch (e: Exception) {
+        Timber.e("getSelectedPlatform Exception: $e")
+        SELECTED_PLATFORM_CONSOLE
     }
 
     override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
@@ -197,6 +208,17 @@ class PreferencesRepositoryImp @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e("setSecretKey Exception: $e")
+        }
+    }
+
+    override suspend fun setSelectedPlatform(platform: String) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.SELECTED_PLATFORM] = platform
+                Timber.i("SelectedPlatform edited to $platform")
+            }
+        } catch (e: Exception) {
+            Timber.e("setSelectedPlatform Exception: $e")
         }
     }
 }

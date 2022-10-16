@@ -20,6 +20,8 @@ interface PreferencesRepository {
 
     suspend fun getSecretKey(): String?
 
+    suspend fun getSelectedPlatform(): String
+
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 
     suspend fun setCurrentAppTheme(index: Int)
@@ -35,4 +37,6 @@ interface PreferencesRepository {
     suspend fun setPartnerId(partnerId: String?)
 
     suspend fun setSecretKey(secretKey: String?)
+
+    suspend fun setSelectedPlatform(platform: String)
 }

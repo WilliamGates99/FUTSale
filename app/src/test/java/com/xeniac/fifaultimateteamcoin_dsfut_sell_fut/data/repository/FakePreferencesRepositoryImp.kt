@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 
 class FakePreferencesRepositoryImp : PreferencesRepository {
 
@@ -12,6 +13,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
     private var previousRequestTimeInMillis = 0L
     private var storedPartnerId: String? = null
     private var storedSecretKey: String? = null
+    private var selectedPlatform = SELECTED_PLATFORM_CONSOLE
 
     override fun getCurrentAppThemeSynchronously(): Int = currentAppTheme
 
@@ -30,6 +32,8 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
     override suspend fun getPartnerId(): String? = storedPartnerId
 
     override suspend fun getSecretKey(): String? = storedSecretKey
+
+    override suspend fun getSelectedPlatform(): String = selectedPlatform
 
     override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
         isOnBoardingCompleted = isCompleted
@@ -61,5 +65,9 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override suspend fun setSecretKey(secretKey: String?) {
         storedSecretKey = secretKey
+    }
+
+    override suspend fun setSelectedPlatform(platform: String) {
+        selectedPlatform = platform
     }
 }

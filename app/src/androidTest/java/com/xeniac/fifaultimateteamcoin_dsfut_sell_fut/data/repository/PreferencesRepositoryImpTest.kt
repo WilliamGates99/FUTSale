@@ -13,6 +13,8 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_NAME_SETTINGS_TEST
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -63,6 +65,7 @@ class PreferencesRepositoryImpTest {
      * getPreviousRequestTimeInMillis -> 0L
      * getPartnerId -> null
      * getSecretKey -> null
+     * getSelectedPlatform -> SELECTED_PLATFORM_CONSOLE
      */
 
     @Test
@@ -86,6 +89,7 @@ class PreferencesRepositoryImpTest {
         val initialPreviousRequestTimeInMillis = testRepository.getPreviousRequestTimeInMillis()
         val initialPartnerId = testRepository.getPartnerId()
         val initialSecretKey = testRepository.getSecretKey()
+        val initialSelectedPlatform = testRepository.getSelectedPlatform()
 
         assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
@@ -95,6 +99,7 @@ class PreferencesRepositoryImpTest {
         assertThat(initialPreviousRequestTimeInMillis).isEqualTo(0L)
         assertThat(initialPartnerId).isNull()
         assertThat(initialSecretKey).isNull()
+        assertThat(initialSelectedPlatform).isEqualTo(SELECTED_PLATFORM_CONSOLE)
     }
 
     /**
@@ -107,6 +112,7 @@ class PreferencesRepositoryImpTest {
      * setPreviousRequestTimeInMillis
      * setPartnerId
      * setSecretKey
+     * setSelectedPlatform
      */
 
     @Test
@@ -192,5 +198,16 @@ class PreferencesRepositoryImpTest {
 
         val secretKey = testRepository.getSecretKey()
         assertThat(secretKey).isEqualTo(testValue)
+    }
+
+    @Test
+    fun writeSelectedPlatform() = testScope.runTest {
+        testDataStore.edit { it.clear() }
+
+        val testValue = SELECTED_PLATFORM_PC
+        testRepository.setSelectedPlatform(testValue)
+
+        val selectedPlatform = testRepository.getSelectedPlatform()
+        assertThat(selectedPlatform).isEqualTo(testValue)
     }
 }
