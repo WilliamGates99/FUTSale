@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.DsfutResponse
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_AUTO_PICK_UP
@@ -45,16 +44,17 @@ class PickUpViewModel @Inject constructor(
             MutableLiveData<Event<Resource<DsfutResponse>>> = MutableLiveData()
     val autoPickPlayerLiveData: LiveData<Event<Resource<DsfutResponse>>> = _autoPickPlayerLiveData
 
-    private val _isPlayerPickedUpLiveData: MutableLiveData<Event<Boolean>> = MutableLiveData()
-    val isPlayerPickedUpLiveData: LiveData<Event<Boolean>> = _isPlayerPickedUpLiveData
+//    private val _isPlayerPickedUpLiveData: MutableLiveData<Event<Boolean>> = MutableLiveData()
+//    val isPlayerPickedUpLiveData: LiveData<Event<Boolean>> = _isPlayerPickedUpLiveData
 
-    private val _pickedUpPlayerLiveData: MutableLiveData<Event<Player>> = MutableLiveData()
-    val pickedUpPlayerLiveData: LiveData<Event<Player>> = _pickedUpPlayerLiveData
+//    private val _pickedUpPlayerLiveData: MutableLiveData<Event<Player?>> = MutableLiveData()
+//    val pickedUpPlayerLiveData: LiveData<Event<Player?>> = _pickedUpPlayerLiveData
 
     private val _timerLiveData: MutableLiveData<Event<Long>> = MutableLiveData()
     val timerLiveData: LiveData<Event<Long>> = _timerLiveData
 
-    var timerInMillis: Long = 0
+    private var countDownTimer: CountDownTimer? = null
+    private var timerInMillis: Long = 0
 
     fun getSelectedPlatform() = viewModelScope.launch {
         safeGetSelectedPlatform()
@@ -133,6 +133,7 @@ class PickUpViewModel @Inject constructor(
     private suspend fun safePickPlayerOnce(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
+        countDownTimer?.cancel()
         _pickPlayerOnceLiveData.postValue(Event(Resource.loading()))
         try {
             val platform = preferencesRepository.getSelectedPlatform()
@@ -142,8 +143,6 @@ class PickUpViewModel @Inject constructor(
             val response = dsfutRepository.get().pickUpPlayer(
                 platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
             )
-
-            // TODO TEST WITH DUMMY DATA
 
             response.body()?.let {
                 when {
@@ -171,10 +170,11 @@ class PickUpViewModel @Inject constructor(
                         Timber.e("safePickPlayerOnce error: ${it.error}")
                     }
                     else -> { // RESPONSE WAS SUCCESSFUL
-                        val expiresInMillis = it.player.expires
+                        val player = it.player
+                        val expiresInMillis = player.expires
                         startCountdown(expiresInMillis.toLong())
                         _pickPlayerOnceLiveData.postValue(Event(Resource.success(it)))
-                        _isPlayerPickedUpLiveData.postValue(Event(true))
+//                        _pickedUpPlayerLiveData.postValue(Event(player))
                         Timber.i("safePickPlayerOnce: ${it.message}")
                     }
                 }
@@ -242,6 +242,7 @@ class PickUpViewModel @Inject constructor(
     private suspend fun safeAutoPickPlayer(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
+        countDownTimer?.cancel()
         _autoPickPlayerLiveData.postValue(Event(Resource.loading()))
         try {
             delay(DELAY_TIME_AUTO_PICK_UP)
@@ -252,8 +253,6 @@ class PickUpViewModel @Inject constructor(
             val response = dsfutRepository.get().pickUpPlayer(
                 platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
             )
-
-            // TODO TEST WITH DUMMY DATA
 
             response.body()?.let {
                 when {
@@ -281,10 +280,11 @@ class PickUpViewModel @Inject constructor(
                         Timber.e("safeAutoPickPlayer error: ${it.error}")
                     }
                     else -> { // RESPONSE WAS SUCCESSFUL
-                        val expiresInMillis = it.player.expires
+                        val player = it.player
+                        val expiresInMillis = player.expires
                         startCountdown(expiresInMillis.toLong())
                         _autoPickPlayerLiveData.postValue(Event(Resource.success(it)))
-                        _isPlayerPickedUpLiveData.postValue(Event(true))
+//                        _pickedUpPlayerLiveData.postValue(Event(player))
                         Timber.i("safeAutoPickPlayer: ${it.message}")
                     }
                 }
@@ -311,12 +311,14 @@ class PickUpViewModel @Inject constructor(
         }
     }
 
+    /*
     fun getIsPlayerPickedUp() = viewModelScope.launch {
         safeGetIsPlayerPickedUp()
     }
 
     private suspend fun safeGetIsPlayerPickedUp() {
-
+        // TODO SAVE PLAYER INTO SHARED PREFS FOR SHOWING LATER
+        // SHOULD SAVE THE RESPONSE_TIME AND DO NOT SHOW THE PLAYER CARD AFTER 3 MINUTES
     }
 
     fun getPickedUpPlayer() = viewModelScope.launch {
@@ -326,11 +328,13 @@ class PickUpViewModel @Inject constructor(
     private suspend fun safeGetPickedUpPlayer() {
 
     }
+    */
+
 
     private fun startCountdown(startTimeInMillis: Long) {
         val countDownIntervalInMillis = 1000L // 1 Second
 
-        object : CountDownTimer(startTimeInMillis, countDownIntervalInMillis) {
+        countDownTimer = object : CountDownTimer(startTimeInMillis, countDownIntervalInMillis) {
             override fun onTick(millisUntilFinished: Long) {
                 timerInMillis = millisUntilFinished
                 _timerLiveData.postValue(Event(millisUntilFinished))
@@ -339,7 +343,7 @@ class PickUpViewModel @Inject constructor(
 
             override fun onFinish() {
                 timerInMillis = 0
-                _isPlayerPickedUpLiveData.postValue(Event(false))
+//                _pickedUpPlayerLiveData.postValue(Event(null))
                 _timerLiveData.postValue(Event(0))
             }
         }.start()

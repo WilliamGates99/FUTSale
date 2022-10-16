@@ -46,7 +46,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         toggleOnCheck()
         pickOnceOnClick()
         autoPickUpOnClick()
-        getIsPlayerPickedUp()
+//        getIsPlayerPickedUp()
     }
 
     override fun onDestroyView() {
@@ -59,9 +59,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         selectedPlatformObserver()
         pickPlayerOnceObserver()
         autoPickPlayerObserver()
-        isPlayerPickedUpObserver()
-        pickedUpPlayerObserver()
-        timerObserver()
+//        isPlayerPickedUpObserver()
+//        pickedUpPlayerObserver()
+//        timerObserver()
     }
 
     private fun getSelectedPlatform() = viewModel.getSelectedPlatform()
@@ -201,8 +201,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         )
     }
 
-    private fun getIsPlayerPickedUp() = viewModel.getIsPlayerPickedUp()
+//    private fun getIsPlayerPickedUp() = viewModel.getIsPlayerPickedUp()
 
+    /*
     private fun isPlayerPickedUpObserver() =
         viewModel.isPlayerPickedUpLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { isPlayerPickedUp ->
@@ -212,40 +213,46 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                 }
             }
         }
+     */
 
-    private fun getPickedUpPlayer() = viewModel.getPickedUpPlayer()
+//    private fun getPickedUpPlayer() = viewModel.getPickedUpPlayer()
 
-    private fun pickedUpPlayerObserver() =
-        viewModel.pickedUpPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { player ->
-                binding.apply {
-                    name = player.name
-                    val playerRating = decimalFormat.format(player.rating)
-                    ratingAndPosition = requireContext().getString(
-                        R.string.pick_up_text_player_rating_position, playerRating, player.position
-                    )
-                    priceStart = player.startPrice.toString()
-                    priceNow = player.buyNowPrice.toString()
-                    shouldShowPlayerCard = true
-                }
-            }
-        }
+    // TODO NEXT VERSION
+//    private fun pickedUpPlayerObserver() =
+//        viewModel.pickedUpPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
+//            responseEvent.getContentIfNotHandled().let { player ->
+//                binding.apply {
+//                    shouldShowPlayerCard = player?.let {
+//                        name = it.name
+//                        val playerRating = decimalFormat.format(it.rating)
+//                        ratingAndPosition = requireContext().getString(
+//                            R.string.pick_up_text_player_rating_position,
+//                            playerRating,
+//                            it.position
+//                        )
+//                        priceStart = it.startPrice.toString()
+//                        priceNow = it.buyNowPrice.toString()
+//                        true
+//                    } ?: false
+//                }
+//            }
+//        }
 
-    private fun timerObserver() =
-        viewModel.timerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
-                when (millisUntilFinished) {
-                    0L -> binding.shouldShowPlayerCard = false
-                    else -> {
-                        val minutes = decimalFormat.format(millisUntilFinished / 60000)
-                        val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
-                        binding.time = requireContext().getString(
-                            R.string.player_details_text_timer, minutes, seconds
-                        )
-                    }
-                }
-            }
-        }
+//    private fun timerObserver() =
+//        viewModel.timerLiveData.observe(viewLifecycleOwner) { responseEvent ->
+//            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
+//                when (millisUntilFinished) {
+//                    0L -> binding.shouldShowPlayerCard = false
+//                    else -> {
+//                        val minutes = decimalFormat.format(millisUntilFinished / 60000)
+//                        val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
+//                        binding.time = requireContext().getString(
+//                            R.string.player_details_text_timer, minutes, seconds
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
     private fun showPickOnceLoadingAnimation() = binding.apply {
         tiEditPriceMin.isEnabled = false
