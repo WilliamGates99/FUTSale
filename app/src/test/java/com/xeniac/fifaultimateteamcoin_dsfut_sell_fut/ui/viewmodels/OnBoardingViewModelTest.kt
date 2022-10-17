@@ -32,15 +32,6 @@ class OnBoardingViewModelTest {
     }
 
     @Test
-    fun getIsOnBoardingCompleted_returnsDefaultIsOnBoardingCompleted() {
-        val defaultIsOnBoardingCompleted = false
-
-        testViewModel.getIsOnBoardingCompleted()
-        val isOnBoardingCompleted = testViewModel.isOnBoardingCompletedLiveData.getOrAwaitValue()
-        assertThat(isOnBoardingCompleted).isEqualTo(defaultIsOnBoardingCompleted)
-    }
-
-    @Test
     fun validateFourthScreenInputsWithBlankInputs_returnsError() {
         testViewModel.validateFourthScreenInputs("", "")
 

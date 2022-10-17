@@ -1,10 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -16,19 +18,41 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel by viewModels<MainViewModel>()
 
-    private lateinit var viewModel: MainViewModel
+    private var shouldShowSplashScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        mainInit()
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { shouldShowSplashScreen }
+
+        getIsOnBoardingCompleted()
+        isOnBoardingCompletedObserver()
+    }
+
+    private fun getIsOnBoardingCompleted() = viewModel.getIsOnBoardingCompleted()
+
+    private fun isOnBoardingCompletedObserver() =
+        viewModel.isOnBoardingCompletedLiveData.observe(this) { isOnBoardingCompleted ->
+            if (isOnBoardingCompleted) {
+                mainInit()
+                shouldShowSplashScreen = false
+            } else {
+                shouldShowSplashScreen = false
+                navigateToOnBoardingActivity()
+            }
+        }
+
+    private fun navigateToOnBoardingActivity() {
+        startActivity(Intent(this, OnBoardingActivity::class.java))
+        finish()
     }
 
     private fun mainInit() {
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupBottomNavView()
     }

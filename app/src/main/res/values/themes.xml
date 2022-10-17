@@ -28,7 +28,7 @@
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
             @drawable/ic_splash_logo_xeniac
         </item>
-        <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin.OnBoarding</item>
+        <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
