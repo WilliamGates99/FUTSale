@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
                 mainInit()
                 shouldShowSplashScreen = false
             } else {
-                shouldShowSplashScreen = false
                 navigateToOnBoardingActivity()
             }
         }
