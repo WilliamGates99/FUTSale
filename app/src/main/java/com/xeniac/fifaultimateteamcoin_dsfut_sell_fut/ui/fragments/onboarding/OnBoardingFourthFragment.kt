@@ -88,22 +88,18 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
 
     private fun textInputsBackgroundColor() = binding.apply {
         tiEditPartnerId.setOnFocusChangeListener { _, isFocused ->
-            if (isFocused) {
-                tiLayoutPartnerId.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.skyBlue)
+            tiLayoutPartnerId.boxBackgroundColor = if (isFocused) {
+                ContextCompat.getColor(requireContext(), R.color.skyBlue)
             } else {
-                tiLayoutPartnerId.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.grayLight)
+                ContextCompat.getColor(requireContext(), R.color.grayLight)
             }
         }
 
         tiEditSecretKey.setOnFocusChangeListener { _, isFocused ->
-            if (isFocused) {
-                tiLayoutSecretKey.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.skyBlue)
+            tiLayoutSecretKey.boxBackgroundColor = if (isFocused) {
+                ContextCompat.getColor(requireContext(), R.color.skyBlue)
             } else {
-                tiLayoutSecretKey.boxBackgroundColor =
-                    ContextCompat.getColor(requireContext(), R.color.grayLight)
+                ContextCompat.getColor(requireContext(), R.color.grayLight)
             }
         }
     }

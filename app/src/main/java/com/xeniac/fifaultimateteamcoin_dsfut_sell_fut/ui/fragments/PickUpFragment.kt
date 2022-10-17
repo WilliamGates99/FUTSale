@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -41,6 +43,8 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         _binding = FragmentPickUpBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
 
+        textInputsBackgroundColor()
+        textInputsStrokeColor()
         subscribeToObservers()
         getSelectedPlatform()
         toggleOnCheck()
@@ -53,6 +57,52 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         super.onDestroyView()
         snackbar?.dismiss()
         _binding = null
+    }
+
+    private fun textInputsBackgroundColor() = binding.apply {
+        tiEditPriceMin.setOnFocusChangeListener { _, isFocused ->
+            tiLayoutPriceMin.boxBackgroundColor = if (isFocused) {
+                ContextCompat.getColor(requireContext(), R.color.surface)
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.grayLight)
+            }
+        }
+
+        tiEditPriceMax.setOnFocusChangeListener { _, isFocused ->
+            tiLayoutPriceMax.boxBackgroundColor = if (isFocused) {
+                ContextCompat.getColor(requireContext(), R.color.surface)
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.grayLight)
+            }
+        }
+
+        tiEditTakeAfter.setOnFocusChangeListener { _, isFocused ->
+            tiLayoutTakeAfter.boxBackgroundColor = if (isFocused) {
+                ContextCompat.getColor(requireContext(), R.color.surface)
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.grayLight)
+            }
+        }
+    }
+
+    private fun textInputsStrokeColor() = binding.apply {
+        tiEditPriceMin.addTextChangedListener {
+            tiLayoutPriceMin.isErrorEnabled = false
+            tiLayoutPriceMin.boxStrokeColor =
+                ContextCompat.getColor(requireContext(), R.color.blue)
+        }
+
+        tiEditPriceMax.addTextChangedListener {
+            tiLayoutPriceMax.isErrorEnabled = false
+            tiLayoutPriceMax.boxStrokeColor =
+                ContextCompat.getColor(requireContext(), R.color.blue)
+        }
+
+        tiEditTakeAfter.addTextChangedListener {
+            tiLayoutTakeAfter.isErrorEnabled = false
+            tiLayoutTakeAfter.boxStrokeColor =
+                ContextCompat.getColor(requireContext(), R.color.blue)
+        }
     }
 
     private fun subscribeToObservers() {
