@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="localized_extra_light" type="font">@font/vazirmatn_rd_fd_extra_light</item>
-
     <item name="localized_light" type="font">@font/vazirmatn_rd_fd_light</item>
 
     <item name="localized_regular" type="font">@font/vazirmatn_rd_fd_regular</item>

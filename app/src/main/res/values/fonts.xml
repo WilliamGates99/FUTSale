@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--TODO REMOVE EXTRA FONTS-->
-
-    <item name="localized_extra_light" type="font">@font/nunito_extra_light</item>
 
     <item name="localized_light" type="font">@font/nunito_light</item>
 
