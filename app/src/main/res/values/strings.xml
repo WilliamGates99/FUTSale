@@ -9,10 +9,6 @@
     <string name="error_btn_retry">Retry</string>
     <!--    <string name="error_btn_confirm">Confirm</string>-->
 
-    <string name="main_menu_title_pick_up">Pick Up</string>
-    <string name="main_menu_title_profile">Profile</string>
-    <string name="main_menu_title_settings">Settings</string>
-
     <string name="onboarding_btn_skip">Skip</string>
     <string name="onboarding_btn_back">Back</string>
     <string name="onboarding_btn_next">Next</string>
@@ -32,6 +28,10 @@
     <string name="onboarding_fourth_btn_start">Get Started</string>
     <string name="onboarding_fourth_error_blank_partner_id">Enter your partner ID!</string>
     <string name="onboarding_fourth_error_blank_secret_key">Enter your secret key!</string>
+
+    <string name="main_menu_title_pick_up">Pick Up</string>
+    <string name="main_menu_title_profile">Profile</string>
+    <string name="main_menu_title_settings">Settings</string>
 
     <string name="pick_up_text_title">Pick Up Player</string>
     <string name="pick_up_title_instruction">Follow the steps below to buy a player:</string>

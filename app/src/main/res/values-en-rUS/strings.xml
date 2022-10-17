@@ -9,10 +9,6 @@
     <string name="error_btn_retry">Retry</string>
     <!--    <string name="error_btn_confirm">Confirm</string>-->
 
-    <string name="main_menu_title_pick_up">Pick Up</string>
-    <string name="main_menu_title_profile">Profile</string>
-    <string name="main_menu_title_settings">Settings</string>
-
     <string name="onboarding_btn_skip">Skip</string>
     <string name="onboarding_btn_back">Back</string>
     <string name="onboarding_btn_next">Next</string>
@@ -33,6 +29,10 @@
     <string name="onboarding_fourth_error_blank_partner_id">Enter your partner ID!</string>
     <string name="onboarding_fourth_error_blank_secret_key">Enter your secret key!</string>
 
+    <string name="main_menu_title_pick_up">Pick Up</string>
+    <string name="main_menu_title_profile">Profile</string>
+    <string name="main_menu_title_settings">Settings</string>
+
     <string name="pick_up_text_title">Pick Up Player</string>
     <string name="pick_up_title_instruction">Follow the steps below to buy a player:</string>
     <string name="pick_up_text_instruction">1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font fgcolor="#1C53F4"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.</string>
@@ -40,9 +40,7 @@
     <string name="pick_up_toggle_platform_console">Console</string>
     <string name="pick_up_toggle_platform_pc">PC</string>
     <string name="pick_up_title_price_min">Min Price</string>
-    <string name="pick_up_hint_price_min" translatable="false">10000</string>
     <string name="pick_up_title_price_max">Max Price</string>
-    <string name="pick_up_hint_price_max" translatable="false">50000</string>
     <string name="pick_up_title_take_after">Take After</string>
     <string name="pick_up_hint_take_after">4 Seconds</string>
     <string name="pick_up_helper_optional">Optional</string>
