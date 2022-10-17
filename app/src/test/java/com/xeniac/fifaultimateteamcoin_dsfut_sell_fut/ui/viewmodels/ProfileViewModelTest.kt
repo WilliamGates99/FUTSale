@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Status
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
@@ -53,7 +53,7 @@ class ProfileViewModelTest {
 
         val responseEvent = testViewModel.updatePartnerIdLiveData.getOrAwaitValue()
 
-        assertThat(responseEvent.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
+        assertThat(responseEvent.getContentIfNotHandled()).isInstanceOf(Resource.Success::class.java)
     }
 
     @Test
@@ -62,7 +62,7 @@ class ProfileViewModelTest {
 
         val responseEvent = testViewModel.updateSecretKeyLiveData.getOrAwaitValue()
 
-        assertThat(responseEvent.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
+        assertThat(responseEvent.getContentIfNotHandled()).isInstanceOf(Resource.Success::class.java)
     }
 
     @Test
