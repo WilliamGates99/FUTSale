@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.pickUpFragment -> setBottomNavViewVisibility(true)
                 R.id.profileFragment -> setBottomNavViewVisibility(true)
                 R.id.settingsFragment -> setBottomNavViewVisibility(true)
-//                 R.id.playerDetailsFragment->setBottomNavViewVisibility(false) TODO UNCOMMENT AFTER ADDING PLAYER DETAILS FRAGMENT
+                R.id.playerDetailsFragment -> setBottomNavViewVisibility(false)
                 else -> setBottomNavViewVisibility(true)
             }
         }
