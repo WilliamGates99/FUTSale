@@ -168,35 +168,39 @@ dependencies {
     debugImplementation 'androidx.fragment:fragment-testing:1.5.3'
 }
 
-// TODO USE VARIABLES FOR THE STRINGS
+def releaseDir = "${rootDir}/app/release"
+def releaseDestDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
+
+def releaseAPK = "app-release.apk"
+def releaseBundle = "app-release.aab"
+
+def versionName = "${android.defaultConfig.versionName}"
+def renamedFileName = "FIFA Ultimate Team Coin $versionName"
+
 task copyReleaseApk(type: Copy) {
-    def sourceDir = "${rootDir}/app/release/app-release.apk"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-    def versionName = "${android.defaultConfig.versionName}"
+    def sourceDir = "$releaseDir/$releaseAPK"
 
     from sourceDir
-    into destDir
+    into releaseDestDir
 
-    rename "app-release.apk", "FIFA Ultimate Team Coin ${versionName}.apk"
+    rename "$releaseAPK", "$renamedFileName.apk"
 }
 
 task copyReleaseBundle(type: Copy) {
-    def sourceDir = "${rootDir}/app/release/app-release.aab"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-    def versionName = "${android.defaultConfig.versionName}"
+    def sourceDir = "$releaseDir/$releaseBundle"
 
     from sourceDir
-    into destDir
+    into releaseDestDir
 
-    rename "app-release.aab", "FIFA Ultimate Team Coin ${versionName}.aab"
+    rename "$releaseBundle", "$renamedFileName.aab"
 }
 
 task copyObfuscationFolder(type: Copy) {
     def sourceDir = "${rootDir}/app/obfuscation"
-    def destDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK\\obfuscation"
+    def obfuscationDestDir = "$destDir\\obfuscation"
 
     from sourceDir
-    into destDir
+    into obfuscationDestDir
 }
 
 task copyReleaseFiles() {
