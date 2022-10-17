@@ -59,14 +59,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     private suspend fun safeUpdatePartnerId(newPartnerId: String?) {
-        _updatePartnerIdLiveData.postValue(Event(Resource.loading()))
+        _updatePartnerIdLiveData.postValue(Event(Resource.Loading()))
         try {
             preferencesRepository.setPartnerId(newPartnerId)
-            _updatePartnerIdLiveData.postValue(Event(Resource.success()))
+            _updatePartnerIdLiveData.postValue(Event(Resource.Success()))
             Timber.i("PartnerId updated successfully.")
         } catch (e: Exception) {
             val message = UiText.StringResource(R.string.error_something_went_wrong)
-            _updatePartnerIdLiveData.postValue(Event(Resource.error(message)))
+            _updatePartnerIdLiveData.postValue(Event(Resource.Error(message)))
             Timber.i("safeUpdatePartnerId Exception: ${e.message}")
         }
     }
@@ -76,14 +76,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     private suspend fun safeUpdateSecretKey(newSecretKey: String?) {
-        _updateSecretKeyLiveData.postValue(Event(Resource.loading()))
+        _updateSecretKeyLiveData.postValue(Event(Resource.Loading()))
         try {
             preferencesRepository.setSecretKey(newSecretKey)
-            _updateSecretKeyLiveData.postValue(Event(Resource.success()))
+            _updateSecretKeyLiveData.postValue(Event(Resource.Success()))
             Timber.i("SecretKey updated successfully.")
         } catch (e: Exception) {
             val message = UiText.StringResource(R.string.error_something_went_wrong)
-            _updateSecretKeyLiveData.postValue(Event(Resource.error(message)))
+            _updateSecretKeyLiveData.postValue(Event(Resource.Error(message)))
             Timber.i("safeUpdateSecretKey Exception: ${e.message}")
         }
     }

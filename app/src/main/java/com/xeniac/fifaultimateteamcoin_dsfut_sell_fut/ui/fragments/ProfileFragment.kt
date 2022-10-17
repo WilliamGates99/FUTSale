@@ -23,8 +23,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_STATISTICS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_WALLET
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Status
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -178,10 +178,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun updatePartnerIdObserver() =
         viewModel.updatePartnerIdLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
-                when (response.status) {
-                    Status.LOADING -> playPartnerIdAnimationTyping()
-                    Status.SUCCESS -> playPartnerIdAnimationSaved()
-                    Status.ERROR -> {
+                when (response) {
+                    is Resource.Loading -> playPartnerIdAnimationTyping()
+                    is Resource.Success -> playPartnerIdAnimationSaved()
+                    is Resource.Error -> {
                         response.message?.let {
                             snackbar = normalErrorSnackbar(
                                 requireView(),
@@ -211,10 +211,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun updateSecretKeyObserver() =
         viewModel.updateSecretKeyLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
-                when (response.status) {
-                    Status.LOADING -> playSecretKeyAnimationTyping()
-                    Status.SUCCESS -> playSecretKeyAnimationSaved()
-                    Status.ERROR -> {
+                when (response) {
+                    is Resource.Loading -> playSecretKeyAnimationTyping()
+                    is Resource.Success -> playSecretKeyAnimationSaved()
+                    is Resource.Error -> {
                         response.message?.let {
                             snackbar = normalErrorSnackbar(
                                 requireView(),

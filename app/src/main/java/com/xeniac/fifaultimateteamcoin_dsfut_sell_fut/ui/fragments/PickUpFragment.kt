@@ -14,8 +14,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -108,15 +108,15 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
     private fun pickPlayerOnceObserver() =
         viewModel.pickPlayerOnceLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
-                when (response.status) {
-                    Status.LOADING -> showPickOnceLoadingAnimation()
-                    Status.SUCCESS -> {
+                when (response) {
+                    is Resource.Loading -> showPickOnceLoadingAnimation()
+                    is Resource.Success -> {
                         hidePickOnceLoadingAnimation()
                         response.data?.let {
                             navigateToPlayerDetails(it.player)
                         }
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         hidePickOnceLoadingAnimation()
                         response.message?.let {
                             snackbar = normalErrorSnackbar(
@@ -159,15 +159,15 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
     private fun autoPickPlayerObserver() =
         viewModel.autoPickPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
-                when (response.status) {
-                    Status.LOADING -> showAutoPickLoadingAnimation()
-                    Status.SUCCESS -> {
+                when (response) {
+                    is Resource.Loading -> showAutoPickLoadingAnimation()
+                    is Resource.Success -> {
                         hideAutoPickLoadingAnimation()
                         response.data?.let {
                             navigateToPlayerDetails(it.player)
                         }
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         response.message?.let {
                             when (it.asString(requireContext())) {
                                 requireContext().getString(R.string.pick_up_error_dsfut_empty) -> {

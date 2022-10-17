@@ -88,7 +88,7 @@ class PickUpViewModel @Inject constructor(
         val partnerId = preferencesRepository.getPartnerId()
         if (partnerId.isNullOrBlank()) {
             _pickPlayerOnceLiveData.postValue(
-                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_blank_partner_id)))
+                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_blank_partner_id)))
             )
             return
         }
@@ -96,7 +96,7 @@ class PickUpViewModel @Inject constructor(
         val secretKey = preferencesRepository.getSecretKey()
         if (secretKey.isNullOrBlank()) {
             _pickPlayerOnceLiveData.postValue(
-                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_blank_secret_key)))
+                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_blank_secret_key)))
             )
             return
         }
@@ -134,7 +134,7 @@ class PickUpViewModel @Inject constructor(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
         countDownTimer?.cancel()
-        _pickPlayerOnceLiveData.postValue(Event(Resource.loading()))
+        _pickPlayerOnceLiveData.postValue(Event(Resource.Loading()))
         try {
             val platform = preferencesRepository.getSelectedPlatform()
             val timestamp = getCurrentTime()
@@ -149,22 +149,22 @@ class PickUpViewModel @Inject constructor(
                     it.error.isNotBlank() -> { // RESPONSE HAD ERROR
                         when {
                             it.error.contains(ERROR_DSFUT_BLOCK) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
                             )
                             it.error.contains(ERROR_DSFUT_EMPTY) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
                             )
                             it.error.contains(ERROR_DSFUT_LIMIT) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
                             )
                             it.error.contains(ERROR_DSFUT_MAINTENANCE) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
                             )
                             it.error.contains(ERROR_DSFUT_THROTTLE) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
                             )
                             else -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.error_something_went_wrong)))
+                                Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
                             )
                         }
                         Timber.e("safePickPlayerOnce error: ${it.error}")
@@ -173,14 +173,14 @@ class PickUpViewModel @Inject constructor(
                         val player = it.player
                         val expiresInMillis = player.expires
                         startCountdown(expiresInMillis.toLong())
-                        _pickPlayerOnceLiveData.postValue(Event(Resource.success(it)))
+                        _pickPlayerOnceLiveData.postValue(Event(Resource.Success(it)))
 //                        _pickedUpPlayerLiveData.postValue(Event(player))
                         Timber.i("safePickPlayerOnce: ${it.message}")
                     }
                 }
             }
         } catch (e: Exception) {
-            _pickPlayerOnceLiveData.postValue(Event(Resource.error(UiText.DynamicString(e.message.toString()))))
+            _pickPlayerOnceLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
             Timber.e("safePickPlayerOnce exception: ${e.message}")
         }
     }
@@ -197,7 +197,7 @@ class PickUpViewModel @Inject constructor(
         val partnerId = preferencesRepository.getPartnerId()
         if (partnerId.isNullOrBlank()) {
             _autoPickPlayerLiveData.postValue(
-                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_blank_partner_id)))
+                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_blank_partner_id)))
             )
             return
         }
@@ -205,7 +205,7 @@ class PickUpViewModel @Inject constructor(
         val secretKey = preferencesRepository.getSecretKey()
         if (secretKey.isNullOrBlank()) {
             _autoPickPlayerLiveData.postValue(
-                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_blank_secret_key)))
+                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_blank_secret_key)))
             )
             return
         }
@@ -243,7 +243,7 @@ class PickUpViewModel @Inject constructor(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
         countDownTimer?.cancel()
-        _autoPickPlayerLiveData.postValue(Event(Resource.loading()))
+        _autoPickPlayerLiveData.postValue(Event(Resource.Loading()))
         try {
             delay(DELAY_TIME_AUTO_PICK_UP)
             val platform = preferencesRepository.getSelectedPlatform()
@@ -259,22 +259,22 @@ class PickUpViewModel @Inject constructor(
                     it.error.isNotBlank() -> { // RESPONSE HAD ERROR
                         when {
                             it.error.contains(ERROR_DSFUT_BLOCK) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
                             )
                             it.error.contains(ERROR_DSFUT_EMPTY) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
                             )
                             it.error.contains(ERROR_DSFUT_LIMIT) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
                             )
                             it.error.contains(ERROR_DSFUT_MAINTENANCE) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
                             )
                             it.error.contains(ERROR_DSFUT_THROTTLE) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
+                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
                             )
                             else -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.error(UiText.StringResource(R.string.error_something_went_wrong)))
+                                Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
                             )
                         }
                         Timber.e("safeAutoPickPlayer error: ${it.error}")
@@ -283,14 +283,14 @@ class PickUpViewModel @Inject constructor(
                         val player = it.player
                         val expiresInMillis = player.expires
                         startCountdown(expiresInMillis.toLong())
-                        _autoPickPlayerLiveData.postValue(Event(Resource.success(it)))
+                        _autoPickPlayerLiveData.postValue(Event(Resource.Success(it)))
 //                        _pickedUpPlayerLiveData.postValue(Event(player))
                         Timber.i("safeAutoPickPlayer: ${it.message}")
                     }
                 }
             }
         } catch (e: Exception) {
-            _autoPickPlayerLiveData.postValue(Event(Resource.error(UiText.DynamicString(e.message.toString()))))
+            _autoPickPlayerLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
             Timber.e("safeAutoPickPlayer exception: ${e.message}")
         }
     }
@@ -302,11 +302,11 @@ class PickUpViewModel @Inject constructor(
     private fun safeCancelAutoPickPlayer() {
         try {
             _autoPickPlayerLiveData.postValue(
-                Event(Resource.error(UiText.StringResource(R.string.pick_up_error_dsfut_canceled)))
+                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_canceled)))
             )
             Timber.i("Auto pick player canceled.")
         } catch (e: Exception) {
-            _autoPickPlayerLiveData.postValue(Event(Resource.error(UiText.DynamicString(e.message.toString()))))
+            _autoPickPlayerLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
             Timber.e("safeCancelAutoPickPlayer exception: ${e.message}")
         }
     }

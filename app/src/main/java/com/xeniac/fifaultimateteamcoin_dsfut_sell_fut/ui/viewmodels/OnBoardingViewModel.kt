@@ -46,14 +46,14 @@ class OnBoardingViewModel @Inject constructor(
     fun validateFourthScreenInputs(partnerId: String, secretKey: String) {
         if (partnerId.isBlank()) {
             _completeOnBoardingLiveData.postValue(
-                Event(Resource.error(UiText.DynamicString(ERROR_INPUT_BLANK_PARTNER_ID)))
+                Event(Resource.Error(UiText.DynamicString(ERROR_INPUT_BLANK_PARTNER_ID)))
             )
             return
         }
 
         if (secretKey.isBlank()) {
             _completeOnBoardingLiveData.postValue(
-                Event(Resource.error(UiText.DynamicString(ERROR_INPUT_BLANK_SECRET_KEY)))
+                Event(Resource.Error(UiText.DynamicString(ERROR_INPUT_BLANK_SECRET_KEY)))
             )
             return
         }
@@ -66,16 +66,16 @@ class OnBoardingViewModel @Inject constructor(
     }
 
     private suspend fun safeCompleteOnBoarding(partnerId: String, secretKey: String) {
-        _completeOnBoardingLiveData.postValue(Event(Resource.loading()))
+        _completeOnBoardingLiveData.postValue(Event(Resource.Loading()))
         try {
             preferencesRepository.setPartnerId(partnerId)
             preferencesRepository.setSecretKey(secretKey)
             preferencesRepository.isOnBoardingCompleted(true)
-            _completeOnBoardingLiveData.postValue(Event(Resource.success()))
+            _completeOnBoardingLiveData.postValue(Event(Resource.Success()))
             Timber.i("Profile data saved successfully.")
         } catch (e: Exception) {
             val message = UiText.DynamicString(e.message.toString())
-            _completeOnBoardingLiveData.postValue(Event(Resource.error(message)))
+            _completeOnBoardingLiveData.postValue(Event(Resource.Error(message)))
             Timber.e("safeCompleteOnBoarding Exception: ${message.value}")
         }
     }
