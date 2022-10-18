@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         binding.bnv.visibility = if (shouldShow) VISIBLE else GONE
     }
 
-    private fun requestTapsellInterstitial() {
+    fun requestTapsellInterstitial() {
         TapsellPlus.requestInterstitialAd(this,
             BuildConfig.TAPSELL_INTERSTITIAL_ZONE_ID, object : AdRequestCallback() {
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {

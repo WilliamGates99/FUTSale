@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,8 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
         _binding = FragmentPlayerDetailsBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
 
+        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
+
         backOnClick()
         getPlayer()
         subscribeToObservers()
@@ -45,20 +48,16 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
         _binding = null
     }
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            findNavController().popBackStack()
+            showInterstitialAd()
+        }
+    }
+
     private fun backOnClick() = binding.btnBack.setOnClickListener {
         findNavController().popBackStack()
-        when {
-            /* TODO UNCOMMENT AFTER ADDING APPLOVIN
-            (requireActivity() as MainActivity).appLovinAd.isReady -> {
-                (requireActivity() as MainActivity).appLovinAd.showAd()
-            }
-             */
-            (requireActivity() as MainActivity).tapsellResponseId != null -> {
-                (requireActivity() as MainActivity).tapsellResponseId?.let {
-                    showInterstitialAd(it)
-                }
-            }
-        }
+        showInterstitialAd()
     }
 
     private fun getPlayer() {
@@ -90,7 +89,20 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
             }
         }
 
-    private fun showInterstitialAd(responseId: String) = TapsellPlus.showInterstitialAd(
+    private fun showInterstitialAd() {
+        (requireActivity() as MainActivity).apply {
+            when {
+                /* TODO UNCOMMENT AFTER ADDING APPLOVIN
+                appLovinAd.isReady -> appLovinAd.showAd()
+                 */
+                tapsellResponseId != null -> showTapsellInterstitialAd(tapsellResponseId!!)
+            }
+
+            requestTapsellInterstitial()
+        }
+    }
+
+    private fun showTapsellInterstitialAd(responseId: String) = TapsellPlus.showInterstitialAd(
         requireActivity(), responseId, object : AdShowListener() {
             override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
                 super.onOpened(tapsellPlusAdModel)

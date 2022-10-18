@@ -218,6 +218,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             val settingsAdHolder = TapsellPlus.createAdHolder(
                 requireActivity(), binding.flSettingsAdContainer, R.layout.ad_banner_tapsell
             )
+
             val miscellaneousAdHolder = TapsellPlus.createAdHolder(
                 requireActivity(), binding.flMiscellaneousAdContainer, R.layout.ad_banner_tapsell
             )
@@ -259,7 +260,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun requestMiscellaneousTapsellNativeAd(adHolder: AdHolder) {
         _binding?.let {
             TapsellPlus.requestNativeAd(requireActivity(),
-                BuildConfig.TAPSELL_SETTINGS_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                BuildConfig.TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID, object : AdRequestCallback() {
                     override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                         super.response(tapsellPlusAdModel)
                         Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
