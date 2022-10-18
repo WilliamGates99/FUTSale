@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentSettingsBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
@@ -14,6 +15,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_CROWDI
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DONATE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
+import ir.tapsell.plus.AdHolder
+import ir.tapsell.plus.AdRequestCallback
+import ir.tapsell.plus.AdShowListener
+import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.model.TapsellPlusAdModel
+import timber.log.Timber
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
@@ -24,6 +31,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private var currentLocaleIndex = 0
     private var currentThemeIndex = 0
+
+    private var tapsellSettingsResponseId: String? = null
+    private var tapsellSettingsRequestCounter = 1
+
+    private var tapsellMiscellaneousResponseId: String? = null
+    private var tapsellMiscellaneousRequestCounter = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,10 +56,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         improveTranslationsOnClick()
         rateUsOnClick()
         privacyPolicyOnClick()
+        initTapsellAdHolder()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        destroyAd()
         _binding = null
     }
 
@@ -196,5 +211,110 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun privacyPolicyOnClick() = binding.clMiscellaneousPrivacyPolicy.setOnClickListener {
         openLink(requireContext(), requireView(), URL_PRIVACY_POLICY)
+    }
+
+    private fun initTapsellAdHolder() {
+        _binding?.let {
+            val settingsAdHolder = TapsellPlus.createAdHolder(
+                requireActivity(), binding.flSettingsAdContainer, R.layout.ad_banner_tapsell
+            )
+            val miscellaneousAdHolder = TapsellPlus.createAdHolder(
+                requireActivity(), binding.flMiscellaneousAdContainer, R.layout.ad_banner_tapsell
+            )
+
+            settingsAdHolder?.let { requestSettingsTapsellNativeAd(it) }
+            miscellaneousAdHolder?.let { requestMiscellaneousTapsellNativeAd(it) }
+        }
+    }
+
+    private fun requestSettingsTapsellNativeAd(adHolder: AdHolder) {
+        _binding?.let {
+            TapsellPlus.requestNativeAd(requireActivity(),
+                BuildConfig.TAPSELL_SETTINGS_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.response(tapsellPlusAdModel)
+                        Timber.i("requestSettingsTapsellNativeAd onResponse")
+                        tapsellSettingsRequestCounter = 1
+                        _binding?.let {
+                            tapsellPlusAdModel?.let {
+                                tapsellSettingsResponseId = it.responseId
+                                showSettingsNativeAdContainer()
+                                showNativeAd(adHolder, tapsellSettingsResponseId!!)
+                            }
+                        }
+                    }
+
+                    override fun error(error: String?) {
+                        super.error(error)
+                        Timber.e("requestSettingsTapsellNativeAd onError: $error")
+                        if (tapsellSettingsRequestCounter < 2) {
+                            tapsellSettingsRequestCounter++
+                            requestSettingsTapsellNativeAd(adHolder)
+                        }
+                    }
+                })
+        }
+    }
+
+    private fun requestMiscellaneousTapsellNativeAd(adHolder: AdHolder) {
+        _binding?.let {
+            TapsellPlus.requestNativeAd(requireActivity(),
+                BuildConfig.TAPSELL_SETTINGS_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.response(tapsellPlusAdModel)
+                        Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
+                        tapsellMiscellaneousRequestCounter = 1
+                        _binding?.let {
+                            tapsellPlusAdModel?.let {
+                                tapsellMiscellaneousResponseId = it.responseId
+                                showMiscellaneousNativeAdContainer()
+                                showNativeAd(adHolder, tapsellMiscellaneousResponseId!!)
+                            }
+                        }
+                    }
+
+                    override fun error(error: String?) {
+                        super.error(error)
+                        Timber.e("requestMiscellaneousTapsellNativeAd onError: $error")
+                        if (tapsellMiscellaneousRequestCounter < 2) {
+                            tapsellMiscellaneousRequestCounter++
+                            requestMiscellaneousTapsellNativeAd(adHolder)
+                        }
+                    }
+                })
+        }
+    }
+
+    private fun showNativeAd(adHolder: AdHolder, responseId: String) {
+        _binding?.let {
+            TapsellPlus.showNativeAd(requireActivity(),
+                responseId, adHolder, object : AdShowListener() {
+                    override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.onOpened(tapsellPlusAdModel)
+                    }
+
+                    override fun onClosed(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.onClosed(tapsellPlusAdModel)
+                    }
+                })
+        }
+    }
+
+    private fun showSettingsNativeAdContainer() = binding.apply {
+        groupSettingsAdContainer.visibility = View.VISIBLE
+    }
+
+    private fun showMiscellaneousNativeAdContainer() = binding.apply {
+        groupMiscellaneousAdContainer.visibility = View.VISIBLE
+    }
+
+    private fun destroyAd() {
+        tapsellSettingsResponseId?.let {
+            TapsellPlus.destroyNativeBanner(requireActivity(), it)
+        }
+
+        tapsellMiscellaneousResponseId?.let {
+            TapsellPlus.destroyNativeBanner(requireActivity(), it)
+        }
     }
 }

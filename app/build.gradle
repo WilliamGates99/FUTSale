@@ -33,10 +33,12 @@ android {
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
         buildConfigField "String", "RETROFIT_FEED_URL", "\"${properties.getProperty("RETROFIT_FEED_URL")}\""
 //        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
+//        buildConfigField "String", "APPLOVIN_PROFILE_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")}\""
 //        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
-//        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
-//        buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
-//        buildConfigField "String", "TAPSELL_SETTINGS_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
+        buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
+        buildConfigField "String", "TAPSELL_PROFILE_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_PROFILE_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "TAPSELL_SETTINGS_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")}\""
 //        buildConfigField "String", "URL_APP_STORE", "\"${properties.getProperty("URL_PLAY_STORE")}\""
 //        buildConfigField "String", "PACKAGE_NAME_APP_STORE", "\"${properties.getProperty("PACKAGE_NAME_PLAY_STORE")}\""
 
@@ -138,13 +140,13 @@ dependencies {
     implementation 'com.applovin:applovin-sdk:11.5.2'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
+     */
 
     // Google AdMob Library
     implementation 'com.google.android.gms:play-services-ads:21.2.0'
 
     // Tapsell Library
     implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.1.7'
-     */
 
     // Local Unit Test Libraries
     testImplementation 'com.google.truth:truth:1.1.3'

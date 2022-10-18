@@ -2,12 +2,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.View.VISIBLE
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieDrawable
 import com.google.android.material.snackbar.Snackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentProfileBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.ProfileViewModel
@@ -25,10 +27,16 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import ir.tapsell.plus.AdHolder
+import ir.tapsell.plus.AdRequestCallback
+import ir.tapsell.plus.AdShowListener
+import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.model.TapsellPlusAdModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -36,6 +44,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ProfileViewModel
+
+    private var tapsellResponseId: String? = null
+    private var tapsellRequestCounter = 1
 
     private var snackbar: Snackbar? = null
 
@@ -56,11 +67,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         statisticsOnClick()
         notificationsConsoleOnClick()
         notificationsPCOnClick()
+        initTapsellAdHolder()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         snackbar?.dismiss()
+        destroyAd()
         _binding = null
     }
 
@@ -283,6 +296,69 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             repeatMode = LottieDrawable.REVERSE
             setAnimation(R.raw.anim_profile_typing)
             playAnimation()
+        }
+    }
+
+    private fun initTapsellAdHolder() {
+        _binding?.let {
+            val adHolder = TapsellPlus.createAdHolder(
+                requireActivity(), binding.flLinksAdContainer, R.layout.ad_banner_tapsell
+            )
+            adHolder?.let { requestTapsellNativeAd(it) }
+        }
+    }
+
+    private fun requestTapsellNativeAd(adHolder: AdHolder) {
+        _binding?.let {
+            TapsellPlus.requestNativeAd(requireActivity(),
+                BuildConfig.TAPSELL_PROFILE_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.response(tapsellPlusAdModel)
+                        Timber.i("requestTapsellNativeAd onResponse")
+                        tapsellRequestCounter = 1
+                        _binding?.let {
+                            tapsellPlusAdModel?.let {
+                                tapsellResponseId = it.responseId
+                                showNativeAd(adHolder, tapsellResponseId!!)
+                            }
+                        }
+                    }
+
+                    override fun error(error: String?) {
+                        super.error(error)
+                        Timber.e("requestTapsellNativeAd onError: $error")
+                        if (tapsellRequestCounter < 2) {
+                            tapsellRequestCounter++
+                            requestTapsellNativeAd(adHolder)
+                        }
+                    }
+                })
+        }
+    }
+
+    private fun showNativeAd(adHolder: AdHolder, responseId: String) {
+        _binding?.let {
+            showNativeAdContainer()
+            TapsellPlus.showNativeAd(requireActivity(),
+                responseId, adHolder, object : AdShowListener() {
+                    override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.onOpened(tapsellPlusAdModel)
+                    }
+
+                    override fun onClosed(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                        super.onClosed(tapsellPlusAdModel)
+                    }
+                })
+        }
+    }
+
+    private fun showNativeAdContainer() = binding.apply {
+        groupLinksAdContainer.visibility = VISIBLE
+    }
+
+    private fun destroyAd() {
+        tapsellResponseId?.let {
+            TapsellPlus.destroyNativeBanner(requireActivity(), it)
         }
     }
 }
