@@ -9,8 +9,13 @@ import androidx.navigation.fragment.navArgs
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPlayerDetailsBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import ir.tapsell.plus.AdShowListener
+import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.model.TapsellPlusAdModel
+import ir.tapsell.plus.model.TapsellPlusErrorModel
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -42,7 +47,18 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
 
     private fun backOnClick() = binding.btnBack.setOnClickListener {
         findNavController().popBackStack()
-        // TODO SHOW AD
+        when {
+            /* TODO UNCOMMENT AFTER ADDING APPLOVIN
+            (requireActivity() as MainActivity).appLovinAd.isReady -> {
+                (requireActivity() as MainActivity).appLovinAd.showAd()
+            }
+             */
+            (requireActivity() as MainActivity).tapsellResponseId != null -> {
+                (requireActivity() as MainActivity).tapsellResponseId?.let {
+                    showInterstitialAd(it)
+                }
+            }
+        }
     }
 
     private fun getPlayer() {
@@ -73,4 +89,19 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
                 )
             }
         }
+
+    private fun showInterstitialAd(responseId: String) = TapsellPlus.showInterstitialAd(
+        requireActivity(), responseId, object : AdShowListener() {
+            override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                super.onOpened(tapsellPlusAdModel)
+            }
+
+            override fun onClosed(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                super.onClosed(tapsellPlusAdModel)
+            }
+
+            override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel?) {
+                super.onError(tapsellPlusErrorModel)
+            }
+        })
 }
