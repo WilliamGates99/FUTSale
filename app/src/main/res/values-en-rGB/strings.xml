@@ -104,7 +104,7 @@
     <string name="player_details_title_price_start">Start Price</string>
     <string name="player_details_title_price_now">Buy Now Price</string>
     <string name="player_details_title_instruction">What to do next?</string>
-    <string name="player_details_text_instruction">1. Go to the transfer page of the game or the companion app.\n2. Find the player card in the market according to its details.\n3. Buy the player card within 3 minutes; Otherwise, your DSFUT account will be blocked for 30 minutes.</string>
+    <string name="player_details_text_instruction">1. Go to the transfer page of the game or the Companion app.\n2. Find the player card in the market according to its details.\n3. Buy the player card within 3 minutes; Otherwise, your DSFUT account will be blocked for 30 minutes.</string>
     <string name="player_details_text_attention">Attention: It is very important to rotate FIFA accounts. That is, if one player was purchased from account #1, then the next must be purchased from account #2. It is very important that the accounts are repeated as rarely as possible, because we do not want bans for either buyers or suppliers.</string>
 
 </resources>
