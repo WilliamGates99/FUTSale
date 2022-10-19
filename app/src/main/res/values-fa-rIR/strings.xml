@@ -28,11 +28,11 @@
     <string name="onboarding_fourth_error_blank_partner_id">شناسه پارتنر خود را وارد کنید!</string>
     <string name="onboarding_fourth_error_blank_secret_key">کلید محرمانه خود را وارد کنید!</string>
 
-    <string name="main_menu_title_pick_up">انتخاب</string>
+    <string name="main_menu_title_pick_up">گرفتن</string>
     <string name="main_menu_title_profile">پروفایل</string>
     <string name="main_menu_title_settings">تنظیمات</string>
 
-    <string name="pick_up_text_title">انتخاب بازیکن</string>
+    <string name="pick_up_text_title">گرفتن بازیکن</string>
     <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
     <string name="pick_up_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
     <string name="pick_up_title_platform">پلتفرم:</string>
@@ -40,7 +40,7 @@
     <string name="pick_up_toggle_platform_pc">کامپیوتر</string>
     <string name="pick_up_title_price_min">حداقل قیمت</string>
     <string name="pick_up_title_price_max">حداکثر قیمت</string>
-    <string name="pick_up_title_take_after">انتخاب بعد از</string>
+    <string name="pick_up_title_take_after">گرفتن بعد از</string>
     <string name="pick_up_hint_take_after">4 ثانیه</string>
     <string name="pick_up_helper_optional">اختیاری</string>
     <string name="pick_up_btn_pick_auto">گرفتن خودکار</string>
