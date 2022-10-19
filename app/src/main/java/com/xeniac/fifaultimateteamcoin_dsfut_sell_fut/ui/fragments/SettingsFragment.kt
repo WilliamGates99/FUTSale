@@ -50,8 +50,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 //        getIsNotificationVibrateActive()
         languageOnClick()
         themeOnClick()
-        notificationSoundOnClick()
-        notificationVibrateOnClick()
+//        notificationSoundOnClick()
+//        notificationVibrateOnClick()
         donateOnClick()
         improveTranslationsOnClick()
         rateUsOnClick()
@@ -70,8 +70,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         currentLocaleIndexObserver()
         currentThemeObserver()
         currentThemeIndexObserver()
-        isNotificationSoundActiveObserver()
-        isNotificationVibrateActiveObserver()
+//        isNotificationSoundActiveObserver()
+//        isNotificationVibrateActiveObserver()
         changeCurrentLocaleObserver()
     }
 
@@ -107,6 +107,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             }
         }
 
+    /* TODO ADD FUNCTIONALITY
     private fun getIsNotificationSoundActive() = viewModel.getIsNotificationSoundActive()
 
     private fun isNotificationSoundActiveObserver() =
@@ -124,6 +125,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 binding.switchSettingsNotificationVibrate.isChecked = isActive
             }
         }
+     */
 
     private fun languageOnClick() = binding.clSettingsLanguage.setOnClickListener {
         val localeTextItems = arrayOf(
@@ -176,25 +178,25 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun changeCurrentTheme(themeIndex: Int) = viewModel.changeCurrentTheme(themeIndex)
 
-    private fun notificationSoundOnClick() =
-        binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            /* TODO ADD FUNCTIONALITY
-            when (isChecked) {
-                true -> {}
-                false -> {}
-            }
-             */
-        }
+    /* TODO ADD FUNCTIONALITY
+   private fun notificationSoundOnClick() =
+       binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
+           when (isChecked) {
+               true -> {}
+               false -> {}
+           }
+       }
+       */
 
+    /* TODO ADD FUNCTIONALITY
     private fun notificationVibrateOnClick() =
         binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            /* TODO ADD FUNCTIONALITY
             when (isChecked) {
                 true -> {}
                 false -> {}
             }
-            */
         }
+        */
 
     private fun donateOnClick() = binding.clMiscellaneousDonate.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DONATE)
