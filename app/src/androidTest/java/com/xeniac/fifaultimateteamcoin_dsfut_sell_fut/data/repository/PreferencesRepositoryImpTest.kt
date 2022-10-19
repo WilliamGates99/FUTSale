@@ -57,7 +57,7 @@ class PreferencesRepositoryImpTest {
     /**
      * Fetch Initial Preferences Test Cases:
      * getCurrentAppThemeSynchronously -> 0
-     * isOnBoardingCompleted -> false
+     * isOnBoardingCompletedSynchronously -> false
      * getCurrentAppTheme -> 0
      * isNotificationSoundActive -> true
      * isNotificationVibrateActive -> true
@@ -73,7 +73,9 @@ class PreferencesRepositoryImpTest {
         testDataStore.edit { it.clear() }
 
         val initialCurrentAppTheme = testRepository.getCurrentAppThemeSynchronously()
+        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
 
+        assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
     }
 
@@ -81,7 +83,6 @@ class PreferencesRepositoryImpTest {
     fun fetchInitialPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
-        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         val initialCurrentAppTheme = testRepository.getCurrentAppTheme()
         val initialIsNotificationSoundActive = testRepository.isNotificationSoundActive()
         val initialIsNotificationVibrateActive = testRepository.isNotificationVibrateActive()
@@ -91,7 +92,6 @@ class PreferencesRepositoryImpTest {
         val initialSecretKey = testRepository.getSecretKey()
         val initialSelectedPlatform = testRepository.getSelectedPlatform()
 
-        assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
         assertThat(initialIsNotificationSoundActive).isTrue()
         assertThat(initialIsNotificationVibrateActive).isTrue()
@@ -121,7 +121,7 @@ class PreferencesRepositoryImpTest {
 
         testRepository.isOnBoardingCompleted(true)
 
-        val isOnBoardingCompleted = testRepository.isOnBoardingCompleted()
+        val isOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
         assertThat(isOnBoardingCompleted).isTrue()
     }
 

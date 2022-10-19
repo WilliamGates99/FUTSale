@@ -55,7 +55,8 @@ class OnBoardingViewModelTest {
 
             testViewModel.completeOnBoarding(partnerId, secretKey)
 
-            val isOnBoardingCompleted = fakePreferencesRepository.isOnBoardingCompleted()
+            val isOnBoardingCompleted = fakePreferencesRepository
+                .isOnBoardingCompletedSynchronously()
             val storedPartnerId = fakePreferencesRepository.getPartnerId()
             val storedSecretKey = fakePreferencesRepository.getSecretKey()
 

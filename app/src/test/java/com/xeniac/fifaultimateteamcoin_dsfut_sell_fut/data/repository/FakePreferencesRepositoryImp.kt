@@ -17,7 +17,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override fun getCurrentAppThemeSynchronously(): Int = currentAppTheme
 
-    override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
+    override fun isOnBoardingCompletedSynchronously(): Boolean = isOnBoardingCompleted
 
     override suspend fun getCurrentAppTheme(): Int = currentAppTheme
 

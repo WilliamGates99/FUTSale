@@ -32,25 +32,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        splashScreen()
+    }
 
+    private fun splashScreen() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { shouldShowSplashScreen }
 
-        getIsOnBoardingCompleted()
-        isOnBoardingCompletedObserver()
-    }
-
-    private fun getIsOnBoardingCompleted() = viewModel.getIsOnBoardingCompleted()
-
-    private fun isOnBoardingCompletedObserver() =
-        viewModel.isOnBoardingCompletedLiveData.observe(this) { isOnBoardingCompleted ->
-            if (isOnBoardingCompleted) {
-                mainInit()
-                shouldShowSplashScreen = false
-            } else {
-                navigateToOnBoardingActivity()
-            }
+        if (viewModel.isOnBoardingCompleted()) {
+            mainInit()
+            shouldShowSplashScreen = false
+        } else {
+            navigateToOnBoardingActivity()
         }
+    }
 
     private fun navigateToOnBoardingActivity() {
         startActivity(Intent(this, OnBoardingActivity::class.java))

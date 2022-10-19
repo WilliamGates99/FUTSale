@@ -4,7 +4,7 @@ interface PreferencesRepository {
 
     fun getCurrentAppThemeSynchronously(): Int
 
-    suspend fun isOnBoardingCompleted(): Boolean
+    fun isOnBoardingCompletedSynchronously(): Boolean
 
     suspend fun getCurrentAppTheme(): Int
 

@@ -5,7 +5,6 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
@@ -33,8 +32,7 @@ class MainViewModelTest {
     fun getIsOnBoardingCompleted_returnsDefaultIsOnBoardingCompleted() {
         val defaultIsOnBoardingCompleted = false
 
-        testViewModel.getIsOnBoardingCompleted()
-        val isOnBoardingCompleted = testViewModel.isOnBoardingCompletedLiveData.getOrAwaitValue()
+        val isOnBoardingCompleted = testViewModel.isOnBoardingCompleted()
         assertThat(isOnBoardingCompleted).isEqualTo(defaultIsOnBoardingCompleted)
     }
 }

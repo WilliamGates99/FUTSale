@@ -49,11 +49,13 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun isOnBoardingCompleted(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
-    } catch (e: Exception) {
-        Timber.e("isOnBoardingCompleted Exception: $e")
-        false
+    override fun isOnBoardingCompletedSynchronously(): Boolean = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
+        } catch (e: Exception) {
+            Timber.e("isOnBoardingCompletedSynchronously Exception: $e")
+            false
+        }
     }
 
     override suspend fun getCurrentAppTheme(): Int = try {
