@@ -40,7 +40,7 @@
     <string name="pick_up_toggle_platform_pc">کامپیوتر</string>
     <string name="pick_up_title_price_min">حداقل قیمت</string>
     <string name="pick_up_title_price_max">حداکثر قیمت</string>
-    <string name="pick_up_title_take_after">Take After</string>
+    <string name="pick_up_title_take_after">انتخاب بعد از</string>
     <string name="pick_up_hint_take_after">4 ثانیه</string>
     <string name="pick_up_helper_optional">اختیاری</string>
     <string name="pick_up_btn_pick_auto">گرفتن خودکار</string>
