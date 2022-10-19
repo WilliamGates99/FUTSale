@@ -566,7 +566,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height_1dp"
                         android:background="@color/grayLight"
-                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@+id/cl_miscellaneous_rate_us" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
