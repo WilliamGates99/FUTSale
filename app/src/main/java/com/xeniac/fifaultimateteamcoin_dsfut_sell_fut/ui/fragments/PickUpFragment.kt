@@ -128,16 +128,15 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
             }
         }
 
-    private fun toggleOnCheck() =
-        binding.togglePlatform.addOnButtonCheckedListener { _, checkedId, _ ->
-            viewModel.setSelectedPlatform(
-                when (checkedId) {
-                    R.id.toggle_platform_console -> SELECTED_PLATFORM_CONSOLE
-                    R.id.toggle_platform_pc -> SELECTED_PLATFORM_PC
-                    else -> SELECTED_PLATFORM_CONSOLE
-                }
-            )
-        }
+    private fun toggleOnCheck() = binding.togglePlatform.addOnButtonCheckedListener { group, _, _ ->
+        viewModel.setSelectedPlatform(
+            when (group.checkedButtonId) {
+                binding.togglePlatformConsole.id -> SELECTED_PLATFORM_CONSOLE
+                binding.togglePlatformPc.id -> SELECTED_PLATFORM_PC
+                else -> SELECTED_PLATFORM_CONSOLE
+            }
+        )
+    }
 
     private fun pickOnceOnClick() = binding.btnPickOnce.setOnClickListener {
         getPickOnceInputs()
