@@ -21,13 +21,13 @@
 #-renamesourcefileattribute SourceFile
 
 
-#---------------Begin: proguard configuration for Obfuscation Mapping---------------
+#🍅---------------Begin: proguard configuration for Obfuscation Mapping---------------🍅
 -printseeds obfuscation/seeds.txt
 -printmapping obfuscation/mapping.txt
-#---------------End: proguard configuration for Obfuscation Mapping---------------
+#🍅---------------End: proguard configuration for Obfuscation Mapping---------------🍅
 
 
-##---------------Begin: proguard configuration for retrofit2  ----------
+#🍅---------------Begin: proguard configuration for Retrofit Library---------------🍅
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -69,10 +69,10 @@
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
-##---------------End: proguard configuration for retrofit2  ----------
+#🍅---------------End: proguard configuration for Retrofit Library---------------🍅
 
 
-##---------------Begin: proguard configuration for okhttp3  ----------
+#🍅---------------Begin: proguard configuration for OkHttp Dependency of Retrofit---------------🍅
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
 
@@ -87,10 +87,40 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
-##---------------End: proguard configuration for okhttp3  ----------
+#🍅---------------End: proguard configuration for OkHttp Dependency of Retrofit---------------🍅
 
 
-#---------------Begin: proguard configuration for Gson---------------
+#🍅---------------Begin: proguard configuration for Okio Dependency of Retrofit---------------🍅
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+#🍅---------------End: proguard configuration for Okio Dependency of Retrofit---------------🍅
+
+
+#🍅---------------Begin: proguard configuration for Tapsell Library---------------🍅
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+
+
+##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
@@ -111,10 +141,10 @@
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
-#---------------End: proguard configuration for Gson---------------
+##---------------End: proguard configuration for Gson  ----------
 
 
-#---------------Begin: proguard configuration for Retrofit---------------
+##---------------Begin: proguard configuration for Retrofit  ----------
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -135,10 +165,10 @@
 
 # Top-level functions that can only be used by Kotlin.
 -dontwarn retrofit2.-KotlinExtensions
-#---------------End: proguard configuration for Retrofit---------------
+##---------------End: proguard configuration for Retrofit  ----------
 
 
-#---------------Begin: proguard configuration for okhttp3---------------
+##---------------Begin: proguard configuration for okhttp3  ----------
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
 
@@ -150,17 +180,17 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
-#---------------End: proguard configuration for okhttp3---------------
+##---------------End: proguard configuration for okhttp3  ----------
 
 
-#---------------Begin: proguard configuration for okio---------------
+##---------------Begin: proguard configuration for okio  ----------
 # Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
 -dontwarn org.codehaus.mojo.animal_sniffer.*
-#---------------End: proguard configuration for okio---------------
+##---------------End: proguard configuration for okio  ----------
 
 
 
-#---------------Begin: proguard configuration for admob---------------
+##---------------Begin: proguard configuration for admob  ----------
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
@@ -201,15 +231,15 @@
 -keepnames class * implements android.os.Parcelable {
    public static final ** CREATOR;
 }
-#---------------End: proguard configuration for admob---------------
+##---------------End: proguard configuration for admob  ----------
 
 
-#---------------Begin: proguard configuration for chartboost---------------
+##---------------Begin: proguard configuration for chartboost  ----------
 -keep class com.chartboost.** { *; }
-#---------------End: proguard configuration for chartboost---------------
+##---------------End: proguard configuration for chartboost  ----------
 
 
-#---------------Begin: proguard configuration for tapsell---------------
+##---------------Begin: proguard configuration for tapsell  ----------
 -keepclassmembers enum * { *; }
 -keep class **.R$* { *; }
 -keep interface ir.tapsell.sdk.NoProguard
@@ -236,14 +266,16 @@
 -keep interface ir.tapsell.plus.NoProguard
 -keep interface * extends ir.tapsell.plus.NoProguard { *; }
 -keep class * implements ir.tapsell.plus.NoProguard { *; }
-#---------------End: proguard configuration for tapsell---------------
 
+##---------------End: proguard configuration for tapsell  ----------
 
-#---------------Begin: proguard configuration for AppLovin---------------
+##---------------Begin: proguard configuration for AppLovin  ----------
+
 -dontwarn com.applovin.**
 -keep class com.applovin.** { *; }
 -keep class com.google.android.gms.ads.identifier.** { *; }
-#---------------End: proguard configuration for AppLovin---------------
+
+##---------------End: proguard configuration for AppLovin  ----------
 
 -keep public class com.bumptech.glide.**
 
@@ -259,3 +291,4 @@
 -keepnames public class com.google.android.gms.ads.identifier.AdvertisingIdClient
 -keepnames public class com.chartboost.sdk.Chartboost
 -keepnames public class com.applovin.sdk.AppLovinSdkSettings
+#🍅---------------End: proguard configuration for Tapsell Library---------------🍅
