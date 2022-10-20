@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bnv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph_main" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bnv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_rounded_bottom_nav"
-        app:itemIconTint="@color/color_bottom_nav"
-        app:itemRippleColor="@color/grayMedium"
-        app:itemTextAppearanceActive="@style/Theme.FifaUltimateTeamCoin.BottomNavigationView.Text"
-        app:itemTextColor="@color/color_bottom_nav"
-        app:labelVisibilityMode="selected"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fcv"
-        app:menu="@menu/menu_bottom_nav" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@+id/bnv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/nav_graph_main" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bnv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rounded_bottom_nav"
+            app:itemIconTint="@color/color_bottom_nav"
+            app:itemRippleColor="@color/grayMedium"
+            app:itemTextAppearanceActive="@style/Theme.FifaUltimateTeamCoin.BottomNavigationView.Text"
+            app:itemTextColor="@color/color_bottom_nav"
+            app:labelVisibilityMode="selected"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fcv"
+            app:menu="@menu/menu_bottom_nav" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

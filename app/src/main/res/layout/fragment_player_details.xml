@@ -44,10 +44,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_header"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_rounded_bottom_16dp"
                 android:elevation="@dimen/elevation_8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -107,7 +109,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/width_0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_16dp"
                     android:layout_marginTop="@dimen/margin_4dp"
@@ -118,6 +120,8 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/green"
                     android:textSize="@dimen/text_size_16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lav" />
 
                 <View
@@ -292,18 +296,20 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_instruction"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_8dp"
                 android:layout_marginBottom="@dimen/margin_8dp"
                 android:background="@drawable/shape_rounded_bottom_12dp"
                 android:elevation="@dimen/elevation_4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cl_header">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_title_instruction"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/width_0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_16dp"
                     android:layout_marginTop="@dimen/margin_24dp"
@@ -313,11 +319,13 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_text_instruction"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/width_0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_16dp"
                     android:layout_marginTop="@dimen/margin_4dp"
@@ -327,11 +335,13 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title_instruction" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_text_attention"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/width_0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_16dp"
                     android:layout_marginVertical="@dimen/margin_24dp"
@@ -343,6 +353,8 @@
                     android:textColor="@color/red"
                     android:textSize="@dimen/text_size_12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_instruction"
                     tools:targetApi="o" />
 

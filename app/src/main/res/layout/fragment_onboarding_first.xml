@@ -14,11 +14,13 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/width_0dp"
         android:layout_height="@dimen/height_0dp"
         android:layout_marginHorizontal="@dimen/margin_40dp"
         android:layout_marginTop="@dimen/margin_20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
@@ -27,7 +29,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/width_0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_24dp"
         android:layout_marginTop="@dimen/margin_44dp"
@@ -40,6 +42,8 @@
         android:textColor="@color/navyBlue"
         android:textSize="@dimen/text_size_20sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintVertical_chainStyle="packed"
@@ -47,7 +51,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_description"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/width_0dp"
         android:layout_height="@dimen/height_0dp"
         android:layout_marginHorizontal="@dimen/margin_24dp"
         android:layout_marginBottom="@dimen/margin_4dp"
@@ -61,6 +65,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_16sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
         tools:targetApi="p" />
 
