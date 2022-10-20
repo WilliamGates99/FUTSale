@@ -162,7 +162,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                     is Resource.Success -> {
                         hidePickOnceLoadingAnimation()
                         response.data?.let {
-                            navigateToPlayerDetails(it.player)
+                            navigateToPlayerDetails(it)
                         }
                     }
                     is Resource.Error -> {
@@ -213,7 +213,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                     is Resource.Success -> {
                         hideAutoPickLoadingAnimation()
                         response.data?.let {
-                            navigateToPlayerDetails(it.player)
+                            navigateToPlayerDetails(it)
                         }
                     }
                     is Resource.Error -> {

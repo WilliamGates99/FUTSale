@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.DsfutResponse
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_AUTO_PICK_UP
@@ -37,12 +37,12 @@ class PickUpViewModel @Inject constructor(
     val selectedPlatformIndexLiveData: LiveData<Event<String>> = _selectedPlatformIndexLiveData
 
     private val _pickPlayerOnceLiveData:
-            MutableLiveData<Event<Resource<DsfutResponse>>> = MutableLiveData()
-    val pickPlayerOnceLiveData: LiveData<Event<Resource<DsfutResponse>>> = _pickPlayerOnceLiveData
+            MutableLiveData<Event<Resource<Player>>> = MutableLiveData()
+    val pickPlayerOnceLiveData: LiveData<Event<Resource<Player>>> = _pickPlayerOnceLiveData
 
     private val _autoPickPlayerLiveData:
-            MutableLiveData<Event<Resource<DsfutResponse>>> = MutableLiveData()
-    val autoPickPlayerLiveData: LiveData<Event<Resource<DsfutResponse>>> = _autoPickPlayerLiveData
+            MutableLiveData<Event<Resource<Player>>> = MutableLiveData()
+    val autoPickPlayerLiveData: LiveData<Event<Resource<Player>>> = _autoPickPlayerLiveData
 
 //    private val _isPlayerPickedUpLiveData: MutableLiveData<Event<Boolean>> = MutableLiveData()
 //    val isPlayerPickedUpLiveData: LiveData<Event<Boolean>> = _isPlayerPickedUpLiveData
@@ -145,38 +145,36 @@ class PickUpViewModel @Inject constructor(
             )
 
             response.body()?.let {
-                when {
-                    it.error.isNotBlank() -> { // RESPONSE HAD ERROR
-                        when {
-                            it.error.contains(ERROR_DSFUT_BLOCK) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
-                            )
-                            it.error.contains(ERROR_DSFUT_EMPTY) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
-                            )
-                            it.error.contains(ERROR_DSFUT_LIMIT) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
-                            )
-                            it.error.contains(ERROR_DSFUT_MAINTENANCE) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
-                            )
-                            it.error.contains(ERROR_DSFUT_THROTTLE) -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
-                            )
-                            else -> _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
-                            )
-                        }
-                        Timber.e("safePickPlayerOnce error: ${it.error}")
+                it.error?.let { error -> // RESPONSE HAD ERROR
+                    when {
+                        error.contains(ERROR_DSFUT_BLOCK) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
+                        )
+                        error.contains(ERROR_DSFUT_EMPTY) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
+                        )
+                        error.contains(ERROR_DSFUT_LIMIT) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
+                        )
+                        error.contains(ERROR_DSFUT_MAINTENANCE) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
+                        )
+                        error.contains(ERROR_DSFUT_THROTTLE) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
+                        )
+                        else -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
+                        )
                     }
-                    else -> { // RESPONSE WAS SUCCESSFUL
-                        val player = it.player
-                        val expiresInMillis = player.expires
-                        startCountdown(expiresInMillis.toLong())
-                        _pickPlayerOnceLiveData.postValue(Event(Resource.Success(it)))
-//                        _pickedUpPlayerLiveData.postValue(Event(player))
-                        Timber.i("safePickPlayerOnce: ${it.message}")
-                    }
+                    Timber.e("safePickPlayerOnce error: ${it.error}")
+                }
+
+                it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
+                    val expiresInMillis = player.expires
+                    startCountdown(expiresInMillis.toLong())
+                    _pickPlayerOnceLiveData.postValue(Event(Resource.Success(player)))
+//                    _pickedUpPlayerLiveData.postValue(Event(player))
+                    Timber.i("safePickPlayerOnce: ${it.message}")
                 }
             }
         } catch (e: Exception) {
@@ -255,38 +253,36 @@ class PickUpViewModel @Inject constructor(
             )
 
             response.body()?.let {
-                when {
-                    it.error.isNotBlank() -> { // RESPONSE HAD ERROR
-                        when {
-                            it.error.contains(ERROR_DSFUT_BLOCK) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
-                            )
-                            it.error.contains(ERROR_DSFUT_EMPTY) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
-                            )
-                            it.error.contains(ERROR_DSFUT_LIMIT) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
-                            )
-                            it.error.contains(ERROR_DSFUT_MAINTENANCE) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
-                            )
-                            it.error.contains(ERROR_DSFUT_THROTTLE) -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
-                            )
-                            else -> _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
-                            )
-                        }
-                        Timber.e("safeAutoPickPlayer error: ${it.error}")
+                it.error?.let { error -> // RESPONSE HAD ERROR
+                    when {
+                        error.contains(ERROR_DSFUT_BLOCK) -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
+                        )
+                        error.contains(ERROR_DSFUT_EMPTY) -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
+                        )
+                        error.contains(ERROR_DSFUT_LIMIT) -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
+                        )
+                        error.contains(ERROR_DSFUT_MAINTENANCE) -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
+                        )
+                        error.contains(ERROR_DSFUT_THROTTLE) -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
+                        )
+                        else -> _autoPickPlayerLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
+                        )
                     }
-                    else -> { // RESPONSE WAS SUCCESSFUL
-                        val player = it.player
-                        val expiresInMillis = player.expires
-                        startCountdown(expiresInMillis.toLong())
-                        _autoPickPlayerLiveData.postValue(Event(Resource.Success(it)))
-//                        _pickedUpPlayerLiveData.postValue(Event(player))
-                        Timber.i("safeAutoPickPlayer: ${it.message}")
-                    }
+                    Timber.e("safeAutoPickPlayer error: ${it.error}")
+                }
+
+                it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
+                    val expiresInMillis = player.expires
+                    startCountdown(expiresInMillis.toLong())
+                    _autoPickPlayerLiveData.postValue(Event(Resource.Success(player)))
+//                    _pickedUpPlayerLiveData.postValue(Event(player))
+                    Timber.i("safeAutoPickPlayer: ${it.message}")
                 }
             }
         } catch (e: Exception) {
