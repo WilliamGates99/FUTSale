@@ -170,8 +170,7 @@ class PickUpViewModel @Inject constructor(
                 }
 
                 it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    val expiresInMillis = player.expires
-                    startCountdown(expiresInMillis.toLong())
+                    startCountdown()
                     _pickPlayerOnceLiveData.postValue(Event(Resource.Success(player)))
 //                    _pickedUpPlayerLiveData.postValue(Event(player))
                     Timber.i("safePickPlayerOnce: ${it.message}")
@@ -278,8 +277,7 @@ class PickUpViewModel @Inject constructor(
                 }
 
                 it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    val expiresInMillis = player.expires
-                    startCountdown(expiresInMillis.toLong())
+                    startCountdown()
                     _autoPickPlayerLiveData.postValue(Event(Resource.Success(player)))
 //                    _pickedUpPlayerLiveData.postValue(Event(player))
                     Timber.i("safeAutoPickPlayer: ${it.message}")
@@ -326,8 +324,8 @@ class PickUpViewModel @Inject constructor(
     }
     */
 
-
-    private fun startCountdown(startTimeInMillis: Long) {
+    private fun startCountdown() {
+        val startTimeInMillis = 3 * 60 * 1000L // 3 Minutes -> 180 Seconds
         val countDownIntervalInMillis = 1000L // 1 Second
 
         countDownTimer = object : CountDownTimer(startTimeInMillis, countDownIntervalInMillis) {
