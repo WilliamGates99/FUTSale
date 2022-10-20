@@ -145,7 +145,7 @@ dependencies {
      */
 
     // Google AdMob Library
-    implementation 'com.google.android.gms:play-services-ads:21.2.0'
+    implementation 'com.google.android.gms:play-services-ads:21.3.0'
 
     // Tapsell Library
     implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.1.7'
