@@ -182,29 +182,29 @@ def versionName = "${android.defaultConfig.versionName}"
 def renamedFileName = "FIFA Ultimate Team Coin $versionName"
 
 task copyReleaseApk(type: Copy) {
-    def sourceDir = "${releaseDir}/${releaseAPK}"
+    def sourceDirApk = "${releaseDir}/${releaseAPK}"
 
-    from sourceDir
+    from sourceDirApk
     into releaseDestDir
 
     rename "${releaseAPK}", "${renamedFileName}.apk"
 }
 
 task copyReleaseBundle(type: Copy) {
-    def sourceDir = "${releaseDir}/{$releaseBundle}"
+    def sourceDirBundle = "${releaseDir}/{$releaseBundle}"
 
-    from sourceDir
+    from sourceDirBundle
     into releaseDestDir
 
     rename "${releaseBundle}", "${renamedFileName}.aab"
 }
 
 task copyObfuscationFolder(type: Copy) {
-    def sourceDir = "${rootDir}/app/obfuscation"
-    def obfuscationDestDir = "${releaseDestDir}\\obfuscation"
+    def sourceDirObfuscation = "${rootDir}/app/obfuscation"
+    def destDirObfuscation = "${releaseDestDir}\\obfuscation"
 
-    from sourceDir
-    into obfuscationDestDir
+    from sourceDirObfuscation
+    into destDirObfuscation
 }
 
 task copyReleaseFiles() {
