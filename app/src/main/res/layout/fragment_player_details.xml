@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="time"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="rating"
+            type="String" />
+
+        <variable
+            name="position"
+            type="String" />
+
+        <variable
+            name="priceStart"
+            type="String" />
+
+        <variable
+            name="priceNow"
+            type="String" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_header"
+                android:layout_width="@dimen/width_0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_rounded_bottom_16dp"
+                android:elevation="@dimen/elevation_8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="@dimen/margin_16dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:layout_marginEnd="@dimen/margin_8dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/padding_5dp"
+                    android:src="@drawable/ic_toolbar_back"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timer"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:layout_marginEnd="@dimen/margin_16dp"
+                    android:background="@drawable/shape_rounded_timer"
+                    android:fontFamily="@font/localized_black"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="@dimen/padding_8dp"
+                    android:paddingVertical="@dimen/padding_4dp"
+                    android:text="@{time}"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_10sp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/btn_back"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lav"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="@dimen/max_height_200dp"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_back"
+                    app:layout_constraintWidth_max="@dimen/max_width_200dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_rawRes="@raw/anim_player_details_success"
+                    app:lottie_repeatCount="0"
+                    app:lottie_speed="0.8" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_16dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:fontFamily="@font/localized_extra_bold"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="@{title}"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lav" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="@dimen/width_1dp"
+                    android:layout_height="@dimen/height_0dp"
+                    android:layout_marginVertical="@dimen/margin_24dp"
+                    android:background="@color/grayLight"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title_rating"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:fontFamily="@font/localized_semi_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/player_details_title_rating"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grayDark"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_rating"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:fontFamily="@font/localized_extra_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@{rating}"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/navyBlue"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_rating" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title_position"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:fontFamily="@font/localized_semi_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/player_details_title_position"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grayDark"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toTopOf="@+id/divider" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_position"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:fontFamily="@font/localized_extra_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@{position}"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/navyBlue"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_position" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title_price_start"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:fontFamily="@font/localized_semi_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/player_details_title_price_start"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grayDark"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_rating" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_price_start"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    android:fontFamily="@font/localized_extra_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@{priceStart}"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/navyBlue"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/divider"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_price_start" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title_price_now"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:fontFamily="@font/localized_semi_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/player_details_title_price_now"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grayDark"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_position" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_price_now"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_4dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    android:fontFamily="@font/localized_extra_bold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@{priceNow}"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/navyBlue"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_price_now"
+                    app:layout_constraintVertical_bias="0.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_instruction"
+                android:layout_width="@dimen/width_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_8dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:background="@drawable/shape_rounded_bottom_12dp"
+                android:elevation="@dimen/elevation_4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_header">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title_instruction"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_16dp"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:fontFamily="@font/localized_medium"
+                    android:gravity="start"
+                    android:text="@string/player_details_title_instruction"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_text_instruction"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_16dp"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:fontFamily="@font/localized_regular"
+                    android:gravity="start"
+                    android:text="@string/player_details_text_instruction"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_instruction" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_text_attention"
+                    android:layout_width="@dimen/width_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_16dp"
+                    android:layout_marginVertical="@dimen/margin_24dp"
+                    android:fontFamily="@font/localized_semi_bold"
+                    android:gravity="start"
+                    android:justificationMode="inter_word"
+                    android:text="@string/player_details_text_attention"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_text_instruction"
+                    tools:targetApi="o" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

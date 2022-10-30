@@ -1,16 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.FIFAUltimateTeamCoin" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+    <style name="Theme.FifaUltimateTeamCoin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/navyBlue</item>
+        <item name="colorOnPrimary">@color/whiteStatic</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/navyBlue</item>
+        <item name="colorOnSecondary">@color/whiteStatic</item>
+        <item name="android:statusBarColor">@color/statusBar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:colorEdgeEffect">@color/skyBlue</item>
+        <item name="snackbarStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar</item>
+        <item name="snackbarTextViewStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.TextView
+        </item>
+        <item name="snackbarButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
+        </item>
+        <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
+        <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
     </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
+        <item name="android:colorBackground">@color/skyBlue</item>
+        <item name="android:statusBarColor">@color/skyBlue</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+
 </resources>

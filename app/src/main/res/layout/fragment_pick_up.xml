@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="shouldShowPlayerCard"
+            type="Boolean" />
+
+        <variable
+            name="time"
+            type="String" />
+
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="ratingAndPosition"
+            type="String" />
+
+        <variable
+            name="priceStart"
+            type="String" />
+
+        <variable
+            name="priceNow"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Theme.FifaUltimateTeamCoin.Toolbar"
+            android:layout_width="@dimen/width_0dp"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/pick_up_text_title" />
+
+        <ScrollView
+            android:layout_width="@dimen/width_0dp"
+            android:layout_height="@dimen/height_0dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_player"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_negative16dp"
+                    android:background="@drawable/shape_rounded_latest_player"
+                    android:elevation="@dimen/elevation_8dp"
+                    android:visibility="@{shouldShowPlayerCard ? View.VISIBLE : View.GONE, default=gone}">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_player_rating_position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_36dp"
+                        android:background="@drawable/shape_rounded_rating_position"
+                        android:fontFamily="@font/localized_extra_bold"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:paddingHorizontal="@dimen/padding_8dp"
+                        android:paddingVertical="@dimen/padding_4dp"
+                        android:text="@{ratingAndPosition}"
+                        android:textAlignment="gravity"
+                        android:textAllCaps="true"
+                        android:textColor="@color/navyBlue"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_player_name"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_player_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_8dp"
+                        android:fontFamily="@font/localized_extra_bold"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@{name}"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/greenDark"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_player_rating_position"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_player_rating_position"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_player_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_16dp"
+                        android:background="@drawable/shape_rounded_timer"
+                        android:fontFamily="@font/localized_black"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/padding_8dp"
+                        android:paddingVertical="@dimen/padding_4dp"
+                        android:text="@{time}"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_10sp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_player_rating_position"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@+id/tv_player_name"
+                        app:layout_constraintTop_toTopOf="@+id/tv_player_rating_position"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_player_price_start"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_4dp"
+                        android:layout_marginTop="@dimen/margin_20dp"
+                        android:fontFamily="@font/localized_regular"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/pick_up_title_player_price_start"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/grayDark"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_title_player_price_now"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_player_rating_position" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_player_price_start"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_4dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginBottom="@dimen/margin_20dp"
+                        android:fontFamily="@font/localized_bold"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@{priceStart}"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/greenDark"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_player_price_now"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_player_price_start" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_player_price_now"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_4dp"
+                        android:layout_marginTop="@dimen/margin_20dp"
+                        android:fontFamily="@font/localized_regular"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/pick_up_title_player_price_now"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/grayDark"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/tv_title_player_price_start"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_player_rating_position" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_player_price_now"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_4dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginBottom="@dimen/margin_20dp"
+                        android:fontFamily="@font/localized_bold"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@{priceNow}"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/greenDark"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/tv_player_price_start"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_player_price_now" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/margin_negative16dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    android:background="@drawable/shape_rounded_bottom_12dp"
+                    android:elevation="@dimen/elevation_4dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_instruction"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_40dp"
+                        android:fontFamily="@font/localized_medium"
+                        android:gravity="start"
+                        android:text="@string/pick_up_title_instruction"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_text_instruction"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:fontFamily="@font/localized_regular"
+                        android:gravity="start"
+                        android:text="@string/pick_up_text_instruction"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_instruction" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_platform"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_16dp"
+                        android:layout_marginEnd="@dimen/margin_12dp"
+                        android:fontFamily="@font/localized_bold"
+                        android:gravity="start"
+                        android:text="@string/pick_up_title_platform"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/toggle_platform"
+                        app:layout_constraintEnd_toStartOf="@+id/toggle_platform"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/toggle_platform"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggle_platform"
+                        style="@style/Theme.FifaUltimateTeamCoin.ToggleButton"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_28dp"
+                        android:layout_marginEnd="@dimen/margin_16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_title_platform"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_text_instruction">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/toggle_platform_console"
+                            style="@style/Theme.FifaUltimateTeamCoin.ToggleButton.Button"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/pick_up_toggle_platform_console" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/toggle_platform_pc"
+                            style="@style/Theme.FifaUltimateTeamCoin.ToggleButton.Button"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/pick_up_toggle_platform_pc" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_price_min"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Title"
+                        android:layout_marginTop="@dimen/margin_16dp"
+                        android:labelFor="@+id/ti_layout_price_min"
+                        android:text="@string/pick_up_title_price_min"
+                        app:layout_constraintEnd_toEndOf="@+id/ti_layout_price_min"
+                        app:layout_constraintStart_toStartOf="@+id/ti_layout_price_min"
+                        app:layout_constraintTop_toBottomOf="@+id/toggle_platform" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ti_layout_price_min"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginEnd="@dimen/margin_8dp"
+                        app:helperText="@string/pick_up_helper_optional"
+                        app:layout_constraintEnd_toStartOf="@+id/ti_layout_price_max"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_price_min">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ti_edit_price_min"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/localized_regular"
+                            android:hint="@string/pick_up_hint_price_min"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textAlignment="viewStart"
+                            android:textColorHint="@color/grayDark"
+                            android:textSize="@dimen/text_size_16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_price_max"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Title"
+                        android:layout_marginTop="@dimen/margin_16dp"
+                        android:labelFor="@+id/ti_layout_price_max"
+                        android:text="@string/pick_up_title_price_max"
+                        app:layout_constraintEnd_toEndOf="@+id/ti_layout_price_max"
+                        app:layout_constraintStart_toStartOf="@+id/ti_layout_price_max"
+                        app:layout_constraintTop_toBottomOf="@+id/toggle_platform" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ti_layout_price_max"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginEnd="@dimen/margin_16dp"
+                        app:helperText="@string/pick_up_helper_optional"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/ti_layout_price_min"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_price_max">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ti_edit_price_max"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/localized_regular"
+                            android:hint="@string/pick_up_hint_price_max"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textAlignment="viewStart"
+                            android:textColorHint="@color/grayDark"
+                            android:textSize="@dimen/text_size_16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_title_take_after"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Title"
+                        android:layout_marginTop="@dimen/margin_16dp"
+                        android:labelFor="@+id/ti_layout_take_after"
+                        android:text="@string/pick_up_title_take_after"
+                        app:layout_constraintEnd_toEndOf="@id/ti_layout_take_after"
+                        app:layout_constraintStart_toStartOf="@id/ti_layout_take_after"
+                        app:layout_constraintTop_toBottomOf="@+id/ti_layout_price_min" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ti_layout_take_after"
+                        style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        app:helperText="@string/pick_up_helper_optional"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_title_take_after">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ti_edit_take_after"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/localized_regular"
+                            android:hint="@string/pick_up_hint_take_after"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textAlignment="viewStart"
+                            android:textColorHint="@color/grayDark"
+                            android:textSize="@dimen/text_size_16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_pick_auto"
+                        style="@style/Theme.FifaUltimateTeamCoin.Button"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_16dp"
+                        android:layout_marginTop="@dimen/margin_40dp"
+                        android:layout_marginEnd="@dimen/margin_8dp"
+                        android:layout_marginBottom="@dimen/margin_24dp"
+                        android:text="@string/pick_up_btn_pick_auto"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btn_pick_once"
+                        app:layout_constraintHorizontal_weight="2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ti_layout_take_after" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/cpi_pick_auto"
+                        style="@style/Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_16dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_pick_auto"
+                        app:layout_constraintStart_toStartOf="@+id/btn_pick_auto"
+                        app:layout_constraintTop_toTopOf="@+id/btn_pick_auto" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_pick_once"
+                        style="@style/Theme.FifaUltimateTeamCoin.Button.Outlined"
+                        android:layout_width="@dimen/width_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8dp"
+                        android:layout_marginTop="@dimen/margin_40dp"
+                        android:layout_marginEnd="@dimen/margin_16dp"
+                        android:layout_marginBottom="@dimen/margin_24dp"
+                        android:text="@string/pick_up_btn_pick_once"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/btn_pick_auto"
+                        app:layout_constraintTop_toBottomOf="@+id/ti_layout_take_after" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/cpi_pick_once"
+                        style="@style/Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_pick_once"
+                        app:layout_constraintEnd_toEndOf="@+id/btn_pick_once"
+                        app:layout_constraintStart_toStartOf="@+id/btn_pick_once"
+                        app:layout_constraintTop_toTopOf="@+id/btn_pick_once" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
