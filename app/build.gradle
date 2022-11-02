@@ -4,17 +4,19 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
-//    id 'com.google.gms.google-services' // Google Services plugin
+    id 'com.google.gms.google-services' // Google Services plugin
     id 'dagger.hilt.android.plugin'
-//    id 'applovin-quality-service'
+//    id 'com.google.firebase.crashlytics'
+//    id 'com.google.firebase.firebase-perf'
+    id 'applovin-quality-service'
 }
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
-//applovin {
-//    apiKey "\"${properties.getProperty("APPLOVIN_API_KEY")}\""
-//}
+applovin {
+    apiKey "\"${properties.getProperty("APPLOVIN_API_KEY")}\""
+}
 
 android {
     namespace 'com.xeniac.fifaultimateteamcoin_dsfut_sell_fut'
@@ -32,10 +34,10 @@ android {
 
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
         buildConfigField "String", "RETROFIT_FEED_URL", "\"${properties.getProperty("RETROFIT_FEED_URL")}\""
-//        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_PROFILE_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID", "\"${properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_PROFILE_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID", "\"${properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")}\""
         buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
         buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
         buildConfigField "String", "TAPSELL_PROFILE_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_PROFILE_NATIVE_ZONE_ID")}\""
@@ -120,6 +122,14 @@ dependencies {
     // Preferences DataStore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
+    // Firebase BoM and Analytics
+    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Firebase Release & Monitor
+//    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+//    implementation 'com.google.firebase:firebase-perf-ktx'
+
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -137,12 +147,10 @@ dependencies {
     // Google Play In-App Reviews API
     implementation 'com.google.android.play:review-ktx:2.0.0'
 
-    /*
     // Applovin Libraries
-    implementation 'com.applovin:applovin-sdk:11.5.2'
+    implementation 'com.applovin:applovin-sdk:11.5.3'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
-    implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
-     */
+    implementation 'com.applovin.mediation:google-adapter:21.3.0.2'
 
     // Google AdMob Library
     implementation 'com.google.android.gms:play-services-ads:21.3.0'
