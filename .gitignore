@@ -10,5 +10,5 @@
 /app/release
 /app/obfuscation
 /app/src/main/dbschemas
-/app/google-services.json
+google-services.json
 .safedk
