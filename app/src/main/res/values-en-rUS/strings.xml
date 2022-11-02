@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FUT Coin</string>
+    <string name="app_name">FUTCoin</string>
 
     <string name="error_network_connection">Unable to connect to the internet.</string>
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
