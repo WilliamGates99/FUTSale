@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FUT Coin</string>
+    <string name="app_name">FUTCoin</string>
     <string name="error_network_connection">Unable to connect to the internet.</string>
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
@@ -23,8 +23,6 @@
     <string name="onboarding_fourth_hint_secret_key">Enter your secret key</string>
     <string name="onboarding_fourth_btn_register">If you don\'t have a DSFUT account, <font fgcolor="#1C53F4"><b>click here</b></font> to create one.</string>
     <string name="onboarding_fourth_btn_start">Get Started</string>
-    <string name="onboarding_fourth_error_blank_partner_id">Enter your partner ID!</string>
-    <string name="onboarding_fourth_error_blank_secret_key">Enter your secret key!</string>
     <string name="main_menu_title_pick_up">Pick Up</string>
     <string name="main_menu_title_profile">Profile</string>
     <string name="main_menu_title_settings">Settings</string>
