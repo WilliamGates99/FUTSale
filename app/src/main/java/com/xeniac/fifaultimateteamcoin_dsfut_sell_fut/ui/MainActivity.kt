@@ -9,6 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdListener
+import com.applovin.mediation.MaxError
+import com.applovin.mediation.ads.MaxInterstitialAd
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
@@ -20,12 +24,15 @@ import ir.tapsell.plus.model.TapsellPlusAdModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MaxAdListener {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel>()
 
     private var shouldShowSplashScreen = true
+
+    lateinit var appLovinAd: MaxInterstitialAd
+    private var appLovinAdRequestCounter = 1
 
     var tapsellResponseId: String? = null
     private var tapsellRequestCounter = 1
@@ -57,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupBottomNavView()
-        requestTapsellInterstitial()
+        requestAppLovinInterstitial()
     }
 
     private fun setupBottomNavView() = binding.apply {
@@ -83,7 +90,47 @@ class MainActivity : AppCompatActivity() {
         binding.bnv.visibility = if (shouldShow) VISIBLE else GONE
     }
 
-    fun requestTapsellInterstitial() {
+    fun requestAppLovinInterstitial() {
+        appLovinAd = MaxInterstitialAd(BuildConfig.APPLOVIN_INTERSTITIAL_UNIT_ID, this).apply {
+            setListener(this@MainActivity)
+            loadAd()
+        }
+    }
+
+    override fun onAdLoaded(ad: MaxAd?) {
+        Timber.i("AppLovin Interstitial onAdLoaded")
+        appLovinAdRequestCounter = 1
+    }
+
+    override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+        Timber.e("AppLovin Interstitial onAdLoadFailed: $error")
+        if (appLovinAdRequestCounter < 2) {
+            appLovinAdRequestCounter++
+            appLovinAd.loadAd()
+        } else {
+            requestTapsellInterstitial()
+        }
+    }
+
+    override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+        Timber.e("AppLovin Interstitial onAdDisplayFailed: $error")
+        appLovinAd.loadAd()
+    }
+
+    override fun onAdHidden(ad: MaxAd?) {
+        Timber.i("AppLovin Interstitial onAdHidden")
+        appLovinAd.loadAd()
+    }
+
+    override fun onAdDisplayed(ad: MaxAd?) {
+        Timber.i("AppLovin Interstitial onAdDisplayed")
+    }
+
+    override fun onAdClicked(ad: MaxAd?) {
+        Timber.i("AppLovin Interstitial onAdClicked")
+    }
+
+    private fun requestTapsellInterstitial() {
         TapsellPlus.requestInterstitialAd(this,
             BuildConfig.TAPSELL_INTERSTITIAL_ZONE_ID, object : AdRequestCallback() {
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
