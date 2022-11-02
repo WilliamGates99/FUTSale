@@ -7,7 +7,7 @@ plugins {
     id 'com.google.gms.google-services' // Google Services plugin
     id 'dagger.hilt.android.plugin'
     id 'com.google.firebase.crashlytics'
-//    id 'com.google.firebase.firebase-perf'
+    id 'com.google.firebase.firebase-perf'
     id 'applovin-quality-service'
 }
 
@@ -130,7 +130,7 @@ dependencies {
 
     // Firebase Release & Monitor
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
-//    implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
