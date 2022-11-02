@@ -5,8 +5,6 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -29,22 +27,6 @@ class OnBoardingViewModelTest {
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImp()
         testViewModel = OnBoardingViewModel(fakePreferencesRepository)
-    }
-
-    @Test
-    fun validateFourthScreenInputsWithBlankInputs_returnsError() {
-        testViewModel.validateFourthScreenInputs("", "")
-
-        val responseEvent = testViewModel.completeOnBoardingLiveData.getOrAwaitValue()
-        assertThat(responseEvent.getContentIfNotHandled()).isInstanceOf(Resource.Error::class.java)
-    }
-
-    @Test
-    fun validateFourthScreenInputsWithValidInputs_returnsSuccess() {
-        testViewModel.validateFourthScreenInputs("123", "abc")
-
-        val responseEvent = testViewModel.completeOnBoardingLiveData.getOrAwaitValue()
-        assertThat(responseEvent.getContentIfNotHandled()).isInstanceOf(Resource.Success::class.java)
     }
 
     @Test

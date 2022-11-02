@@ -43,10 +43,6 @@ object Constants {
     const val DELAY_TIME_SECRET_KEY = 1000L
     const val DELAY_TIME_AUTO_PICK_UP = 500L
 
-    // Input Errors
-    const val ERROR_INPUT_BLANK_PARTNER_ID = "Partner ID is blank"
-    const val ERROR_INPUT_BLANK_SECRET_KEY = "Secret Key is blank"
-
     // Response Errors
     const val ERROR_NETWORK_CONNECTION =
         "A network error (such as timeout, interrupted connection or unreachable host) has occurred"

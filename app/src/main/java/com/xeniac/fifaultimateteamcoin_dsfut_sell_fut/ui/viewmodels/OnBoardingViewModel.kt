@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPUT_BLANK_PARTNER_ID
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPUT_BLANK_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
@@ -23,24 +21,6 @@ class OnBoardingViewModel @Inject constructor(
     private val _completeOnBoardingLiveData:
             MutableLiveData<Event<Resource<Nothing>>> = MutableLiveData()
     val completeOnBoardingLiveData: LiveData<Event<Resource<Nothing>>> = _completeOnBoardingLiveData
-
-    fun validateFourthScreenInputs(partnerId: String, secretKey: String) {
-        if (partnerId.isBlank()) {
-            _completeOnBoardingLiveData.postValue(
-                Event(Resource.Error(UiText.DynamicString(ERROR_INPUT_BLANK_PARTNER_ID)))
-            )
-            return
-        }
-
-        if (secretKey.isBlank()) {
-            _completeOnBoardingLiveData.postValue(
-                Event(Resource.Error(UiText.DynamicString(ERROR_INPUT_BLANK_SECRET_KEY)))
-            )
-            return
-        }
-
-        completeOnBoarding(partnerId, secretKey)
-    }
 
     fun completeOnBoarding(partnerId: String, secretKey: String) = viewModelScope.launch {
         safeCompleteOnBoarding(partnerId, secretKey)
