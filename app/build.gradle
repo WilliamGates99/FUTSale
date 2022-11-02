@@ -27,8 +27,8 @@ android {
         applicationId "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk 21
         targetSdk 33
-        versionCode 2 // TODO UPGRADE FOR RELEASE
-        versionName '1.0.1' // TODO UPGRADE FOR RELEASE
+        versionCode 3 // TODO UPGRADE FOR RELEASE
+        versionName '1.0.2' // TODO UPGRADE FOR RELEASE
 
         resConfigs "en_US", "en_GB", "fa_IR"
 
@@ -52,9 +52,9 @@ android {
     buildTypes {
         debug {
             versionNameSuffix ' - debug'
-//            applicationIdSuffix '.debug'
-//            ext.enableCrashlytics = false
-//            ext.alwaysUpdateBuildId = false
+            applicationIdSuffix '.debug'
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
         }
 
         release {
