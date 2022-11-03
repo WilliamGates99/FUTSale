@@ -4,8 +4,10 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
-//    id 'com.google.gms.google-services' // Google Services plugin
+    id 'com.google.gms.google-services' // Google Services plugin
     id 'dagger.hilt.android.plugin'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
 //    id 'applovin-quality-service'
 }
 
@@ -25,17 +27,17 @@ android {
         applicationId "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk 21
         targetSdk 33
-        versionCode 2 // TODO UPGRADE FOR RELEASE
-        versionName '1.0.1' // TODO UPGRADE FOR RELEASE
+        versionCode 3 // TODO UPGRADE FOR RELEASE
+        versionName '1.0.2' // TODO UPGRADE FOR RELEASE
 
         resConfigs "en_US", "en_GB", "fa_IR"
 
         buildConfigField "String", "RETROFIT_BASE_URL", "\"${properties.getProperty("RETROFIT_BASE_URL")}\""
         buildConfigField "String", "RETROFIT_FEED_URL", "\"${properties.getProperty("RETROFIT_FEED_URL")}\""
-//        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_PROFILE_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
-//        buildConfigField "String", "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID", "\"${properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")}\""
+        buildConfigField "String", "APPLOVIN_INTERSTITIAL_UNIT_ID", "\"${properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_PROFILE_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_SETTINGS_NATIVE_UNIT_ID", "\"${properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")}\""
+        buildConfigField "String", "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID", "\"${properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")}\""
         buildConfigField "String", "TAPSELL_KEY", "\"${properties.getProperty("TAPSELL_KEY")}\""
         buildConfigField "String", "TAPSELL_INTERSTITIAL_ZONE_ID", "\"${properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")}\""
         buildConfigField "String", "TAPSELL_PROFILE_NATIVE_ZONE_ID", "\"${properties.getProperty("TAPSELL_PROFILE_NATIVE_ZONE_ID")}\""
@@ -51,6 +53,8 @@ android {
         debug {
             versionNameSuffix ' - debug'
             applicationIdSuffix '.debug'
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
         }
 
         release {
@@ -99,15 +103,15 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
     // Navigation Component
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
     // Dagger - Hilt
     implementation 'com.google.dagger:hilt-android:2.44'
     kapt 'com.google.dagger:hilt-compiler:2.44'
 
     // Activity KTX for Injecting ViewModels into Fragments
-    implementation 'androidx.activity:activity-ktx:1.6.0'
+    implementation 'androidx.activity:activity-ktx:1.6.1'
 
     // Architectural Components
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
@@ -119,6 +123,14 @@ dependencies {
 
     // Preferences DataStore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    // Firebase BoM and Analytics
+    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Firebase Release & Monitor
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -137,12 +149,10 @@ dependencies {
     // Google Play In-App Reviews API
     implementation 'com.google.android.play:review-ktx:2.0.0'
 
-    /*
     // Applovin Libraries
-    implementation 'com.applovin:applovin-sdk:11.5.2'
+    implementation 'com.applovin:applovin-sdk:11.5.3'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
-    implementation 'com.applovin.mediation:google-adapter:21.2.0.0'
-     */
+    implementation 'com.applovin.mediation:google-adapter:21.3.0.2'
 
     // Google AdMob Library
     implementation 'com.google.android.gms:play-services-ads:21.3.0'
@@ -163,48 +173,47 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
-    androidTestImplementation 'androidx.navigation:navigation-testing:2.5.2'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.5.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptAndroidTest 'com.google.dagger:hilt-compiler:2.44'
-    debugImplementation 'androidx.fragment:fragment-testing:1.5.3'
+    debugImplementation 'androidx.fragment:fragment-testing:1.5.4'
 }
 
 def releaseDir = "${rootDir}/app/release"
-def releaseDestDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-
-def releaseAPK = "app-release.apk"
-def releaseBundle = "app-release.aab"
+def destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
 def versionName = "${android.defaultConfig.versionName}"
 def renamedFileName = "FIFA Ultimate Team Coin $versionName"
 
 task copyReleaseApk(type: Copy) {
-    def sourceDirApk = "${releaseDir}/${releaseAPK}"
+    def apkFile = "app-release.apk"
+    def apkSourceDir = "${releaseDir}/${apkFile}"
 
-    from sourceDirApk
-    into releaseDestDir
+    from apkSourceDir
+    into destinationDir
 
-    rename "${releaseAPK}", "${renamedFileName}.apk"
+    rename "${apkFile}", "${renamedFileName}.apk"
 }
 
 task copyReleaseBundle(type: Copy) {
-    def sourceDirBundle = "${releaseDir}/{$releaseBundle}"
+    def bundleFile = "app-release.aab"
+    def bundleSourceDir = "${releaseDir}/${bundleFile}"
 
-    from sourceDirBundle
-    into releaseDestDir
+    from bundleSourceDir
+    into destinationDir
 
-    rename "${releaseBundle}", "${renamedFileName}.aab"
+    rename "${bundleFile}", "${renamedFileName}.aab"
 }
 
 task copyObfuscationFolder(type: Copy) {
-    def sourceDirObfuscation = "${rootDir}/app/obfuscation"
-    def destDirObfuscation = "${releaseDestDir}\\obfuscation"
+    def obfuscationSourceDir = "${rootDir}/app/obfuscation"
+    def obfuscationDestDir = "${destinationDir}\\obfuscation"
 
-    from sourceDirObfuscation
-    into destDirObfuscation
+    from obfuscationSourceDir
+    into obfuscationDestDir
 }
 
 task copyReleaseFiles() {

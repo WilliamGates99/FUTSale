@@ -3,8 +3,16 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdRevenueListener
+import com.applovin.mediation.MaxError
+import com.applovin.mediation.nativeAds.MaxNativeAdListener
+import com.applovin.mediation.nativeAds.MaxNativeAdLoader
+import com.applovin.mediation.nativeAds.MaxNativeAdView
+import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -22,7 +30,7 @@ import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import timber.log.Timber
 
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListener {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -31,6 +39,16 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private var currentLocaleIndex = 0
     private var currentThemeIndex = 0
+
+    private lateinit var appLovinSettingsNativeAdContainer: ViewGroup
+    private lateinit var appLovinSettingsAdLoader: MaxNativeAdLoader
+    private var appLovinSettingsNativeAd: MaxAd? = null
+    private var appLovinSettingsAdRequestCounter = 1
+
+    private lateinit var appLovinMiscellaneousNativeAdContainer: ViewGroup
+    private lateinit var appLovinMiscellaneousAdLoader: MaxNativeAdLoader
+    private var appLovinMiscellaneousNativeAd: MaxAd? = null
+    private var appLovinMiscellaneousAdRequestCounter = 1
 
     private var tapsellSettingsResponseId: String? = null
     private var tapsellSettingsRequestCounter = 1
@@ -56,7 +74,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         improveTranslationsOnClick()
         rateUsOnClick()
         privacyPolicyOnClick()
-        initTapsellAdHolder()
+        requestSettingsAppLovinNativeAd()
+        requestMiscellaneousAppLovinNativeAd()
     }
 
     override fun onDestroyView() {
@@ -215,92 +234,192 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         openLink(requireContext(), requireView(), URL_PRIVACY_POLICY)
     }
 
-    private fun initTapsellAdHolder() {
-        _binding?.let {
-            val settingsAdHolder = TapsellPlus.createAdHolder(
-                requireActivity(), binding.flSettingsAdContainer, R.layout.ad_banner_tapsell
-            )
+    private fun createNativeAdView(): MaxNativeAdView {
+        val nativeAdBinder: MaxNativeAdViewBinder =
+            MaxNativeAdViewBinder.Builder(R.layout.ad_banner_applovin).apply {
+                setIconImageViewId(R.id.iv_banner_icon)
+                setTitleTextViewId(R.id.tv_banner_title)
+                setBodyTextViewId(R.id.tv_banner_body)
+                setCallToActionButtonId(R.id.btn_banner_action)
+            }.build()
+        return MaxNativeAdView(nativeAdBinder, requireContext())
+    }
 
-            val miscellaneousAdHolder = TapsellPlus.createAdHolder(
-                requireActivity(), binding.flMiscellaneousAdContainer, R.layout.ad_banner_tapsell
-            )
+    override fun onAdRevenuePaid(ad: MaxAd?) {
+        Timber.i("AppLovin onAdRevenuePaid")
+    }
 
-            settingsAdHolder?.let { requestSettingsTapsellNativeAd(it) }
-            miscellaneousAdHolder?.let { requestMiscellaneousTapsellNativeAd(it) }
+    private fun requestSettingsAppLovinNativeAd() = _binding?.let {
+        appLovinSettingsNativeAdContainer = binding.flSettingsAdContainer
+        appLovinSettingsAdLoader = MaxNativeAdLoader(
+            BuildConfig.APPLOVIN_SETTINGS_NATIVE_UNIT_ID,
+            requireContext()
+        ).apply {
+            setRevenueListener(this@SettingsFragment)
+            setNativeAdListener(AppLovinSettingsNativeAdListener())
+            loadAd(createNativeAdView())
         }
+    }
+
+    private inner class AppLovinSettingsNativeAdListener : MaxNativeAdListener() {
+        override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
+            super.onNativeAdLoaded(nativeAdView, nativeAd)
+            Timber.i("AppLovinSettingsNativeAdListener  onNativeAdLoaded")
+            appLovinSettingsAdRequestCounter = 1
+
+            appLovinSettingsNativeAd?.let {
+                // Clean up any pre-existing native ad to prevent memory leaks.
+                appLovinSettingsAdLoader.destroy(it)
+            }
+
+            showSettingsNativeAdContainer()
+            appLovinSettingsNativeAd = nativeAd
+            appLovinSettingsNativeAdContainer.removeAllViews()
+            appLovinSettingsNativeAdContainer.addView(nativeAdView)
+        }
+
+        override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
+            super.onNativeAdLoadFailed(adUnitId, error)
+            Timber.e("AppLovinSettingsNativeAdListener onNativeAdLoadFailed: ${error?.message}")
+            if (appLovinSettingsAdRequestCounter < 2) {
+                appLovinSettingsAdRequestCounter++
+                appLovinSettingsAdLoader.loadAd(createNativeAdView())
+            } else {
+                initTapsellSettingsAdHolder()
+            }
+        }
+
+        override fun onNativeAdClicked(nativeAd: MaxAd?) {
+            super.onNativeAdClicked(nativeAd)
+            Timber.i("AppLovinSettingsNativeAdListener onNativeAdClicked")
+        }
+    }
+
+    private fun initTapsellSettingsAdHolder() = _binding?.let {
+        val settingsAdHolder = TapsellPlus.createAdHolder(
+            requireActivity(), binding.flSettingsAdContainer, R.layout.ad_banner_tapsell
+        )
+        settingsAdHolder?.let { requestSettingsTapsellNativeAd(it) }
     }
 
     private fun requestSettingsTapsellNativeAd(adHolder: AdHolder) {
-        _binding?.let {
-            TapsellPlus.requestNativeAd(requireActivity(),
-                BuildConfig.TAPSELL_SETTINGS_NATIVE_ZONE_ID, object : AdRequestCallback() {
-                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
-                        super.response(tapsellPlusAdModel)
-                        Timber.i("requestSettingsTapsellNativeAd onResponse")
-                        tapsellSettingsRequestCounter = 1
-                        _binding?.let {
-                            tapsellPlusAdModel?.let {
-                                tapsellSettingsResponseId = it.responseId
-                                showSettingsNativeAdContainer()
-                                showNativeAd(adHolder, tapsellSettingsResponseId!!)
-                            }
+        TapsellPlus.requestNativeAd(requireActivity(),
+            BuildConfig.TAPSELL_SETTINGS_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                    super.response(tapsellPlusAdModel)
+                    Timber.i("requestSettingsTapsellNativeAd onResponse")
+                    tapsellSettingsRequestCounter = 1
+                    _binding?.let {
+                        tapsellPlusAdModel?.let {
+                            tapsellSettingsResponseId = it.responseId
+                            showSettingsNativeAdContainer()
+                            showTapsellNativeAd(adHolder, tapsellSettingsResponseId!!)
                         }
                     }
+                }
 
-                    override fun error(error: String?) {
-                        super.error(error)
-                        Timber.e("requestSettingsTapsellNativeAd onError: $error")
-                        if (tapsellSettingsRequestCounter < 2) {
-                            tapsellSettingsRequestCounter++
-                            requestSettingsTapsellNativeAd(adHolder)
-                        }
+                override fun error(error: String?) {
+                    super.error(error)
+                    Timber.e("requestSettingsTapsellNativeAd onError: $error")
+                    if (tapsellSettingsRequestCounter < 2) {
+                        tapsellSettingsRequestCounter++
+                        requestSettingsTapsellNativeAd(adHolder)
                     }
-                })
+                }
+            })
+    }
+
+    private fun requestMiscellaneousAppLovinNativeAd() = _binding?.let {
+        appLovinMiscellaneousNativeAdContainer = binding.flSettingsAdContainer
+        appLovinMiscellaneousAdLoader = MaxNativeAdLoader(
+            BuildConfig.APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID,
+            requireContext()
+        ).apply {
+            setRevenueListener(this@SettingsFragment)
+            setNativeAdListener(AppLovinMiscellaneousNativeAdListener())
+            loadAd(createNativeAdView())
         }
+    }
+
+    private inner class AppLovinMiscellaneousNativeAdListener : MaxNativeAdListener() {
+        override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
+            super.onNativeAdLoaded(nativeAdView, nativeAd)
+            Timber.i("AppLovinMiscellaneousNativeAdListener  onNativeAdLoaded")
+            appLovinMiscellaneousAdRequestCounter = 1
+
+            appLovinMiscellaneousNativeAd?.let {
+                // Clean up any pre-existing native ad to prevent memory leaks.
+                appLovinMiscellaneousAdLoader.destroy(it)
+            }
+
+            showMiscellaneousNativeAdContainer()
+            appLovinMiscellaneousNativeAd = nativeAd
+            appLovinMiscellaneousNativeAdContainer.removeAllViews()
+            appLovinMiscellaneousNativeAdContainer.addView(nativeAdView)
+        }
+
+        override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
+            super.onNativeAdLoadFailed(adUnitId, error)
+            Timber.e("AppLovinMiscellaneousNativeAdListener onNativeAdLoadFailed: ${error?.message}")
+            if (appLovinMiscellaneousAdRequestCounter < 2) {
+                appLovinMiscellaneousAdRequestCounter++
+                appLovinMiscellaneousAdLoader.loadAd(createNativeAdView())
+            } else {
+                initTapsellMiscellaneousAdHolder()
+            }
+        }
+
+        override fun onNativeAdClicked(nativeAd: MaxAd?) {
+            super.onNativeAdClicked(nativeAd)
+            Timber.i("AppLovinMiscellaneousNativeAdListener onNativeAdClicked")
+        }
+    }
+
+    private fun initTapsellMiscellaneousAdHolder() = _binding?.let {
+        val miscellaneousAdHolder = TapsellPlus.createAdHolder(
+            requireActivity(), binding.flMiscellaneousAdContainer, R.layout.ad_banner_tapsell
+        )
+        miscellaneousAdHolder?.let { requestMiscellaneousTapsellNativeAd(it) }
     }
 
     private fun requestMiscellaneousTapsellNativeAd(adHolder: AdHolder) {
-        _binding?.let {
-            TapsellPlus.requestNativeAd(requireActivity(),
-                BuildConfig.TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID, object : AdRequestCallback() {
-                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
-                        super.response(tapsellPlusAdModel)
-                        Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
-                        tapsellMiscellaneousRequestCounter = 1
-                        _binding?.let {
-                            tapsellPlusAdModel?.let {
-                                tapsellMiscellaneousResponseId = it.responseId
-                                showMiscellaneousNativeAdContainer()
-                                showNativeAd(adHolder, tapsellMiscellaneousResponseId!!)
-                            }
+        TapsellPlus.requestNativeAd(requireActivity(),
+            BuildConfig.TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID, object : AdRequestCallback() {
+                override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                    super.response(tapsellPlusAdModel)
+                    Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
+                    tapsellMiscellaneousRequestCounter = 1
+                    _binding?.let {
+                        tapsellPlusAdModel?.let {
+                            tapsellMiscellaneousResponseId = it.responseId
+                            showMiscellaneousNativeAdContainer()
+                            showTapsellNativeAd(adHolder, tapsellMiscellaneousResponseId!!)
                         }
                     }
+                }
 
-                    override fun error(error: String?) {
-                        super.error(error)
-                        Timber.e("requestMiscellaneousTapsellNativeAd onError: $error")
-                        if (tapsellMiscellaneousRequestCounter < 2) {
-                            tapsellMiscellaneousRequestCounter++
-                            requestMiscellaneousTapsellNativeAd(adHolder)
-                        }
+                override fun error(error: String?) {
+                    super.error(error)
+                    Timber.e("requestMiscellaneousTapsellNativeAd onError: $error")
+                    if (tapsellMiscellaneousRequestCounter < 2) {
+                        tapsellMiscellaneousRequestCounter++
+                        requestMiscellaneousTapsellNativeAd(adHolder)
                     }
-                })
-        }
+                }
+            })
     }
 
-    private fun showNativeAd(adHolder: AdHolder, responseId: String) {
-        _binding?.let {
-            TapsellPlus.showNativeAd(requireActivity(),
-                responseId, adHolder, object : AdShowListener() {
-                    override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
-                        super.onOpened(tapsellPlusAdModel)
-                    }
+    private fun showTapsellNativeAd(adHolder: AdHolder, responseId: String) {
+        TapsellPlus.showNativeAd(requireActivity(),
+            responseId, adHolder, object : AdShowListener() {
+                override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                    super.onOpened(tapsellPlusAdModel)
+                }
 
-                    override fun onClosed(tapsellPlusAdModel: TapsellPlusAdModel?) {
-                        super.onClosed(tapsellPlusAdModel)
-                    }
-                })
-        }
+                override fun onClosed(tapsellPlusAdModel: TapsellPlusAdModel?) {
+                    super.onClosed(tapsellPlusAdModel)
+                }
+            })
     }
 
     private fun showSettingsNativeAdContainer() = binding.apply {
@@ -312,6 +431,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun destroyAd() {
+        appLovinSettingsNativeAd?.let {
+            appLovinSettingsAdLoader.destroy(it)
+        }
+
+        appLovinMiscellaneousNativeAd?.let {
+            appLovinMiscellaneousAdLoader.destroy(it)
+        }
+
         tapsellSettingsResponseId?.let {
             TapsellPlus.destroyNativeBanner(requireActivity(), it)
         }

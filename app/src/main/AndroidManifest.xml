@@ -46,7 +46,6 @@
                 android:value="true" />
         </service>
 
-        <!--TODO EDIT AFTER ADDING APPLOVIN
         <meta-data
             android:name="applovin.sdk.key"
             android:value="hmVNBfwsMg8e9UdPEe6ZOWwE83xd2y2KUkDTlGBqx3DMlb0CUOK4f7AeBRRxh-QmzJneB-DPUA-cJuPFEZ7qWA"
@@ -54,8 +53,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4429657659293031~7535647965" />
-            -->
+            android:value="ca-app-pub-4429657659293031~2049225136" />
 
     </application>
 

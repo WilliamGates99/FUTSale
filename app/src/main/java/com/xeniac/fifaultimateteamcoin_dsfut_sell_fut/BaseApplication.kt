@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut
 
 import android.app.Application
 import android.util.Log
+import com.applovin.sdk.AppLovinPrivacySettings
+import com.applovin.sdk.AppLovinSdk
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
 import ir.tapsell.plus.TapsellPlus
@@ -22,12 +24,19 @@ class BaseApplication : Application() {
 
         setupTimber()
         setAppTheme()
+        initAppLovin()
         initTapsell()
     }
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
     private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
+
+    private fun initAppLovin() {
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk {}
+        AppLovinPrivacySettings.setHasUserConsent(true, this)
+    }
 
     private fun initTapsell() {
         TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY, object : TapsellPlusInitListener {

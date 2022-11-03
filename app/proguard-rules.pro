@@ -21,13 +21,19 @@
 #-renamesourcefileattribute SourceFile
 
 
-#🍅---------------Begin: proguard configuration for Obfuscation Mapping---------------🍅
+#🍅---------------Begin: Proguard Configuration for Obfuscation Mapping---------------🍅
 -printseeds obfuscation/seeds.txt
 -printmapping obfuscation/mapping.txt
-#🍅---------------End: proguard configuration for Obfuscation Mapping---------------🍅
+#🍅---------------End: Proguard Configuration for Obfuscation Mapping---------------🍅
 
 
-#🍅---------------Begin: proguard configuration for Retrofit Library---------------🍅
+#🍅---------------Begin: Proguard Configuration for Firebase Crashlytics---------------🍅
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+#🍅---------------End: Proguard Configuration for Firebase Crashlytics---------------🍅
+
+
+#🍅---------------Begin: Proguard Configuration for Retrofit Library---------------🍅
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -69,10 +75,10 @@
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
-#🍅---------------End: proguard configuration for Retrofit Library---------------🍅
+#🍅---------------End: Proguard Configuration for Retrofit Library---------------🍅
 
 
-#🍅---------------Begin: proguard configuration for OkHttp Dependency of Retrofit---------------🍅
+#🍅---------------Begin: Proguard Configuration for OkHttp Dependency of Retrofit---------------🍅
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
 
@@ -87,39 +93,16 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
-#🍅---------------End: proguard configuration for OkHttp Dependency of Retrofit---------------🍅
+#🍅---------------End: Proguard Configuration for OkHttp Dependency of Retrofit---------------🍅
 
 
-#🍅---------------Begin: proguard configuration for Okio Dependency of Retrofit---------------🍅
+#🍅---------------Begin: Proguard Configuration for Okio Dependency of Retrofit---------------🍅
 # Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
 -dontwarn org.codehaus.mojo.animal_sniffer.*
-#🍅---------------End: proguard configuration for Okio Dependency of Retrofit---------------🍅
+#🍅---------------End: Proguard Configuration for Okio Dependency of Retrofit---------------🍅
 
 
-#🍅---------------Begin: proguard configuration for Tapsell Library---------------🍅
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
-
+#🍅---------------Begin: Proguard Configuration for Tapsell Library---------------🍅
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
@@ -291,4 +274,52 @@
 -keepnames public class com.google.android.gms.ads.identifier.AdvertisingIdClient
 -keepnames public class com.chartboost.sdk.Chartboost
 -keepnames public class com.applovin.sdk.AppLovinSdkSettings
-#🍅---------------End: proguard configuration for Tapsell Library---------------🍅
+#🍅---------------End: Proguard Configuration for Tapsell Library---------------🍅
+
+
+#🍅---------------Begin: Missing Rules---------------🍅
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn com.adcolony.sdk.AdColony
+-dontwarn com.adcolony.sdk.AdColonyAdSize
+-dontwarn com.adcolony.sdk.AdColonyAdView
+-dontwarn com.adcolony.sdk.AdColonyAdViewListener
+-dontwarn com.adcolony.sdk.AdColonyAppOptions
+-dontwarn com.adcolony.sdk.AdColonyInterstitial
+-dontwarn com.adcolony.sdk.AdColonyInterstitialListener
+-dontwarn com.adcolony.sdk.AdColonyRewardListener
+-dontwarn com.android.vending.billing.IInAppBillingService$Stub
+-dontwarn com.android.vending.billing.IInAppBillingService
+-dontwarn com.chartboost.sdk.Chartboost
+-dontwarn com.chartboost.sdk.ChartboostDelegate
+-dontwarn com.chartboost.sdk.Libraries.CBLogging$Level
+-dontwarn com.chartboost.sdk.Privacy.model.DataUseConsent
+-dontwarn com.chartboost.sdk.Privacy.model.GDPR$GDPR_CONSENT
+-dontwarn com.chartboost.sdk.Privacy.model.GDPR
+-dontwarn com.chartboost.sdk.a
+-dontwarn com.facebook.FacebookSdk
+-dontwarn com.facebook.ads.AudienceNetworkAds$InitListener
+-dontwarn com.facebook.ads.AudienceNetworkAds$InitSettingsBuilder
+-dontwarn com.facebook.ads.AudienceNetworkAds
+-dontwarn com.facebook.ads.InterstitialAd
+-dontwarn com.facebook.ads.InterstitialAdListener
+-dontwarn com.facebook.ads.RewardedVideoAd
+-dontwarn com.facebook.ads.RewardedVideoAdListener
+-dontwarn com.squareup.picasso.Picasso
+-dontwarn com.squareup.picasso.RequestCreator
+-dontwarn com.squareup.picasso.Target
+-dontwarn com.unity3d.ads.IUnityAdsInitializationListener
+-dontwarn com.unity3d.ads.IUnityAdsListener
+-dontwarn com.unity3d.ads.UnityAds$PlacementState
+-dontwarn com.unity3d.ads.UnityAds
+-dontwarn com.unity3d.ads.metadata.MetaData
+-dontwarn com.unity3d.services.banners.BannerView$IListener
+-dontwarn com.unity3d.services.banners.BannerView
+-dontwarn com.unity3d.services.banners.UnityBannerSize
+-dontwarn com.vungle.warren.AdConfig
+-dontwarn com.vungle.warren.InitCallback
+-dontwarn com.vungle.warren.LoadAdCallback
+-dontwarn com.vungle.warren.PlayAdCallback
+-dontwarn com.vungle.warren.Vungle$Consent
+-dontwarn com.vungle.warren.Vungle
+#🍅---------------End: Missing Rules---------------🍅

@@ -17,8 +17,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingFourthBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.OnBoardingViewModel
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPUT_BLANK_PARTNER_ID
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_INPUT_BLANK_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_PARTNER_ID
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT
@@ -142,7 +140,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
         val partnerId = binding.tiEditPartnerId.text.toString().trim()
         val secretKey = binding.tiEditSecretKey.text.toString().trim()
 
-        viewModel.validateFourthScreenInputs(partnerId, secretKey)
+        viewModel.completeOnBoarding(partnerId, secretKey)
     }
 
     private fun onBoardingObserver() =
@@ -158,30 +156,8 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                         hideLoadingAnimation()
                         response.message?.let { message ->
                             message.asString(requireContext()).let {
-                                when {
-                                    it.contains(ERROR_INPUT_BLANK_PARTNER_ID) -> {
-                                        binding.apply {
-                                            tiLayoutPartnerId.error = requireContext()
-                                                .getString(R.string.onboarding_fourth_error_blank_partner_id)
-                                            tiLayoutPartnerId.requestFocus()
-                                            tiLayoutPartnerId.boxStrokeColor = ContextCompat
-                                                .getColor(requireContext(), R.color.red)
-                                        }
-                                    }
-                                    it.contains(ERROR_INPUT_BLANK_SECRET_KEY) -> {
-                                        binding.apply {
-                                            tiLayoutSecretKey.error = requireContext()
-                                                .getString(R.string.onboarding_fourth_error_blank_secret_key)
-                                            tiLayoutSecretKey.requestFocus()
-                                            tiLayoutSecretKey.boxStrokeColor = ContextCompat
-                                                .getColor(requireContext(), R.color.red)
-                                        }
-                                    }
-                                    else -> {
-                                        snackbar = normalErrorSnackbar(requireView(), it)
-                                        snackbar?.show()
-                                    }
-                                }
+                                snackbar = normalErrorSnackbar(requireView(), it)
+                                snackbar?.show()
                             }
                         }
                     }

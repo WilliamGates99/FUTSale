@@ -50,12 +50,15 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            findNavController().popBackStack()
-            showInterstitialAd()
+            navigateToPickUpFragment()
         }
     }
 
     private fun backOnClick() = binding.btnBack.setOnClickListener {
+        navigateToPickUpFragment()
+    }
+
+    private fun navigateToPickUpFragment() {
         findNavController().popBackStack()
         showInterstitialAd()
     }
@@ -92,13 +95,11 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     private fun showInterstitialAd() {
         (requireActivity() as MainActivity).apply {
             when {
-                /* TODO UNCOMMENT AFTER ADDING APPLOVIN
                 appLovinAd.isReady -> appLovinAd.showAd()
-                 */
                 tapsellResponseId != null -> showTapsellInterstitialAd(tapsellResponseId!!)
             }
 
-            requestTapsellInterstitial()
+            requestAppLovinInterstitial()
         }
     }
 

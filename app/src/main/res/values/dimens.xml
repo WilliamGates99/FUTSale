@@ -54,6 +54,7 @@
     <dimen name="elevation_3dp">3dp</dimen>
     <dimen name="elevation_4dp">4dp</dimen>
     <dimen name="elevation_8dp">8dp</dimen>
+    <dimen name="elevation_10dp">10dp</dimen>
 
     <!--Radius-->
     <dimen name="radius_4dp">4dp</dimen>
