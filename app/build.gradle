@@ -78,13 +78,6 @@ android {
         jvmTarget = '1.8'
     }
 
-    kapt {
-        /**
-         * Allow references to generated code
-         */
-        correctErrorTypes true
-    }
-
     bundle {
         language {
             /**
@@ -94,6 +87,13 @@ android {
             enableSplit false
         }
     }
+}
+
+kapt {
+    /**
+     * Allow references to generated code
+     */
+    correctErrorTypes = true
 }
 
 dependencies {
