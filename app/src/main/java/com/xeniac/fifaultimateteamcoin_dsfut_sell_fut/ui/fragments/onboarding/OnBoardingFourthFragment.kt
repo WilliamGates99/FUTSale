@@ -20,6 +20,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.OnBoardingVi
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_PARTNER_ID
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_SECRET_KEY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
@@ -41,6 +42,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
         textInputsBackgroundColor()
         textInputsStrokeColor()
         registerOnClick()
+        agreementOnClick()
         startOnClick()
         startActionDone()
         onBoardingObserver()
@@ -118,6 +120,10 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
 
     private fun registerOnClick() = binding.btnRegister.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DSFUT)
+    }
+
+    private fun agreementOnClick() = binding.btnAgreement.setOnClickListener {
+        openLink(requireContext(), requireView(), URL_PRIVACY_POLICY)
     }
 
     private fun startOnClick() = binding.btnStart.setOnClickListener {
