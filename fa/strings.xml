@@ -23,6 +23,7 @@
     <string name="onboarding_fourth_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
     <string name="onboarding_fourth_btn_register">اگر حساب DSFUT ندارید، <font fgcolor="#1C53F4"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.</string>
     <string name="onboarding_fourth_btn_start">شروع کنیم</string>
+    <string name="onboarding_fourth_btn_agreement">با ورود، شما <font fgcolor="#1C53F4"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.</string>
     <string name="main_menu_title_pick_up">گرفتن</string>
     <string name="main_menu_title_profile">پروفایل</string>
     <string name="main_menu_title_settings">تنظیمات</string>
