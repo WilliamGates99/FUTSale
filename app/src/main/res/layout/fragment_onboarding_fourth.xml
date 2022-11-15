@@ -161,9 +161,9 @@
             android:layout_width="@dimen/width_0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24dp"
-            android:layout_marginBottom="@dimen/margin_24dp"
+            android:layout_marginBottom="@dimen/margin_11dp"
             android:text="@string/onboarding_fourth_btn_start"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_agreement"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -177,6 +177,28 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_start"
             app:layout_constraintStart_toStartOf="@+id/btn_start"
             app:layout_constraintTop_toTopOf="@+id/btn_start" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_agreement"
+            style="@style/Theme.FifaUltimateTeamCoin.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_3dp"
+            android:layout_marginBottom="@dimen/margin_11dp"
+            android:fontFamily="@font/localized_light"
+            android:gravity="center_vertical|start"
+            android:maxWidth="@dimen/max_width_1000dp"
+            android:maxLines="2"
+            android:text="@string/onboarding_fourth_btn_agreement"
+            android:textAlignment="gravity"
+            android:textColor="@color/grayDark"
+            android:textSize="@dimen/text_size_12sp"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
