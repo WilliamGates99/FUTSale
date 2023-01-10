@@ -390,7 +390,7 @@ tasks.register<Copy>("copyReleaseBundle") {
     val renamedFileName = "FUTCoin $versionName"
 
     val playStoreBundleFile = "app-prod-playStore-release.aab"
-    val playStoreBundleSourceDir = "${releaseRootDir}/prodPlayStore/release/${bundleFile}"
+    val playStoreBundleSourceDir = "${releaseRootDir}/prodPlayStore/release/${playStoreBundleFile}"
 
     from(playStoreBundleSourceDir)
     into(destinationDir)
