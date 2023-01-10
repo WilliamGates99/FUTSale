@@ -36,57 +36,57 @@ android {
          */
         resourceConfigurations += mutableSetOf("en-rUS", "en-rGB", "fa-rIR")
 
-        resValue(
+        buildConfigField(
             "String",
             "RETROFIT_BASE_URL",
             properties.getProperty("RETROFIT_BASE_URL")
         )
-        resValue(
+        buildConfigField(
             "String",
             "RETROFIT_FEED_URL",
             properties.getProperty("RETROFIT_FEED_URL")
         )
-        resValue(
+        buildConfigField(
             "String",
             "APPLOVIN_INTERSTITIAL_UNIT_ID",
             properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "APPLOVIN_PROFILE_NATIVE_UNIT_ID",
             properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "APPLOVIN_SETTINGS_NATIVE_UNIT_ID",
             properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID",
             properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "TAPSELL_KEY",
             properties.getProperty("TAPSELL_KEY")
         )
-        resValue(
+        buildConfigField(
             "String",
             "TAPSELL_INTERSTITIAL_ZONE_ID",
             properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "TAPSELL_PROFILE_NATIVE_ZONE_ID",
             properties.getProperty("TAPSELL_PROFILE_NATIVE_ZONE_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "TAPSELL_SETTINGS_NATIVE_ZONE_ID",
             properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")
         )
-        resValue(
+        buildConfigField(
             "String",
             "TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID",
             properties.getProperty("TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID")
