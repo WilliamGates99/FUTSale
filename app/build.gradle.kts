@@ -91,8 +91,6 @@ android {
             "TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID",
             properties.getProperty("TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID")
         )
-//        buildConfigField "String", "URL_APP_STORE", "\"${properties.getProperty("URL_PLAY_STORE")}\""
-//        buildConfigField "String", "PACKAGE_NAME_APP_STORE", "\"${properties.getProperty("PACKAGE_NAME_PLAY_STORE")}\""
 
         testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
     }
@@ -113,6 +111,77 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
+            )
+        }
+    }
+
+    flavorDimensions += listOf("build", "market")
+    productFlavors {
+        create("dev") {
+            dimension = "build"
+            versionNameSuffix = " - Developer Preview"
+            applicationIdSuffix = ".dev"
+            resValue("color", "appIconBackground", "@color/appIconBackgroundDev")
+        }
+
+        create("prod") {
+            dimension = "build"
+            resValue("color", "appIconBackground", "@color/appIconBackgroundProd")
+        }
+
+        create("playStore") {
+            dimension = "market"
+            buildConfigField(
+                "String",
+                "URL_APP_STORE",
+                properties.getProperty("URL_PLAY_STORE")
+            )
+            buildConfigField(
+                "String",
+                "PACKAGE_NAME_APP_STORE",
+                properties.getProperty("PACKAGE_NAME_PLAY_STORE")
+            )
+        }
+
+        create("amazon") {
+            dimension = "market"
+            buildConfigField(
+                "String",
+                "URL_APP_STORE",
+                properties.getProperty("URL_AMAZON")
+            )
+            buildConfigField(
+                "String",
+                "PACKAGE_NAME_APP_STORE",
+                properties.getProperty("PACKAGE_NAME_AMAZON")
+            )
+        }
+
+        create("cafeBazaar") {
+            dimension = "market"
+            buildConfigField(
+                "String",
+                "URL_APP_STORE",
+                properties.getProperty("URL_CAFEBAZAAR")
+            )
+            buildConfigField(
+                "String",
+                "PACKAGE_NAME_APP_STORE",
+                properties.getProperty("PACKAGE_NAME_CAFEBAZAAR")
+            )
+        }
+
+        create("myket") {
+            dimension = "market"
+            buildConfigField(
+                "String",
+                "URL_APP_STORE",
+                properties.getProperty("URL_MYKET")
+            )
+            buildConfigField(
+                "String",
+                "PACKAGE_NAME_APP_STORE",
+                properties.getProperty("PACKAGE_NAME_MYKET")
             )
         }
     }
@@ -138,6 +207,39 @@ android {
              * These resources are instead packaged with each base and dynamic feature APK.
              */
             enableSplit = false
+        }
+    }
+}
+
+androidComponents {
+    beforeVariants { variantBuilder ->
+        /**
+         * Gradle ignores any variants that satisfy the conditions below.
+         */
+        if (variantBuilder.buildType == "debug") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "amazon")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
+        }
+
+        if (variantBuilder.buildType == "release") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
         }
     }
 }
