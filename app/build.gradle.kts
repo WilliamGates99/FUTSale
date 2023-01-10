@@ -337,31 +337,66 @@ dependencies {
     debugImplementation("androidx.fragment:fragment-testing:1.5.5")
 }
 
-//def releaseDir = "${rootDir}/app/release"
-//def destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-//
-//def versionName = "${android.defaultConfig.versionName}"
-//def renamedFileName = "FIFA Ultimate Team Coin $versionName"
-//
-//task copyReleaseApk (type: Copy) {
-//    def apkFile = "app-release.apk"
-//    def apkSourceDir = "${releaseDir}/${apkFile}"
-//
-//    from apkSourceDir
-//            into destinationDir
-//
-//            rename "${apkFile}", "${renamedFileName}.apk"
-//}
-//
-//task copyReleaseBundle (type: Copy) {
-//    def bundleFile = "app-release.aab"
-//    def bundleSourceDir = "${releaseDir}/${bundleFile}"
-//
-//    from bundleSourceDir
-//            into destinationDir
-//
-//            rename "${bundleFile}", "${renamedFileName}.aab"
-//}
+tasks.register<Copy>("copyDevPreviewApk") {
+    val releaseRootDir = "${rootDir}/app"
+    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+
+    val versionName = "${android.defaultConfig.versionName}"
+    val renamedFileName = "FUTCoin $versionName (Developer Preview)"
+
+    val apkFile = "app-dev-playStore-release.apk"
+    val bundleSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
+
+    from(bundleSourceDir)
+    into(destinationDir)
+
+    rename(apkFile, "${renamedFileName}.apk")
+}
+
+tasks.register<Copy>("copyReleaseApk") {
+    val releaseRootDir = "${rootDir}/app"
+    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+
+    val versionName = "${android.defaultConfig.versionName}"
+    val renamedFileName = "FUTCoin $versionName"
+
+    val amazonApkFile = "app-prod-amazon-release.apk"
+    val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
+    val myketApkFile = "app-prod-myket-release.apk"
+
+    val amazonApkSourceDir = "${releaseRootDir}/prodAmazon/release/${amazonApkFile}"
+    val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
+    val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
+
+    from(amazonApkSourceDir)
+    into(destinationDir)
+
+    from(cafeBazaarApkSourceDir)
+    into(destinationDir)
+
+    from(myketApkSourceDir)
+    into(destinationDir)
+
+    rename(amazonApkFile, "$renamedFileName - Amazon.apk")
+    rename(cafeBazaarApkFile, "$renamedFileName - CafeBazaar.apk")
+    rename(myketApkFile, "$renamedFileName - Myket.apk")
+}
+
+tasks.register<Copy>("copyReleaseBundle") {
+    val releaseRootDir = "${rootDir}/app"
+    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+
+    val versionName = "${android.defaultConfig.versionName}"
+    val renamedFileName = "FUTCoin $versionName"
+
+    val playStoreBundleFile = "app-prod-playStore-release.aab"
+    val playStoreBundleSourceDir = "${releaseRootDir}/prodPlayStore/release/${bundleFile}"
+
+    from(playStoreBundleSourceDir)
+    into(destinationDir)
+
+    rename(playStoreBundleFile, "$renamedFileName - Play Store.aab")
+}
 
 tasks.register<Copy>("copyObfuscationFolder") {
     val obfuscationSourceDir = "${rootDir}/app/obfuscation"
