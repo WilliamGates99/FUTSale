@@ -1,5 +1,10 @@
 /build
 /release
+/prodPlayStore
+/prodAmazon
+/prodCafeBazaar
+/prodMyket
+/devPlayStore
 /obfuscation
 /src/main/dbschemas
 google-services.json
