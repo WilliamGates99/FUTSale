@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import com.applovin.sdk.AppLovinPrivacySettings
 import com.applovin.sdk.AppLovinSdk
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
 import ir.tapsell.plus.TapsellPlus
@@ -24,6 +28,7 @@ class BaseApplication : Application() {
 
         setupTimber()
         setAppTheme()
+        initFirebaseAppCheck()
         initAppLovin()
         initTapsell()
     }
@@ -31,6 +36,21 @@ class BaseApplication : Application() {
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
     private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
+
+    private fun initFirebaseAppCheck() {
+        FirebaseApp.initializeApp(this)
+        val firebaseAppCheck = FirebaseAppCheck.getInstance()
+
+        if (BuildConfig.DEBUG) {
+            firebaseAppCheck.installAppCheckProviderFactory(
+                DebugAppCheckProviderFactory.getInstance()
+            )
+        } else {
+            firebaseAppCheck.installAppCheckProviderFactory(
+                PlayIntegrityAppCheckProviderFactory.getInstance()
+            )
+        }
+    }
 
     private fun initAppLovin() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"

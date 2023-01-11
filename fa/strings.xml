@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
-
     <string name="error_network_connection">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
-    <!--    <string name="error_btn_confirm">تایید</string>-->
-
+    <!--    <string name="error_btn_confirm">Confirm</string>-->
     <string name="onboarding_btn_skip">رد کردن</string>
     <string name="onboarding_btn_back">قبلی</string>
     <string name="onboarding_btn_next">بعدی</string>
@@ -18,7 +16,6 @@
     <string name="onboarding_second_description">پس از انتخاب پلتفرم بازی خود، روی دکمه گرفتن خودکار کلیک کنید تا شروع به جستجوی بازیکن کنید. سپس صبر کنید تا یک بازیکن ظاهر شود.</string>
     <string name="onboarding_third_title">خرید بازیکن</string>
     <string name="onboarding_third_description">به صفحه ترنسفر بازی رفته و کارت بازیکن را در مارکت پیدا کنید و در عرض 3 دقیقه آن را خریداری کنید.</string>
-
     <string name="onboarding_fourth_title">برای استفاده از برنامه، باید شناسه پارتنر و کلید محرمانه حساب DSFUT خود را وارد کنید.</string>
     <string name="onboarding_fourth_title_partner_id">شناسه پارتنر</string>
     <string name="onboarding_fourth_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
@@ -27,11 +24,9 @@
     <string name="onboarding_fourth_btn_register">اگر حساب DSFUT ندارید، <font fgcolor="#1C53F4"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.</string>
     <string name="onboarding_fourth_btn_start">شروع کنیم</string>
     <string name="onboarding_fourth_btn_agreement">با ورود، شما <font fgcolor="#1C53F4"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.</string>
-
     <string name="main_menu_title_pick_up">گرفتن</string>
     <string name="main_menu_title_profile">پروفایل</string>
     <string name="main_menu_title_settings">تنظیمات</string>
-
     <string name="pick_up_text_title">گرفتن بازیکن</string>
     <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
     <string name="pick_up_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
@@ -41,7 +36,7 @@
     <string name="pick_up_title_price_min">حداقل قیمت</string>
     <string name="pick_up_title_price_max">حداکثر قیمت</string>
     <string name="pick_up_title_take_after">گرفتن بعد از</string>
-    <string name="pick_up_hint_take_after">4 ثانیه</string>
+    <string name="pick_up_hint_take_after">۴ ثانیه</string>
     <string name="pick_up_helper_optional">اختیاری</string>
     <string name="pick_up_btn_pick_auto">گرفتن خودکار</string>
     <string name="pick_up_btn_pick_auto_cancel">لغو</string>
@@ -56,7 +51,6 @@
     <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
     <string name="pick_up_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
     <string name="pick_up_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
-
     <string name="profile_text_title">پروفایل</string>
     <string name="profile_title_partner_id">شناسه پارتنر</string>
     <string name="profile_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
@@ -68,7 +62,6 @@
     <string name="profile_text_links_statistics">آمار</string>
     <string name="profile_text_links_notifications_console">اعلان‌های بازیکنان کنسول</string>
     <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
-
     <string name="settings_text_title">تنظیمات</string>
     <string name="settings_title_settings">تنظیمات</string>
     <string name="settings_text_settings_language">زبان</string>
@@ -96,7 +89,6 @@
     <string name="settings_dialog_item_theme_default">پیش‌فرض سیستم</string>
     <string name="settings_dialog_item_theme_light">روشن</string>
     <string name="settings_dialog_item_theme_dark">تیره</string>
-
     <string name="player_details_text_title">%s با موفقیت گرفته شد.</string>
     <string name="player_details_title_rating">ریتینگ</string>
     <string name="player_details_title_position">پست</string>
@@ -105,5 +97,4 @@
     <string name="player_details_title_instruction">بعدش چکار کنید؟</string>
     <string name="player_details_text_instruction">1. به صفحه ترنسفر بازی یا برنامه کمپانیون بروید.\n2. کارت بازیکن را با توجه به جزئیات آن در مارکت پیدا کنید.\n3. کارت بازیکن را در عرض 3 دقیقه بخرید. در غیر این صورت حساب DSFUT شما به مدت 30 دقیقه مسدود خواهد شد.</string>
     <string name="player_details_text_attention">توجه: تعویض حساب‌های فیفا بسیار مهم است. یعنی اگر یک بازیکن از حساب شماره 1 خریداری شده باشد، بازیکن بعدی باید از حساب شماره 2 خریداری شود. بسیار مهم است که حساب‌ها تا حد امکان به ندرت تکرار شوند، زیرا نمی‌خواهیم خریداران و تامین‌کنندگان از بازی محروم شوند.</string>
-
 </resources>
