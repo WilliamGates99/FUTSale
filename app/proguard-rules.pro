@@ -309,8 +309,8 @@
 -dontwarn com.squareup.picasso.RequestCreator
 -dontwarn com.squareup.picasso.Target
 -dontwarn com.unity3d.ads.IUnityAdsInitializationListener
--dontwarn com.unity3d.ads.IUnityAdsListener
--dontwarn com.unity3d.ads.UnityAds$PlacementState
+-dontwarn com.unity3d.ads.IUnityAdsLoadListener
+-dontwarn com.unity3d.ads.IUnityAdsShowListener
 -dontwarn com.unity3d.ads.UnityAds
 -dontwarn com.unity3d.ads.metadata.MetaData
 -dontwarn com.unity3d.services.banners.BannerView$IListener
