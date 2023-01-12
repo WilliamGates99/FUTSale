@@ -198,7 +198,6 @@
                     android:layout_marginBottom="@dimen/margin_8dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="@dimen/radius_12dp"
-                    app:cardElevation="@dimen/elevation_2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
