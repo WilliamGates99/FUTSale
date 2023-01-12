@@ -13,6 +13,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_GREAT_BRITAIN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_UNITED_STATES
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_DEFAULT
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_ENGLISH_GREAT_BRITAIN
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_ENGLISH_UNITED_STATES
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_PERSIAN_IRAN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_PERSIAN_IRAN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DARK
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DEFAULT
@@ -66,9 +70,9 @@ class SettingsViewModel @Inject constructor(
             _currentLanguageLiveData.postValue(
                 Event(UiText.StringResource(R.string.settings_text_settings_language_default))
             )
-            _currentLocaleIndexLiveData.postValue(Event(0))
+            _currentLocaleIndexLiveData.postValue(Event(LOCALE_INDEX_DEFAULT))
             Timber.i("Current language is System Default")
-            Timber.i("Current locale index is 0")
+            Timber.i("Current locale index is $LOCALE_INDEX_DEFAULT")
         } else {
             val localeString = localeList[0].toString()
             Timber.i("Current language is $localeString")
@@ -78,29 +82,29 @@ class SettingsViewModel @Inject constructor(
                     _currentLanguageLiveData.postValue(
                         Event(UiText.StringResource(R.string.settings_text_settings_language_english_us))
                     )
-                    _currentLocaleIndexLiveData.postValue(Event(1))
-                    Timber.i("Current locale index is 1")
+                    _currentLocaleIndexLiveData.postValue(Event(LOCALE_INDEX_ENGLISH_UNITED_STATES))
+                    Timber.i("Current locale index is $LOCALE_INDEX_ENGLISH_UNITED_STATES")
                 }
                 "en_GB" -> {
                     _currentLanguageLiveData.postValue(
                         Event(UiText.StringResource(R.string.settings_text_settings_language_english_gb))
                     )
-                    _currentLocaleIndexLiveData.postValue(Event(2))
-                    Timber.i("Current locale index is 2")
+                    _currentLocaleIndexLiveData.postValue(Event(LOCALE_INDEX_ENGLISH_GREAT_BRITAIN))
+                    Timber.i("Current locale index is $LOCALE_INDEX_ENGLISH_GREAT_BRITAIN")
                 }
                 "fa_IR" -> {
                     _currentLanguageLiveData.postValue(
                         Event(UiText.StringResource(R.string.settings_text_settings_language_persian_ir))
                     )
-                    _currentLocaleIndexLiveData.postValue(Event(3))
-                    Timber.i("Current locale index is 3")
+                    _currentLocaleIndexLiveData.postValue(Event(LOCALE_INDEX_PERSIAN_IRAN))
+                    Timber.i("Current locale index is $LOCALE_INDEX_PERSIAN_IRAN")
                 }
                 else -> {
                     _currentLanguageLiveData.postValue(
                         Event(UiText.StringResource(R.string.settings_text_settings_language_default))
                     )
-                    _currentLocaleIndexLiveData.postValue(Event(0))
-                    Timber.i("Current locale index is 0")
+                    _currentLocaleIndexLiveData.postValue(Event(LOCALE_INDEX_DEFAULT))
+                    Timber.i("Current locale index is $LOCALE_INDEX_DEFAULT")
                 }
             }
         }
@@ -158,25 +162,25 @@ class SettingsViewModel @Inject constructor(
         var isActivityRestartNeeded = false
 
         when (index) {
-            0 -> {
+            LOCALE_INDEX_DEFAULT -> {
                 val defaultLocale = LocaleListCompat.getAdjustedDefault()[0]
                 val newLayoutDirection = defaultLocale?.layoutDirection ?: -1
                 isActivityRestartNeeded = isActivityRestartNeeded(newLayoutDirection)
                 AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
             }
-            1 -> {
+            LOCALE_INDEX_ENGLISH_UNITED_STATES -> {
                 isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.LTR)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_UNITED_STATES)
                 )
             }
-            2 -> {
+            LOCALE_INDEX_ENGLISH_GREAT_BRITAIN -> {
                 isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.LTR)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_ENGLISH_GREAT_BRITAIN)
                 )
             }
-            3 -> {
+            LOCALE_INDEX_PERSIAN_IRAN -> {
                 isActivityRestartNeeded = isActivityRestartNeeded(LayoutDirection.RTL)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(LOCALE_PERSIAN_IRAN)

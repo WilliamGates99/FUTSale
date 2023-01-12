@@ -34,6 +34,10 @@ object Constants {
     const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
     const val LOCALE_PERSIAN_IRAN = "fa-IR"
+    const val LOCALE_INDEX_DEFAULT = 0
+    const val LOCALE_INDEX_ENGLISH_UNITED_STATES = 1
+    const val LOCALE_INDEX_ENGLISH_GREAT_BRITAIN = 2
+    const val LOCALE_INDEX_PERSIAN_IRAN = 3
 
     // Platform Constants
     const val SELECTED_PLATFORM_CONSOLE = "cons"
