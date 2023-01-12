@@ -32,10 +32,8 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
     private var shouldShowSplashScreen = true
 
     lateinit var appLovinAd: MaxInterstitialAd
-    private var appLovinAdRequestCounter = 1
 
     var tapsellResponseId: String? = null
-    private var tapsellRequestCounter = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,17 +97,11 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
 
     override fun onAdLoaded(ad: MaxAd?) {
         Timber.i("AppLovin Interstitial onAdLoaded")
-        appLovinAdRequestCounter = 1
     }
 
     override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
         Timber.e("AppLovin Interstitial onAdLoadFailed: $error")
-        if (appLovinAdRequestCounter < 2) {
-            appLovinAdRequestCounter++
-            appLovinAd.loadAd()
-        } else {
-            requestTapsellInterstitial()
-        }
+        requestTapsellInterstitial()
     }
 
     override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
@@ -136,17 +128,13 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestTapsellInterstitial onResponse")
-                    tapsellRequestCounter = 1
                     tapsellPlusAdModel?.let { tapsellResponseId = it.responseId }
                 }
 
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestTapsellInterstitial onError: $error")
-                    if (tapsellRequestCounter < 2) {
-                        tapsellRequestCounter++
-                        requestTapsellInterstitial()
-                    }
+                    requestTapsellInterstitial()
                 }
             })
     }

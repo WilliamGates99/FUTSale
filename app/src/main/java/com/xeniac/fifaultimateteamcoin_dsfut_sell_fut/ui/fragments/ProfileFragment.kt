@@ -56,10 +56,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
     private lateinit var appLovinNativeAdContainer: ViewGroup
     private lateinit var appLovinAdLoader: MaxNativeAdLoader
     private var appLovinNativeAd: MaxAd? = null
-    private var appLovinAdRequestCounter = 1
 
     private var tapsellResponseId: String? = null
-    private var tapsellRequestCounter = 1
 
     private var snackbar: Snackbar? = null
 
@@ -339,7 +337,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinNativeAdListener onNativeAdLoaded")
-            appLovinAdRequestCounter = 1
 
             appLovinNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -355,12 +352,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinAdRequestCounter < 2) {
-                appLovinAdRequestCounter++
-                appLovinAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellAdHolder()
-            }
+            initTapsellAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -386,7 +378,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestTapsellNativeAd onResponse")
-                    tapsellRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellResponseId = it.responseId
@@ -398,10 +389,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestTapsellNativeAd onError: $error")
-                    if (tapsellRequestCounter < 2) {
-                        tapsellRequestCounter++
-                        requestTapsellNativeAd(adHolder)
-                    }
+                    requestTapsellNativeAd(adHolder)
                 }
             })
     }

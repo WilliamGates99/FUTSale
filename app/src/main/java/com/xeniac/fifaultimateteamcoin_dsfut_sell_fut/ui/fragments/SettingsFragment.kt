@@ -43,18 +43,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     private lateinit var appLovinSettingsNativeAdContainer: ViewGroup
     private lateinit var appLovinSettingsAdLoader: MaxNativeAdLoader
     private var appLovinSettingsNativeAd: MaxAd? = null
-    private var appLovinSettingsAdRequestCounter = 1
 
     private lateinit var appLovinMiscellaneousNativeAdContainer: ViewGroup
     private lateinit var appLovinMiscellaneousAdLoader: MaxNativeAdLoader
     private var appLovinMiscellaneousNativeAd: MaxAd? = null
-    private var appLovinMiscellaneousAdRequestCounter = 1
 
     private var tapsellSettingsResponseId: String? = null
-    private var tapsellSettingsRequestCounter = 1
 
     private var tapsellMiscellaneousResponseId: String? = null
-    private var tapsellMiscellaneousRequestCounter = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -265,7 +261,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinSettingsNativeAdListener  onNativeAdLoaded")
-            appLovinSettingsAdRequestCounter = 1
 
             appLovinSettingsNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -281,12 +276,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinSettingsNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinSettingsAdRequestCounter < 2) {
-                appLovinSettingsAdRequestCounter++
-                appLovinSettingsAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellSettingsAdHolder()
-            }
+            initTapsellSettingsAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -308,7 +298,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestSettingsTapsellNativeAd onResponse")
-                    tapsellSettingsRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellSettingsResponseId = it.responseId
@@ -321,10 +310,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestSettingsTapsellNativeAd onError: $error")
-                    if (tapsellSettingsRequestCounter < 2) {
-                        tapsellSettingsRequestCounter++
-                        requestSettingsTapsellNativeAd(adHolder)
-                    }
+                    requestSettingsTapsellNativeAd(adHolder)
                 }
             })
     }
@@ -345,7 +331,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinMiscellaneousNativeAdListener  onNativeAdLoaded")
-            appLovinMiscellaneousAdRequestCounter = 1
 
             appLovinMiscellaneousNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -361,12 +346,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinMiscellaneousNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinMiscellaneousAdRequestCounter < 2) {
-                appLovinMiscellaneousAdRequestCounter++
-                appLovinMiscellaneousAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellMiscellaneousAdHolder()
-            }
+            initTapsellMiscellaneousAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -388,7 +368,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
-                    tapsellMiscellaneousRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellMiscellaneousResponseId = it.responseId
@@ -401,10 +380,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestMiscellaneousTapsellNativeAd onError: $error")
-                    if (tapsellMiscellaneousRequestCounter < 2) {
-                        tapsellMiscellaneousRequestCounter++
-                        requestMiscellaneousTapsellNativeAd(adHolder)
-                    }
+                    requestMiscellaneousTapsellNativeAd(adHolder)
                 }
             })
     }
