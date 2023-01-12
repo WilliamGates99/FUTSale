@@ -5,10 +5,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityOnboardingBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.adapters.DotsIndicatorAdapter
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFirstFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFourthFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingSecondFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingThirdFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding1stFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding4thFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding2ndFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding3rdFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,10 +40,10 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         val fragmentsList = arrayListOf(
-            OnBoardingFirstFragment(),
-            OnBoardingSecondFragment(),
-            OnBoardingThirdFragment(),
-            OnBoardingFourthFragment()
+            OnBoarding1stFragment(),
+            OnBoarding2ndFragment(),
+            OnBoarding3rdFragment(),
+            OnBoarding4thFragment()
         )
 
         val dotsIndicatorAdapter = DotsIndicatorAdapter(

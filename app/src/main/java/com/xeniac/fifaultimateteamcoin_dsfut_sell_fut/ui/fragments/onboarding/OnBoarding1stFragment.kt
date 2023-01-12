@@ -5,19 +5,19 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingFirstBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboarding1stBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.OnBoardingActivity
 
-class OnBoardingFirstFragment : Fragment(R.layout.fragment_onboarding_first) {
+class OnBoarding1stFragment : Fragment(R.layout.fragment_onboarding_1st) {
 
-    private var _binding: FragmentOnboardingFirstBinding? = null
+    private var _binding: FragmentOnboarding1stBinding? = null
     private val binding get() = _binding!!
 
     private var viewPager: ViewPager2? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentOnboardingFirstBinding.bind(view)
+        _binding = FragmentOnboarding1stBinding.bind(view)
 
         (activity as OnBoardingActivity?)?.let {
             viewPager = it.findViewById(R.id.viewpager)

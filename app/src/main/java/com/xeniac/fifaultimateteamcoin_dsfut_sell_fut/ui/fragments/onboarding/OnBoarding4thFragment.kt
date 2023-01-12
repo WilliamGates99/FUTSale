@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingFourthBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboarding4thBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.OnBoardingViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_PARTNER_ID
@@ -25,9 +25,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
 
-class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
+class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
 
-    private var _binding: FragmentOnboardingFourthBinding? = null
+    private var _binding: FragmentOnboarding4thBinding? = null
     private val binding get() = _binding!!
 
     lateinit var viewModel: OnBoardingViewModel
@@ -36,7 +36,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentOnboardingFourthBinding.bind(view)
+        _binding = FragmentOnboarding4thBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[OnBoardingViewModel::class.java]
 
         textInputsBackgroundColor()
