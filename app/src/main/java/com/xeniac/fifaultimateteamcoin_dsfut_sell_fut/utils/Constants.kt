@@ -25,6 +25,11 @@ object Constants {
     const val DATASTORE_SECRET_KEY_KEY = "secretKey"
     const val DATASTORE_SELECTED_PLATFORM_KEY = "selectedPlatform"
 
+    // App Theme Constants
+    const val THEME_INDEX_DEFAULT = 0
+    const val THEME_INDEX_LIGHT = 1
+    const val THEME_INDEX_DARK = 2
+
     // App Locale Constants
     const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"

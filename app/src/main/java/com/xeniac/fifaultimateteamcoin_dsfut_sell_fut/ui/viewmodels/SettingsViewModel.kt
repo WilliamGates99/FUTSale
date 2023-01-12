@@ -14,6 +14,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.Preferen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_GREAT_BRITAIN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_UNITED_STATES
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_PERSIAN_IRAN
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DARK
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DEFAULT
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_LIGHT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper.setAppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
@@ -111,13 +114,13 @@ class SettingsViewModel @Inject constructor(
         val currentThemeIndex = preferencesRepository.getCurrentAppTheme()
 
         when (currentThemeIndex) {
-            0 -> _currentThemeLiveData.postValue(
+            THEME_INDEX_DEFAULT -> _currentThemeLiveData.postValue(
                 Event(UiText.StringResource(R.string.settings_text_settings_theme_default))
             )
-            1 -> _currentThemeLiveData.postValue(
+            THEME_INDEX_LIGHT -> _currentThemeLiveData.postValue(
                 Event(UiText.StringResource(R.string.settings_text_settings_theme_light))
             )
-            2 -> _currentThemeLiveData.postValue(
+            THEME_INDEX_DARK -> _currentThemeLiveData.postValue(
                 Event(UiText.StringResource(R.string.settings_text_settings_theme_dark))
             )
         }
