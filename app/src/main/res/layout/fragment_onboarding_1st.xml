@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/anim_onboarding_first"
+        app:lottie_rawRes="@raw/anim_onboarding_1st"
         app:lottie_speed="0.7" />
 
     <com.google.android.material.textview.MaterialTextView
