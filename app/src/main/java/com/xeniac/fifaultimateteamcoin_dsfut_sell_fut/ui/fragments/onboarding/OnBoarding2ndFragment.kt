@@ -7,6 +7,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboarding2ndBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.OnBoardingActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_1ST_INDEX
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_3RD_INDEX
 
 class OnBoarding2ndFragment : Fragment(R.layout.fragment_onboarding_2nd) {
 
@@ -34,11 +36,11 @@ class OnBoarding2ndFragment : Fragment(R.layout.fragment_onboarding_2nd) {
 
     private fun backOnClick() = binding.btnBack.setOnClickListener {
         // ViewPager items start from 0
-        viewPager?.currentItem = 0
+        viewPager?.currentItem = ONBOARDING_1ST_INDEX
     }
 
     private fun nextOnClick() = binding.btnNext.setOnClickListener {
         // ViewPager items start from 0
-        viewPager?.currentItem = 2
+        viewPager?.currentItem = ONBOARDING_3RD_INDEX
     }
 }

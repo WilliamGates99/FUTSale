@@ -39,6 +39,12 @@ object Constants {
     const val LOCALE_INDEX_ENGLISH_GREAT_BRITAIN = 2
     const val LOCALE_INDEX_PERSIAN_IRAN = 3
 
+    // OnBoarding ViewPager Items Index
+    const val ONBOARDING_1ST_INDEX = 0
+    const val ONBOARDING_2ND_INDEX = 1
+    const val ONBOARDING_3RD_INDEX = 2
+    const val ONBOARDING_4TH_INDEX = 3
+
     // Platform Constants
     const val SELECTED_PLATFORM_CONSOLE = "cons"
     const val SELECTED_PLATFORM_PC = "pc"
