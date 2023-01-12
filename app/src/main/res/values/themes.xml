@@ -19,6 +19,7 @@
         </item>
         <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
+        <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.SplashScreen" parent="Theme.SplashScreen">
@@ -33,6 +34,7 @@
     <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
         <item name="android:colorBackground">@color/skyBlue</item>
         <item name="android:statusBarColor">@color/skyBlue</item>
+        <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.Snackbar" parent="Widget.MaterialComponents.Snackbar">
