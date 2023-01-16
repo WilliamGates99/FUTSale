@@ -705,7 +705,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
-                            app:constraint_referenced_ids="divider_miscellaneous_rate_us,cl_miscellaneous_donate,cl_miscellaneous_rate_us" />
+                            app:constraint_referenced_ids="cl_miscellaneous_donate" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

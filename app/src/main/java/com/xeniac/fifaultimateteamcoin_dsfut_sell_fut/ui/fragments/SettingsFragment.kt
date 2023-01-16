@@ -22,6 +22,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.sh
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_CROWDIN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DONATE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openAppPageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
@@ -225,7 +226,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         }
 
     private fun rateUsOnClick() = binding.clMiscellaneousRateUs.setOnClickListener {
-//        openPlayStore(requireContext(), requireView())
+        openAppPageInStore(requireContext(), requireView())
     }
 
     private fun privacyPolicyOnClick() = binding.clMiscellaneousPrivacyPolicy.setOnClickListener {
