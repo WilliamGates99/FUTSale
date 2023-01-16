@@ -237,8 +237,8 @@ class PickUpViewModel @Inject constructor(
         maxPrice: Int?,
         takeAfter: Int?
     ) {
+        pickPlayerJob?.cancel()
         pickPlayerJob = viewModelScope.launch {
-            pickPlayerJob?.cancel()
             safeAutoPickPlayer(partnerId, secretKey, minPrice, maxPrice, takeAfter)
         }
     }
