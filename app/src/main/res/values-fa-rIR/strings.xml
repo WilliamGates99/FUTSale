@@ -50,7 +50,12 @@
     <string name="pick_up_title_player_price_now">قیمت خرید در لحظه</string>
     <string name="pick_up_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
-    <string name="pick_up_error_dsfut_block">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است.</string>
+    <string name="pick_up_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <string name="pick_up_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
     <string name="pick_up_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
     <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>

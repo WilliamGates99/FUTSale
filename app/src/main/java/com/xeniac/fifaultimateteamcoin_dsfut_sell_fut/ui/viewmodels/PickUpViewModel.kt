@@ -147,9 +147,12 @@ class PickUpViewModel @Inject constructor(
             response.body()?.let {
                 it.error?.let { error -> // RESPONSE HAD ERROR
                     when {
-                        error.contains(ERROR_DSFUT_BLOCK) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
-                        )
+                        error.contains(ERROR_DSFUT_BLOCK) -> {
+                            val errorMessage = "$error - ${it.message}"
+                            _pickPlayerOnceLiveData.postValue(
+                                Event(Resource.Error(UiText.DynamicString(errorMessage)))
+                            )
+                        }
                         error.contains(ERROR_DSFUT_EMPTY) -> _pickPlayerOnceLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
                         )
@@ -255,9 +258,12 @@ class PickUpViewModel @Inject constructor(
             response.body()?.let {
                 it.error?.let { error -> // RESPONSE HAD ERROR
                     when {
-                        error.contains(ERROR_DSFUT_BLOCK) -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_block)))
-                        )
+                        error.contains(ERROR_DSFUT_BLOCK) -> {
+                            val errorMessage = "$error - ${it.message}"
+                            _autoPickPlayerLiveData.postValue(
+                                Event(Resource.Error(UiText.DynamicString(errorMessage)))
+                            )
+                        }
                         error.contains(ERROR_DSFUT_EMPTY) -> _autoPickPlayerLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
                         )

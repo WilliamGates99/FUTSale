@@ -15,11 +15,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_BLOCK
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_1
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showActionSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
@@ -187,6 +189,23 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                                 it.contains(ERROR_NETWORK_CONNECTION_2) -> {
                                     showNetworkFailureError(requireContext(), requireView())
                                 }
+                                it.contains(ERROR_DSFUT_BLOCK) -> {
+                                    val blockDuration = it.filter { char ->
+                                        char.isDigit()
+                                    }.toInt()
+
+                                    val message = requireContext().resources.getQuantityString(
+                                        R.plurals.pick_up_error_dsfut_block,
+                                        blockDuration,
+                                        blockDuration
+                                    )
+
+                                    showActionSnackbarError(
+                                        view = requireView(),
+                                        message = message,
+                                        actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                    ) { snackbar?.dismiss() }
+                                }
                                 else -> {
                                     showNormalSnackbarError(requireView(), it)
                                 }
@@ -257,6 +276,23 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                                     }
                                     it.contains(ERROR_NETWORK_CONNECTION_2) -> {
                                         showNetworkFailureError(requireContext(), requireView())
+                                    }
+                                    it.contains(ERROR_DSFUT_BLOCK) -> {
+                                        val blockDuration = it.filter { char ->
+                                            char.isDigit()
+                                        }.toInt()
+
+                                        val message = requireContext().resources.getQuantityString(
+                                            R.plurals.pick_up_error_dsfut_block,
+                                            blockDuration,
+                                            blockDuration
+                                        )
+
+                                        showActionSnackbarError(
+                                            view = requireView(),
+                                            message = message,
+                                            actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                        ) { snackbar?.dismiss() }
                                     }
                                     else -> {
                                         showNormalSnackbarError(requireView(), it)
