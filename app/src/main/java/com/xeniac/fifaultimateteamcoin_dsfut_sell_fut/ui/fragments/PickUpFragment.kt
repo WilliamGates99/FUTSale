@@ -14,10 +14,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_1
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -167,12 +170,18 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                     }
                     is Resource.Error -> {
                         hidePickOnceLoadingAnimation()
-                        response.message?.let {
-                            snackbar = normalErrorSnackbar(
-                                requireView(),
-                                it.asString(requireContext())
-                            )
-                            snackbar?.show()
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = when {
+                                it.contains(ERROR_NETWORK_CONNECTION_1) -> {
+                                    showNetworkFailureError(requireContext(), requireView())
+                                }
+                                it.contains(ERROR_NETWORK_CONNECTION_2) -> {
+                                    showNetworkFailureError(requireContext(), requireView())
+                                }
+                                else -> {
+                                    showNormalSnackbarError(requireView(), it)
+                                }
+                            }
                         }
                     }
                 }
@@ -217,25 +226,25 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                         }
                     }
                     is Resource.Error -> {
-                        response.message?.let {
-                            when (it.asString(requireContext())) {
-                                requireContext().getString(R.string.pick_up_error_dsfut_empty) -> {
-                                    when (isAutoPickActive) {
-                                        true -> {
-                                            Timber.i("Auto pick player spam goes brrrrrrr…")
-                                            getAutoPickUpInputs()
-                                        }
-                                        else -> {
-                                            /* NO-OP */
-                                        }
+                        response.message?.asString(requireContext())?.let {
+                            val shouldPickPlayerAgain =
+                                it.contains(requireContext().getString(R.string.pick_up_error_dsfut_empty)) && isAutoPickActive
+
+                            if (shouldPickPlayerAgain) {
+                                Timber.i("Auto pick player spam goes brrrrrrr…")
+                                getAutoPickUpInputs()
+                            } else {
+                                hideAutoPickLoadingAnimation()
+                                snackbar = when {
+                                    it.contains(ERROR_NETWORK_CONNECTION_1) -> {
+                                        showNetworkFailureError(requireContext(), requireView())
                                     }
-                                }
-                                else -> {
-                                    hideAutoPickLoadingAnimation()
-                                    snackbar = normalErrorSnackbar(
-                                        requireView(), it.asString(requireContext())
-                                    )
-                                    snackbar?.show()
+                                    it.contains(ERROR_NETWORK_CONNECTION_2) -> {
+                                        showNetworkFailureError(requireContext(), requireView())
+                                    }
+                                    else -> {
+                                        showNormalSnackbarError(requireView(), it)
+                                    }
                                 }
                             }
                         }

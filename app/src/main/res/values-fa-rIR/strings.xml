@@ -2,12 +2,12 @@
 <resources>
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
 
-    <string name="error_network_connection">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
+    <string name="error_network_connection_unavailable">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
-    <!--    <string name="error_btn_confirm">تایید</string>-->
+    <string name="error_btn_confirm">تایید</string>
 
     <string name="onboarding_btn_skip">رد کردن</string>
     <string name="onboarding_btn_back">قبلی</string>

@@ -23,7 +23,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 
 class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
 
@@ -160,12 +160,7 @@ class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
                     }
                     is Resource.Error -> {
                         hideLoadingAnimation()
-                        response.message?.let { message ->
-                            message.asString(requireContext()).let {
-                                snackbar = normalErrorSnackbar(requireView(), it)
-                                snackbar?.show()
-                            }
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }

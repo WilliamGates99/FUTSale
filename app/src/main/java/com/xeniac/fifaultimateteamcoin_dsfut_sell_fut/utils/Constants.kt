@@ -59,8 +59,8 @@ object Constants {
     const val DELAY_TIME_AUTO_PICK_UP = 500L
 
     // Response Errors
-    const val ERROR_NETWORK_CONNECTION =
-        "A network error (such as timeout, interrupted connection or unreachable host) has occurred"
+    const val ERROR_NETWORK_CONNECTION_1 = "SSL handshake timed out"
+    const val ERROR_NETWORK_CONNECTION_2 = "Unable to resolve host"
     const val ERROR_DSFUT_BLOCK = "block"
     const val ERROR_DSFUT_EMPTY = "empty"
     const val ERROR_DSFUT_LIMIT = "limit"

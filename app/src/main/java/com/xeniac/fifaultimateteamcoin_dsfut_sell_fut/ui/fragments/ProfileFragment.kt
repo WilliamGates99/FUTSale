@@ -34,7 +34,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_WALLET
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
@@ -206,13 +206,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                     is Resource.Loading -> playPartnerIdAnimationTyping()
                     is Resource.Success -> playPartnerIdAnimationSaved()
                     is Resource.Error -> {
-                        response.message?.let {
-                            snackbar = normalErrorSnackbar(
-                                requireView(),
-                                it.asString(requireContext())
-                            )
-                            snackbar?.show()
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }
@@ -239,13 +233,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                     is Resource.Loading -> playSecretKeyAnimationTyping()
                     is Resource.Success -> playSecretKeyAnimationSaved()
                     is Resource.Error -> {
-                        response.message?.let {
-                            snackbar = normalErrorSnackbar(
-                                requireView(),
-                                it.asString(requireContext())
-                            )
-                            snackbar?.show()
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }
