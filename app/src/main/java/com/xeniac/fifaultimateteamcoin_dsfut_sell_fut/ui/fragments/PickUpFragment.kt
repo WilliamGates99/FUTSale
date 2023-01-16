@@ -142,10 +142,10 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
     }
 
     private fun pickOnceOnClick() = binding.btnPickOnce.setOnClickListener {
-        getPickOnceInputs()
+        validatePickOnceInputs()
     }
 
-    private fun getPickOnceInputs() = binding.apply {
+    private fun validatePickOnceInputs() = binding.apply {
         val inputMethodManager = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().applicationWindowToken, 0)
@@ -192,7 +192,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         if (isAutoPickActive) {
             cancelAutoPickUp()
         } else {
-            getAutoPickUpInputs()
+            validateAutoPickUpInputs()
         }
     }
 
@@ -201,7 +201,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         viewModel.cancelAutoPickPlayer()
     }
 
-    private fun getAutoPickUpInputs() = binding.apply {
+    private fun validateAutoPickUpInputs() = binding.apply {
         val inputMethodManager = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().applicationWindowToken, 0)
@@ -232,7 +232,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
 
                             if (shouldPickPlayerAgain) {
                                 Timber.i("Auto pick player spam goes brrrrrrr…")
-                                getAutoPickUpInputs()
+                                validateAutoPickUpInputs()
                             } else {
                                 hideAutoPickLoadingAnimation()
                                 snackbar = when {
