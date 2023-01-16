@@ -15,12 +15,18 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.ads.MaxInterstitialAd
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.NetworkConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.MainViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showThreeBtnAlertDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromFirstInstallTime
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromPreviousRequestTime
 import dagger.hilt.android.AndroidEntryPoint
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.TapsellPlus
@@ -39,6 +45,9 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
 
     private lateinit var connectivityObserver: ConnectivityObserver
     private var networkStatus: ConnectivityObserver.Status = ConnectivityObserver.Status.AVAILABLE
+
+    private lateinit var reviewManager: ReviewManager
+    var reviewInfo: ReviewInfo? = null
 
     lateinit var appLovinAd: MaxInterstitialAd
 
@@ -73,6 +82,8 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
 
         networkConnectivityObserver()
         setupBottomNavView()
+        subscribeToObservers()
+        getRateAppDialogChoice()
         requestAppLovinInterstitial()
     }
 
@@ -87,6 +98,119 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
 
     fun hasNetworkConnection(): Boolean =
         networkStatus == ConnectivityObserver.Status.AVAILABLE
+
+    private fun subscribeToObservers() {
+        rateAppDialogChoiceObserver()
+        previousRequestTimeInMillisObserver()
+    }
+
+    private fun getRateAppDialogChoice() = viewModel.getRateAppDialogChoice()
+
+    private fun rateAppDialogChoiceObserver() =
+        viewModel.rateAppDialogChoiceLiveData.observe(this) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { rateAppDialogChoice ->
+                when (rateAppDialogChoice) {
+                    /**
+                     * 0 -> Rate Now (Default)
+                     * 1 -> Remind me later
+                     * -1 -> No, Thanks (Never)
+                     */
+                    0 -> checkDaysFromFirstInstallTime()
+                    1 -> getPreviousRequestTimeInMillis()
+                    -1 -> {
+                        /* NO-OP */
+                    }
+                }
+            }
+        }
+
+    private fun checkDaysFromFirstInstallTime() {
+        val daysFromFirstInstallTime = getDaysFromFirstInstallTime(this)
+        Timber.i("It's been $daysFromFirstInstallTime days from first install time.")
+
+        if (daysFromFirstInstallTime >= 5) {
+            requestInAppReviews()
+        }
+    }
+
+    private fun getPreviousRequestTimeInMillis() = viewModel.getPreviousRequestTimeInMillis()
+
+    private fun previousRequestTimeInMillisObserver() =
+        viewModel.previousRequestTimeInMillisLiveData.observe(this) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { previousRequestTimeInMillis ->
+                checkDaysFromPreviousRequestTime(previousRequestTimeInMillis)
+            }
+        }
+
+    private fun checkDaysFromPreviousRequestTime(previousRequestTimeInMillis: Long) {
+        val daysFromPreviousRequestTime =
+            getDaysFromPreviousRequestTime(previousRequestTimeInMillis)
+        Timber.i("It's been $daysFromPreviousRequestTime days from the previous request time.")
+
+        if (daysFromPreviousRequestTime >= 3) {
+            requestInAppReviews()
+        }
+    }
+
+    private fun requestInAppReviews() {
+        reviewManager = ReviewManagerFactory.create(this)
+        val request = reviewManager.requestReviewFlow()
+
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // We got the ReviewInfo object
+                reviewInfo = task.result
+                Timber.i("InAppReviews request was successful.")
+            } else {
+                // There was some problem, log or handle the error code.
+                reviewInfo = null
+                Timber.e("InAppReviews request was not successful; Exception: ${task.exception}")
+            }
+        }
+    }
+
+    fun showRateAppDialog() = reviewInfo?.let {
+        showThreeBtnAlertDialog(
+            this,
+            getString(R.string.main_rate_app_dialog_title, getString(R.string.app_name)),
+            R.string.main_rate_app_dialog_message,
+            R.string.main_rate_app_dialog_positive,
+            R.string.main_rate_app_dialog_negative,
+            R.string.main_rate_app_dialog_neutral,
+            positiveAction = {
+                showInAppReviews()
+                setRateAppDialogChoiceToNever()
+            },
+            negativeAction = { setRateAppDialogChoiceToNever() },
+            neutralAction = { setRateAppDialogChoiceToAskLater() }
+        )
+    }
+
+    private fun setRateAppDialogChoiceToNever() = viewModel.setRateAppDialogChoice(-1)
+
+    private fun setRateAppDialogChoiceToAskLater() {
+        viewModel.setPreviousRequestTimeInMillis()
+        viewModel.setRateAppDialogChoice(1)
+    }
+
+    private fun showInAppReviews() = reviewInfo?.let { reviewInfo ->
+        val flow = reviewManager.launchReviewFlow(this, reviewInfo)
+
+        flow.addOnCompleteListener {
+            /**
+             * The flow has finished. The API does not indicate whether the user
+             * reviewed or not, or even whether the review dialog was shown. Thus, no
+             * matter the result, we continue our app flow.
+             */
+
+            if (it.isSuccessful) {
+                Timber.i("In-App Reviews Dialog was completed successfully.")
+            } else {
+                Timber.i("Something went wrong with showing the In-App Reviews Dialog; Exception: ${it.exception}")
+            }
+        }
+    }
+
 
     private fun setupBottomNavView() = binding.apply {
         val navHostFragment = supportFragmentManager

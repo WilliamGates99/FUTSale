@@ -38,6 +38,8 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
 
         requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
 
+        (requireActivity() as MainActivity).showRateAppDialog()
+
         backOnClick()
         getPlayer()
         subscribeToObservers()

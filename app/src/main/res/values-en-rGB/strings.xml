@@ -31,6 +31,12 @@
     <string name="main_menu_title_pick_up">Pick Up</string>
     <string name="main_menu_title_profile">Profile</string>
     <string name="main_menu_title_settings">Settings</string>
+    <!--Placeholder is for the App Name-->
+    <string name="main_rate_app_dialog_title">Rate %s?</string>
+    <string name="main_rate_app_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
+    <string name="main_rate_app_dialog_positive">Rate now</string>
+    <string name="main_rate_app_dialog_negative">No, Thanks</string>
+    <string name="main_rate_app_dialog_neutral">Remind me later</string>
 
     <string name="pick_up_text_title">Pick Up Player</string>
     <string name="pick_up_title_instruction">Follow the steps below to buy a player:</string>
