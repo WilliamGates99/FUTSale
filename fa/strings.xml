@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
-    <string name="error_network_connection">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
+    <string name="error_network_connection_unavailable">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
-    <!--    <string name="error_btn_confirm">Confirm</string>-->
+    <string name="error_btn_confirm">تایید</string>
     <string name="onboarding_btn_skip">رد کردن</string>
     <string name="onboarding_btn_back">قبلی</string>
     <string name="onboarding_btn_next">بعدی</string>
@@ -27,6 +27,12 @@
     <string name="main_menu_title_pick_up">گرفتن</string>
     <string name="main_menu_title_profile">پروفایل</string>
     <string name="main_menu_title_settings">تنظیمات</string>
+    <!--Placeholder is for the App Name-->
+    <string name="main_rate_app_dialog_title">امتیاز به %s؟</string>
+    <string name="main_rate_app_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>
+    <string name="main_rate_app_dialog_positive">الان امتیاز می‌دهم</string>
+    <string name="main_rate_app_dialog_negative">نه، ممنون</string>
+    <string name="main_rate_app_dialog_neutral">بعدا بهم یادآوری کن</string>
     <string name="pick_up_text_title">گرفتن بازیکن</string>
     <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
     <string name="pick_up_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
@@ -45,7 +51,12 @@
     <string name="pick_up_title_player_price_now">قیمت خرید در لحظه</string>
     <string name="pick_up_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
-    <string name="pick_up_error_dsfut_block">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است.</string>
+    <string name="pick_up_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <string name="pick_up_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
     <string name="pick_up_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
     <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
@@ -60,6 +71,7 @@
     <string name="profile_text_links_wallet">کیف پول</string>
     <string name="profile_text_links_players">بازیکنان</string>
     <string name="profile_text_links_statistics">آمار</string>
+    <string name="profile_text_links_rules">قوانین</string>
     <string name="profile_text_links_notifications_console">اعلان‌های بازیکنان کنسول</string>
     <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
     <string name="settings_text_title">تنظیمات</string>
