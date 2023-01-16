@@ -13,12 +13,12 @@ import com.applovin.mediation.nativeAds.MaxNativeAdListener
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentSettingsBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.SettingsViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showSingleChoiceItemsDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_CROWDIN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DONATE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
@@ -150,13 +150,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             requireContext().getString(R.string.settings_dialog_item_language_persian_ir)
         )
 
-        MaterialAlertDialogBuilder(requireContext()).apply {
-            setTitle(requireContext().getString(R.string.settings_dialog_title_language))
-            setSingleChoiceItems(localeTextItems, currentLocaleIndex) { dialogInterface, index ->
-                changeCurrentLocale(index)
-                dialogInterface.dismiss()
-            }
-        }.show()
+        showSingleChoiceItemsDialog(
+            context = requireContext(),
+            title = R.string.settings_dialog_title_language,
+            items = localeTextItems,
+            checkedItemIndex = currentLocaleIndex,
+        ) { index ->
+            changeCurrentLocale(index)
+        }
     }
 
     private fun changeCurrentLocale(localeIndex: Int) = viewModel.changeCurrentLocale(localeIndex)
@@ -182,13 +183,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             requireContext().getString(R.string.settings_text_settings_theme_dark)
         )
 
-        MaterialAlertDialogBuilder(requireContext()).apply {
-            setTitle(requireContext().getString(R.string.settings_text_settings_theme))
-            setSingleChoiceItems(themeItems, currentThemeIndex) { dialogInterface, index ->
-                changeCurrentTheme(index)
-                dialogInterface.dismiss()
-            }
-        }.show()
+        showSingleChoiceItemsDialog(
+            context = requireContext(),
+            title = R.string.settings_text_settings_theme,
+            items = themeItems,
+            checkedItemIndex = currentThemeIndex,
+        ) { index ->
+            changeCurrentTheme(index)
+        }
     }
 
     private fun changeCurrentTheme(themeIndex: Int) = viewModel.changeCurrentTheme(themeIndex)
