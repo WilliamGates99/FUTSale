@@ -19,7 +19,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -50,8 +49,6 @@ class PickUpViewModel @Inject constructor(
 
 //    private val _pickedUpPlayerLiveData: MutableLiveData<Event<Player?>> = MutableLiveData()
 //    val pickedUpPlayerLiveData: LiveData<Event<Player?>> = _pickedUpPlayerLiveData
-
-    private var pickPlayerJob: Job? = null
 
     private val _timerLiveData: MutableLiveData<Event<Long>> = MutableLiveData()
     val timerLiveData: LiveData<Event<Long>> = _timerLiveData
@@ -236,11 +233,8 @@ class PickUpViewModel @Inject constructor(
         minPrice: Int?,
         maxPrice: Int?,
         takeAfter: Int?
-    ) {
-        pickPlayerJob?.cancel()
-        pickPlayerJob = viewModelScope.launch {
-            safeAutoPickPlayer(partnerId, secretKey, minPrice, maxPrice, takeAfter)
-        }
+    ) = viewModelScope.launch {
+        safeAutoPickPlayer(partnerId, secretKey, minPrice, maxPrice, takeAfter)
     }
 
     private suspend fun safeAutoPickPlayer(
@@ -303,7 +297,6 @@ class PickUpViewModel @Inject constructor(
 
     private fun safeCancelAutoPickPlayer() {
         try {
-            pickPlayerJob?.cancel()
             _autoPickPlayerLiveData.postValue(
                 Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_canceled)))
             )
