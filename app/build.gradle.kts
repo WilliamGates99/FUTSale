@@ -145,20 +145,6 @@ android {
             )
         }
 
-        create("amazon") {
-            dimension = "market"
-            buildConfigField(
-                "String",
-                "URL_APP_STORE",
-                properties.getProperty("URL_AMAZON")
-            )
-            buildConfigField(
-                "String",
-                "PACKAGE_NAME_APP_STORE",
-                properties.getProperty("PACKAGE_NAME_AMAZON")
-            )
-        }
-
         create("cafeBazaar") {
             dimension = "market"
             buildConfigField(
@@ -221,11 +207,9 @@ androidComponents {
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
@@ -236,7 +220,6 @@ androidComponents {
         if (variantBuilder.buildType == "release") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     else -> true
@@ -366,16 +349,11 @@ tasks.register<Copy>("copyReleaseApk") {
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName"
 
-    val amazonApkFile = "app-prod-amazon-release.apk"
     val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
     val myketApkFile = "app-prod-myket-release.apk"
 
-    val amazonApkSourceDir = "${releaseRootDir}/prodAmazon/release/${amazonApkFile}"
     val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
     val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
-
-    from(amazonApkSourceDir)
-    into(destinationDir)
 
     from(cafeBazaarApkSourceDir)
     into(destinationDir)
@@ -383,7 +361,6 @@ tasks.register<Copy>("copyReleaseApk") {
     from(myketApkSourceDir)
     into(destinationDir)
 
-    rename(amazonApkFile, "$renamedFileName - Amazon.apk")
     rename(cafeBazaarApkFile, "$renamedFileName - CafeBazaar.apk")
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
