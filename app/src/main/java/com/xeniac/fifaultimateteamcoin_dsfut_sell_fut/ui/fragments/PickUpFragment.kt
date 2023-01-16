@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_1
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_2
@@ -21,6 +22,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -150,11 +152,18 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().applicationWindowToken, 0)
 
-        val minPriceInput = tiEditPriceMin.text?.toString()
-        val maxPriceInput = tiEditPriceMax.text?.toString()
-        val takeAfterInput = tiEditTakeAfter.text?.toString()
+        if (hasNetworkConnection()) {
+            val minPriceInput = tiEditPriceMin.text?.toString()
+            val maxPriceInput = tiEditPriceMax.text?.toString()
+            val takeAfterInput = tiEditTakeAfter.text?.toString()
 
-        viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
+            viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
+        } else {
+            snackbar = showUnavailableNetworkConnectionError(
+                requireContext(), requireView()
+            ) { validateAutoPickUpInputs() }
+            Timber.e("validatePickOnceInputs Error: Offline")
+        }
     }
 
     private fun pickPlayerOnceObserver() =
@@ -201,17 +210,24 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         viewModel.cancelAutoPickPlayer()
     }
 
-    private fun validateAutoPickUpInputs() = binding.apply {
+    private fun validateAutoPickUpInputs() {
         val inputMethodManager = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().applicationWindowToken, 0)
 
-        val minPriceInput = tiEditPriceMin.text?.toString()
-        val maxPriceInput = tiEditPriceMax.text?.toString()
-        val takeAfterInput = tiEditTakeAfter.text?.toString()
+        if (hasNetworkConnection()) {
+            val minPriceInput = binding.tiEditPriceMin.text?.toString()
+            val maxPriceInput = binding.tiEditPriceMax.text?.toString()
+            val takeAfterInput = binding.tiEditTakeAfter.text?.toString()
 
-        isAutoPickActive = true
-        viewModel.validateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
+            isAutoPickActive = true
+            viewModel.validateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
+        } else {
+            snackbar = showUnavailableNetworkConnectionError(
+                requireContext(), requireView()
+            ) { validateAutoPickUpInputs() }
+            Timber.e("validateAutoPickUpInputs Error: Offline")
+        }
     }
 
     private fun autoPickPlayerObserver() =
@@ -311,6 +327,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
 //                }
 //            }
 //        }
+
+    private fun hasNetworkConnection(): Boolean =
+        (requireActivity() as MainActivity).hasNetworkConnection()
 
     private fun showPickOnceLoadingAnimation() = binding.apply {
         tiEditPriceMin.isEnabled = false
