@@ -401,7 +401,7 @@
                             android:background="@color/grayLight"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider_links_statistics" />
+                            app:layout_constraintTop_toBottomOf="@+id/cl_links_statistics" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_links_rules"
