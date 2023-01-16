@@ -30,6 +30,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTA
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_PC
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_PLAYERS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_RULES
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_STATISTICS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_WALLET
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
@@ -76,6 +77,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         walletOnClick()
         playersOnClick()
         statisticsOnClick()
+        rulesOnClick()
         notificationsConsoleOnClick()
         notificationsPCOnClick()
         requestAppLovinNativeAd()
@@ -249,6 +251,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
 
     private fun statisticsOnClick() = binding.clLinksStatistics.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DSFUT_STATISTICS)
+    }
+
+    private fun rulesOnClick() = binding.clLinksRules.setOnClickListener {
+        openLink(requireContext(), requireView(), URL_DSFUT_RULES)
     }
 
     private fun notificationsConsoleOnClick() =

@@ -6,6 +6,7 @@ object Constants {
     const val URL_DSFUT_WALLET = "https://dsfut.net/wallet"
     const val URL_DSFUT_PLAYERS = "https://dsfut.net/players"
     const val URL_DSFUT_STATISTICS = "https://dsfut.net/stats"
+    const val URL_DSFUT_RULES = "https://dsfut.net/rules"
     const val URL_DSFUT_NOTIFICATIONS_CONSOLE = "https://t.me/dsfut_ps"
     const val URL_DSFUT_NOTIFICATIONS_PC = "https://t.me/dsfutnet_pc"
     const val URL_PRIVACY_POLICY = "https://xeniacdev.github.io/fifaultimateteamcoin/privacy_policy"

@@ -395,13 +395,78 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <View
+                            android:id="@+id/divider_links_rules"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="@dimen/height_1dp"
+                            android:background="@color/grayLight"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider_links_statistics" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_links_rules"
+                            android:layout_width="@dimen/width_0dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingVertical="@dimen/padding_12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider_links_rules">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/iv_links_rules"
+                                android:layout_width="@dimen/width_26dp"
+                                android:layout_height="@dimen/height_26dp"
+                                android:layout_marginStart="@dimen/margin_12dp"
+                                android:background="@color/navyBlue10"
+                                android:src="@drawable/ic_profile_rules"
+                                app:contentPadding="@dimen/padding_4dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_links_rules"
+                                android:layout_width="@dimen/width_0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/margin_12dp"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/localized_semi_bold"
+                                android:gravity="center_vertical|start"
+                                android:maxLines="1"
+                                android:text="@string/profile_text_links_rules"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_size_16sp"
+                                app:layout_constraintBottom_toBottomOf="@+id/iv_links_rules"
+                                app:layout_constraintEnd_toStartOf="@+id/iv_links_rules_arrow"
+                                app:layout_constraintStart_toEndOf="@+id/iv_links_rules"
+                                app:layout_constraintTop_toTopOf="@+id/iv_links_rules"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/iv_links_rules_arrow"
+                                android:layout_width="@dimen/width_18dp"
+                                android:layout_height="@dimen/height_18dp"
+                                android:layout_marginEnd="@dimen/margin_12dp"
+                                android:src="@drawable/ic_open_arrow"
+                                app:layout_constraintBottom_toBottomOf="@+id/iv_links_rules"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/iv_links_rules"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
                             android:id="@+id/divider_links_notifications_console"
                             android:layout_width="@dimen/width_0dp"
                             android:layout_height="@dimen/height_1dp"
                             android:background="@color/grayLight"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cl_links_statistics" />
+                            app:layout_constraintTop_toBottomOf="@+id/cl_links_rules" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/cl_links_notifications_console"

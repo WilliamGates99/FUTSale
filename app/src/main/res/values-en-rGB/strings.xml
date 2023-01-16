@@ -77,6 +77,7 @@
     <string name="profile_text_links_wallet">Wallet</string>
     <string name="profile_text_links_players">Players</string>
     <string name="profile_text_links_statistics">Statistics</string>
+    <string name="profile_text_links_rules">Rules</string>
     <string name="profile_text_links_notifications_console">Console Players Notifications</string>
     <string name="profile_text_links_notifications_pc">PC Players Notifications</string>
 
