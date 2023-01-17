@@ -700,13 +700,6 @@
                             android:visibility="gone"
                             app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
 
-                        <!--TODO REMOVE AFTER ADDING FUNCTIONALITIES-->
-                        <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="cl_miscellaneous_donate" />
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>

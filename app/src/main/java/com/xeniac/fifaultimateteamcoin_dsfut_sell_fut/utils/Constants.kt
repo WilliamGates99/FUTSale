@@ -10,7 +10,7 @@ object Constants {
     const val URL_DSFUT_NOTIFICATIONS_CONSOLE = "https://t.me/dsfut_ps"
     const val URL_DSFUT_NOTIFICATIONS_PC = "https://t.me/dsfutnet_pc"
     const val URL_PRIVACY_POLICY = "https://xeniacdev.github.io/fifaultimateteamcoin/privacy_policy"
-    const val URL_DONATE = "https://xeniacdev.github.io/WarrantyRoster/donate" // TODO CHANGE URL
+    const val URL_DONATE = "https://xeniacdev.github.io/donate"
     const val URL_CROWDIN = "https://crowdin.com/project/fifa-ultimate-team-coin"
 
     // DataStore Constants
