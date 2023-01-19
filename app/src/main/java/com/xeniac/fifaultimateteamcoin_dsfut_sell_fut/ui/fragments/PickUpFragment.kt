@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -159,7 +160,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
             val maxPriceInput = tiEditPriceMax.text?.toString()
             val takeAfterInput = tiEditTakeAfter.text?.toString()
 
-            viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
+            pickPlayerOnce(minPriceInput, maxPriceInput, takeAfterInput)
         } else {
             snackbar = showUnavailableNetworkConnectionError(
                 requireContext(), requireView()
@@ -167,6 +168,13 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
             Timber.e("validatePickOnceInputs Error: Offline")
         }
     }
+
+    private fun pickPlayerOnce(
+        minPriceInput: String?,
+        maxPriceInput: String?,
+        takeAfterInput: String?
+    ) =
+        viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
 
     private fun pickPlayerOnceObserver() =
         viewModel.pickPlayerOnceLiveData.observe(viewLifecycleOwner) { responseEvent ->
@@ -239,8 +247,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
             val maxPriceInput = binding.tiEditPriceMax.text?.toString()
             val takeAfterInput = binding.tiEditTakeAfter.text?.toString()
 
-            isAutoPickActive = true
-            viewModel.validateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
+            autoPickUpPlayer(minPriceInput, maxPriceInput, takeAfterInput)
         } else {
             snackbar = showUnavailableNetworkConnectionError(
                 requireContext(), requireView()
@@ -249,12 +256,25 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         }
     }
 
+    private fun autoPickUpPlayer(
+        minPriceInput: String?,
+        maxPriceInput: String?,
+        takeAfterInput: String?
+    ) {
+        isAutoPickActive = true
+        viewModel.validateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
+    }
+
     private fun autoPickPlayerObserver() =
         viewModel.autoPickPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { response ->
                 when (response) {
-                    is Resource.Loading -> showAutoPickLoadingAnimation()
+                    is Resource.Loading -> {
+                        keepScreenOn()
+                        showAutoPickLoadingAnimation()
+                    }
                     is Resource.Success -> {
+                        doNotKeepScreenOn()
                         hideAutoPickLoadingAnimation()
                         response.data?.let {
                             navigateToPlayerDetails(it)
@@ -269,6 +289,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                                 Timber.i("Auto pick player spam goes brrrrrrr…")
                                 validateAutoPickUpInputs()
                             } else {
+                                doNotKeepScreenOn()
                                 hideAutoPickLoadingAnimation()
                                 snackbar = when {
                                     it.contains(ERROR_NETWORK_CONNECTION_1) -> {
@@ -366,6 +387,14 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
 
     private fun hasNetworkConnection(): Boolean =
         (requireActivity() as MainActivity).hasNetworkConnection()
+
+    private fun keepScreenOn() {
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    private fun doNotKeepScreenOn() {
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
 
     private fun showPickOnceLoadingAnimation() = binding.apply {
         tiEditPriceMin.isEnabled = false
