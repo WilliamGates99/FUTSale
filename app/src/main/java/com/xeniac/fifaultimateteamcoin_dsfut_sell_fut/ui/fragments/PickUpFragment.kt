@@ -24,7 +24,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showActionSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -215,7 +214,11 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                                     ) { snackbar?.dismiss() }
                                 }
                                 else -> {
-                                    showNormalSnackbarError(requireView(), it)
+                                    showActionSnackbarError(
+                                        view = requireView(),
+                                        message = it,
+                                        actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                    ) { snackbar?.dismiss() }
                                 }
                             }
                         }
@@ -316,7 +319,11 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                                         ) { snackbar?.dismiss() }
                                     }
                                     else -> {
-                                        showNormalSnackbarError(requireView(), it)
+                                        showActionSnackbarError(
+                                            view = requireView(),
+                                            message = it,
+                                            actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                        ) { snackbar?.dismiss() }
                                     }
                                 }
                             }
