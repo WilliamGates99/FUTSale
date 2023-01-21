@@ -335,7 +335,7 @@ dependencies {
 
 tasks.register<Copy>("copyDevPreviewApk") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName (Developer Preview)"
@@ -351,7 +351,7 @@ tasks.register<Copy>("copyDevPreviewApk") {
 
 tasks.register<Copy>("copyReleaseApk") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName"
@@ -374,7 +374,7 @@ tasks.register<Copy>("copyReleaseApk") {
 
 tasks.register<Copy>("copyReleaseBundle") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName"
