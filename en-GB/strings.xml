@@ -60,6 +60,7 @@
     <string name="pick_up_error_dsfut_empty">There are no players available for redemption.</string>
     <string name="pick_up_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
     <string name="pick_up_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
+    <string name="pick_up_error_dsfut_sign">Please check the entered values for the partner ID and secret key in the Profile page.</string>
     <string name="pick_up_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
     <string name="pick_up_error_dsfut_canceled">Auto pick player cancelled.</string>
     <string name="profile_text_title">Profile</string>
