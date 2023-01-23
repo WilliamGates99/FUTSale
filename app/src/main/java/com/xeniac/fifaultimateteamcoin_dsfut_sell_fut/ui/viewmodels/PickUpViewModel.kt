@@ -16,6 +16,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFU
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_EMPTY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_LIMIT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_MAINTENANCE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_SIGN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_THROTTLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
@@ -173,6 +174,9 @@ class PickUpViewModel @Inject constructor(
                         error.contains(ERROR_DSFUT_MAINTENANCE) -> _pickPlayerOnceLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
                         )
+                        error.contains(ERROR_DSFUT_SIGN) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_sign)))
+                        )
                         error.contains(ERROR_DSFUT_THROTTLE) -> _pickPlayerOnceLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
                         )
@@ -282,6 +286,9 @@ class PickUpViewModel @Inject constructor(
                         )
                         error.contains(ERROR_DSFUT_MAINTENANCE) -> _autoPickPlayerLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
+                        )
+                        error.contains(ERROR_DSFUT_SIGN) -> _pickPlayerOnceLiveData.postValue(
+                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_sign)))
                         )
                         error.contains(ERROR_DSFUT_THROTTLE) -> _autoPickPlayerLiveData.postValue(
                             Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))

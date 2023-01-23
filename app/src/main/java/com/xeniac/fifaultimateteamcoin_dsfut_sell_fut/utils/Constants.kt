@@ -74,6 +74,7 @@ object Constants {
     const val ERROR_DSFUT_EMPTY = "empty"
     const val ERROR_DSFUT_LIMIT = "limit"
     const val ERROR_DSFUT_MAINTENANCE = "maintenance"
+    const val ERROR_DSFUT_SIGN = "sign"
     const val ERROR_DSFUT_THROTTLE = "throttle"
 
     // OnBoarding Fragment SaveInstanceState Keys

@@ -65,6 +65,7 @@
     <string name="pick_up_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
     <string name="pick_up_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
     <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
+    <string name="pick_up_error_dsfut_sign">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
     <string name="pick_up_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
     <string name="pick_up_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
 
