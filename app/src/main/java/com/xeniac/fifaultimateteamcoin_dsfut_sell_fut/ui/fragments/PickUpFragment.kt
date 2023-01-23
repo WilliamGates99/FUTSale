@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
@@ -21,9 +22,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETW
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_2
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getTimeUntilExpiryInMillis
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.isPickedPlayerNotExpired
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showActionSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -57,7 +61,6 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         toggleOnCheck()
         pickOnceOnClick()
         autoPickUpOnClick()
-//        getIsPlayerPickedUp()
     }
 
     override fun onDestroyView() {
@@ -116,9 +119,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         selectedPlatformObserver()
         pickPlayerOnceObserver()
         autoPickPlayerObserver()
-//        isPlayerPickedUpObserver()
-//        pickedUpPlayerObserver()
-//        timerObserver()
+        insertPickedUpPlayerObserver()
+        allPickedUpPlayersObserver()
+        pickedPlayerCardExpiryTimerObserver()
     }
 
     private fun getSelectedPlatform() = viewModel.getSelectedPlatform()
@@ -339,58 +342,83 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         )
     }
 
-//    private fun getIsPlayerPickedUp() = viewModel.getIsPlayerPickedUp()
-
-    /*
-    private fun isPlayerPickedUpObserver() =
-        viewModel.isPlayerPickedUpLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { isPlayerPickedUp ->
-                when (isPlayerPickedUp) {
-                    true -> getPickedUpPlayer()
-                    false -> binding.shouldShowPlayerCard = false
+    private fun insertPickedUpPlayerObserver() =
+        viewModel.insertPickedUpPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Loading -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Success -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Error -> {
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = showSomethingWentWrongError(requireContext(), requireView())
+                        }
+                    }
                 }
             }
         }
-     */
 
-//    private fun getPickedUpPlayer() = viewModel.getPickedUpPlayer()
+    private fun allPickedUpPlayersObserver() =
+        viewModel.allPickedUpPlayersLiveData.observe(viewLifecycleOwner) { allPickedUpPlayers ->
+            val validPickedUpPlayers = mutableListOf<PickedUpPlayer>()
 
-    // TODO NEXT VERSION
-//    private fun pickedUpPlayerObserver() =
-//        viewModel.pickedUpPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-//            responseEvent.getContentIfNotHandled().let { player ->
-//                binding.apply {
-//                    shouldShowPlayerCard = player?.let {
-//                        name = it.name
-//                        val playerRating = decimalFormat.format(it.rating)
-//                        ratingAndPosition = requireContext().getString(
-//                            R.string.pick_up_text_player_rating_position,
-//                            playerRating,
-//                            it.position
-//                        )
-//                        priceStart = it.startPrice.toString()
-//                        priceNow = it.buyNowPrice.toString()
-//                        true
-//                    } ?: false
-//                }
-//            }
-//        }
+            allPickedUpPlayers.forEach { player ->
+                if (isPickedPlayerNotExpired(player.pickUpTimeInMillis)) {
+                    validPickedUpPlayers.add(player)
+                }
+            }
 
-//    private fun timerObserver() =
-//        viewModel.timerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-//            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
-//                when (millisUntilFinished) {
-//                    0L -> binding.shouldShowPlayerCard = false
-//                    else -> {
-//                        val minutes = decimalFormat.format(millisUntilFinished / 60000)
-//                        val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
-//                        binding.time = requireContext().getString(
-//                            R.string.player_details_text_timer, minutes, seconds
-//                        )
-//                    }
-//                }
-//            }
-//        }
+            if (validPickedUpPlayers.isEmpty()) {
+                hidePickedPlayerCard()
+            } else {
+                val latestPickedUpPlayer = validPickedUpPlayers[0]
+                val timeUntilExpiryInMillis = getTimeUntilExpiryInMillis(
+                    latestPickedUpPlayer.pickUpTimeInMillis
+                )
+                startPickedPlayerCardTimer(timeUntilExpiryInMillis)
+                showPickedPlayerCard(latestPickedUpPlayer)
+            }
+        }
+
+    private fun showPickedPlayerCard(player: PickedUpPlayer) =
+        binding.apply {
+            name = player.name
+            val playerRating = decimalFormat.format(player.rating)
+            ratingAndPosition = requireContext().getString(
+                R.string.pick_up_text_player_rating_position,
+                playerRating,
+                player.position
+            )
+            priceStart = player.priceStart.toString()
+            priceNow = player.priceNow.toString()
+            shouldShowPlayerCard = true
+        }
+
+    private fun hidePickedPlayerCard() = binding.apply {
+        shouldShowPlayerCard = false
+    }
+
+    private fun startPickedPlayerCardTimer(startTimeInMillis: Long) =
+        viewModel.startPickedPlayerCardExpiryCountdown(startTimeInMillis)
+
+    private fun pickedPlayerCardExpiryTimerObserver() =
+        viewModel.pickedPlayerCardExpiryTimerLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
+                when (millisUntilFinished) {
+                    0L -> hidePickedPlayerCard()
+                    else -> {
+                        val minutes = decimalFormat.format(millisUntilFinished / 60000)
+                        val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
+                        binding.time = requireContext().getString(
+                            R.string.player_details_text_timer, minutes, seconds
+                        )
+                    }
+                }
+            }
+        }
 
     private fun hasNetworkConnection(): Boolean =
         (requireActivity() as MainActivity).hasNetworkConnection()

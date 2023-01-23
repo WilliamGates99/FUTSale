@@ -6,15 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.COUNT_DOWN_INTERVAL_IN_MILLIS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_AUTO_PICK_UP
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_BLOCK
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_EMPTY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_LIMIT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_MAINTENANCE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_THROTTLE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
@@ -24,7 +28,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,17 +47,26 @@ class PickUpViewModel @Inject constructor(
             MutableLiveData<Event<Resource<Player>>> = MutableLiveData()
     val autoPickPlayerLiveData: LiveData<Event<Resource<Player>>> = _autoPickPlayerLiveData
 
-//    private val _isPlayerPickedUpLiveData: MutableLiveData<Event<Boolean>> = MutableLiveData()
-//    val isPlayerPickedUpLiveData: LiveData<Event<Boolean>> = _isPlayerPickedUpLiveData
+    private val _insertPickedUpPlayerLiveData:
+            MutableLiveData<Event<Resource<PickedUpPlayer>>> = MutableLiveData()
+    val insertPickedUpPlayerLiveData:
+            LiveData<Event<Resource<PickedUpPlayer>>> = _insertPickedUpPlayerLiveData
 
-//    private val _pickedUpPlayerLiveData: MutableLiveData<Event<Player?>> = MutableLiveData()
-//    val pickedUpPlayerLiveData: LiveData<Event<Player?>> = _pickedUpPlayerLiveData
+    val allPickedUpPlayersLiveData = dsfutRepository.get().observeAllPickedUpPlayers()
 
-    private val _timerLiveData: MutableLiveData<Event<Long>> = MutableLiveData()
-    val timerLiveData: LiveData<Event<Long>> = _timerLiveData
+    private val _pickPlayerExpiryTimerLiveData: MutableLiveData<Event<Long>> = MutableLiveData()
+    val pickPlayerExpiryTimerLiveData: LiveData<Event<Long>> = _pickPlayerExpiryTimerLiveData
 
-    private var countDownTimer: CountDownTimer? = null
-    private var timerInMillis: Long = 0
+    private val _pickedPlayerCardExpiryTimerLiveData:
+            MutableLiveData<Event<Long>> = MutableLiveData()
+    val pickedPlayerCardExpiryTimerLiveData:
+            LiveData<Event<Long>> = _pickedPlayerCardExpiryTimerLiveData
+
+    private var pickPlayerExpiryCountDownTimer: CountDownTimer? = null
+    private var pickPlayerExpiryTimerInMillis: Long = 0
+
+    private var pickedPlayerCardExpiryCountDownTimer: CountDownTimer? = null
+    private var pickedPlayerCardExpiryTimerInMillis: Long = 0
 
     fun getSelectedPlatform() = viewModelScope.launch {
         safeGetSelectedPlatform()
@@ -133,11 +145,10 @@ class PickUpViewModel @Inject constructor(
     private suspend fun safePickPlayerOnce(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
-        countDownTimer?.cancel()
         _pickPlayerOnceLiveData.postValue(Event(Resource.Loading()))
         try {
             val platform = preferencesRepository.getSelectedPlatform()
-            val timestamp = getCurrentTime()
+            val timestamp = getCurrentTimeInMillis()
             val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
             val response = dsfutRepository.get().pickUpPlayer(
@@ -174,9 +185,9 @@ class PickUpViewModel @Inject constructor(
                 }
 
                 it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    startCountdown()
+                    startPickPlayerExpiryCountdown()
+                    insertPickedUpPlayerIntoDb(player)
                     _pickPlayerOnceLiveData.postValue(Event(Resource.Success(player)))
-//                    _pickedUpPlayerLiveData.postValue(Event(player))
                     Timber.i("safePickPlayerOnce: ${it.message}")
                 }
             }
@@ -243,12 +254,11 @@ class PickUpViewModel @Inject constructor(
     private suspend fun safeAutoPickPlayer(
         partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
     ) {
-        countDownTimer?.cancel()
         _autoPickPlayerLiveData.postValue(Event(Resource.Loading()))
         try {
             delay(DELAY_TIME_AUTO_PICK_UP)
             val platform = preferencesRepository.getSelectedPlatform()
-            val timestamp = getCurrentTime()
+            val timestamp = getCurrentTimeInMillis()
             val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
             val response = dsfutRepository.get().pickUpPlayer(
@@ -285,9 +295,9 @@ class PickUpViewModel @Inject constructor(
                 }
 
                 it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    startCountdown()
+                    startPickPlayerExpiryCountdown()
+                    insertPickedUpPlayerIntoDb(player)
                     _autoPickPlayerLiveData.postValue(Event(Resource.Success(player)))
-//                    _pickedUpPlayerLiveData.postValue(Event(player))
                     Timber.i("safeAutoPickPlayer: ${it.message}")
                 }
             }
@@ -313,47 +323,62 @@ class PickUpViewModel @Inject constructor(
         }
     }
 
-    /*
-    fun getIsPlayerPickedUp() = viewModelScope.launch {
-        safeGetIsPlayerPickedUp()
+    fun insertPickedUpPlayerIntoDb(player: Player) = viewModelScope.launch {
+        try {
+            val pickedUpPlayer = PickedUpPlayer(
+                name = player.name,
+                position = player.position,
+                rating = player.rating,
+                priceStart = player.startPrice,
+                priceNow = player.buyNowPrice
+            )
+            dsfutRepository.get().insertPickedUpPlayer(pickedUpPlayer)
+            _insertPickedUpPlayerLiveData.postValue(Event(Resource.Success(pickedUpPlayer)))
+            Timber.i("Picked Player: $pickedUpPlayer")
+            Timber.i("Picked Player inserted into database.")
+        } catch (e: Exception) {
+            val message = UiText.DynamicString(e.message.toString())
+            _insertPickedUpPlayerLiveData.postValue(Event(Resource.Error(message)))
+            Timber.e("insertPickedUpPlayerIntoDb Exception: ${message.value}")
+        }
     }
 
-    private suspend fun safeGetIsPlayerPickedUp() {
-        // TODO SAVE PLAYER INTO SHARED PREFS FOR SHOWING LATER
-        // SHOULD SAVE THE RESPONSE_TIME AND DO NOT SHOW THE PLAYER CARD AFTER 3 MINUTES
+    private fun startPickPlayerExpiryCountdown() {
+        pickPlayerExpiryCountDownTimer?.cancel()
+
+        pickPlayerExpiryCountDownTimer =
+            object : CountDownTimer(PLAYER_EXPIRY_TIME_IN_MILLIS, COUNT_DOWN_INTERVAL_IN_MILLIS) {
+                override fun onTick(millisUntilFinished: Long) {
+                    pickPlayerExpiryTimerInMillis = millisUntilFinished
+                    _pickPlayerExpiryTimerLiveData.postValue(Event(millisUntilFinished))
+                    Timber.i("pickPlayerExpiryCountDownTimer remaining time: $millisUntilFinished")
+                }
+
+                override fun onFinish() {
+                    pickPlayerExpiryTimerInMillis = 0
+                    _pickPlayerExpiryTimerLiveData.postValue(Event(0))
+                    Timber.i("pickPlayerExpiryCountDownTimer finished.")
+                }
+            }.start()
     }
 
-    fun getPickedUpPlayer() = viewModelScope.launch {
-        safeGetPickedUpPlayer()
-    }
+    fun startPickedPlayerCardExpiryCountdown(startTimeInMillis: Long) {
+        pickedPlayerCardExpiryCountDownTimer?.cancel()
 
-    private suspend fun safeGetPickedUpPlayer() {
+        pickedPlayerCardExpiryCountDownTimer =
+            object : CountDownTimer(startTimeInMillis, COUNT_DOWN_INTERVAL_IN_MILLIS) {
+                override fun onTick(millisUntilFinished: Long) {
+                    pickedPlayerCardExpiryTimerInMillis = millisUntilFinished
+                    _pickedPlayerCardExpiryTimerLiveData.postValue(Event(millisUntilFinished))
+                    Timber.i("pickedPlayerCardExpiryCountDownTimer remaining time: $millisUntilFinished")
+                }
 
-    }
-    */
-
-    private fun startCountdown() {
-        val startTimeInMillis = 3 * 60 * 1000L // 3 Minutes -> 180 Seconds
-        val countDownIntervalInMillis = 1000L // 1 Second
-
-        countDownTimer = object : CountDownTimer(startTimeInMillis, countDownIntervalInMillis) {
-            override fun onTick(millisUntilFinished: Long) {
-                timerInMillis = millisUntilFinished
-                _timerLiveData.postValue(Event(millisUntilFinished))
-                Timber.i("Timer remaining time: $millisUntilFinished")
-            }
-
-            override fun onFinish() {
-                timerInMillis = 0
-//                _pickedUpPlayerLiveData.postValue(Event(null))
-                _timerLiveData.postValue(Event(0))
-            }
-        }.start()
-    }
-
-    private fun getCurrentTime(): String {
-        val calendar = Calendar.getInstance()
-        return calendar.timeInMillis.toString()
+                override fun onFinish() {
+                    pickedPlayerCardExpiryTimerInMillis = 0
+                    _pickedPlayerCardExpiryTimerLiveData.postValue(Event(0))
+                    Timber.i("pickedPlayerCardExpiryCountDownTimer finished.")
+                }
+            }.start()
     }
 
     private fun getMd5Signature(partnerId: String, secretKey: String, timestamp: String): String {

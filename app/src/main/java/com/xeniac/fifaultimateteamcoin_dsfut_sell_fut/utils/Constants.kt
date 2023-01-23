@@ -1,6 +1,10 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 
 object Constants {
+
+    // Room Database Constants
+    const val DSFUT_DATABASE_NAME = "dsfut_db"
+
     // Web URLs
     const val URL_DSFUT = "https://dsfut.net"
     const val URL_DSFUT_WALLET = "https://dsfut.net/wallet"
@@ -58,6 +62,10 @@ object Constants {
     const val DELAY_TIME_PARTNER_ID = 1000L
     const val DELAY_TIME_SECRET_KEY = 1000L
     const val DELAY_TIME_AUTO_PICK_UP = 500L
+
+    // Countdown Timer Constants
+    const val COUNT_DOWN_INTERVAL_IN_MILLIS = 1000L // 1 Second
+    const val PLAYER_EXPIRY_TIME_IN_MILLIS = 3 * 60 * 1000L // 3 Minutes -> 180,000 Milli Seconds
 
     // Response Errors
     const val ERROR_NETWORK_CONNECTION_1 = "SSL handshake timed out"

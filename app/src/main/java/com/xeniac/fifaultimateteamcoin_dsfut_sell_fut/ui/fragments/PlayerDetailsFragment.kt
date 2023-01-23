@@ -79,11 +79,11 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     }
 
     private fun subscribeToObservers() {
-        timerObserver()
+        pickPlayerExpiryTimerObserver()
     }
 
-    private fun timerObserver() =
-        viewModel.timerLiveData.observe(viewLifecycleOwner) { responseEvent ->
+    private fun pickPlayerExpiryTimerObserver() =
+        viewModel.pickPlayerExpiryTimerLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
                 val minutes = decimalFormat.format(millisUntilFinished / 60000)
                 val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
