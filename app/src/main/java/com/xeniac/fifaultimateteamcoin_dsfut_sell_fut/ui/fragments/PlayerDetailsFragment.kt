@@ -38,8 +38,6 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
 
         requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
 
-        (requireActivity() as MainActivity).showRateAppDialog()
-
         backOnClick()
         getPlayer()
         subscribeToObservers()
@@ -63,6 +61,7 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     private fun navigateToPickUpFragment() {
         findNavController().popBackStack()
         showInterstitialAd()
+        (requireActivity() as MainActivity).showRateAppDialog()
     }
 
     private fun getPlayer() {
