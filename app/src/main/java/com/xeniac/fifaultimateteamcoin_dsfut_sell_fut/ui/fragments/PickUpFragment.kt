@@ -1,20 +1,27 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.vmadalin.easypermissions.EasyPermissions
+import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_BLOCK
@@ -35,7 +42,7 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
+class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentPickUpBinding? = null
     private val binding get() = _binding!!
@@ -47,12 +54,16 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
 
     private var isAutoPickActive = false
 
+    private lateinit var notificationService: PickUpPlayerNotificationService
+
     private var snackbar: Snackbar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPickUpBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
+
+        notificationService = PickUpPlayerNotificationService(requireContext())
 
         textInputsBackgroundColor()
         textInputsStrokeColor()
@@ -231,6 +242,8 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         }
 
     private fun autoPickUpOnClick() = binding.btnPickAuto.setOnClickListener {
+        checkNotificationPermission()
+
         if (isAutoPickActive) {
             cancelAutoPickUp()
         } else {
@@ -280,9 +293,14 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                         showAutoPickLoadingAnimation()
                     }
                     is Resource.Success -> {
+                        isAutoPickActive = false
                         doNotKeepScreenOn()
                         hideAutoPickLoadingAnimation()
+
                         response.data?.let {
+                            if (hasNotificationPermission()) {
+                                notificationService.showPickUpSuccessNotification(it.name)
+                            }
                             navigateToPlayerDetails(it)
                         }
                     }
@@ -294,32 +312,42 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
                             if (shouldPickPlayerAgain) {
                                 Timber.i("Auto pick player spam goes brrrrrrr…")
                                 validateAutoPickUpInputs()
-                            } else {
+                            } else if (it.contains(ERROR_DSFUT_BLOCK)) {
+                                isAutoPickActive = false
                                 doNotKeepScreenOn()
                                 hideAutoPickLoadingAnimation()
+
+                                val blockDuration = it.filter { char -> char.isDigit() }.toInt()
+                                val message = requireContext().resources.getQuantityString(
+                                    R.plurals.pick_up_error_dsfut_block,
+                                    blockDuration,
+                                    blockDuration
+                                )
+
+                                if (hasNotificationPermission()) {
+                                    notificationService.showPickUpFailedNotification(message)
+                                }
+
+                                snackbar = showActionSnackbarError(
+                                    view = requireView(),
+                                    message = message,
+                                    actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                ) { snackbar?.dismiss() }
+                            } else {
+                                isAutoPickActive = false
+                                doNotKeepScreenOn()
+                                hideAutoPickLoadingAnimation()
+
+                                if (hasNotificationPermission()) {
+                                    notificationService.showPickUpFailedNotification(it)
+                                }
+
                                 snackbar = when {
                                     it.contains(ERROR_NETWORK_CONNECTION_1) -> {
                                         showNetworkFailureError(requireContext(), requireView())
                                     }
                                     it.contains(ERROR_NETWORK_CONNECTION_2) -> {
                                         showNetworkFailureError(requireContext(), requireView())
-                                    }
-                                    it.contains(ERROR_DSFUT_BLOCK) -> {
-                                        val blockDuration = it.filter { char ->
-                                            char.isDigit()
-                                        }.toInt()
-
-                                        val message = requireContext().resources.getQuantityString(
-                                            R.plurals.pick_up_error_dsfut_block,
-                                            blockDuration,
-                                            blockDuration
-                                        )
-
-                                        showActionSnackbarError(
-                                            view = requireView(),
-                                            message = message,
-                                            actionBtn = requireContext().getString(R.string.error_btn_confirm)
-                                        ) { snackbar?.dismiss() }
                                     }
                                     else -> {
                                         showActionSnackbarError(
@@ -467,5 +495,56 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up) {
         tiEditTakeAfter.isEnabled = true
         btnPickOnce.isClickable = true
         btnPickAuto.text = requireContext().getString(R.string.pick_up_btn_pick_auto)
+    }
+
+
+    private fun checkNotificationPermission() {
+        val doesNotHaveNotificationPermission =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission()
+
+        @SuppressLint("NewApi")
+        if (doesNotHaveNotificationPermission) {
+            requestNotificationPermission()
+        }
+    }
+
+    private fun hasNotificationPermission(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            EasyPermissions.hasPermissions(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+        } else true
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        EasyPermissions.requestPermissions(
+            host = this,
+            rationale = requireContext().getString(R.string.notification_permission_rational_message),
+            requestCode = PickUpPlayerNotificationService.NOTIFICATION_PERMISSION_REQUEST_CODE,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
+        /* NO-OP */
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms.first())) {
+            SettingsDialog.Builder(requireActivity()).build().show()
+        } else {
+            requestNotificationPermission()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(
+            requestCode, permissions, grantResults, this
+        )
     }
 }

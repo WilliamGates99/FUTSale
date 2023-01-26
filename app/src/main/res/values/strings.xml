@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">FUTCoin</string>
 
+    <string name="notification_channel_name_pick_up_player">Auto Pick Up Player</string>
+    <string name="notification_channel_description_pick_up_player">This notification will be shown after a player is picked up</string>
+    <string name="notification_permission_rational_message">Without Notification Permission, you won\'t receive a notification after a player is picked up.</string>
+
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_connection_unavailable">Unable to connect to the internet.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
@@ -74,6 +78,8 @@
     <string name="pick_up_error_dsfut_sign">Please check the entered values for the partner ID and secret key in the Profile page.</string>
     <string name="pick_up_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
     <string name="pick_up_error_dsfut_canceled">Auto pick player canceled.</string>
+    <string name="pick_up_notification_title_success">%s was picked up successfully</string>
+    <string name="pick_up_notification_title_fail">Auto pick up player failed</string>
 
     <string name="profile_text_title">Profile</string>
     <string name="profile_title_partner_id">Partner ID</string>

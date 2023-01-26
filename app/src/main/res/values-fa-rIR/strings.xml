@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
 
+    <string name="notification_channel_name_pick_up_player">گرفتن خودکار بازیکن</string>
+    <string name="notification_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
+    <string name="notification_permission_rational_message">بدون مجوز اعلان، پس از گرفتن بازیکن، اعلانی دریافت نخواهید کرد.</string>
+
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_network_connection_unavailable">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
@@ -68,6 +72,8 @@
     <string name="pick_up_error_dsfut_sign">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
     <string name="pick_up_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
     <string name="pick_up_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
+    <string name="pick_up_notification_title_success">%s با موفقیت گرفته شد</string>
+    <string name="pick_up_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
 
     <string name="profile_text_title">پروفایل</string>
     <string name="profile_title_partner_id">شناسه پارتنر</string>

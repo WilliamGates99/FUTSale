@@ -291,6 +291,9 @@ dependencies {
     // Timber Library
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    // EasyPermissions Library
+    implementation("com.vmadalin:easypermissions-ktx:1.0.0")
+
     // Lottie Library
     implementation("com.airbnb.android:lottie:5.2.0")
 
