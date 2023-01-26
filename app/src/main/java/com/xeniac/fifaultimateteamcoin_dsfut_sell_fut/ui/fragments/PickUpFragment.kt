@@ -529,7 +529,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms.first())) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             SettingsDialog.Builder(requireActivity()).build().show()
         } else {
             requestNotificationPermission()
