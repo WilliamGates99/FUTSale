@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vmadalin.easypermissions.EasyPermissions
-import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import com.vmadalin.easypermissions.models.PermissionRequest
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
@@ -68,6 +68,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         textInputsBackgroundColor()
         textInputsStrokeColor()
         subscribeToObservers()
+        checkNotificationPermission()
         getSelectedPlatform()
         toggleOnCheck()
         pickOnceOnClick()
@@ -133,6 +134,16 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         insertPickedUpPlayerObserver()
         allPickedUpPlayersObserver()
         pickedPlayerCardExpiryTimerObserver()
+    }
+
+    private fun checkNotificationPermission() {
+        val doesNotHaveNotificationPermission =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission()
+
+        @SuppressLint("NewApi")
+        if (doesNotHaveNotificationPermission) {
+            requestNotificationPermission()
+        }
     }
 
     private fun getSelectedPlatform() = viewModel.getSelectedPlatform()
@@ -242,8 +253,6 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         }
 
     private fun autoPickUpOnClick() = binding.btnPickAuto.setOnClickListener {
-        checkNotificationPermission()
-
         if (isAutoPickActive) {
             cancelAutoPickUp()
         } else {
@@ -497,17 +506,6 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         btnPickAuto.text = requireContext().getString(R.string.pick_up_btn_pick_auto)
     }
 
-
-    private fun checkNotificationPermission() {
-        val doesNotHaveNotificationPermission =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission()
-
-        @SuppressLint("NewApi")
-        if (doesNotHaveNotificationPermission) {
-            requestNotificationPermission()
-        }
-    }
-
     private fun hasNotificationPermission(): Boolean =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             EasyPermissions.hasPermissions(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
@@ -515,12 +513,16 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
-        EasyPermissions.requestPermissions(
-            host = this,
-            rationale = requireContext().getString(R.string.notification_permission_rational_message),
-            requestCode = PickUpPlayerNotificationService.NOTIFICATION_PERMISSION_REQUEST_CODE,
-            Manifest.permission.POST_NOTIFICATIONS
-        )
+        val notificationPermissionRequest = PermissionRequest.Builder(requireContext()).apply {
+            code(PickUpPlayerNotificationService.NOTIFICATION_PERMISSION_REQUEST_CODE)
+            perms(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+            rationale(requireContext().getString(R.string.notification_permission_rational_message))
+            theme(R.style.Theme_FifaUltimateTeamCoin_AlertDialog)
+            positiveButtonText(requireContext().getString(R.string.notification_permission_rational_btn_positive))
+            negativeButtonText(requireContext().getString(R.string.notification_permission_rational_btn_negative))
+        }.build()
+
+        EasyPermissions.requestPermissions(this, notificationPermissionRequest)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
@@ -530,7 +532,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            SettingsDialog.Builder(requireActivity()).build().show()
+            /* NO-OP */
         } else {
             requestNotificationPermission()
         }

@@ -12,6 +12,7 @@
     <color name="skyBlue">#DEF4FD</color>
     <color name="greenDark">#004D28</color>
     <color name="greenLight">#CCFFE6</color>
+    <color name="dialogButton">#1C53F4</color>
     <color name="grayLight">#F3F3F3</color>
     <color name="grayMedium">#E9E9E9</color>
     <color name="grayDark">#959595</color>
