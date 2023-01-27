@@ -204,6 +204,24 @@ class SettingsViewModel @Inject constructor(
         Timber.i("App theme index changed to $index")
     }
 
+    fun changeIsNotificationSoundActive(isActive: Boolean) = viewModelScope.launch {
+        safeChangeIsNotificationSoundActive(isActive)
+    }
+
+    private suspend fun safeChangeIsNotificationSoundActive(isActive: Boolean) {
+        preferencesRepository.isNotificationSoundActive(isActive)
+        Timber.i("Notification sound activation changed to $isActive")
+    }
+
+    fun changeIsNotificationVibrateActive(isActive: Boolean) = viewModelScope.launch {
+        safeChangeIsNotificationVibrateActive(isActive)
+    }
+
+    private suspend fun safeChangeIsNotificationVibrateActive(isActive: Boolean) {
+        preferencesRepository.isNotificationVibrateActive(isActive)
+        Timber.i("Notification vibrate activation changed to $isActive")
+    }
+
     private fun isActivityRestartNeeded(newLayoutDirection: Int): Boolean {
         val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
         val currentLayoutDirection = currentLocale?.layoutDirection

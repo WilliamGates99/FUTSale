@@ -6,6 +6,10 @@ interface PreferencesRepository {
 
     fun isOnBoardingCompletedSynchronously(): Boolean
 
+    fun isNotificationSoundActiveSynchronously(): Boolean
+    
+    fun isNotificationVibrateActiveSynchronously(): Boolean
+
     suspend fun getCurrentAppTheme(): Int
 
     suspend fun isNotificationSoundActive(): Boolean

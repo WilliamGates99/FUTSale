@@ -61,12 +61,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         subscribeToObservers()
         getCurrentLanguage()
         getCurrentTheme()
-//        getIsNotificationSoundActive()
-//        getIsNotificationVibrateActive()
+        getIsNotificationSoundActive()
+        getIsNotificationVibrateActive()
         languageOnClick()
         themeOnClick()
-//        notificationSoundOnClick()
-//        notificationVibrateOnClick()
+        notificationSoundOnClick()
+        notificationVibrateOnClick()
         donateOnClick()
         improveTranslationsOnClick()
         rateUsOnClick()
@@ -86,8 +86,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         currentLocaleIndexObserver()
         currentThemeObserver()
         currentThemeIndexObserver()
-//        isNotificationSoundActiveObserver()
-//        isNotificationVibrateActiveObserver()
+        isNotificationSoundActiveObserver()
+        isNotificationVibrateActiveObserver()
         changeCurrentLocaleObserver()
     }
 
@@ -123,13 +123,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             }
         }
 
-    /* TODO ADD FUNCTIONALITY
     private fun getIsNotificationSoundActive() = viewModel.getIsNotificationSoundActive()
 
     private fun isNotificationSoundActiveObserver() =
         viewModel.isNotificationSoundActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { isActive ->
-                binding.switchSettingsNotificationSound.isChecked = isActive
+                binding.isNotificationSoundOn = isActive
             }
         }
 
@@ -138,10 +137,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     private fun isNotificationVibrateActiveObserver() =
         viewModel.isNotificationVibrateActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { isActive ->
-                binding.switchSettingsNotificationVibrate.isChecked = isActive
+                binding.isNotificationVibrateOn = isActive
             }
         }
-     */
 
     private fun languageOnClick() = binding.clSettingsLanguage.setOnClickListener {
         val localeTextItems = arrayOf(
@@ -196,25 +194,21 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
 
     private fun changeCurrentTheme(themeIndex: Int) = viewModel.changeCurrentTheme(themeIndex)
 
-    /* TODO ADD FUNCTIONALITY
-   private fun notificationSoundOnClick() =
-       binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-           when (isChecked) {
-               true -> {}
-               false -> {}
-           }
-       }
-       */
-
-    /* TODO ADD FUNCTIONALITY
-    private fun notificationVibrateOnClick() =
+    private fun notificationSoundOnClick() =
         binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            when (isChecked) {
-                true -> {}
-                false -> {}
-            }
+            changeIsNotificationSoundActive(isChecked)
         }
-        */
+
+    private fun changeIsNotificationSoundActive(isActive: Boolean) =
+        viewModel.changeIsNotificationSoundActive(isActive)
+
+    private fun notificationVibrateOnClick() =
+        binding.switchSettingsNotificationVibrate.setOnCheckedChangeListener { _, isChecked ->
+            changeIsNotificationVibrateActive(isChecked)
+        }
+
+    private fun changeIsNotificationVibrateActive(isActive: Boolean) =
+        viewModel.changeIsNotificationVibrateActive(isActive)
 
     private fun donateOnClick() = binding.clMiscellaneousDonate.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DONATE)
