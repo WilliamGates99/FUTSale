@@ -54,7 +54,8 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
 
     private var isAutoPickActive = false
 
-    private lateinit var notificationService: PickUpPlayerNotificationService
+    @Inject
+    lateinit var notificationService: PickUpPlayerNotificationService
 
     private var snackbar: Snackbar? = null
 
@@ -62,8 +63,6 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPickUpBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
-
-        notificationService = PickUpPlayerNotificationService(requireContext())
 
         textInputsBackgroundColor()
         textInputsStrokeColor()

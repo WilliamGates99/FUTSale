@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.DsfutResponse
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
@@ -265,11 +266,29 @@ class PickUpViewModel @Inject constructor(
             val timestamp = getCurrentTimeInMillis()
             val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
-            val response = dsfutRepository.get().pickUpPlayer(
-                platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
+            // TODO REMOVE
+            val responseDummy = DsfutResponse(
+                error = null,
+                message = "player popped",
+                player = Player(
+                    assetID = 1,
+                    buyNowPrice = 100,
+                    expires = 300,
+                    name = "Muller",
+                    position = "FW",
+                    rating = 80,
+                    resourceID = 10,
+                    startPrice = 80,
+                    tradeID = 1000L,
+                    transactionID = 100
+                )
             )
 
-            response.body()?.let {
+//            val response = dsfutRepository.get().pickUpPlayer(
+//                platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
+//            )
+
+            responseDummy.let {
                 it.error?.let { error -> // RESPONSE HAD ERROR
                     when {
                         error.contains(ERROR_DSFUT_BLOCK) -> {
