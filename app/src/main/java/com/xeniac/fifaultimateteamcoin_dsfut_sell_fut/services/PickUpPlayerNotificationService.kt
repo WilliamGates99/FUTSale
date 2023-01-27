@@ -50,17 +50,10 @@ class PickUpPlayerNotificationService(
     }
 
     private fun setCommonNotificationOptions(notificationBuilder: NotificationCompat.Builder) {
-        val cancelPendingIntent = PendingIntent.getActivity(
-            context,
-            2001,
-            Intent(""),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-        )
-
         notificationBuilder.apply {
             setAutoCancel(true)
             setSmallIcon(R.drawable.ic_notification)
-            setContentIntent(cancelPendingIntent)
+            setContentIntent(getCancelNotificationPendingIntent())
 
             /**
              * On Android 8.0 and above this value is ignored
@@ -77,4 +70,11 @@ class PickUpPlayerNotificationService(
             )
         }
     }
+
+    private fun getCancelNotificationPendingIntent() = PendingIntent.getActivity(
+        context,
+        2001,
+        Intent(""),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+    )
 }
