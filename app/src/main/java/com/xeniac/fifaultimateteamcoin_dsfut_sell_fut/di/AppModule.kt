@@ -1,13 +1,10 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
-import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
@@ -115,24 +112,6 @@ object AppModule {
     fun provideNotificationManager(
         @ApplicationContext context: Context
     ) = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @Provides
-    fun providePickUpPlayerNotificationChannel(
-        @ApplicationContext context: Context
-    ): NotificationChannel = NotificationChannel(
-        PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID,
-        context.getString(R.string.notification_channel_name_pick_up_player),
-        NotificationManager.IMPORTANCE_HIGH
-    ).apply {
-        description = context.getString(R.string.notification_channel_description_pick_up_player)
-        lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        lightColor = ContextCompat.getColor(context, R.color.green)
-        enableLights(true)
-        setSound(null, null)
-        enableVibration(false)
-    }
 
     @Singleton
     @Provides
