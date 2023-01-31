@@ -1,19 +1,16 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut
 
 import android.app.Application
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.applovin.sdk.AppLovinPrivacySettings
 import com.applovin.sdk.AppLovinSdk
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
 import ir.tapsell.plus.TapsellPlus
@@ -28,6 +25,9 @@ class BaseApplication : Application() {
 
     @Inject
     lateinit var notificationManager: NotificationManager
+
+    @Inject
+    lateinit var pickUpPlayerNotificationChannel: NotificationChannel
 
     @set:Inject
     var currentAppThemeIndex = 0
@@ -47,21 +47,6 @@ class BaseApplication : Application() {
 
     private fun createPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val pickUpPlayerNotificationChannel = NotificationChannel(
-                PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID,
-                getString(R.string.notification_channel_name_pick_up_player),
-                NotificationManager.IMPORTANCE_HIGH
-            )
-
-            pickUpPlayerNotificationChannel.apply {
-                description = getString(R.string.notification_channel_description_pick_up_player)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                lightColor = ContextCompat.getColor(this@BaseApplication, R.color.green)
-                enableLights(true)
-                setSound(null, null)
-                enableVibration(false)
-            }
-
             notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
         }
     }
