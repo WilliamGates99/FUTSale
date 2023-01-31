@@ -6,8 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -122,42 +120,18 @@ object AppModule {
     @Singleton
     @Provides
     fun providePickUpPlayerNotificationChannel(
-        @ApplicationContext context: Context,
-        @Named("notification_sound") isNotificationSoundActive: Boolean,
-        @Named("notification_vibrate") isNotificationVibrateActive: Boolean
-    ): NotificationChannel {
-        val pickUpPlayerNotificationChannel = NotificationChannel(
-            PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.notification_channel_name_pick_up_player),
-            NotificationManager.IMPORTANCE_HIGH
-        )
-
-        pickUpPlayerNotificationChannel.apply {
-            description = context.getString(
-                R.string.notification_channel_description_pick_up_player
-            )
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            lightColor = ContextCompat.getColor(context, R.color.green)
-            enableLights(true)
-
-            if (isNotificationSoundActive) {
-                val audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .build()
-                val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                setSound(sound, audioAttributes)
-            } else {
-                setSound(null, null)
-            }
-
-            if (isNotificationVibrateActive) {
-                vibrationPattern = longArrayOf(0, 500, 1000, 500, 1000)
-            } else {
-                enableVibration(false)
-            }
-        }
-
-        return pickUpPlayerNotificationChannel
+        @ApplicationContext context: Context
+    ): NotificationChannel = NotificationChannel(
+        PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID,
+        context.getString(R.string.notification_channel_name_pick_up_player),
+        NotificationManager.IMPORTANCE_HIGH
+    ).apply {
+        description = context.getString(R.string.notification_channel_description_pick_up_player)
+        lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        lightColor = ContextCompat.getColor(context, R.color.green)
+        enableLights(true)
+        setSound(null, null)
+        enableVibration(false)
     }
 
     @Singleton
@@ -175,9 +149,7 @@ object AppModule {
     @Provides
     fun provideBasePickUpNotificationBuilder(
         @ApplicationContext context: Context,
-        cancelNotificationPendingIntent: PendingIntent,
-        @Named("notification_sound") isNotificationSoundActive: Boolean,
-        @Named("notification_vibrate") isNotificationVibrateActive: Boolean
+        cancelNotificationPendingIntent: PendingIntent
     ) = NotificationCompat.Builder(
         context, PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID
     ).apply {
@@ -193,17 +165,7 @@ object AppModule {
          */
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(ContextCompat.getColor(context, R.color.green), 1000, 1000)
-
-        if (isNotificationSoundActive) {
-            setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-        } else {
-            setSound(null)
-        }
-
-        if (isNotificationVibrateActive) {
-            setVibrate(longArrayOf(0, 500, 1000, 500, 1000))
-        } else {
-            setVibrate(null)
-        }
+        setSound(null)
+        setVibrate(null)
     }
 }
