@@ -22,6 +22,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DEFAULT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_LIGHT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper.setAppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,6 +59,16 @@ class SettingsViewModel @Inject constructor(
 
     private val _changeCurrentLocaleLiveData: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val changeCurrentLocaleLiveData: LiveData<Event<Boolean>> = _changeCurrentLocaleLiveData
+
+    private val _changeIsNotificationSoundActiveLiveData:
+            MutableLiveData<Event<Resource<Boolean>>> = MutableLiveData()
+    val changeIsNotificationSoundActiveLiveData:
+            LiveData<Event<Resource<Boolean>>> = _changeIsNotificationSoundActiveLiveData
+
+    private val _changeIsNotificationVibrateActiveLiveData:
+            MutableLiveData<Event<Resource<Boolean>>> = MutableLiveData()
+    val changeIsNotificationVibrateActiveLiveData:
+            LiveData<Event<Resource<Boolean>>> = _changeIsNotificationVibrateActiveLiveData
 
     fun getCurrentLanguage() = viewModelScope.launch {
         safeGetCurrentLanguage()
@@ -209,8 +220,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     private suspend fun safeChangeIsNotificationSoundActive(isActive: Boolean) {
-        preferencesRepository.isNotificationSoundActive(isActive)
-        Timber.i("Notification sound activation changed to $isActive")
+        _changeIsNotificationSoundActiveLiveData.postValue(Event(Resource.Loading()))
+        try {
+            preferencesRepository.isNotificationSoundActive(isActive)
+            _changeIsNotificationSoundActiveLiveData.postValue(Event(Resource.Success(isActive)))
+            Timber.i("Notification sound activation changed to $isActive")
+        } catch (e: Exception) {
+            _changeIsNotificationSoundActiveLiveData.postValue(
+                Event(Resource.Error(UiText.DynamicString(e.message.toString())))
+            )
+            Timber.e("safeChangeIsNotificationSoundActive exception: ${e.message}")
+        }
     }
 
     fun changeIsNotificationVibrateActive(isActive: Boolean) = viewModelScope.launch {
@@ -218,8 +238,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     private suspend fun safeChangeIsNotificationVibrateActive(isActive: Boolean) {
-        preferencesRepository.isNotificationVibrateActive(isActive)
-        Timber.i("Notification vibrate activation changed to $isActive")
+        _changeIsNotificationVibrateActiveLiveData.postValue(Event(Resource.Loading()))
+        try {
+            preferencesRepository.isNotificationVibrateActive(isActive)
+            _changeIsNotificationVibrateActiveLiveData.postValue(Event(Resource.Success(isActive)))
+            Timber.i("Notification vibrate activation changed to $isActive")
+        } catch (e: Exception) {
+            _changeIsNotificationVibrateActiveLiveData.postValue(
+                Event(Resource.Error(UiText.DynamicString(e.message.toString())))
+            )
+            Timber.e("safeChangeIsNotificationVibrateActive exception: ${e.message}")
+        }
     }
 
     private fun isActivityRestartNeeded(newLayoutDirection: Int): Boolean {

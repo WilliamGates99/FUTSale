@@ -13,9 +13,11 @@ import com.applovin.mediation.nativeAds.MaxNativeAdListener
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
+import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentSettingsBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.SettingsViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showSingleChoiceItemsDialog
@@ -24,13 +26,18 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DONATE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openAppPageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
+import dagger.hilt.android.AndroidEntryPoint
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
 import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListener {
 
     private var _binding: FragmentSettingsBinding? = null
@@ -38,8 +45,15 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
 
     private lateinit var viewModel: SettingsViewModel
 
+    @Inject
+    lateinit var notificationService: PickUpPlayerNotificationService
+
     private var currentLocaleIndex = 0
     private var currentThemeIndex = 0
+    private var isNotificationSoundActive = true
+    private var isNotificationVibrateActive = true
+
+    private var snackbar: Snackbar? = null
 
     private lateinit var appLovinSettingsNativeAdContainer: ViewGroup
     private lateinit var appLovinSettingsAdLoader: MaxNativeAdLoader
@@ -78,6 +92,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     override fun onDestroyView() {
         super.onDestroyView()
         destroyAd()
+        snackbar?.dismiss()
         _binding = null
     }
 
@@ -89,6 +104,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         isNotificationSoundActiveObserver()
         isNotificationVibrateActiveObserver()
         changeCurrentLocaleObserver()
+        changeIsNotificationSoundActiveObserver()
+        changeIsNotificationVibrateActiveObserver()
     }
 
     private fun getCurrentLanguage() = viewModel.getCurrentLanguage()
@@ -202,6 +219,27 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     private fun changeIsNotificationSoundActive(isActive: Boolean) =
         viewModel.changeIsNotificationSoundActive(isActive)
 
+    private fun changeIsNotificationSoundActiveObserver() =
+        viewModel.changeIsNotificationSoundActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Loading -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { isActive ->
+                            isNotificationSoundActive = isActive
+                        }
+                    }
+                    is Resource.Error -> {
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = showSomethingWentWrongError(requireContext(), requireView())
+                        }
+                    }
+                }
+            }
+        }
+
     private fun notificationVibrateOnClick() =
         binding.switchSettingsNotificationVibrate.setOnCheckedChangeListener { _, isChecked ->
             changeIsNotificationVibrateActive(isChecked)
@@ -209,6 +247,27 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
 
     private fun changeIsNotificationVibrateActive(isActive: Boolean) =
         viewModel.changeIsNotificationVibrateActive(isActive)
+
+    private fun changeIsNotificationVibrateActiveObserver() =
+        viewModel.changeIsNotificationVibrateActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Loading -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { isActive ->
+                            isNotificationVibrateActive = isActive
+                        }
+                    }
+                    is Resource.Error -> {
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = showSomethingWentWrongError(requireContext(), requireView())
+                        }
+                    }
+                }
+            }
+        }
 
     private fun donateOnClick() = binding.clMiscellaneousDonate.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DONATE)
