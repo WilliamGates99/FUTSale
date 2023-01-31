@@ -57,6 +57,12 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
     @Inject
     lateinit var notificationService: PickUpPlayerNotificationService
 
+    @set:Inject
+    var isNotificationSoundActive = true
+
+    @set:Inject
+    var isNotificationVibrateActive = true
+
     private var snackbar: Snackbar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -307,7 +313,11 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
 
                         response.data?.let {
                             if (hasNotificationPermission()) {
-                                notificationService.showPickUpSuccessNotification(it.name)
+                                notificationService.showPickUpSuccessNotification(
+                                    playerName = it.name,
+                                    isNotificationSoundActive = isNotificationSoundActive,
+                                    isNotificationVibrateActive = isNotificationVibrateActive
+                                )
                             }
                             navigateToPlayerDetails(it)
                         }
@@ -333,7 +343,11 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                                 )
 
                                 if (hasNotificationPermission()) {
-                                    notificationService.showPickUpFailedNotification(message)
+                                    notificationService.showPickUpFailedNotification(
+                                        message = message,
+                                        isNotificationSoundActive = isNotificationSoundActive,
+                                        isNotificationVibrateActive = isNotificationVibrateActive
+                                    )
                                 }
 
                                 snackbar = showActionSnackbarError(
@@ -347,7 +361,11 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                                 hideAutoPickLoadingAnimation()
 
                                 if (hasNotificationPermission()) {
-                                    notificationService.showPickUpFailedNotification(it)
+                                    notificationService.showPickUpFailedNotification(
+                                        message = it,
+                                        isNotificationSoundActive = isNotificationSoundActive,
+                                        isNotificationVibrateActive = isNotificationVibrateActive
+                                    )
                                 }
 
                                 snackbar = when {
