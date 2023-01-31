@@ -36,7 +36,8 @@ class BaseApplication : Application() {
         super.onCreate()
 
         setupTimber()
-        createPickUpPlayerNotificationChannel()
+        createMutedPickUpPlayerNotificationChannel()
+        createSoundedPickUpPlayerNotificationChannel()
         setAppTheme()
         initFirebaseAppCheck()
         initAppLovin()
@@ -45,10 +46,10 @@ class BaseApplication : Application() {
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
-    private fun createPickUpPlayerNotificationChannel() {
+    private fun createMutedPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val pickUpPlayerNotificationChannel = NotificationChannel(
-                PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID,
+                PickUpPlayerNotificationService.MUTED_PICK_UP_NOTIFICATION_CHANNEL_ID,
                 getString(R.string.notification_channel_name_pick_up_player),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
@@ -57,6 +58,24 @@ class BaseApplication : Application() {
                 lightColor = ContextCompat.getColor(this@BaseApplication, R.color.green)
                 enableLights(true)
                 setSound(null, null)
+                enableVibration(false)
+            }
+
+            notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
+        }
+    }
+
+    private fun createSoundedPickUpPlayerNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val pickUpPlayerNotificationChannel = NotificationChannel(
+                PickUpPlayerNotificationService.SOUNDED_PICK_UP_NOTIFICATION_CHANNEL_ID,
+                getString(R.string.notification_channel_name_pick_up_player),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = getString(R.string.notification_channel_description_pick_up_player)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                lightColor = ContextCompat.getColor(this@BaseApplication, R.color.green)
+                enableLights(true)
                 enableVibration(false)
             }
 

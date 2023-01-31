@@ -126,11 +126,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideBasePickUpNotificationBuilder(
+    @Named("muted_pick_up_notification")
+    fun provideMutedBasePickUpNotificationBuilder(
         @ApplicationContext context: Context,
         cancelNotificationPendingIntent: PendingIntent
     ) = NotificationCompat.Builder(
-        context, PickUpPlayerNotificationService.PICK_UP_NOTIFICATION_CHANNEL_ID
+        context, PickUpPlayerNotificationService.MUTED_PICK_UP_NOTIFICATION_CHANNEL_ID
     ).apply {
         setAutoCancel(true)
         setSmallIcon(R.drawable.ic_notification)
@@ -145,6 +146,30 @@ object AppModule {
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(ContextCompat.getColor(context, R.color.green), 1000, 1000)
         setSound(null)
+        setVibrate(null)
+    }
+
+    @Singleton
+    @Provides
+    @Named("sounded_pick_up_notification")
+    fun provideSoundedBasePickUpNotificationBuilder(
+        @ApplicationContext context: Context,
+        cancelNotificationPendingIntent: PendingIntent
+    ) = NotificationCompat.Builder(
+        context, PickUpPlayerNotificationService.SOUNDED_PICK_UP_NOTIFICATION_CHANNEL_ID
+    ).apply {
+        setAutoCancel(true)
+        setSmallIcon(R.drawable.ic_notification)
+        setContentIntent(cancelNotificationPendingIntent)
+
+        /**
+         * On Android 8.0 and above these values are ignored
+         * in favor of the values set on the notification's channel.
+         * On older platforms, these values are still used,
+         * so it is still required for apps supporting those platforms.
+         */
+        setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        setLights(ContextCompat.getColor(context, R.color.green), 1000, 1000)
         setVibrate(null)
     }
 }
