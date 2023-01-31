@@ -40,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.DecimalFormat
 import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.PermissionCallbacks {
@@ -57,10 +58,12 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
     @Inject
     lateinit var notificationService: PickUpPlayerNotificationService
 
-    @set:Inject
+    @JvmField
+    @field:[Inject Named("notification_sound")]
     var isNotificationSoundActive = true
 
-    @set:Inject
+    @JvmField
+    @field:[Inject Named("notification_vibrate")]
     var isNotificationVibrateActive = true
 
     private var snackbar: Snackbar? = null
