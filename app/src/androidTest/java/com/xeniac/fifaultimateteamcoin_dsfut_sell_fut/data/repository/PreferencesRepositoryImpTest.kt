@@ -59,7 +59,7 @@ class PreferencesRepositoryImpTest {
      * getCurrentAppThemeSynchronously -> 0
      * isOnBoardingCompletedSynchronously -> false
      * isNotificationSoundActiveSynchronously -> true
-     * initialIsNotificationVibrateActive -> true
+     * isNotificationVibrateActive -> true
      * getCurrentAppTheme -> 0
      * isNotificationSoundActive -> true
      * isNotificationVibrateActive -> true
