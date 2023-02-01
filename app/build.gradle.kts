@@ -242,7 +242,7 @@ kapt {
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // Navigation Component
@@ -312,7 +312,7 @@ dependencies {
     implementation("com.applovin.mediation:google-adapter:21.5.0.0")
 
     // Google AdMob Library
-    implementation("com.google.android.gms:play-services-ads:21.4.0")
+    implementation("com.google.android.gms:play-services-ads:21.5.0")
 
     // Tapsell Library
     implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
