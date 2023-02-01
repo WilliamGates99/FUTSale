@@ -36,11 +36,10 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
         _binding = FragmentPlayerDetailsBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
 
-        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
-
         backOnClick()
         getPlayer()
         subscribeToObservers()
+        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     override fun onDestroyView() {
