@@ -54,6 +54,7 @@
     <string name="pick_up_btn_pick_once">Pick Once</string>
     <string name="pick_up_title_player_price_start">Start Price</string>
     <string name="pick_up_title_player_price_now">Buy Now Price</string>
+    <string name="pick_up_text_player_timer_finished">Expired</string>
     <string name="pick_up_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
     <string name="pick_up_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
     <string name="pick_up_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
