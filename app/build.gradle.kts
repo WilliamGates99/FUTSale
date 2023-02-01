@@ -307,9 +307,9 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.1")
 
     // Applovin Libraries
-    implementation("com.applovin:applovin-sdk:11.6.1")
+    implementation("com.applovin:applovin-sdk:11.7.0")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
-    implementation("com.applovin.mediation:google-adapter:21.4.0.1")
+    implementation("com.applovin.mediation:google-adapter:21.5.0.0")
 
     // Google AdMob Library
     implementation("com.google.android.gms:play-services-ads:21.4.0")
