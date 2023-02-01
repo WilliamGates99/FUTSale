@@ -54,6 +54,7 @@
     <string name="pick_up_btn_pick_once">یکبار گرفتن</string>
     <string name="pick_up_title_player_price_start">قیمت اولیه</string>
     <string name="pick_up_title_player_price_now">قیمت خرید در لحظه</string>
+    <string name="pick_up_text_player_timer_finished">منقضی‌شده</string>
     <string name="pick_up_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
