@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityOnboardingBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.adapters.DotsIndicatorAdapter
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding1stFragment
@@ -36,7 +37,6 @@ class OnBoardingActivity : AppCompatActivity() {
                     ONBOARDING_2ND_INDEX -> currentItem = ONBOARDING_1ST_INDEX
                     ONBOARDING_3RD_INDEX -> currentItem = ONBOARDING_2ND_INDEX
                     ONBOARDING_4TH_INDEX -> currentItem = ONBOARDING_3RD_INDEX
-                    ONBOARDING_1ST_INDEX -> finishAffinity()
                 }
             }
         }
@@ -56,5 +56,20 @@ class OnBoardingActivity : AppCompatActivity() {
 
         binding.viewpager.adapter = dotsIndicatorAdapter
         binding.indicator.attachTo(binding.viewpager)
+        viewPagerOnPageChange()
     }
+
+    private fun viewPagerOnPageChange() =
+        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                onBackPressedCallback.isEnabled = when (position) {
+                    ONBOARDING_1ST_INDEX -> false
+                    ONBOARDING_2ND_INDEX -> true
+                    ONBOARDING_3RD_INDEX -> true
+                    ONBOARDING_4TH_INDEX -> true
+                    else -> false
+                }
+            }
+        })
 }
