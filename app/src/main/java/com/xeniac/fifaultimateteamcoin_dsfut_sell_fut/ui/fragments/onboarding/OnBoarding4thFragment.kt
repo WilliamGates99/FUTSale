@@ -166,9 +166,9 @@ class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
             }
         }
 
-    private fun navigateToMainActivity() {
-        startActivity(Intent(requireContext(), MainActivity::class.java))
-        requireActivity().finish()
+    private fun navigateToMainActivity() = requireActivity().apply {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun showLoadingAnimation() = binding.apply {
