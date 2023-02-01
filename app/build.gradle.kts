@@ -33,6 +33,20 @@ android {
         versionCode = 6 // TODO UPGRADE AFTER EACH RELEASE
         versionName = "1.1.0" // TODO UPGRADE AFTER EACH RELEASE
 
+        kapt {
+            arguments {
+                /**
+                 * Room DB schema directory
+                 */
+                arg("room.schemaLocation", "$projectDir/roomDbSchemas")
+            }
+
+            /**
+             * Allow references to generated code
+             */
+            correctErrorTypes = true
+        }
+
         /**
          * Keeps language resources for only the locales specified below.
          */
@@ -101,10 +115,6 @@ android {
         getByName("debug") {
             versionNameSuffix = " - debug"
             applicationIdSuffix = ".debug"
-            extra.apply {
-                set("enableCrashlytics", false)
-                set("alwaysUpdateBuildId", false)
-            }
         }
 
         getByName("release") {
@@ -227,13 +237,6 @@ androidComponents {
             }
         }
     }
-}
-
-kapt {
-    /**
-     * Allow references to generated code
-     */
-    correctErrorTypes = true
 }
 
 dependencies {
