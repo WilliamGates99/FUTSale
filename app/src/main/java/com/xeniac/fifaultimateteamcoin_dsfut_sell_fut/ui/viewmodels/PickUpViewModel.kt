@@ -9,14 +9,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRep
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.COUNT_DOWN_INTERVAL_IN_MILLIS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_AUTO_PICK_UP
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_BLOCK
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_EMPTY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_LIMIT
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_MAINTENANCE
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_SIGN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_THROTTLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
@@ -24,8 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.math.BigInteger
-import java.security.MessageDigest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -138,65 +129,19 @@ class PickUpViewModel @Inject constructor(
         maxPrice: Int?,
         takeAfter: Int?
     ) = viewModelScope.launch {
-        safePickPlayerOnce(partnerId, secretKey, minPrice, maxPrice, takeAfter)
-    }
-
-    private suspend fun safePickPlayerOnce(
-        partnerId: String, secretKey: String, minPrice: Int?, maxPrice: Int?, takeAfter: Int?
-    ) {
         _pickPlayerOnceLiveData.postValue(Event(Resource.Loading()))
-        try {
-            val platform = preferencesRepository.getSelectedPlatform()
-            val timestamp = getCurrentTimeInMillis()
-            val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
-            val response = dsfutRepository.get().pickUpPlayer(
-                platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
-            )
+        val platform = preferencesRepository.getSelectedPlatform()
+        val response = dsfutRepository.get().pickUpPlayer(
+            platform, partnerId, secretKey, minPrice, maxPrice, takeAfter
+        )
 
-            response.body()?.let {
-                it.error?.let { error -> // RESPONSE HAD ERROR
-                    when {
-                        error.contains(ERROR_DSFUT_BLOCK) -> {
-                            val errorMessage = "$error - ${it.message}"
-                            _pickPlayerOnceLiveData.postValue(
-                                Event(Resource.Error(UiText.DynamicString(errorMessage)))
-                            )
-                        }
-                        error.contains(ERROR_DSFUT_EMPTY) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
-                        )
-                        error.contains(ERROR_DSFUT_LIMIT) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
-                        )
-                        error.contains(ERROR_DSFUT_MAINTENANCE) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
-                        )
-                        error.contains(ERROR_DSFUT_SIGN) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_sign)))
-                        )
-                        error.contains(ERROR_DSFUT_THROTTLE) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
-                        )
-                        else -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
-                        )
-                    }
-                    Timber.e("safePickPlayerOnce error: ${it.error}")
-                    Timber.e("safePickPlayerOnce message: ${it.message}")
-                }
-
-                it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    startPickPlayerExpiryCountdown()
-                    insertPickedUpPlayerIntoDb(player)
-                    _pickPlayerOnceLiveData.postValue(Event(Resource.Success(player)))
-                    Timber.i("safePickPlayerOnce: ${it.message}")
-                }
-            }
-        } catch (e: Exception) {
-            _pickPlayerOnceLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
-            Timber.e("safePickPlayerOnce exception: ${e.message}")
+        response.data?.let { player ->
+            startPickPlayerExpiryCountdown()
+            insertPickedUpPlayerIntoDb(player)
         }
+
+        _pickPlayerOnceLiveData.postValue(Event(response))
     }
 
     fun validateAutoPickPlayerInputs(
@@ -259,53 +204,18 @@ class PickUpViewModel @Inject constructor(
         _autoPickPlayerLiveData.postValue(Event(Resource.Loading()))
         try {
             delay(DELAY_TIME_AUTO_PICK_UP)
-            val platform = preferencesRepository.getSelectedPlatform()
-            val timestamp = getCurrentTimeInMillis()
-            val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
+            val platform = preferencesRepository.getSelectedPlatform()
             val response = dsfutRepository.get().pickUpPlayer(
-                platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
+                platform, partnerId, secretKey, minPrice, maxPrice, takeAfter
             )
 
-            response.body()?.let {
-                it.error?.let { error -> // RESPONSE HAD ERROR
-                    when {
-                        error.contains(ERROR_DSFUT_BLOCK) -> {
-                            val errorMessage = "$error - ${it.message}"
-                            _autoPickPlayerLiveData.postValue(
-                                Event(Resource.Error(UiText.DynamicString(errorMessage)))
-                            )
-                        }
-                        error.contains(ERROR_DSFUT_EMPTY) -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_empty)))
-                        )
-                        error.contains(ERROR_DSFUT_LIMIT) -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_limit)))
-                        )
-                        error.contains(ERROR_DSFUT_MAINTENANCE) -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)))
-                        )
-                        error.contains(ERROR_DSFUT_SIGN) -> _pickPlayerOnceLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_sign)))
-                        )
-                        error.contains(ERROR_DSFUT_THROTTLE) -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.pick_up_error_dsfut_throttle)))
-                        )
-                        else -> _autoPickPlayerLiveData.postValue(
-                            Event(Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)))
-                        )
-                    }
-                    Timber.e("safeAutoPickPlayer error: ${it.error}")
-                    Timber.e("safeAutoPickPlayer message: ${it.message}")
-                }
-
-                it.player?.let { player -> // RESPONSE WAS SUCCESSFUL
-                    startPickPlayerExpiryCountdown()
-                    insertPickedUpPlayerIntoDb(player)
-                    _autoPickPlayerLiveData.postValue(Event(Resource.Success(player)))
-                    Timber.i("safeAutoPickPlayer: ${it.message}")
-                }
+            response.data?.let { player ->
+                startPickPlayerExpiryCountdown()
+                insertPickedUpPlayerIntoDb(player)
             }
+
+            _autoPickPlayerLiveData.postValue(Event(response))
         } catch (e: Exception) {
             _autoPickPlayerLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
             Timber.e("safeAutoPickPlayer exception: ${e.message}")
@@ -386,9 +296,9 @@ class PickUpViewModel @Inject constructor(
             }.start()
     }
 
-    private fun getMd5Signature(partnerId: String, secretKey: String, timestamp: String): String {
-        val input = partnerId + secretKey + timestamp
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(23, '0')
-    }
+//    private fun getMd5Signature(partnerId: String, secretKey: String, timestamp: String): String {
+//        val input = partnerId + secretKey + timestamp
+//        val md = MessageDigest.getInstance("MD5")
+//        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(23, '0')
+//    }
 }
