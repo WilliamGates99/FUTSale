@@ -147,15 +147,15 @@ class PickUpViewModel @Inject constructor(
     }
 
     fun validateAutoPickPlayerInputs(
-        minPriceInput: String?, maxPriceInput: String?, takeAfterInput: String?
+        minPriceInput: String? = null,
+        maxPriceInput: String? = null,
+        takeAfterInput: String? = null
     ) = viewModelScope.launch {
         safeValidateAutoPickPlayerInputs(minPriceInput, maxPriceInput, takeAfterInput)
     }
 
     private suspend fun safeValidateAutoPickPlayerInputs(
-        minPriceInput: String? = null,
-        maxPriceInput: String? = null,
-        takeAfterInput: String? = null
+        minPriceInput: String?, maxPriceInput: String?, takeAfterInput: String?
     ) {
         val partnerId = preferencesRepository.getPartnerId()
         if (partnerId.isNullOrBlank()) {
