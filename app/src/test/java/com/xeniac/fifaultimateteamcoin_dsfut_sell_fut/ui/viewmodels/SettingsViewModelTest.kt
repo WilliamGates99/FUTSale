@@ -113,4 +113,25 @@ class SettingsViewModelTest {
         assertThat(currentThemeString.resId).isEqualTo(newThemeString)
         assertThat(indexResponseEvent.getContentIfNotHandled()).isEqualTo(newThemeIndex)
     }
+
+    @Test
+    fun changeIsNotificationSoundActive_returnsNewIsNotificationSoundActive() {
+        val newIsNotificationSoundActive = false
+
+        testViewModel.changeIsNotificationSoundActive(newIsNotificationSoundActive)
+
+        val responseEvent = testViewModel.changeIsNotificationSoundActiveLiveData.getOrAwaitValue()
+        assertThat(responseEvent.getContentIfNotHandled()?.data).isFalse()
+    }
+
+    @Test
+    fun changeIsNotificationVibrateActive_returnsNewIsNotificationSoundActive() {
+        val newIsNotificationVibrateActive = false
+
+        testViewModel.changeIsNotificationVibrateActive(newIsNotificationVibrateActive)
+
+        val responseEvent = testViewModel
+            .changeIsNotificationVibrateActiveLiveData.getOrAwaitValue()
+        assertThat(responseEvent.getContentIfNotHandled()?.data).isFalse()
+    }
 }
