@@ -19,6 +19,10 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override fun isOnBoardingCompletedSynchronously(): Boolean = isOnBoardingCompleted
 
+    override fun isNotificationSoundActiveSynchronously(): Boolean = isNotificationSoundActive
+
+    override fun isNotificationVibrateActiveSynchronously(): Boolean = isNotificationVibrateActive
+
     override suspend fun getCurrentAppTheme(): Int = currentAppTheme
 
     override suspend fun isNotificationSoundActive(): Boolean = isNotificationSoundActive
