@@ -82,19 +82,17 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     }
 
     private fun pickPlayerExpiryTimerObserver() =
-        viewModel.pickPlayerExpiryTimerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
-                when (millisUntilFinished) {
-                    0L -> binding.time = requireContext().getString(
-                        R.string.pick_up_text_player_timer_finished
+        viewModel.pickPlayerExpiryTimerLiveData.observe(viewLifecycleOwner) { millisUntilFinished ->
+            when (millisUntilFinished) {
+                0L -> binding.time = requireContext().getString(
+                    R.string.pick_up_text_player_timer_finished
+                )
+                else -> {
+                    val minutes = decimalFormat.format(millisUntilFinished / 60000)
+                    val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
+                    binding.time = requireContext().getString(
+                        R.string.player_details_text_timer, minutes, seconds
                     )
-                    else -> {
-                        val minutes = decimalFormat.format(millisUntilFinished / 60000)
-                        val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
-                        binding.time = requireContext().getString(
-                            R.string.player_details_text_timer, minutes, seconds
-                        )
-                    }
                 }
             }
         }

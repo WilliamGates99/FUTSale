@@ -1,10 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
 import android.os.CountDownTimer
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
@@ -34,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PickUpViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val dsfutRepository: dagger.Lazy<DsfutRepository>
+    private val dsfutRepository: dagger.Lazy<DsfutRepository>,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _selectedPlatformIndexLiveData: MutableLiveData<Event<String>> = MutableLiveData()
@@ -55,8 +53,8 @@ class PickUpViewModel @Inject constructor(
 
     val allPickedUpPlayersLiveData = dsfutRepository.get().observeAllPickedUpPlayers()
 
-    private val _pickPlayerExpiryTimerLiveData: MutableLiveData<Event<Long>> = MutableLiveData()
-    val pickPlayerExpiryTimerLiveData: LiveData<Event<Long>> = _pickPlayerExpiryTimerLiveData
+    val pickPlayerExpiryTimerLiveData: LiveData<Long> =
+        savedStateHandle.getLiveData<Long>("pickPlayerExpiryTimerLiveData")
 
     private val _pickedPlayerCardExpiryTimerLiveData:
             MutableLiveData<Event<Long>> = MutableLiveData()
@@ -357,13 +355,13 @@ class PickUpViewModel @Inject constructor(
             object : CountDownTimer(PLAYER_EXPIRY_TIME_IN_MILLIS, COUNT_DOWN_INTERVAL_IN_MILLIS) {
                 override fun onTick(millisUntilFinished: Long) {
                     pickPlayerExpiryTimerInMillis = millisUntilFinished
-                    _pickPlayerExpiryTimerLiveData.postValue(Event(millisUntilFinished))
+                    savedStateHandle["pickPlayerExpiryTimerLiveData"] = millisUntilFinished
                     Timber.i("pickPlayerExpiryCountDownTimer remaining time: $millisUntilFinished")
                 }
 
                 override fun onFinish() {
                     pickPlayerExpiryTimerInMillis = 0
-                    _pickPlayerExpiryTimerLiveData.postValue(Event(0))
+                    savedStateHandle["pickPlayerExpiryTimerLiveData"] = 0L
                     Timber.i("pickPlayerExpiryCountDownTimer finished.")
                 }
             }.start()
