@@ -2,11 +2,13 @@
 <resources>
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
 
+
     <string name="notification_channel_name_pick_up_player">گرفتن خودکار بازیکن</string>
     <string name="notification_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
     <string name="notification_permission_rational_message">بدون مجوز اعلان، پس از گرفتن بازیکن، اعلانی دریافت نخواهید کرد.</string>
     <string name="notification_permission_rational_btn_positive">باشه</string>
     <string name="notification_permission_rational_btn_negative">لغو</string>
+
 
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_network_connection_unavailable">اتصال به اینترنت امکان‌پذیر نیست.</string>
@@ -14,6 +16,7 @@
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
     <string name="error_btn_confirm">تایید</string>
+
 
     <string name="onboarding_btn_skip">رد کردن</string>
     <string name="onboarding_btn_back">قبلی</string>
@@ -24,7 +27,6 @@
     <string name="onboarding_second_description">پس از انتخاب پلتفرم بازی خود، روی دکمه گرفتن خودکار کلیک کنید تا شروع به جستجوی بازیکن کنید. سپس صبر کنید تا یک بازیکن ظاهر شود.</string>
     <string name="onboarding_third_title">خرید بازیکن</string>
     <string name="onboarding_third_description">به صفحه ترنسفر بازی رفته و کارت بازیکن را در مارکت پیدا کنید و در عرض 3 دقیقه آن را خریداری کنید.</string>
-
     <string name="onboarding_fourth_title">برای استفاده از برنامه، باید شناسه پارتنر و کلید محرمانه حساب DSFUT خود را وارد کنید.</string>
     <string name="onboarding_fourth_title_partner_id">شناسه پارتنر</string>
     <string name="onboarding_fourth_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
@@ -33,6 +35,7 @@
     <string name="onboarding_fourth_btn_register">اگر حساب DSFUT ندارید، <font fgcolor="#1C53F4"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.</string>
     <string name="onboarding_fourth_btn_start">شروع کنیم</string>
     <string name="onboarding_fourth_btn_agreement">با ورود، شما <font fgcolor="#1C53F4"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.</string>
+
 
     <string name="main_menu_title_pick_up">گرفتن</string>
     <string name="main_menu_title_profile">پروفایل</string>
@@ -43,6 +46,7 @@
     <string name="main_rate_app_dialog_positive">الان امتیاز می‌دهم</string>
     <string name="main_rate_app_dialog_negative">نه، ممنون</string>
     <string name="main_rate_app_dialog_neutral">بعدا بهم یادآوری کن</string>
+
 
     <string name="pick_up_text_title">گرفتن بازیکن</string>
     <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
@@ -78,6 +82,7 @@
     <string name="pick_up_notification_title_success">%s با موفقیت گرفته شد</string>
     <string name="pick_up_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
 
+
     <string name="profile_text_title">پروفایل</string>
     <string name="profile_title_partner_id">شناسه پارتنر</string>
     <string name="profile_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
@@ -90,6 +95,7 @@
     <string name="profile_text_links_rules">قوانین</string>
     <string name="profile_text_links_notifications_console">اعلان‌های بازیکنان کنسول</string>
     <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
+
 
     <string name="settings_text_title">تنظیمات</string>
     <string name="settings_title_settings">تنظیمات</string>
@@ -118,6 +124,7 @@
     <string name="settings_dialog_item_theme_default">پیش‌فرض سیستم</string>
     <string name="settings_dialog_item_theme_light">روشن</string>
     <string name="settings_dialog_item_theme_dark">تیره</string>
+
 
     <string name="player_details_text_title">%s با موفقیت گرفته شد.</string>
     <string name="player_details_title_rating">ریتینگ</string>
