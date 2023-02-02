@@ -69,16 +69,34 @@
     <string name="pick_up_btn_pick_once">Pick Once</string>
     <string name="pick_up_title_player_price_start">Start Price</string>
     <string name="pick_up_title_player_price_now">Buy Now Price</string>
+    <!--
+    Placeholders:
+    • %1$s: Player's Rating
+    • %2$s: Player's Position
+    Sample: 88\nCDM
+    -->
     <string name="pick_up_text_player_rating_position" translatable="false">%1$s\n%2$s</string>
+    <!--
+    Placeholders:
+    • %1$s: Minute
+    • %2$s: Seconds
+    Sample: 02:52
+    -->
     <string name="pick_up_text_player_timer" translatable="false">%1$s:%2$s</string>
     <string name="pick_up_text_player_timer_finished">Expired</string>
     <string name="pick_up_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
     <string name="pick_up_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_one">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minute.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_two">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_few">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_many">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <!--Placeholder is for the remaining block time-->
     <string name="pick_up_error_dsfut_block_other">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <string name="pick_up_error_dsfut_empty">There are no players available for redemption.</string>
     <string name="pick_up_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
