@@ -25,6 +25,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBi
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.MainViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showThreeBtnAlertDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromFirstInstallTime
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromPreviousRequestTime
 import dagger.hilt.android.AndroidEntryPoint
@@ -129,7 +131,7 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
         val daysFromFirstInstallTime = getDaysFromFirstInstallTime(this)
         Timber.i("It's been $daysFromFirstInstallTime days from first install time.")
 
-        if (daysFromFirstInstallTime >= 5) {
+        if (daysFromFirstInstallTime >= IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME) {
             requestInAppReviews()
         }
     }
@@ -148,7 +150,7 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
             getDaysFromPreviousRequestTime(previousRequestTimeInMillis)
         Timber.i("It's been $daysFromPreviousRequestTime days from the previous request time.")
 
-        if (daysFromPreviousRequestTime >= 3) {
+        if (daysFromPreviousRequestTime >= IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME) {
             requestInAppReviews()
         }
     }
