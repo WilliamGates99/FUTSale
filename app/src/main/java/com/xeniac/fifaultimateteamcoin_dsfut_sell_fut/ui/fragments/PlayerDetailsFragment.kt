@@ -39,7 +39,9 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
         backOnClick()
         getPlayer()
         subscribeToObservers()
-        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, onBackPressedCallback
+        )
     }
 
     override fun onDestroyView() {
