@@ -205,8 +205,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         minPriceInput: String?,
         maxPriceInput: String?,
         takeAfterInput: String?
-    ) =
-        viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
+    ) = viewModel.validatePickOnceInputs(minPriceInput, maxPriceInput, takeAfterInput)
 
     private fun pickPlayerOnceObserver() =
         viewModel.pickPlayerOnceLiveData.observe(viewLifecycleOwner) { responseEvent ->
