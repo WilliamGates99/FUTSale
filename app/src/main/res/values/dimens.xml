@@ -52,7 +52,6 @@
     <dimen name="padding_16dp">16dp</dimen>
 
     <!--Elevation-->
-    <dimen name="elevation_2dp">2dp</dimen>
     <dimen name="elevation_3dp">3dp</dimen>
     <dimen name="elevation_4dp">4dp</dimen>
     <dimen name="elevation_8dp">8dp</dimen>
