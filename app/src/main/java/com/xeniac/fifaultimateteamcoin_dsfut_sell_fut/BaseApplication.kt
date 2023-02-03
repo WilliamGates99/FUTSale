@@ -4,8 +4,6 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -69,11 +67,6 @@ class BaseApplication : Application() {
 
     private fun createSoundedPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val audioAttributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .build()
-
             val pickUpPlayerNotificationChannel = NotificationChannel(
                 PickUpPlayerNotificationService.SOUNDED_PICK_UP_NOTIFICATION_CHANNEL_ID,
                 getString(R.string.notification_channel_name_pick_up_player),
@@ -84,7 +77,6 @@ class BaseApplication : Application() {
                 lightColor = ContextCompat.getColor(this@BaseApplication, R.color.green)
                 enableLights(true)
                 enableVibration(false)
-                setSound(notificationSound, audioAttributes)
             }
 
             notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)

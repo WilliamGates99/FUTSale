@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services
 
 import android.app.NotificationManager
 import android.content.Context
-import android.media.RingtoneManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -37,8 +36,6 @@ class PickUpPlayerNotificationService @Inject constructor(
      */
     private val vibrationPattern = longArrayOf(0, 500, 500, 500, 500)
 
-    private val notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
     fun showPickUpSuccessNotification(
         playerName: String,
         isNotificationSoundActive: Boolean,
@@ -46,7 +43,6 @@ class PickUpPlayerNotificationService @Inject constructor(
     ) {
         val pickUpSuccessNotification = if (isNotificationSoundActive) {
             baseSoundedPickUpNotificationBuilder.apply {
-                setSound(notificationSound)
                 setContentTitle(
                     context.getString(R.string.pick_up_notification_title_success, playerName)
                 )
@@ -75,7 +71,6 @@ class PickUpPlayerNotificationService @Inject constructor(
     ) {
         val pickUpFailedNotificationBuilder = if (isNotificationSoundActive) {
             baseSoundedPickUpNotificationBuilder.apply {
-                setSound(notificationSound)
                 setContentTitle(context.getString(R.string.pick_up_notification_title_fail))
                 setContentText(message)
             }
