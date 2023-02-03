@@ -138,11 +138,6 @@ class PickUpViewModel @Inject constructor(
             platform, partnerId, secretKey, minPrice, maxPrice, takeAfter
         )
 
-        response.data?.let { player ->
-            startPickPlayerExpiryCountdown()
-            insertPickedUpPlayerIntoDb(player)
-        }
-
         _pickPlayerOnceLiveData.postValue(Event(response))
     }
 
@@ -214,11 +209,6 @@ class PickUpViewModel @Inject constructor(
                 platform, partnerId, secretKey, minPrice, maxPrice, takeAfter
             )
 
-            response.data?.let { player ->
-                startPickPlayerExpiryCountdown()
-                insertPickedUpPlayerIntoDb(player)
-            }
-
             _autoPickPlayerLiveData.postValue(Event(response))
         } catch (e: Exception) {
             _autoPickPlayerLiveData.postValue(Event(Resource.Error(UiText.DynamicString(e.message.toString()))))
@@ -262,7 +252,7 @@ class PickUpViewModel @Inject constructor(
         }
     }
 
-    private fun startPickPlayerExpiryCountdown() {
+    fun startPickPlayerExpiryCountdown() {
         pickPlayerExpiryCountDownTimer?.cancel()
 
         pickPlayerExpiryCountDownTimer =
@@ -299,10 +289,4 @@ class PickUpViewModel @Inject constructor(
                 }
             }.start()
     }
-
-//    private fun getMd5Signature(partnerId: String, secretKey: String, timestamp: String): String {
-//        val input = partnerId + secretKey + timestamp
-//        val md = MessageDigest.getInstance("MD5")
-//        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(23, '0')
-//    }
 }

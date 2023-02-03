@@ -214,8 +214,10 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                     is Resource.Loading -> showPickOnceLoadingAnimation()
                     is Resource.Success -> {
                         hidePickOnceLoadingAnimation()
-                        response.data?.let {
-                            navigateToPlayerDetails(it)
+                        response.data?.let { player ->
+                            startPickPlayerExpiryCountdown()
+                            insertPickedUpPlayerIntoDb(player)
+                            navigateToPlayerDetails(player)
                         }
                     }
                     is Resource.Error -> {
@@ -312,16 +314,17 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                         isAutoPickActive = false
                         doNotKeepScreenOn()
                         hideAutoPickLoadingAnimation()
-
-                        response.data?.let {
+                        response.data?.let { player ->
                             if (hasNotificationPermission()) {
                                 notificationService.showPickUpSuccessNotification(
-                                    playerName = it.name,
+                                    playerName = player.name,
                                     isNotificationSoundActive = isNotificationSoundActive,
                                     isNotificationVibrateActive = isNotificationVibrateActive
                                 )
                             }
-                            navigateToPlayerDetails(it)
+                            startPickPlayerExpiryCountdown()
+                            insertPickedUpPlayerIntoDb(player)
+                            navigateToPlayerDetails(player)
                         }
                     }
                     is Resource.Error -> {
@@ -392,11 +395,10 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
             }
         }
 
-    private fun navigateToPlayerDetails(player: Player) {
-        findNavController().navigate(
-            PickUpFragmentDirections.actionPickUpFragmentToPlayerDetailsFragment(player)
-        )
-    }
+    private fun startPickPlayerExpiryCountdown() = viewModel.startPickPlayerExpiryCountdown()
+
+    private fun insertPickedUpPlayerIntoDb(player: Player) =
+        viewModel.insertPickedUpPlayerIntoDb(player)
 
     private fun insertPickedUpPlayerObserver() =
         viewModel.insertPickedUpPlayerLiveData.observe(viewLifecycleOwner) { responseEvent ->
@@ -416,6 +418,10 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                 }
             }
         }
+
+    private fun navigateToPlayerDetails(player: Player) = findNavController().navigate(
+        PickUpFragmentDirections.actionPickUpFragmentToPlayerDetailsFragment(player)
+    )
 
     private fun allPickedUpPlayersObserver() =
         viewModel.allPickedUpPlayersLiveData.observe(viewLifecycleOwner) { allPickedUpPlayers ->
