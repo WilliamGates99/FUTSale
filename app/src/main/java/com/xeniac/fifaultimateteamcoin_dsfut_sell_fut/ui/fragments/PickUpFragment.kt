@@ -34,6 +34,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.isPickedP
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showActionSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
 import dagger.hilt.android.AndroidEntryPoint
@@ -347,19 +348,24 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                                     blockDuration
                                 )
 
-                                if (hasNotificationPermission()) {
+                                snackbar = if (hasNotificationPermission()) {
                                     notificationService.showPickUpFailedNotification(
                                         message = message,
                                         isNotificationSoundActive = isNotificationSoundActive,
                                         isNotificationVibrateActive = isNotificationVibrateActive
                                     )
-                                }
 
-                                snackbar = showActionSnackbarError(
-                                    view = requireView(),
-                                    message = message,
-                                    actionBtn = requireContext().getString(R.string.error_btn_confirm)
-                                ) { snackbar?.dismiss() }
+                                    showNormalSnackbarError(
+                                        view = requireView(),
+                                        message = message,
+                                    )
+                                } else {
+                                    showActionSnackbarError(
+                                        view = requireView(),
+                                        message = message,
+                                        actionBtn = requireContext().getString(R.string.error_btn_confirm)
+                                    ) { snackbar?.dismiss() }
+                                }
                             } else {
                                 isAutoPickActive = false
                                 doNotKeepScreenOn()
@@ -380,7 +386,12 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
                                     it.contains(ERROR_NETWORK_CONNECTION_2) -> {
                                         showNetworkFailureError(requireContext(), requireView())
                                     }
-                                    else -> {
+                                    else -> if (hasNotificationPermission()) {
+                                        showNormalSnackbarError(
+                                            view = requireView(),
+                                            message = it,
+                                        )
+                                    } else {
                                         showActionSnackbarError(
                                             view = requireView(),
                                             message = it,
