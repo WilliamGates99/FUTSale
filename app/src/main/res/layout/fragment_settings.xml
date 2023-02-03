@@ -29,8 +29,6 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             style="@style/Theme.FifaUltimateTeamCoin.Toolbar"
-            android:layout_width="@dimen/width_0dp"
-            android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -78,7 +76,6 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="@dimen/radius_12dp"
-                    app:cardElevation="@dimen/elevation_2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title_settings">
@@ -376,13 +373,6 @@
                             android:visibility="gone"
                             app:constraint_referenced_ids="divider_settings_ad_container,fl_settings_ad_container" />
 
-                        <!--TODO REMOVE AFTER ADDING NOTIFICATION FUNCTIONALITY-->
-                        <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_settings_notification_sound,divider_settings_notification_vibrate,cl_settings_notification_sound,cl_settings_notification_vibrate" />
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -415,7 +405,6 @@
                     android:layout_marginBottom="@dimen/margin_8dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="@dimen/radius_12dp"
-                    app:cardElevation="@dimen/elevation_2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -701,13 +690,6 @@
                             android:layout_height="wrap_content"
                             android:visibility="gone"
                             app:constraint_referenced_ids="divider_miscellaneous_ad_container,fl_miscellaneous_ad_container" />
-
-                        <!--TODO REMOVE AFTER ADDING FUNCTIONALITIES-->
-                        <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:constraint_referenced_ids="divider_miscellaneous_rate_us,cl_miscellaneous_donate,cl_miscellaneous_rate_us" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

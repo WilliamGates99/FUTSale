@@ -36,11 +36,12 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
         _binding = FragmentPlayerDetailsBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[PickUpViewModel::class.java]
 
-        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
-
         backOnClick()
         getPlayer()
         subscribeToObservers()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, onBackPressedCallback
+        )
     }
 
     override fun onDestroyView() {
@@ -61,6 +62,7 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     private fun navigateToPickUpFragment() {
         findNavController().popBackStack()
         showInterstitialAd()
+        (requireActivity() as MainActivity).showRateAppDialog()
     }
 
     private fun getPlayer() {
@@ -78,17 +80,22 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     }
 
     private fun subscribeToObservers() {
-        timerObserver()
+        pickPlayerExpiryTimerObserver()
     }
 
-    private fun timerObserver() =
-        viewModel.timerLiveData.observe(viewLifecycleOwner) { responseEvent ->
-            responseEvent.getContentIfNotHandled()?.let { millisUntilFinished ->
-                val minutes = decimalFormat.format(millisUntilFinished / 60000)
-                val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
-                binding.time = requireContext().getString(
-                    R.string.player_details_text_timer, minutes, seconds
+    private fun pickPlayerExpiryTimerObserver() =
+        viewModel.pickPlayerExpiryTimerLiveData.observe(viewLifecycleOwner) { millisUntilFinished ->
+            when (millisUntilFinished) {
+                0L -> binding.time = requireContext().getString(
+                    R.string.pick_up_text_player_timer_finished
                 )
+                else -> {
+                    val minutes = decimalFormat.format(millisUntilFinished / 60000)
+                    val seconds = decimalFormat.format((millisUntilFinished / 1000) % 60)
+                    binding.time = requireContext().getString(
+                        R.string.player_details_text_timer, minutes, seconds
+                    )
+                }
             }
         }
 

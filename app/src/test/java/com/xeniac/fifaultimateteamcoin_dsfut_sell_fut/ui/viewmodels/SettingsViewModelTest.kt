@@ -8,6 +8,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_PERSIAN_IRAN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -89,14 +90,14 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun changeCurrentLocale_returnsNewLocaleIndex() {
-        val newLocaleIndex = 1
+    fun changeCurrentLocaleToPersian_returnsTrueForIsActivityRestartNeeded() {
+        val newLocaleIndex = LOCALE_INDEX_PERSIAN_IRAN
 
         testViewModel.changeCurrentLocale(newLocaleIndex)
 
         val responseEvent = testViewModel.changeCurrentLocaleLiveData.getOrAwaitValue()
 
-        assertThat(responseEvent.getContentIfNotHandled()).isEqualTo(newLocaleIndex)
+        assertThat(responseEvent.getContentIfNotHandled()).isTrue()
     }
 
     @Test
@@ -112,5 +113,26 @@ class SettingsViewModelTest {
 
         assertThat(currentThemeString.resId).isEqualTo(newThemeString)
         assertThat(indexResponseEvent.getContentIfNotHandled()).isEqualTo(newThemeIndex)
+    }
+
+    @Test
+    fun changeIsNotificationSoundActive_returnsNewIsNotificationSoundActive() {
+        val newIsNotificationSoundActive = false
+
+        testViewModel.changeIsNotificationSoundActive(newIsNotificationSoundActive)
+
+        val responseEvent = testViewModel.changeIsNotificationSoundActiveLiveData.getOrAwaitValue()
+        assertThat(responseEvent.getContentIfNotHandled()?.data).isFalse()
+    }
+
+    @Test
+    fun changeIsNotificationVibrateActive_returnsNewIsNotificationSoundActive() {
+        val newIsNotificationVibrateActive = false
+
+        testViewModel.changeIsNotificationVibrateActive(newIsNotificationVibrateActive)
+
+        val responseEvent = testViewModel
+            .changeIsNotificationVibrateActiveLiveData.getOrAwaitValue()
+        assertThat(responseEvent.getContentIfNotHandled()?.data).isFalse()
     }
 }

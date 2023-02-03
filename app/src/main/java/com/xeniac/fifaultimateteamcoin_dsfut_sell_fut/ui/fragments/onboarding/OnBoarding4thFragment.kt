@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboardingFourthBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboarding4thBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.OnBoardingViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_ONBOARDING_PARTNER_ID
@@ -23,11 +23,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 
-class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
+class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
 
-    private var _binding: FragmentOnboardingFourthBinding? = null
+    private var _binding: FragmentOnboarding4thBinding? = null
     private val binding get() = _binding!!
 
     lateinit var viewModel: OnBoardingViewModel
@@ -36,7 +36,7 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentOnboardingFourthBinding.bind(view)
+        _binding = FragmentOnboarding4thBinding.bind(view)
         viewModel = ViewModelProvider(requireActivity())[OnBoardingViewModel::class.java]
 
         textInputsBackgroundColor()
@@ -160,20 +160,15 @@ class OnBoardingFourthFragment : Fragment(R.layout.fragment_onboarding_fourth) {
                     }
                     is Resource.Error -> {
                         hideLoadingAnimation()
-                        response.message?.let { message ->
-                            message.asString(requireContext()).let {
-                                snackbar = normalErrorSnackbar(requireView(), it)
-                                snackbar?.show()
-                            }
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }
         }
 
-    private fun navigateToMainActivity() {
-        startActivity(Intent(requireContext(), MainActivity::class.java))
-        requireActivity().finish()
+    private fun navigateToMainActivity() = requireActivity().apply {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun showLoadingAnimation() = binding.apply {

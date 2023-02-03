@@ -1,15 +1,20 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 
 object Constants {
+
+    // Room Database Constants
+    const val DSFUT_DATABASE_NAME = "dsfut_db"
+
     // Web URLs
     const val URL_DSFUT = "https://dsfut.net"
     const val URL_DSFUT_WALLET = "https://dsfut.net/wallet"
     const val URL_DSFUT_PLAYERS = "https://dsfut.net/players"
     const val URL_DSFUT_STATISTICS = "https://dsfut.net/stats"
+    const val URL_DSFUT_RULES = "https://dsfut.net/rules"
     const val URL_DSFUT_NOTIFICATIONS_CONSOLE = "https://t.me/dsfut_ps"
     const val URL_DSFUT_NOTIFICATIONS_PC = "https://t.me/dsfutnet_pc"
     const val URL_PRIVACY_POLICY = "https://xeniacdev.github.io/fifaultimateteamcoin/privacy_policy"
-    const val URL_DONATE = "https://xeniacdev.github.io/WarrantyRoster/donate" // TODO CHANGE URL
+    const val URL_DONATE = "https://xeniacdev.github.io/donate"
     const val URL_CROWDIN = "https://crowdin.com/project/fifa-ultimate-team-coin"
 
     // DataStore Constants
@@ -25,10 +30,29 @@ object Constants {
     const val DATASTORE_SECRET_KEY_KEY = "secretKey"
     const val DATASTORE_SELECTED_PLATFORM_KEY = "selectedPlatform"
 
+    // App Theme Constants
+    const val THEME_INDEX_DEFAULT = 0
+    const val THEME_INDEX_LIGHT = 1
+    const val THEME_INDEX_DARK = 2
+
     // App Locale Constants
     const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
     const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
     const val LOCALE_PERSIAN_IRAN = "fa-IR"
+    const val LOCALE_INDEX_DEFAULT = 0
+    const val LOCALE_INDEX_ENGLISH_UNITED_STATES = 1
+    const val LOCALE_INDEX_ENGLISH_GREAT_BRITAIN = 2
+    const val LOCALE_INDEX_PERSIAN_IRAN = 3
+
+    // OnBoarding ViewPager Items Index
+    const val ONBOARDING_1ST_INDEX = 0
+    const val ONBOARDING_2ND_INDEX = 1
+    const val ONBOARDING_3RD_INDEX = 2
+    const val ONBOARDING_4TH_INDEX = 3
+
+    // Google Play In-App Reviews API Constants
+    const val IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME = 10
+    const val IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME = 5
 
     // Platform Constants
     const val SELECTED_PLATFORM_CONSOLE = "cons"
@@ -43,13 +67,18 @@ object Constants {
     const val DELAY_TIME_SECRET_KEY = 1000L
     const val DELAY_TIME_AUTO_PICK_UP = 500L
 
+    // Countdown Timer Constants
+    const val COUNT_DOWN_INTERVAL_IN_MILLIS = 1000L // 1 Second
+    const val PLAYER_EXPIRY_TIME_IN_MILLIS = 3 * 60 * 1000L // 3 Minutes -> 180,000 Milli Seconds
+
     // Response Errors
-    const val ERROR_NETWORK_CONNECTION =
-        "A network error (such as timeout, interrupted connection or unreachable host) has occurred"
+    const val ERROR_NETWORK_CONNECTION_1 = "SSL handshake timed out"
+    const val ERROR_NETWORK_CONNECTION_2 = "Unable to resolve host"
     const val ERROR_DSFUT_BLOCK = "block"
     const val ERROR_DSFUT_EMPTY = "empty"
     const val ERROR_DSFUT_LIMIT = "limit"
     const val ERROR_DSFUT_MAINTENANCE = "maintenance"
+    const val ERROR_DSFUT_SIGN = "sign"
     const val ERROR_DSFUT_THROTTLE = "throttle"
 
     // OnBoarding Fragment SaveInstanceState Keys

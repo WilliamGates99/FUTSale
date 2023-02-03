@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
@@ -28,8 +30,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 33
-        versionCode = 5 // TODO UPGRADE FOR RELEASE
-        versionName = "1.0.4" // TODO UPGRADE FOR RELEASE
+        versionCode = 6 // TODO UPGRADE AFTER EACH RELEASE
+        versionName = "1.1.0" // TODO UPGRADE AFTER EACH RELEASE
 
         /**
          * Keeps language resources for only the locales specified below.
@@ -99,10 +101,6 @@ android {
         getByName("debug") {
             versionNameSuffix = " - debug"
             applicationIdSuffix = ".debug"
-            extra.apply {
-                set("enableCrashlytics", false)
-                set("alwaysUpdateBuildId", false)
-            }
         }
 
         getByName("release") {
@@ -140,20 +138,6 @@ android {
                 "String",
                 "PACKAGE_NAME_APP_STORE",
                 properties.getProperty("PACKAGE_NAME_PLAY_STORE")
-            )
-        }
-
-        create("amazon") {
-            dimension = "market"
-            buildConfigField(
-                "String",
-                "URL_APP_STORE",
-                properties.getProperty("URL_AMAZON")
-            )
-            buildConfigField(
-                "String",
-                "PACKAGE_NAME_APP_STORE",
-                properties.getProperty("PACKAGE_NAME_AMAZON")
             )
         }
 
@@ -219,11 +203,9 @@ androidComponents {
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
@@ -234,7 +216,6 @@ androidComponents {
         if (variantBuilder.buildType == "release") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "amazon")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     else -> true
@@ -245,6 +226,13 @@ androidComponents {
 }
 
 kapt {
+    arguments {
+        /**
+         * Room DB schema directory
+         */
+        arg("room.schemaLocation", "$projectDir/roomDbSchemas")
+    }
+
     /**
      * Allow references to generated code
      */
@@ -253,8 +241,8 @@ kapt {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.0-rc01")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.6.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // Navigation Component
@@ -275,6 +263,13 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    // Room Library
+    implementation("androidx.room:room-runtime:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+
+    // Kotlin Extensions and Coroutines Support for Room
+    implementation("androidx.room:room-ktx:2.5.0")
 
     // Preferences DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -299,6 +294,9 @@ dependencies {
     // Timber Library
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    // EasyPermissions Library
+    implementation("com.vmadalin:easypermissions-ktx:1.0.0")
+
     // Lottie Library
     implementation("com.airbnb.android:lottie:5.2.0")
 
@@ -309,12 +307,12 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.1")
 
     // Applovin Libraries
-    implementation("com.applovin:applovin-sdk:11.6.1")
+    implementation("com.applovin:applovin-sdk:11.7.0")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
-    implementation("com.applovin.mediation:google-adapter:21.4.0.1")
+    implementation("com.applovin.mediation:google-adapter:21.5.0.0")
 
     // Google AdMob Library
-    implementation("com.google.android.gms:play-services-ads:21.4.0")
+    implementation("com.google.android.gms:play-services-ads:21.5.0")
 
     // Tapsell Library
     implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
@@ -343,7 +341,7 @@ dependencies {
 
 tasks.register<Copy>("copyDevPreviewApk") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName (Developer Preview)"
@@ -359,21 +357,16 @@ tasks.register<Copy>("copyDevPreviewApk") {
 
 tasks.register<Copy>("copyReleaseApk") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName"
 
-    val amazonApkFile = "app-prod-amazon-release.apk"
     val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
     val myketApkFile = "app-prod-myket-release.apk"
 
-    val amazonApkSourceDir = "${releaseRootDir}/prodAmazon/release/${amazonApkFile}"
     val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
     val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
-
-    from(amazonApkSourceDir)
-    into(destinationDir)
 
     from(cafeBazaarApkSourceDir)
     into(destinationDir)
@@ -381,14 +374,13 @@ tasks.register<Copy>("copyReleaseApk") {
     from(myketApkSourceDir)
     into(destinationDir)
 
-    rename(amazonApkFile, "$renamedFileName - Amazon.apk")
     rename(cafeBazaarApkFile, "$renamedFileName - CafeBazaar.apk")
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
 
 tasks.register<Copy>("copyReleaseBundle") {
     val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\\\01 My Files\\\\Projects\\\\Xeniac\\\\FIFA Ultimate Team Coin\\\\APK"
+    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
 
     val versionName = "${android.defaultConfig.versionName}"
     val renamedFileName = "FUTCoin $versionName"

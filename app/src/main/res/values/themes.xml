@@ -19,6 +19,7 @@
         </item>
         <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
         <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
+        <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.SplashScreen" parent="Theme.SplashScreen">
@@ -33,6 +34,7 @@
     <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
         <item name="android:colorBackground">@color/skyBlue</item>
         <item name="android:statusBarColor">@color/skyBlue</item>
+        <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.Snackbar" parent="Widget.MaterialComponents.Snackbar">
@@ -235,6 +237,8 @@
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:layout_width">@dimen/width_0dp</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="titleTextAppearance">@style/Theme.FifaUltimateTeamCoin.Toolbar.Title</item>
         <item name="android:background">@drawable/shape_rounded_bottom_12dp</item>
         <item name="android:elevation">@dimen/elevation_3dp</item>
@@ -265,6 +269,15 @@
         <item name="android:checkedTextViewStyle">
             @style/Theme.FifaUltimateTeamCoin.AlertDialog.Choice
         </item>
+        <item name="buttonBarPositiveButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.PositiveButton
+        </item>
+        <item name="buttonBarNegativeButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.NegativeButton
+        </item>
+        <item name="buttonBarNeutralButtonStyle">
+            @style/Theme.FifaUltimateTeamCoin.AlertDialog.NeutralButton
+        </item>
     </style>
 
     <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Style" parent="MaterialAlertDialog.MaterialComponents">
@@ -292,6 +305,51 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_regular</item>
+    </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.PositiveButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+        <item name="android:textColor">@color/dialogButton</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:fontFamily">@font/localized_bold</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingTop">@dimen/padding_4dp</item>
+        <item name="android:paddingBottom">@dimen/padding_4dp</item>
+        <item name="android:paddingStart">@dimen/padding_8dp</item>
+        <item name="android:paddingEnd">@dimen/padding_8dp</item>
+    </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.NegativeButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+        <item name="android:textColor">@color/dialogButton</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:fontFamily">@font/localized_bold</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingTop">@dimen/padding_4dp</item>
+        <item name="android:paddingBottom">@dimen/padding_4dp</item>
+        <item name="android:paddingStart">@dimen/padding_8dp</item>
+        <item name="android:paddingEnd">@dimen/padding_8dp</item>
+    </style>
+
+    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.NeutralButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+        <item name="android:textColor">@color/dialogButton</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:fontFamily">@font/localized_bold</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingTop">@dimen/padding_4dp</item>
+        <item name="android:paddingBottom">@dimen/padding_4dp</item>
+        <item name="android:paddingStart">@dimen/padding_8dp</item>
+        <item name="android:paddingEnd">@dimen/padding_8dp</item>
     </style>
 
 </resources>

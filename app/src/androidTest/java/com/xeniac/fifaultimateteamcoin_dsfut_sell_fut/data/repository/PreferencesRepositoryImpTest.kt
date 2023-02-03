@@ -58,6 +58,8 @@ class PreferencesRepositoryImpTest {
      * Fetch Initial Preferences Test Cases:
      * getCurrentAppThemeSynchronously -> 0
      * isOnBoardingCompletedSynchronously -> false
+     * isNotificationSoundActiveSynchronously -> true
+     * isNotificationVibrateActive -> true
      * getCurrentAppTheme -> 0
      * isNotificationSoundActive -> true
      * isNotificationVibrateActive -> true
@@ -74,9 +76,15 @@ class PreferencesRepositoryImpTest {
 
         val initialCurrentAppTheme = testRepository.getCurrentAppThemeSynchronously()
         val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
+        val initialIsNotificationSoundActive =
+            testRepository.isNotificationSoundActiveSynchronously()
+        val initialIsNotificationVibrateActive =
+            testRepository.isNotificationVibrateActiveSynchronously()
 
         assertThat(initialIsOnBoardingCompleted).isFalse()
         assertThat(initialCurrentAppTheme).isEqualTo(0)
+        assertThat(initialIsNotificationSoundActive).isTrue()
+        assertThat(initialIsNotificationVibrateActive).isTrue()
     }
 
     @Test

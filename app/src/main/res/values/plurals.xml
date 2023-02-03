@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="pick_up_error_dsfut_block" translatable="false">
+        <item quantity="zero">@string/pick_up_error_dsfut_block_zero</item>
+        <item quantity="one">@string/pick_up_error_dsfut_block_one</item>
+        <item quantity="two">@string/pick_up_error_dsfut_block_two</item>
+        <item quantity="few">@string/pick_up_error_dsfut_block_few</item>
+        <item quantity="many">@string/pick_up_error_dsfut_block_many</item>
+        <item quantity="other">@string/pick_up_error_dsfut_block_other</item>
+    </plurals>
+
+</resources>

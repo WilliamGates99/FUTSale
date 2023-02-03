@@ -13,23 +13,31 @@ import com.applovin.mediation.nativeAds.MaxNativeAdListener
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentSettingsBinding
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.SettingsViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showSingleChoiceItemsDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_CROWDIN
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DONATE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_PRIVACY_POLICY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openAppPageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
+import dagger.hilt.android.AndroidEntryPoint
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
 import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListener {
 
     private var _binding: FragmentSettingsBinding? = null
@@ -37,24 +45,27 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
 
     private lateinit var viewModel: SettingsViewModel
 
+    @Inject
+    lateinit var notificationService: PickUpPlayerNotificationService
+
     private var currentLocaleIndex = 0
     private var currentThemeIndex = 0
+    private var isNotificationSoundActive = true
+    private var isNotificationVibrateActive = true
+
+    private var snackbar: Snackbar? = null
 
     private lateinit var appLovinSettingsNativeAdContainer: ViewGroup
     private lateinit var appLovinSettingsAdLoader: MaxNativeAdLoader
     private var appLovinSettingsNativeAd: MaxAd? = null
-    private var appLovinSettingsAdRequestCounter = 1
 
     private lateinit var appLovinMiscellaneousNativeAdContainer: ViewGroup
     private lateinit var appLovinMiscellaneousAdLoader: MaxNativeAdLoader
     private var appLovinMiscellaneousNativeAd: MaxAd? = null
-    private var appLovinMiscellaneousAdRequestCounter = 1
 
     private var tapsellSettingsResponseId: String? = null
-    private var tapsellSettingsRequestCounter = 1
 
     private var tapsellMiscellaneousResponseId: String? = null
-    private var tapsellMiscellaneousRequestCounter = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,12 +75,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         subscribeToObservers()
         getCurrentLanguage()
         getCurrentTheme()
-//        getIsNotificationSoundActive()
-//        getIsNotificationVibrateActive()
+        getIsNotificationSoundActive()
+        getIsNotificationVibrateActive()
         languageOnClick()
         themeOnClick()
-//        notificationSoundOnClick()
-//        notificationVibrateOnClick()
+        notificationSoundOnClick()
+        notificationVibrateOnClick()
         donateOnClick()
         improveTranslationsOnClick()
         rateUsOnClick()
@@ -81,6 +92,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     override fun onDestroyView() {
         super.onDestroyView()
         destroyAd()
+        snackbar?.dismiss()
         _binding = null
     }
 
@@ -89,9 +101,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         currentLocaleIndexObserver()
         currentThemeObserver()
         currentThemeIndexObserver()
-//        isNotificationSoundActiveObserver()
-//        isNotificationVibrateActiveObserver()
+        isNotificationSoundActiveObserver()
+        isNotificationVibrateActiveObserver()
         changeCurrentLocaleObserver()
+        changeIsNotificationSoundActiveObserver()
+        changeIsNotificationVibrateActiveObserver()
     }
 
     private fun getCurrentLanguage() = viewModel.getCurrentLanguage()
@@ -126,13 +140,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             }
         }
 
-    /* TODO ADD FUNCTIONALITY
     private fun getIsNotificationSoundActive() = viewModel.getIsNotificationSoundActive()
 
     private fun isNotificationSoundActiveObserver() =
         viewModel.isNotificationSoundActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { isActive ->
-                binding.switchSettingsNotificationSound.isChecked = isActive
+                binding.isNotificationSoundOn = isActive
             }
         }
 
@@ -141,10 +154,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     private fun isNotificationVibrateActiveObserver() =
         viewModel.isNotificationVibrateActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
             responseEvent.getContentIfNotHandled()?.let { isActive ->
-                binding.switchSettingsNotificationVibrate.isChecked = isActive
+                binding.isNotificationVibrateOn = isActive
             }
         }
-     */
 
     private fun languageOnClick() = binding.clSettingsLanguage.setOnClickListener {
         val localeTextItems = arrayOf(
@@ -154,13 +166,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             requireContext().getString(R.string.settings_dialog_item_language_persian_ir)
         )
 
-        MaterialAlertDialogBuilder(requireContext()).apply {
-            setTitle(requireContext().getString(R.string.settings_dialog_title_language))
-            setSingleChoiceItems(localeTextItems, currentLocaleIndex) { dialogInterface, index ->
-                changeCurrentLocale(index)
-                dialogInterface.dismiss()
-            }
-        }.show()
+        showSingleChoiceItemsDialog(
+            context = requireContext(),
+            title = R.string.settings_dialog_title_language,
+            items = localeTextItems,
+            checkedItemIndex = currentLocaleIndex,
+        ) { index ->
+            changeCurrentLocale(index)
+        }
     }
 
     private fun changeCurrentLocale(localeIndex: Int) = viewModel.changeCurrentLocale(localeIndex)
@@ -186,36 +199,75 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
             requireContext().getString(R.string.settings_text_settings_theme_dark)
         )
 
-        MaterialAlertDialogBuilder(requireContext()).apply {
-            setTitle(requireContext().getString(R.string.settings_text_settings_theme))
-            setSingleChoiceItems(themeItems, currentThemeIndex) { dialogInterface, index ->
-                changeCurrentTheme(index)
-                dialogInterface.dismiss()
-            }
-        }.show()
+        showSingleChoiceItemsDialog(
+            context = requireContext(),
+            title = R.string.settings_text_settings_theme,
+            items = themeItems,
+            checkedItemIndex = currentThemeIndex,
+        ) { index ->
+            changeCurrentTheme(index)
+        }
     }
 
     private fun changeCurrentTheme(themeIndex: Int) = viewModel.changeCurrentTheme(themeIndex)
 
-    /* TODO ADD FUNCTIONALITY
-   private fun notificationSoundOnClick() =
-       binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-           when (isChecked) {
-               true -> {}
-               false -> {}
-           }
-       }
-       */
-
-    /* TODO ADD FUNCTIONALITY
-    private fun notificationVibrateOnClick() =
+    private fun notificationSoundOnClick() =
         binding.switchSettingsNotificationSound.setOnCheckedChangeListener { _, isChecked ->
-            when (isChecked) {
-                true -> {}
-                false -> {}
+            changeIsNotificationSoundActive(isChecked)
+        }
+
+    private fun changeIsNotificationSoundActive(isActive: Boolean) =
+        viewModel.changeIsNotificationSoundActive(isActive)
+
+    private fun changeIsNotificationSoundActiveObserver() =
+        viewModel.changeIsNotificationSoundActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Loading -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { isActive ->
+                            isNotificationSoundActive = isActive
+                        }
+                    }
+                    is Resource.Error -> {
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = showSomethingWentWrongError(requireContext(), requireView())
+                        }
+                    }
+                }
             }
         }
-        */
+
+    private fun notificationVibrateOnClick() =
+        binding.switchSettingsNotificationVibrate.setOnCheckedChangeListener { _, isChecked ->
+            changeIsNotificationVibrateActive(isChecked)
+        }
+
+    private fun changeIsNotificationVibrateActive(isActive: Boolean) =
+        viewModel.changeIsNotificationVibrateActive(isActive)
+
+    private fun changeIsNotificationVibrateActiveObserver() =
+        viewModel.changeIsNotificationVibrateActiveLiveData.observe(viewLifecycleOwner) { responseEvent ->
+            responseEvent.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Loading -> {
+                        /* NO-OP */
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { isActive ->
+                            isNotificationVibrateActive = isActive
+                        }
+                    }
+                    is Resource.Error -> {
+                        response.message?.asString(requireContext())?.let {
+                            snackbar = showSomethingWentWrongError(requireContext(), requireView())
+                        }
+                    }
+                }
+            }
+        }
 
     private fun donateOnClick() = binding.clMiscellaneousDonate.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DONATE)
@@ -227,7 +279,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         }
 
     private fun rateUsOnClick() = binding.clMiscellaneousRateUs.setOnClickListener {
-//        openPlayStore(requireContext(), requireView())
+        openAppPageInStore(requireContext(), requireView())
     }
 
     private fun privacyPolicyOnClick() = binding.clMiscellaneousPrivacyPolicy.setOnClickListener {
@@ -265,7 +317,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinSettingsNativeAdListener  onNativeAdLoaded")
-            appLovinSettingsAdRequestCounter = 1
 
             appLovinSettingsNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -281,12 +332,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinSettingsNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinSettingsAdRequestCounter < 2) {
-                appLovinSettingsAdRequestCounter++
-                appLovinSettingsAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellSettingsAdHolder()
-            }
+            initTapsellSettingsAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -308,7 +354,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestSettingsTapsellNativeAd onResponse")
-                    tapsellSettingsRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellSettingsResponseId = it.responseId
@@ -321,10 +366,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestSettingsTapsellNativeAd onError: $error")
-                    if (tapsellSettingsRequestCounter < 2) {
-                        tapsellSettingsRequestCounter++
-                        requestSettingsTapsellNativeAd(adHolder)
-                    }
+                    requestSettingsTapsellNativeAd(adHolder)
                 }
             })
     }
@@ -345,7 +387,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinMiscellaneousNativeAdListener  onNativeAdLoaded")
-            appLovinMiscellaneousAdRequestCounter = 1
 
             appLovinMiscellaneousNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -361,12 +402,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinMiscellaneousNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinMiscellaneousAdRequestCounter < 2) {
-                appLovinMiscellaneousAdRequestCounter++
-                appLovinMiscellaneousAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellMiscellaneousAdHolder()
-            }
+            initTapsellMiscellaneousAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -388,7 +424,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestMiscellaneousTapsellNativeAd onResponse")
-                    tapsellMiscellaneousRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellMiscellaneousResponseId = it.responseId
@@ -401,10 +436,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestMiscellaneousTapsellNativeAd onError: $error")
-                    if (tapsellMiscellaneousRequestCounter < 2) {
-                        tapsellMiscellaneousRequestCounter++
-                        requestMiscellaneousTapsellNativeAd(adHolder)
-                    }
+                    requestMiscellaneousTapsellNativeAd(adHolder)
                 }
             })
     }

@@ -30,11 +30,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTA
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_PC
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_PLAYERS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_RULES
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_STATISTICS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_WALLET
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.normalErrorSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
@@ -56,10 +57,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
     private lateinit var appLovinNativeAdContainer: ViewGroup
     private lateinit var appLovinAdLoader: MaxNativeAdLoader
     private var appLovinNativeAd: MaxAd? = null
-    private var appLovinAdRequestCounter = 1
 
     private var tapsellResponseId: String? = null
-    private var tapsellRequestCounter = 1
 
     private var snackbar: Snackbar? = null
 
@@ -78,6 +77,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         walletOnClick()
         playersOnClick()
         statisticsOnClick()
+        rulesOnClick()
         notificationsConsoleOnClick()
         notificationsPCOnClick()
         requestAppLovinNativeAd()
@@ -208,13 +208,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                     is Resource.Loading -> playPartnerIdAnimationTyping()
                     is Resource.Success -> playPartnerIdAnimationSaved()
                     is Resource.Error -> {
-                        response.message?.let {
-                            snackbar = normalErrorSnackbar(
-                                requireView(),
-                                it.asString(requireContext())
-                            )
-                            snackbar?.show()
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }
@@ -241,13 +235,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                     is Resource.Loading -> playSecretKeyAnimationTyping()
                     is Resource.Success -> playSecretKeyAnimationSaved()
                     is Resource.Error -> {
-                        response.message?.let {
-                            snackbar = normalErrorSnackbar(
-                                requireView(),
-                                it.asString(requireContext())
-                            )
-                            snackbar?.show()
-                        }
+                        snackbar = showSomethingWentWrongError(requireContext(), requireView())
                     }
                 }
             }
@@ -263,6 +251,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
 
     private fun statisticsOnClick() = binding.clLinksStatistics.setOnClickListener {
         openLink(requireContext(), requireView(), URL_DSFUT_STATISTICS)
+    }
+
+    private fun rulesOnClick() = binding.clLinksRules.setOnClickListener {
+        openLink(requireContext(), requireView(), URL_DSFUT_RULES)
     }
 
     private fun notificationsConsoleOnClick() =
@@ -339,7 +331,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
             super.onNativeAdLoaded(nativeAdView, nativeAd)
             Timber.i("AppLovinNativeAdListener onNativeAdLoaded")
-            appLovinAdRequestCounter = 1
 
             appLovinNativeAd?.let {
                 // Clean up any pre-existing native ad to prevent memory leaks.
@@ -355,12 +346,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         override fun onNativeAdLoadFailed(adUnitId: String?, error: MaxError?) {
             super.onNativeAdLoadFailed(adUnitId, error)
             Timber.e("AppLovinNativeAdListener onNativeAdLoadFailed: ${error?.message}")
-            if (appLovinAdRequestCounter < 2) {
-                appLovinAdRequestCounter++
-                appLovinAdLoader.loadAd(createNativeAdView())
-            } else {
-                initTapsellAdHolder()
-            }
+            initTapsellAdHolder()
         }
 
         override fun onNativeAdClicked(nativeAd: MaxAd?) {
@@ -386,7 +372,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel?) {
                     super.response(tapsellPlusAdModel)
                     Timber.i("requestTapsellNativeAd onResponse")
-                    tapsellRequestCounter = 1
                     _binding?.let {
                         tapsellPlusAdModel?.let {
                             tapsellResponseId = it.responseId
@@ -398,10 +383,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
                 override fun error(error: String?) {
                     super.error(error)
                     Timber.e("requestTapsellNativeAd onError: $error")
-                    if (tapsellRequestCounter < 2) {
-                        tapsellRequestCounter++
-                        requestTapsellNativeAd(adHolder)
-                    }
+                    requestTapsellNativeAd(adHolder)
                 }
             })
     }

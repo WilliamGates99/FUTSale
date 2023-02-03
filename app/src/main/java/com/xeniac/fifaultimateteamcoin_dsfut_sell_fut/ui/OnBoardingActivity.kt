@@ -3,12 +3,17 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityOnboardingBinding
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.adapters.DotsIndicatorAdapter
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFirstFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingFourthFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingSecondFragment
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoardingThirdFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding1stFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding2ndFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding3rdFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding.OnBoarding4thFragment
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_1ST_INDEX
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_2ND_INDEX
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_3RD_INDEX
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_4TH_INDEX
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,10 +34,9 @@ class OnBoardingActivity : AppCompatActivity() {
         override fun handleOnBackPressed() {
             binding.viewpager.apply {
                 when (currentItem) {
-                    1 -> currentItem = 0
-                    2 -> currentItem = 1
-                    3 -> currentItem = 2
-                    0 -> finishAffinity()
+                    ONBOARDING_2ND_INDEX -> currentItem = ONBOARDING_1ST_INDEX
+                    ONBOARDING_3RD_INDEX -> currentItem = ONBOARDING_2ND_INDEX
+                    ONBOARDING_4TH_INDEX -> currentItem = ONBOARDING_3RD_INDEX
                 }
             }
         }
@@ -40,10 +44,10 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         val fragmentsList = arrayListOf(
-            OnBoardingFirstFragment(),
-            OnBoardingSecondFragment(),
-            OnBoardingThirdFragment(),
-            OnBoardingFourthFragment()
+            OnBoarding1stFragment(),
+            OnBoarding2ndFragment(),
+            OnBoarding3rdFragment(),
+            OnBoarding4thFragment()
         )
 
         val dotsIndicatorAdapter = DotsIndicatorAdapter(
@@ -52,5 +56,20 @@ class OnBoardingActivity : AppCompatActivity() {
 
         binding.viewpager.adapter = dotsIndicatorAdapter
         binding.indicator.attachTo(binding.viewpager)
+        viewPagerOnPageChange()
     }
+
+    private fun viewPagerOnPageChange() =
+        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                onBackPressedCallback.isEnabled = when (position) {
+                    ONBOARDING_1ST_INDEX -> false
+                    ONBOARDING_2ND_INDEX -> true
+                    ONBOARDING_3RD_INDEX -> true
+                    ONBOARDING_4TH_INDEX -> true
+                    else -> false
+                }
+            }
+        })
 }

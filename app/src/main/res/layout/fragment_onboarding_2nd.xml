@@ -24,8 +24,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/anim_onboarding_first"
-        app:lottie_speed="0.7" />
+        app:lottie_rawRes="@raw/anim_onboarding_2nd"
+        app:lottie_speed="0.8" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
@@ -37,7 +37,7 @@
         android:fontFamily="@font/localized_extra_bold"
         android:gravity="center_horizontal"
         android:lineHeight="@dimen/text_size_24sp"
-        android:text="@string/onboarding_first_title"
+        android:text="@string/onboarding_second_title"
         android:textAlignment="gravity"
         android:textColor="@color/navyBlue"
         android:textSize="@dimen/text_size_20sp"
@@ -60,7 +60,7 @@
         android:gravity="center_horizontal"
         android:lineHeight="@dimen/text_size_20sp"
         android:maxHeight="@dimen/height_180dp"
-        android:text="@string/onboarding_first_description"
+        android:text="@string/onboarding_second_description"
         android:textAlignment="gravity"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_16sp"
@@ -71,13 +71,13 @@
         tools:targetApi="p" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_skip"
+        android:id="@+id/btn_back"
         style="@style/Theme.FifaUltimateTeamCoin.TextButton.OnBoarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_24dp"
         android:layout_marginEnd="@dimen/margin_2dp"
-        android:text="@string/onboarding_btn_skip"
+        android:text="@string/onboarding_btn_back"
         app:layout_constraintBaseline_toBaselineOf="@+id/btn_next"
         app:layout_constraintEnd_toStartOf="@+id/btn_next"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -94,6 +94,6 @@
         android:text="@string/onboarding_btn_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_skip" />
+        app:layout_constraintStart_toEndOf="@+id/btn_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
