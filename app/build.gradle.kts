@@ -347,9 +347,9 @@ tasks.register<Copy>("copyDevPreviewApk") {
     val renamedFileName = "FUTCoin $versionName (Developer Preview)"
 
     val apkFile = "app-dev-playStore-release.apk"
-    val bundleSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
+    val apkSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
 
-    from(bundleSourceDir)
+    from(apkSourceDir)
     into(destinationDir)
 
     rename(apkFile, "${renamedFileName}.apk")
