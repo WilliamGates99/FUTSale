@@ -47,27 +47,29 @@ class DsfutRepositoryImp @Inject constructor(
         )
 
         response.body()?.let {
-            it.error?.let { error -> // RESPONSE HAD ERROR
-                Timber.e("pickUpPlayer error: ${it.error}")
-                Timber.e("pickUpPlayer message: ${it.message}")
+            Timber.i("pickUpPlayer Response: $it")
+
+            if (!it.error.isNullOrBlank()) {
+                Timber.e("pickUpPlayer Error: ${it.error}")
+                Timber.e("pickUpPlayer Message: ${it.message}")
                 return when {
-                    error.contains(Constants.ERROR_DSFUT_BLOCK) -> {
-                        val errorMessage = "$error - ${it.message}"
+                    it.error.contains(Constants.ERROR_DSFUT_BLOCK) -> {
+                        val errorMessage = "${it.error} - ${it.message}"
                         Resource.Error(UiText.DynamicString(errorMessage))
                     }
-                    error.contains(Constants.ERROR_DSFUT_EMPTY) -> Resource.Error(
+                    it.error.contains(Constants.ERROR_DSFUT_EMPTY) -> Resource.Error(
                         UiText.StringResource(R.string.pick_up_error_dsfut_empty)
                     )
-                    error.contains(Constants.ERROR_DSFUT_LIMIT) -> Resource.Error(
+                    it.error.contains(Constants.ERROR_DSFUT_LIMIT) -> Resource.Error(
                         UiText.StringResource(R.string.pick_up_error_dsfut_limit)
                     )
-                    error.contains(Constants.ERROR_DSFUT_MAINTENANCE) -> Resource.Error(
+                    it.error.contains(Constants.ERROR_DSFUT_MAINTENANCE) -> Resource.Error(
                         UiText.StringResource(R.string.pick_up_error_dsfut_maintenance)
                     )
-                    error.contains(Constants.ERROR_DSFUT_SIGN) -> Resource.Error(
+                    it.error.contains(Constants.ERROR_DSFUT_SIGN) -> Resource.Error(
                         UiText.StringResource(R.string.pick_up_error_dsfut_sign)
                     )
-                    error.contains(Constants.ERROR_DSFUT_THROTTLE) -> Resource.Error(
+                    it.error.contains(Constants.ERROR_DSFUT_THROTTLE) -> Resource.Error(
                         UiText.StringResource(R.string.pick_up_error_dsfut_throttle)
                     )
                     else -> Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
@@ -75,7 +77,7 @@ class DsfutRepositoryImp @Inject constructor(
             }
 
             return it.player?.let { player ->
-                Timber.e("pickUpPlayer player: $player")
+                Timber.e("pickUpPlayer Player: $player")
                 Resource.Success(player)
             } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
         } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
