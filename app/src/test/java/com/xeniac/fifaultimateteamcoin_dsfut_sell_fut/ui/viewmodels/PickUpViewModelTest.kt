@@ -163,8 +163,12 @@ class PickUpViewModelTest {
         val testPlayer = Player(
             assetID = 1,
             buyNowPrice = 100,
+            chemistryStyle = "Basic",
+            chemistryStyleID = 2,
+            contracts = 7,
             expires = 100,
             name = "Test Player",
+            owners = 1,
             position = "CDM",
             rating = 89,
             resourceID = 1,

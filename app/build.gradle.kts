@@ -30,8 +30,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 33
-        versionCode = 6 // TODO UPGRADE AFTER EACH RELEASE
-        versionName = "1.1.0" // TODO UPGRADE AFTER EACH RELEASE
+        versionCode = 7 // TODO UPGRADE AFTER EACH RELEASE
+        versionName = "1.1.1" // TODO UPGRADE AFTER EACH RELEASE
 
         /**
          * Keeps language resources for only the locales specified below.
@@ -307,7 +307,7 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.1")
 
     // Applovin Libraries
-    implementation("com.applovin:applovin-sdk:11.7.0")
+    implementation("com.applovin:applovin-sdk:11.7.1")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
     implementation("com.applovin.mediation:google-adapter:21.5.0.0")
 
@@ -347,9 +347,9 @@ tasks.register<Copy>("copyDevPreviewApk") {
     val renamedFileName = "FUTCoin $versionName (Developer Preview)"
 
     val apkFile = "app-dev-playStore-release.apk"
-    val bundleSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
+    val apkSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
 
-    from(bundleSourceDir)
+    from(apkSourceDir)
     into(destinationDir)
 
     rename(apkFile, "${renamedFileName}.apk")
