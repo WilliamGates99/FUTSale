@@ -9,8 +9,12 @@ import kotlinx.parcelize.Parcelize
 data class Player(
     val assetID: Int,
     val buyNowPrice: Int,
+    val chemistryStyle: String,
+    val chemistryStyleID: Int,
+    val contracts: Int,
     val expires: Int,
     val name: String,
+    val owners: Int,
     val position: String,
     val rating: Int,
     val resourceID: Int,
