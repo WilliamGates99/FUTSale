@@ -30,8 +30,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 33
-        versionCode = 6 // TODO UPGRADE AFTER EACH RELEASE
-        versionName = "1.1.0" // TODO UPGRADE AFTER EACH RELEASE
+        versionCode = 7 // TODO UPGRADE AFTER EACH RELEASE
+        versionName = "1.1.1" // TODO UPGRADE AFTER EACH RELEASE
 
         /**
          * Keeps language resources for only the locales specified below.
