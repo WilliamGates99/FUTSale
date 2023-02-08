@@ -77,7 +77,7 @@ class DsfutRepositoryImp @Inject constructor(
             }
 
             return it.player?.let { player ->
-                Timber.e("pickUpPlayer Player: $player")
+                Timber.i("pickUpPlayer Player: $player")
                 Resource.Success(player)
             } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
         } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
