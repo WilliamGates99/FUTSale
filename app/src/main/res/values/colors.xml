@@ -21,7 +21,6 @@
 
     <!--Static Colors-->
     <color name="appIconBackgroundProd">#10161A</color>
-    <color name="appIconBackgroundDev">#FF9100</color>
     <color name="whiteStatic">#FFFFFF</color>
     <color name="blue">#1C53F4</color>
     <color name="green">#00BD62</color>
