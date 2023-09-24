@@ -394,16 +394,11 @@ tasks.register<Copy>("copyDevPreviewApk") {
 }
 
 tasks.register<Copy>("copyReleaseApk") {
-    val playStoreApkFile = "app-prod-playStore-release.apk"
     val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
     val myketApkFile = "app-prod-myket-release.apk"
 
-    val playStoreApkSourceDir = "${releaseRootDir}/prodPlayStore/release/${playStoreApkFile}"
     val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
     val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
-
-    from(playStoreApkSourceDir)
-    into(destDir)
 
     from(cafeBazaarApkSourceDir)
     into(destDir)
@@ -411,7 +406,6 @@ tasks.register<Copy>("copyReleaseApk") {
     from(myketApkSourceDir)
     into(destDir)
 
-    rename(playStoreApkFile, "$renamedFileName.apk")
     rename(cafeBazaarApkFile, "$renamedFileName - CafeBazaar.apk")
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
