@@ -5,11 +5,13 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services") // Google Services plugin
-    id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
     id("applovin-quality-service")
@@ -23,20 +25,20 @@ applovin {
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
-    compileSdk = 33
-    buildToolsVersion = "34.0.0 rc3"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
-        targetSdk = 33
-        versionCode = 8 // TODO UPGRADE AFTER EACH RELEASE
-        versionName = "1.1.2" // TODO UPGRADE AFTER EACH RELEASE
+        targetSdk = 34
+        versionCode = 9 // TODO UPGRADE AFTER EACH RELEASE
+        versionName = "1.2.0" // TODO UPGRADE AFTER EACH RELEASE
 
-        /**
-         * Keeps language resources for only the locales specified below.
-         */
+        // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
+
+        testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
 
         buildConfigField(
             "String",
@@ -93,31 +95,24 @@ android {
             "TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID",
             properties.getProperty("TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID")
         )
-
-        testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
     }
 
     buildTypes {
         getByName("debug") {
             versionNameSuffix = " - debug"
             applicationIdSuffix = ".debug"
+
+            resValue("color", "appIconBackground", "#FF9100") // Orange
         }
 
         getByName("release") {
-            /**
-             * Enables code shrinking, obfuscation, and optimization for only
-             * your project's release build type.
-             */
+            // Enables code shrinking, obfuscation, and optimization for only your project's release build type.
             isMinifyEnabled = true
 
-            /**
-             * Enables resource shrinking, which is performed by the Android Gradle plugin.
-             */
+            // Enables resource shrinking, which is performed by the Android Gradle plugin.
             isShrinkResources = true
 
-            /**
-             * Includes the default ProGuard rules files that are packaged with the Android Gradle plugin.
-             */
+            // Includes the default ProGuard rules files that are packaged with the Android Gradle plugin.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -131,12 +126,12 @@ android {
             dimension = "build"
             versionNameSuffix = " - Developer Preview"
             applicationIdSuffix = ".dev"
-            resValue("color", "appIconBackground", "#fcb901") // AS Canary Icon Color
+            resValue("color", "appIconBackground", "#FF0011") // Red
         }
 
         create("prod") {
             dimension = "build"
-            resValue("color", "appIconBackground", "@color/appIconBackgroundProd")
+            resValue("color", "appIconBackground", "#10161A") // Dark Gray
         }
 
         create("playStore") {
@@ -144,12 +139,12 @@ android {
             buildConfigField(
                 "String",
                 "URL_APP_STORE",
-                properties.getProperty("URL_PLAY_STORE")
+                "\"https://play.google.com/store/apps/details?id=com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
             buildConfigField(
                 "String",
                 "PACKAGE_NAME_APP_STORE",
-                properties.getProperty("PACKAGE_NAME_PLAY_STORE")
+                "\"com.android.vending\""
             )
         }
 
@@ -158,12 +153,12 @@ android {
             buildConfigField(
                 "String",
                 "URL_APP_STORE",
-                properties.getProperty("URL_CAFEBAZAAR")
+                "\"https://cafebazaar.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
             buildConfigField(
                 "String",
                 "PACKAGE_NAME_APP_STORE",
-                properties.getProperty("PACKAGE_NAME_CAFEBAZAAR")
+                "\"com.farsitel.bazaar\""
             )
         }
 
@@ -172,12 +167,12 @@ android {
             buildConfigField(
                 "String",
                 "URL_APP_STORE",
-                properties.getProperty("URL_MYKET")
+                "\"https://myket.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
             buildConfigField(
                 "String",
                 "PACKAGE_NAME_APP_STORE",
-                properties.getProperty("PACKAGE_NAME_MYKET")
+                "\"ir.mservices.market\""
             )
         }
     }
@@ -189,6 +184,9 @@ android {
     }
 
     compileOptions {
+        // Java 8+ API Desugaring Support
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -205,9 +203,9 @@ android {
 
     bundle {
         language {
-            /**
-             * Specifies that the app bundle should not support configuration APKs for language resources.
-             * These resources are instead packaged with each base and dynamic feature APK.
+            /*
+            Specifies that the app bundle should not support configuration APKs for language resources.
+            These resources are instead packaged with each base and dynamic feature APK.
              */
             enableSplit = false
         }
@@ -216,9 +214,7 @@ android {
 
 androidComponents {
     beforeVariants { variantBuilder ->
-        /**
-         * Gradle ignores any variants that satisfy the conditions below.
-         */
+        // Gradle ignores any variants that satisfy the conditions below.
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
@@ -246,55 +242,54 @@ androidComponents {
 
 kapt {
     arguments {
-        /**
-         * Room DB schema directory
-         */
+        // Export room db schemas
         arg("room.schemaLocation", "$projectDir/roomDbSchemas")
     }
 
-    /**
-     * Allow references to generated code
-     */
+    // Allow references to generated code
     correctErrorTypes = true
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.0")
+    // Java 8+ API Desugaring Support
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Navigation Component
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.2")
 
     // Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.45")
-    kapt("com.google.dagger:hilt-compiler:2.45")
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
 
     // Activity KTX for Injecting ViewModels into Fragments
-    implementation("androidx.activity:activity-ktx:1.7.0")
+    implementation("androidx.activity:activity-ktx:1.7.2")
 
     // Architectural Components
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Room Library
-    implementation("androidx.room:room-runtime:2.5.0")
-    kapt("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
 
     // Kotlin Extensions and Coroutines Support for Room
-    implementation("androidx.room:room-ktx:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.2")
 
     // Preferences DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Firebase BoM and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Firebase App Check
@@ -317,108 +312,115 @@ dependencies {
     implementation("com.vmadalin:easypermissions-ktx:1.0.0")
 
     // Lottie Library
-    implementation("com.airbnb.android:lottie:6.0.0")
+    implementation("com.airbnb.android:lottie:6.1.0")
 
     // Dots Indicator Library
-    implementation("com.tbuonomo:dotsindicator:4.3")
+    implementation("com.tbuonomo:dotsindicator:5.0")
 
     // Google Play In-App Reviews API
     implementation("com.google.android.play:review-ktx:2.0.1")
 
     // Applovin Libraries
-    implementation("com.applovin:applovin-sdk:11.9.0")
+    implementation("com.applovin:applovin-sdk:11.11.3")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
-    implementation("com.applovin.mediation:google-adapter:22.0.0.1")
+    implementation("com.applovin.mediation:google-adapter:22.4.0.0")
 
     // Google AdMob Library
-    implementation("com.google.android.gms:play-services-ads:22.0.0")
+    implementation("com.google.android.gms:play-services-ads:22.4.0")
 
     // Tapsell Library
-    implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
+    implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.2.0")
 
     // Local Unit Test Libraries
-    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("com.google.truth:truth:1.1.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // Instrumentation Test Libraries
-    androidTestImplementation("com.google.truth:truth:1.1.3")
+    androidTestImplementation("com.google.truth:truth:1.1.5")
     androidTestImplementation("junit:junit:4.13.2")
+    //noinspection GradleDependency
     androidTestImplementation("androidx.test:core:1.4.0") // DO NOT UPGRADE
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.45")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.45")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.48")
 
     // UI Test Libraries
-    androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.2")
+    //noinspection GradleDependency
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0") // DO NOT UPGRADE
+    //noinspection GradleDependency
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0") // DO NOT UPGRADE
+    //noinspection GradleDependency
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.3.0") // DO NOT UPGRADE
-    debugImplementation("androidx.fragment:fragment-testing:1.5.6")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.1")
+}
+
+val releaseRootDir = "${rootDir}/app"
+val destDir: String = properties.getProperty("DESTINATION_DIR")
+val obfuscationDestDir: String = properties.getProperty("OBFUSCATION_DESTINATION_DIR")
+
+val versionName = "${android.defaultConfig.versionName}"
+val renamedFileName = "FUTDeals $versionName"
+
+tasks.register<Copy>("copyDevPreviewBundle") {
+    val bundleFile = "app-dev-playStore-release.aab"
+    val bundleSourceDir = "${releaseRootDir}/devPlayStore/release/${bundleFile}"
+
+    from(bundleSourceDir)
+    into(destDir)
+
+    rename(bundleFile, "$renamedFileName (Developer Preview).aab")
 }
 
 tasks.register<Copy>("copyDevPreviewApk") {
-    val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-
-    val versionName = "${android.defaultConfig.versionName}"
-    val renamedFileName = "FUTCoin $versionName (Developer Preview)"
-
     val apkFile = "app-dev-playStore-release.apk"
     val apkSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
 
     from(apkSourceDir)
-    into(destinationDir)
+    into(destDir)
 
-    rename(apkFile, "${renamedFileName}.apk")
+    rename(apkFile, "$renamedFileName (Developer Preview).aab")
 }
 
 tasks.register<Copy>("copyReleaseApk") {
-    val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-
-    val versionName = "${android.defaultConfig.versionName}"
-    val renamedFileName = "FUTCoin $versionName"
-
+    val playStoreApkFile = "app-prod-playStore-release.apk"
     val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
     val myketApkFile = "app-prod-myket-release.apk"
 
+    val playStoreApkSourceDir = "${releaseRootDir}/prodPlayStore/release/${playStoreApkFile}"
     val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
     val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
 
+    from(playStoreApkSourceDir)
+    into(destDir)
+
     from(cafeBazaarApkSourceDir)
-    into(destinationDir)
+    into(destDir)
 
     from(myketApkSourceDir)
-    into(destinationDir)
+    into(destDir)
 
+    rename(playStoreApkFile, "$renamedFileName.apk")
     rename(cafeBazaarApkFile, "$renamedFileName - CafeBazaar.apk")
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
 
 tasks.register<Copy>("copyReleaseBundle") {
-    val releaseRootDir = "${rootDir}/app"
-    val destinationDir = "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK"
-
-    val versionName = "${android.defaultConfig.versionName}"
-    val renamedFileName = "FUTCoin $versionName"
-
     val playStoreBundleFile = "app-prod-playStore-release.aab"
     val playStoreBundleSourceDir = "${releaseRootDir}/prodPlayStore/release/${playStoreBundleFile}"
 
     from(playStoreBundleSourceDir)
-    into(destinationDir)
+    into(destDir)
 
-    rename(playStoreBundleFile, "$renamedFileName - Play Store.aab")
+    rename(playStoreBundleFile, "${renamedFileName}.aab")
 }
 
 tasks.register<Copy>("copyObfuscationFolder") {
     val obfuscationSourceDir = "${rootDir}/app/obfuscation"
-    val obfuscationDestDir =
-        "D:\\01 My Files\\Projects\\Xeniac\\FIFA Ultimate Team Coin\\APK\\obfuscation"
 
     from(obfuscationSourceDir)
     into(obfuscationDestDir)
