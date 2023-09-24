@@ -241,13 +241,23 @@ androidComponents {
 }
 
 kapt {
-    arguments {
-        // Export room db schemas
-        arg("room.schemaLocation", "$projectDir/roomDbSchemas")
-    }
-
     // Allow references to generated code
     correctErrorTypes = true
+}
+
+ksp {
+    // Export room db schemas
+    arg(RoomSchemaArgProvider(schemaDir = File(projectDir, "roomDbSchemas")))
+}
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+    override fun asArguments(): Iterable<String> {
+        return listOf("room.schemaLocation=${schemaDir.path}")
+    }
 }
 
 dependencies {
@@ -280,7 +290,8 @@ dependencies {
 
     // Room Library
     implementation("androidx.room:room-runtime:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2") // Kotlin Extensions and Coroutines support for Room
+    ksp("androidx.room:room-compiler:2.5.2")
 
     // Kotlin Extensions and Coroutines Support for Room
     implementation("androidx.room:room-ktx:2.5.2")
