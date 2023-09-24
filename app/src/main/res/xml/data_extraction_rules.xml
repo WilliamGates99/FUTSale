@@ -3,27 +3,22 @@
 
     <!--
     Backup rules for Android 12 (API level 31) or higher.
-
     Sample data extraction rules file; uncomment and customize as necessary.
     See https://developer.android.com/about/versions/12/backup-restore#xml-changes
     for details.
     -->
 
     <cloud-backup>
-        <include
-            domain="sharedpref"
-            path="." />
         <exclude domain="root" />
+        <exclude domain="sharedpref" />
         <exclude domain="database" />
         <exclude domain="file" />
         <exclude domain="external" />
     </cloud-backup>
 
     <device-transfer>
-        <include
-            domain="sharedpref"
-            path="." />
         <exclude domain="root" />
+        <exclude domain="sharedpref" />
         <exclude domain="database" />
         <exclude domain="file" />
         <exclude domain="external" />

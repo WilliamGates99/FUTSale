@@ -3,7 +3,6 @@
 
     <!--
     Backup rules for Android 11 (API level 30) or lower.
-
     Sample backup rules file; uncomment and customize as necessary.
     See https://developer.android.com/guide/topics/data/autobackup
     for details.
@@ -11,10 +10,7 @@
     See https://developer.android.com/about/versions/12/backup-restore
     -->
 
-    <include
-        domain="sharedpref"
-        path="." />
-
+    <exclude domain="sharedpref" />
     <exclude domain="root" />
     <exclude domain="database" />
     <exclude domain="file" />

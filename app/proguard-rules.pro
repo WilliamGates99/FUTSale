@@ -14,11 +14,11 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
 
 
 #🍅---------------Begin: Proguard Configuration for Obfuscation Mapping---------------🍅
@@ -274,26 +274,31 @@
 -keepnames public class com.google.android.gms.ads.identifier.AdvertisingIdClient
 -keepnames public class com.chartboost.sdk.Chartboost
 -keepnames public class com.applovin.sdk.AppLovinSdkSettings
-#🍅---------------End: Proguard Configuration for Tapsell Library---------------🍅
 
+# Vunvle Rules
+-keep class com.vungle.warren.AdConfig
+-keep class com.vungle.warren.InitCallback
+-keep class com.vungle.warren.LoadAdCallback
+-keep class com.vungle.warren.PlayAdCallback
+-keep class com.vungle.warren.Vungle$Consent
+-keep class com.vungle.warren.Vungle
+-dontwarn com.vungle.warren.AdConfig
+-dontwarn com.vungle.warren.InitCallback
+-dontwarn com.vungle.warren.LoadAdCallback
+-dontwarn com.vungle.warren.PlayAdCallback
+-dontwarn com.vungle.warren.Vungle$Consent
+-dontwarn com.vungle.warren.Vungle
 
-#🍅---------------Begin: Missing Rules---------------🍅
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
--dontwarn com.adcolony.sdk.AdColony
--dontwarn com.adcolony.sdk.AdColonyAdSize
--dontwarn com.adcolony.sdk.AdColonyAdView
--dontwarn com.adcolony.sdk.AdColonyAdViewListener
--dontwarn com.adcolony.sdk.AdColonyAppOptions
--dontwarn com.adcolony.sdk.AdColonyInterstitial
--dontwarn com.adcolony.sdk.AdColonyInterstitialListener
--dontwarn com.adcolony.sdk.AdColonyRewardListener
--dontwarn com.android.vending.billing.IInAppBillingService$Stub
--dontwarn com.android.vending.billing.IInAppBillingService
--dontwarn com.chartboost.sdk.Chartboost
--dontwarn com.chartboost.sdk.ChartboostDelegate
--dontwarn com.chartboost.sdk.Libraries.CBLogging$Level
--dontwarn com.chartboost.sdk.a
+# FaceBook sdk Rules
+-keep class com.facebook.FacebookSdk
+-keep class com.facebook.ads.AudienceNetworkAds$InitListener
+-keep class com.facebook.ads.AudienceNetworkAds$InitSettingsBuilder
+-keep class com.facebook.ads.AudienceNetworkAds
+-keep class com.facebook.ads.InterstitialAd
+-keep class com.facebook.ads.InterstitialAdListener
+-keep class com.facebook.ads.RewardedVideoAd
+-keep class com.facebook.ads.RewardedVideoAdListener
+-dontwarn com.facebook.FacebookSdk
 -dontwarn com.facebook.ads.AudienceNetworkAds$InitListener
 -dontwarn com.facebook.ads.AudienceNetworkAds$InitSettingsBuilder
 -dontwarn com.facebook.ads.AudienceNetworkAds
@@ -301,27 +306,10 @@
 -dontwarn com.facebook.ads.InterstitialAdListener
 -dontwarn com.facebook.ads.RewardedVideoAd
 -dontwarn com.facebook.ads.RewardedVideoAdListener
--dontwarn com.oracle.svm.core.annotate.AutomaticFeature
--dontwarn com.oracle.svm.core.annotate.Delete
--dontwarn com.oracle.svm.core.annotate.Substitute
--dontwarn com.oracle.svm.core.annotate.TargetClass
--dontwarn com.oracle.svm.core.configure.ResourcesRegistry
--dontwarn com.squareup.picasso.Picasso
--dontwarn com.squareup.picasso.RequestCreator
--dontwarn com.squareup.picasso.Target
--dontwarn com.unity3d.ads.IUnityAdsInitializationListener
--dontwarn com.unity3d.ads.IUnityAdsLoadListener
--dontwarn com.unity3d.ads.IUnityAdsShowListener
--dontwarn com.unity3d.ads.UnityAds
--dontwarn com.unity3d.services.banners.BannerView$IListener
--dontwarn com.unity3d.services.banners.BannerView
--dontwarn com.unity3d.services.banners.UnityBannerSize
--dontwarn com.vungle.warren.AdConfig
--dontwarn com.vungle.warren.InitCallback
--dontwarn com.vungle.warren.LoadAdCallback
--dontwarn com.vungle.warren.PlayAdCallback
--dontwarn com.vungle.warren.Vungle
--dontwarn org.graalvm.nativeimage.ImageSingletons
--dontwarn org.graalvm.nativeimage.hosted.Feature$BeforeAnalysisAccess
--dontwarn org.graalvm.nativeimage.hosted.Feature
+#🍅---------------End: Proguard Configuration for Tapsell Library---------------🍅
+
+
+#🍅---------------Begin: Missing Rules---------------🍅
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
 #🍅---------------End: Missing Rules---------------🍅

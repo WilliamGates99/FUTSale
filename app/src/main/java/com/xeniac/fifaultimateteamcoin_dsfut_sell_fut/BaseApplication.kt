@@ -107,6 +107,7 @@ class BaseApplication : Application() {
     }
 
     private fun initTapsell() {
+        TapsellPlus.setDebugMode(Log.DEBUG)
         TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY, object : TapsellPlusInitListener {
             override fun onInitializeSuccess(adNetworks: AdNetworks?) {
                 Timber.i("onInitializeSuccess: ${adNetworks?.name}")
@@ -116,7 +117,6 @@ class BaseApplication : Application() {
                 Timber.e("onInitializeFailed: ${adNetworks?.name}, error: ${error?.errorMessage}")
             }
         })
-        TapsellPlus.setDebugMode(Log.DEBUG)
         TapsellPlus.setGDPRConsent(this, true)
     }
 }
