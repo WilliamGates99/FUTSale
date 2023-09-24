@@ -228,7 +228,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_wallet"
@@ -293,7 +293,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_players"
@@ -358,7 +358,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_statistics"
@@ -423,7 +423,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_rules"
@@ -488,7 +488,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_notifications_console"
@@ -553,7 +553,7 @@
                                 app:contentPadding="@dimen/padding_4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearance="@style/Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance" />
+                                app:shapeAppearance="@style/Theme.FUTDeals.ImageViewShapeAppearance" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_links_notifications_pc"
