@@ -43,7 +43,14 @@ class DsfutRepositoryImp @Inject constructor(
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
         val response = dsfutApi.pickUpPlayer(
-            fifaVersion, platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
+            fifaVersion = fifaVersion,
+            platform = platform,
+            partnerId = partnerId,
+            timestamp = timestamp,
+            signature = signature,
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            takeAfter = takeAfter
         )
 
         response.body()?.let {

@@ -11,7 +11,7 @@ interface DsfutApi {
 
     @GET(BuildConfig.RETROFIT_FEED_URL)
     suspend fun pickUpPlayer(
-        @Path("fifa") fifaVersion: Int,
+        @Path("game_year") fifaVersion: Int,
         @Path("console") platform: String,
         @Path("partner_id") partnerId: String,
         @Path("timestamp") timestamp: String,
