@@ -43,7 +43,14 @@ class DsfutRepositoryImp @Inject constructor(
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
         val response = dsfutApi.pickUpPlayer(
-            fifaVersion, platform, partnerId, timestamp, signature, minPrice, maxPrice, takeAfter
+            fifaVersion = fifaVersion,
+            platform = platform,
+            partnerId = partnerId,
+            timestamp = timestamp,
+            signature = signature,
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            takeAfter = takeAfter
         )
 
         response.body()?.let {
@@ -77,7 +84,7 @@ class DsfutRepositoryImp @Inject constructor(
             }
 
             return it.player?.let { player ->
-                Timber.e("pickUpPlayer Player: $player")
+                Timber.i("pickUpPlayer Player: $player")
                 Resource.Success(player)
             } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
         } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))

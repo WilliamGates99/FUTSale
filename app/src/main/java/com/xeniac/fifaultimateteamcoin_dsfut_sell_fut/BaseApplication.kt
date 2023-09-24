@@ -9,10 +9,6 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.applovin.sdk.AppLovinPrivacySettings
 import com.applovin.sdk.AppLovinSdk
-import com.google.firebase.FirebaseApp
-import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
@@ -39,7 +35,6 @@ class BaseApplication : Application() {
         createMutedPickUpPlayerNotificationChannel()
         createSoundedPickUpPlayerNotificationChannel()
         setAppTheme()
-        initFirebaseAppCheck()
         initAppLovin()
         initTapsell()
     }
@@ -85,21 +80,6 @@ class BaseApplication : Application() {
 
     private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
 
-    private fun initFirebaseAppCheck() {
-        FirebaseApp.initializeApp(this)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-
-        if (BuildConfig.DEBUG) {
-            firebaseAppCheck.installAppCheckProviderFactory(
-                DebugAppCheckProviderFactory.getInstance()
-            )
-        } else {
-            firebaseAppCheck.installAppCheckProviderFactory(
-                PlayIntegrityAppCheckProviderFactory.getInstance()
-            )
-        }
-    }
-
     private fun initAppLovin() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"
         AppLovinSdk.getInstance(this).initializeSdk {}
@@ -107,6 +87,7 @@ class BaseApplication : Application() {
     }
 
     private fun initTapsell() {
+        TapsellPlus.setDebugMode(Log.DEBUG)
         TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY, object : TapsellPlusInitListener {
             override fun onInitializeSuccess(adNetworks: AdNetworks?) {
                 Timber.i("onInitializeSuccess: ${adNetworks?.name}")
@@ -116,7 +97,6 @@ class BaseApplication : Application() {
                 Timber.e("onInitializeFailed: ${adNetworks?.name}, error: ${error?.errorMessage}")
             }
         })
-        TapsellPlus.setDebugMode(Log.DEBUG)
         TapsellPlus.setGDPRConsent(this, true)
     }
 }

@@ -85,9 +85,9 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         snackbar?.dismiss()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun textInputsBackgroundColor() = binding.apply {
@@ -553,7 +553,7 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
             code(PickUpPlayerNotificationService.NOTIFICATION_PERMISSION_REQUEST_CODE)
             perms(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
             rationale(requireContext().getString(R.string.notification_permission_rational_message))
-            theme(R.style.Theme_FifaUltimateTeamCoin_AlertDialog)
+            theme(R.style.Theme_FUTDeals_AlertDialog)
             positiveButtonText(requireContext().getString(R.string.notification_permission_rational_btn_positive))
             negativeButtonText(requireContext().getString(R.string.notification_permission_rational_btn_negative))
         }.build()

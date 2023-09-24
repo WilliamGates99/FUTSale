@@ -90,10 +90,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), MaxAdRevenueListe
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         destroyAd()
         snackbar?.dismiss()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun subscribeToObservers() {

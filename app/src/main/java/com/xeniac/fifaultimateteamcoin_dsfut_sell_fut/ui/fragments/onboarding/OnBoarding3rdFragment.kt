@@ -30,8 +30,8 @@ class OnBoarding3rdFragment : Fragment(R.layout.fragment_onboarding_3rd) {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun backOnClick() = binding.btnBack.setOnClickListener {

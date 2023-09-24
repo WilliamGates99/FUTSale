@@ -20,6 +20,6 @@ interface DsfutRepository {
         minPrice: Int? = null,
         maxPrice: Int? = null,
         takeAfter: Int? = null,
-        fifaVersion: Int = 23
+        fifaVersion: Int = 24
     ): Resource<Player>
 }

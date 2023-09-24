@@ -21,14 +21,15 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FifaUltimateTeamCoin"
+        android:theme="@style/Theme.FUTDeals"
         tools:targetApi="tiramisu">
 
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FifaUltimateTeamCoin.SplashScreen">
+            android:theme="@style/Theme.FUTDeals.SplashScreen"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -38,7 +39,8 @@
         <activity
             android:name=".ui.OnBoardingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FifaUltimateTeamCoin.OnBoarding" />
+            android:theme="@style/Theme.FUTDeals.OnBoarding"
+            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

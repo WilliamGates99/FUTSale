@@ -29,7 +29,7 @@
             android:background="@drawable/shape_rounded_bottom_nav"
             app:itemIconTint="@color/color_bottom_nav"
             app:itemRippleColor="@color/grayMedium"
-            app:itemTextAppearanceActive="@style/Theme.FifaUltimateTeamCoin.BottomNavigationView.Text"
+            app:itemTextAppearanceActive="@style/Theme.FUTDeals.BottomNavigationView.Text"
             app:itemTextColor="@color/color_bottom_nav"
             app:labelVisibilityMode="selected"
             app:layout_constraintBottom_toBottomOf="parent"

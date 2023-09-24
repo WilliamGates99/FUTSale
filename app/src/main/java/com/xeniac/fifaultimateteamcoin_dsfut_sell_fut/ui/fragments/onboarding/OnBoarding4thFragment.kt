@@ -49,9 +49,9 @@ class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         snackbar?.dismiss()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
