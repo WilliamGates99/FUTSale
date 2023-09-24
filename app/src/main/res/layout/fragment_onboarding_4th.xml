@@ -58,7 +58,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_title_partner_id"
-            style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Title"
+            style="@style/Theme.FUTDeals.TextInputLayout.Title"
             android:labelFor="@+id/ti_layout_partner_id"
             android:text="@string/onboarding_fourth_title_partner_id"
             app:layout_constraintBottom_toTopOf="@+id/ti_layout_partner_id"
@@ -68,7 +68,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_layout_partner_id"
-            style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout"
+            style="@style/Theme.FUTDeals.TextInputLayout"
             android:layout_width="@dimen/width_0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24dp"
@@ -95,7 +95,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_title_secret_key"
-            style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout.Title"
+            style="@style/Theme.FUTDeals.TextInputLayout.Title"
             android:layout_marginTop="@dimen/margin_16dp"
             android:labelFor="@+id/ti_layout_secret_key"
             android:text="@string/onboarding_fourth_title_secret_key"
@@ -106,7 +106,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_layout_secret_key"
-            style="@style/Theme.FifaUltimateTeamCoin.TextInputLayout"
+            style="@style/Theme.FUTDeals.TextInputLayout"
             android:layout_width="@dimen/width_0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24dp"
@@ -133,7 +133,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register"
-            style="@style/Theme.FifaUltimateTeamCoin.TextButton"
+            style="@style/Theme.FUTDeals.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_3dp"
@@ -157,7 +157,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_start"
-            style="@style/Theme.FifaUltimateTeamCoin.Button"
+            style="@style/Theme.FUTDeals.Button"
             android:layout_width="@dimen/width_0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24dp"
@@ -169,7 +169,7 @@
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/cpi"
-            style="@style/Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button"
+            style="@style/Theme.FUTDeals.LoadingProgressBar.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -180,7 +180,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_agreement"
-            style="@style/Theme.FifaUltimateTeamCoin.TextButton"
+            style="@style/Theme.FUTDeals.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_3dp"

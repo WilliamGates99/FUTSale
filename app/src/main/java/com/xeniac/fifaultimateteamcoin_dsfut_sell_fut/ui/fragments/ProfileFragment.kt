@@ -84,10 +84,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         snackbar?.dismiss()
         destroyAd()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

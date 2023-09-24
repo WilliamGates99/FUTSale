@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.FifaUltimateTeamCoin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.FUTDeals" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:colorBackground">@color/background</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/navyBlue</item>
@@ -10,50 +10,47 @@
         <item name="colorOnSecondary">@color/whiteStatic</item>
         <item name="android:statusBarColor">@color/statusBarV21</item>
         <item name="android:colorEdgeEffect">@color/skyBlue</item>
-        <item name="snackbarStyle">@style/Theme.FifaUltimateTeamCoin.Snackbar</item>
-        <item name="snackbarTextViewStyle">
-            @style/Theme.FifaUltimateTeamCoin.Snackbar.TextView
-        </item>
-        <item name="snackbarButtonStyle">
-            @style/Theme.FifaUltimateTeamCoin.Snackbar.ActionButton
-        </item>
-        <item name="switchStyle">@style/Theme.FifaUltimateTeamCoin.Switch</item>
-        <item name="materialAlertDialogTheme">@style/Theme.FifaUltimateTeamCoin.AlertDialog</item>
+        <item name="snackbarStyle">@style/Theme.FUTDeals.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Theme.FUTDeals.Snackbar.TextView</item>
+        <item name="snackbarButtonStyle">@style/Theme.FUTDeals.Snackbar.ActionButton</item>
+        <item name="switchStyle">@style/Theme.FUTDeals.Switch</item>
+        <item name="materialAlertDialogTheme">@style/Theme.FUTDeals.AlertDialog</item>
         <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.SplashScreen" parent="Theme.SplashScreen">
+    <style name="Theme.FUTDeals.SplashScreen" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="windowSplashScreenBackground">@color/appIconBackground</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
             @drawable/ic_splash_logo_xeniac
         </item>
-        <item name="postSplashScreenTheme">@style/Theme.FifaUltimateTeamCoin</item>
+        <item name="postSplashScreenTheme">@style/Theme.FUTDeals</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.OnBoarding" parent="Theme.FifaUltimateTeamCoin">
+    <style name="Theme.FUTDeals.OnBoarding" parent="Theme.FUTDeals">
         <item name="android:colorBackground">@color/skyBlue</item>
         <item name="android:statusBarColor">@color/skyBlue</item>
         <item name="android:fontFamily">@font/localized_font</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+    <style name="Theme.FUTDeals.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="backgroundTint">@color/red</item>
         <item name="animationMode">slide</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Snackbar.TextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+    <style name="Theme.FUTDeals.Snackbar.TextView" parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/whiteStatic</item>
         <item name="android:fontFamily">@font/localized_semi_bold</item>
         <item name="android:maxLines">10</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Snackbar.ActionButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+    <style name="Theme.FUTDeals.Snackbar.ActionButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/localized_bold</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextInputLayout.Title" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.TextInputLayout.Title" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_8dp</item>
@@ -69,7 +66,7 @@
         <item name="layout_constraintHorizontal_bias">0</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="Theme.FUTDeals.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintEnabled">false</item>
         <item name="boxBackgroundColor">@color/grayLight</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/radius_12dp</item>
@@ -81,45 +78,41 @@
         <item name="boxStrokeErrorColor">@color/red</item>
         <item name="errorTextColor">@color/red</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="errorTextAppearance">
-            @style/Theme.FifaUltimateTeamCoin.TextInputLayout.Error
-        </item>
+        <item name="errorTextAppearance">@style/Theme.FUTDeals.TextInputLayout.Error</item>
         <item name="helperTextTextColor">@color/grayDark</item>
-        <item name="helperTextTextAppearance">
-            @style/Theme.FifaUltimateTeamCoin.TextInputLayout.Helper
-        </item>
+        <item name="helperTextTextAppearance">@style/Theme.FUTDeals.TextInputLayout.Helper</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextInputLayout.Error" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.TextInputLayout.Error" parent="Widget.MaterialComponents.TextView">
         <item name="android:fontFamily">@font/localized_semi_bold</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextInputLayout.Helper" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.TextInputLayout.Helper" parent="Widget.MaterialComponents.TextView">
         <item name="android:fontFamily">@font/localized_semi_bold</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="Theme.FUTDeals.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="useMaterialThemeColors">true</item>
         <item name="android:minWidth">@dimen/min_width_0dp</item>
         <item name="android:minHeight">@dimen/min_height_0dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button" parent="Widget.MaterialComponents.CircularProgressIndicator.Small">
+    <style name="Theme.FUTDeals.LoadingProgressBar.Button" parent="Widget.MaterialComponents.CircularProgressIndicator.Small">
         <item name="android:indeterminate">true</item>
         <item name="indicatorColor">@color/whiteStatic</item>
         <item name="trackCornerRadius">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.LoadingProgressBar.Button.Outlined" parent="Widget.MaterialComponents.CircularProgressIndicator.Small">
+    <style name="Theme.FUTDeals.LoadingProgressBar.Button.Outlined" parent="Widget.MaterialComponents.CircularProgressIndicator.Small">
         <item name="android:indeterminate">true</item>
         <item name="indicatorColor">@color/black</item>
         <item name="trackCornerRadius">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.Button.Appearance</item>
+    <style name="Theme.FUTDeals.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.Button.Appearance</item>
         <item name="android:textColor">@color/whiteStatic</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>
@@ -130,8 +123,8 @@
         <item name="android:padding">@dimen/padding_16dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.Button.Appearance</item>
+    <style name="Theme.FUTDeals.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.Button.Appearance</item>
         <item name="strokeWidth">@dimen/width_1dp</item>
         <item name="strokeColor">@color/grayLight</item>
         <item name="android:textColor">@color/black</item>
@@ -144,15 +137,13 @@
         <item name="android:padding">@dimen/padding_16dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Button.Appearance" parent="ShapeAppearance.MaterialComponents">
+    <style name="Theme.FUTDeals.Button.Appearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.ToggleButton" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
-        <item name="shapeAppearance">
-            @style/Theme.FifaUltimateTeamCoin.ToggleButton.Appearance
-        </item>
+    <style name="Theme.FUTDeals.ToggleButton" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.ToggleButton.Appearance</item>
         <item name="strokeWidth">@dimen/width_1dp</item>
         <item name="strokeColor">@color/grayMedium</item>
         <item name="backgroundTint">@color/grayLight</item>
@@ -160,10 +151,8 @@
         <item name="singleSelection">true</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.ToggleButton.Button" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="shapeAppearance">
-            @style/Theme.FifaUltimateTeamCoin.ToggleButton.Appearance
-        </item>
+    <style name="Theme.FUTDeals.ToggleButton.Button" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.ToggleButton.Appearance</item>
         <item name="backgroundTint">@color/color_toggle_button_background</item>
         <item name="android:textColor">@color/color_toggle_button_text</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
@@ -178,13 +167,13 @@
         <item name="android:paddingBottom">@dimen/padding_9dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.ToggleButton.Appearance" parent="ShapeAppearance.MaterialComponents">
+    <style name="Theme.FUTDeals.ToggleButton.Appearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+    <style name="Theme.FUTDeals.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.TextButton.Appearance</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>
@@ -201,15 +190,13 @@
         <item name="android:padding">@dimen/padding_5dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextButton.Appearance" parent="ShapeAppearance.MaterialComponents">
+    <style name="Theme.FUTDeals.TextButton.Appearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_4dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextButton.OnBoarding" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="shapeAppearance">
-            @style/Theme.FifaUltimateTeamCoin.TextButton.OnBoarding.Appearance
-        </item>
+    <style name="Theme.FUTDeals.TextButton.OnBoarding" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.TextButton.OnBoarding.Appearance</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>
@@ -226,20 +213,20 @@
         <item name="android:padding">@dimen/padding_5dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.TextButton.OnBoarding.Appearance" parent="ShapeAppearance.MaterialComponents">
+    <style name="Theme.FUTDeals.TextButton.OnBoarding.Appearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.BottomNavigationView.Text" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.BottomNavigationView.Text" parent="Widget.MaterialComponents.TextView">
         <item name="android:fontFamily">@font/localized_regular</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+    <style name="Theme.FUTDeals.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:layout_width">@dimen/width_0dp</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="titleTextAppearance">@style/Theme.FifaUltimateTeamCoin.Toolbar.Title</item>
+        <item name="titleTextAppearance">@style/Theme.FUTDeals.Toolbar.Title</item>
         <item name="android:background">@drawable/shape_rounded_bottom_12dp</item>
         <item name="android:elevation">@dimen/elevation_3dp</item>
         <item name="titleCentered">true</item>
@@ -247,68 +234,64 @@
         <item name="contentInsetStart">@dimen/content_inset_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.Toolbar.Title" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.Toolbar.Title" parent="Widget.MaterialComponents.TextView">
         <item name="android:fontFamily">@font/localized_extra_bold</item>
         <item name="android:textSize">@dimen/text_size_20sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.ImageViewShapeAppearance">
+    <style name="Theme.FUTDeals.ImageViewShapeAppearance">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_8dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="alertDialogStyle">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Style</item>
+    <style name="Theme.FUTDeals.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/Theme.FUTDeals.AlertDialog.Style</item>
         <item name="materialAlertDialogTitleTextStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Title
+            @style/Theme.FUTDeals.AlertDialog.Title
         </item>
-        <item name="materialAlertDialogBodyTextStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Body
-        </item>
-        <item name="android:checkedTextViewStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.Choice
-        </item>
+        <item name="materialAlertDialogBodyTextStyle">@style/Theme.FUTDeals.AlertDialog.Body</item>
+        <item name="android:checkedTextViewStyle">@style/Theme.FUTDeals.AlertDialog.Choice</item>
         <item name="buttonBarPositiveButtonStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.PositiveButton
+            @style/Theme.FUTDeals.AlertDialog.PositiveButton
         </item>
         <item name="buttonBarNegativeButtonStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.NegativeButton
+            @style/Theme.FUTDeals.AlertDialog.NegativeButton
         </item>
         <item name="buttonBarNeutralButtonStyle">
-            @style/Theme.FifaUltimateTeamCoin.AlertDialog.NeutralButton
+            @style/Theme.FUTDeals.AlertDialog.NeutralButton
         </item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Style" parent="MaterialAlertDialog.MaterialComponents">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.AlertDialog.Appearance</item>
+    <style name="Theme.FUTDeals.AlertDialog.Style" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.AlertDialog.Appearance</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Appearance" parent="ShapeAppearance.MaterialComponents">
+    <style name="Theme.FUTDeals.AlertDialog.Appearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_12dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+    <style name="Theme.FUTDeals.AlertDialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textColor">@color/navyBlue</item>
         <item name="android:textSize">@dimen/text_size_20sp</item>
         <item name="android:fontFamily">@font/localized_extra_bold</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Body" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.FUTDeals.AlertDialog.Body" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_regular</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.Choice" parent="Widget.MaterialComponents.CheckedTextView">
+    <style name="Theme.FUTDeals.AlertDialog.Choice" parent="Widget.MaterialComponents.CheckedTextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_regular</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.PositiveButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+    <style name="Theme.FUTDeals.AlertDialog.PositiveButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.TextButton.Appearance</item>
         <item name="android:textColor">@color/dialogButton</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>
@@ -322,8 +305,8 @@
         <item name="android:paddingEnd">@dimen/padding_8dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.NegativeButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+    <style name="Theme.FUTDeals.AlertDialog.NegativeButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.TextButton.Appearance</item>
         <item name="android:textColor">@color/dialogButton</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>
@@ -337,8 +320,8 @@
         <item name="android:paddingEnd">@dimen/padding_8dp</item>
     </style>
 
-    <style name="Theme.FifaUltimateTeamCoin.AlertDialog.NeutralButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="shapeAppearance">@style/Theme.FifaUltimateTeamCoin.TextButton.Appearance</item>
+    <style name="Theme.FUTDeals.AlertDialog.NeutralButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/Theme.FUTDeals.TextButton.Appearance</item>
         <item name="android:textColor">@color/dialogButton</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/localized_bold</item>

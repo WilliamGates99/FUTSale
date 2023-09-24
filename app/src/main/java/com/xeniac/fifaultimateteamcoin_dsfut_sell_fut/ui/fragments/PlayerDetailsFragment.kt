@@ -45,8 +45,8 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {

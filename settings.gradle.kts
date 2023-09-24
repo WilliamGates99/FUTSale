@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FIFAUltimateTeamCoin"
+rootProject.name = "FUTDeals"
 include(":app")
