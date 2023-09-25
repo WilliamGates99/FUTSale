@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FUTDeals"
+rootProject.name = "UltimateCoin"
 include(":app")
