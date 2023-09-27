@@ -371,7 +371,7 @@ val destDir: String = properties.getProperty("DESTINATION_DIR")
 val obfuscationDestDir: String = properties.getProperty("OBFUSCATION_DESTINATION_DIR")
 
 val versionName = "${android.defaultConfig.versionName}"
-val renamedFileName = "FUTDeals $versionName"
+val renamedFileName = "FUTSale $versionName"
 
 tasks.register<Copy>("copyDevPreviewBundle") {
     val bundleFile = "app-dev-playStore-release.aab"
