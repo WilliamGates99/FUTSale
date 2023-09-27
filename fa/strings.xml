@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">فیفا آلتیمیت تیم کوین</string>
+    <string name="app_name">آلتیمیت تیم کوین</string>
     <string name="notification_channel_name_pick_up_player">گرفتن خودکار بازیکن</string>
     <string name="notification_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
     <string name="notification_permission_rational_message">بدون مجوز اعلان، پس از گرفتن بازیکن، اعلانی دریافت نخواهید کرد.</string>
