@@ -21,26 +21,19 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FUTDeals"
+        android:theme="@style/Theme.FUTSale"
         tools:targetApi="tiramisu">
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FUTDeals.SplashScreen"
+            android:theme="@style/Theme.FUTSale.SplashScreen"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.OnBoardingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.FUTDeals.OnBoarding"
-            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
@@ -51,14 +44,16 @@
                 android:value="true" />
         </service>
 
+        <!--
         <meta-data
-            android:name="applovin.sdk.key"
-            android:value="hmVNBfwsMg8e9UdPEe6ZOWwE83xd2y2KUkDTlGBqx3DMlb0CUOK4f7AeBRRxh-QmzJneB-DPUA-cJuPFEZ7qWA"
-            tools:replace="android:value" />
+        android:name="applovin.sdk.key"
+        android:value="hmVNBfwsMg8e9UdPEe6ZOWwE83xd2y2KUkDTlGBqx3DMlb0CUOK4f7AeBRRxh-QmzJneB-DPUA-cJuPFEZ7qWA"
+        tools:replace="android:value" />
 
         <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4429657659293031~2049225136" />
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-4429657659293031~2049225136" />
+        -->
 
     </application>
 

@@ -5,41 +5,37 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
-import com.applovin.sdk.AppLovinPrivacySettings
-import com.applovin.sdk.AppLovinSdk
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
-import ir.tapsell.plus.TapsellPlus
-import ir.tapsell.plus.TapsellPlusInitListener
-import ir.tapsell.plus.model.AdNetworkError
-import ir.tapsell.plus.model.AdNetworks
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
 class BaseApplication : Application() {
 
-    @Inject
-    lateinit var notificationManager: NotificationManager
-
     @set:Inject
     var currentAppThemeIndex = 0
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     override fun onCreate() {
         super.onCreate()
 
         setupTimber()
+        setAppTheme()
+
         createMutedPickUpPlayerNotificationChannel()
         createSoundedPickUpPlayerNotificationChannel()
-        setAppTheme()
-        initAppLovin()
-        initTapsell()
+        // initAppLovin()
+        // initTapsell()
     }
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
+
+    private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
 
     private fun createMutedPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -78,8 +74,7 @@ class BaseApplication : Application() {
         }
     }
 
-    private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
-
+    /*
     private fun initAppLovin() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"
         AppLovinSdk.getInstance(this).initializeSdk {}
@@ -99,4 +94,5 @@ class BaseApplication : Application() {
         })
         TapsellPlus.setGDPRConsent(this, true)
     }
+     */
 }
