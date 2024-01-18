@@ -1,6 +1,10 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
 
 object Constants {
+
+    // DataStore Constants
+    const val DATASTORE_NAME_SETTINGS = "settings"
+    const val DATASTORE_NAME_SETTINGS_TEST = "settings_test"
 
     // Room Database Constants
     const val DSFUT_DATABASE_NAME = "dsfut_db"
@@ -16,19 +20,6 @@ object Constants {
     const val URL_PRIVACY_POLICY = "https://xeniacdev.github.io/fifaultimateteamcoin/privacy_policy"
     const val URL_DONATE = "https://xeniacdev.github.io/donate"
     const val URL_CROWDIN = "https://crowdin.com/project/fifa-ultimate-team-coin"
-
-    // DataStore Constants
-    const val DATASTORE_NAME_SETTINGS = "settings"
-    const val DATASTORE_NAME_SETTINGS_TEST = "settings_test"
-    const val DATASTORE_IS_ONBOARDING_COMPLETED_KEY = "isOnBoardingCompleted"
-    const val DATASTORE_THEME_KEY = "theme"
-    const val DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY = "isNotificationSoundActive"
-    const val DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY = "isNotificationVibrateActive"
-    const val DATASTORE_RATE_APP_DIALOG_CHOICE_KEY = "rateAppDialogChoice"
-    const val DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY = "previousRequestTimeInMillis"
-    const val DATASTORE_PARTNER_ID_KEY = "partnerId"
-    const val DATASTORE_SECRET_KEY_KEY = "secretKey"
-    const val DATASTORE_SELECTED_PLATFORM_KEY = "selectedPlatform"
 
     // App Theme Constants
     const val THEME_INDEX_DEFAULT = 0

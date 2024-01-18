@@ -7,7 +7,7 @@ import android.app.NotificationManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.SettingsHelper
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject

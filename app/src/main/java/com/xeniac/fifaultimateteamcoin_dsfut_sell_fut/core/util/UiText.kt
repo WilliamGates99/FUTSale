@@ -1,7 +1,9 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
 
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 
 sealed class UiText {
     data class DynamicString(val value: String) : UiText()
@@ -10,7 +12,6 @@ sealed class UiText {
         vararg val args: Any
     ) : UiText()
 
-    /*
     @Composable
     fun asString(): String {
         return when (this) {
@@ -18,7 +19,6 @@ sealed class UiText {
             is StringResource -> stringResource(resId, *args)
         }
     }
-     */
 
     fun asString(context: Context): String {
         return when (this) {

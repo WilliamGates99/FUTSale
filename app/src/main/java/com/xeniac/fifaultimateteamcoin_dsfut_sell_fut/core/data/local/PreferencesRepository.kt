@@ -1,16 +1,32 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
+
+/**
+ * Index List:
+ *
+ * 0: Device Default
+ *
+ * 1: Light Mode
+ *
+ * 2: Dark Mode
+ */
+typealias AppThemeIndex = Int
+typealias AppLocaleString = String
 
 interface PreferencesRepository {
 
-    fun getCurrentAppThemeSynchronously(): Int
-
-    fun isOnBoardingCompletedSynchronously(): Boolean
+    fun getCurrentAppThemeIndexSynchronously(): AppThemeIndex
 
     fun isNotificationSoundActiveSynchronously(): Boolean
-    
+
     fun isNotificationVibrateActiveSynchronously(): Boolean
 
-    suspend fun getCurrentAppTheme(): Int
+    suspend fun isOnBoardingCompleted(): Boolean
+
+    suspend fun getNotificationPermissionCount(): Int
+
+    suspend fun getCurrentAppThemeIndex(): AppThemeIndex
+
+    suspend fun getCurrentAppLocaleString(): AppLocaleString?
 
     suspend fun isNotificationSoundActive(): Boolean
 
@@ -28,7 +44,11 @@ interface PreferencesRepository {
 
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 
-    suspend fun setCurrentAppTheme(index: Int)
+    suspend fun setNotificationPermissionCount(count: Int)
+
+    suspend fun setCurrentAppTheme(index: AppThemeIndex)
+
+    suspend fun setCurrentAppLocale(localeTag: String, newLayoutDirection: Int): Boolean
 
     suspend fun isNotificationSoundActive(isActive: Boolean)
 

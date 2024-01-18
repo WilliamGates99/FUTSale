@@ -1,18 +1,17 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.ConnectivityObserver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class NetworkConnectivityObserver(context: Context) : ConnectivityObserver {
+class ConnectivityObserverImpl(context: Context) : ConnectivityObserver {
 
     private val connectivityManager = context.getSystemService(
         Context.CONNECTIVITY_SERVICE

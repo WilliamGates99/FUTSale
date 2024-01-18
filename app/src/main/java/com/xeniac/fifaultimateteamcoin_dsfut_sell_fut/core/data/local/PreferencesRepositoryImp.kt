@@ -1,18 +1,16 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
+import androidx.core.text.layoutDirection
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_IS_ONBOARDING_COMPLETED_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PARTNER_ID_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_RATE_APP_DIALOG_CHOICE_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SECRET_KEY_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_SELECTED_PLATFORM_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_THEME_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -23,38 +21,24 @@ class PreferencesRepositoryImp @Inject constructor(
 ) : PreferencesRepository {
 
     private object PreferencesKeys {
-        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey(DATASTORE_IS_ONBOARDING_COMPLETED_KEY)
-        val CURRENT_APP_THEME = intPreferencesKey(DATASTORE_THEME_KEY)
-        val IS_NOTIFICATION_SOUND_ACTIVE = booleanPreferencesKey(
-            DATASTORE_IS_NOTIFICATION_SOUND_ACTIVE_KEY
-        )
-        val IS_NOTIFICATION_VIBRATE_ACTIVE = booleanPreferencesKey(
-            DATASTORE_IS_NOTIFICATION_VIBRATE_ACTIVE_KEY
-        )
-        val RATE_APP_DIALOG_CHOICE = intPreferencesKey(DATASTORE_RATE_APP_DIALOG_CHOICE_KEY)
-        val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey(
-            DATASTORE_PREVIOUS_REQUEST_TIME_IN_MILLIS_KEY
-        )
-        val PARTNER_ID = stringPreferencesKey(DATASTORE_PARTNER_ID_KEY)
-        val SECRET_KEY = stringPreferencesKey(DATASTORE_SECRET_KEY_KEY)
-        val SELECTED_PLATFORM = stringPreferencesKey(DATASTORE_SELECTED_PLATFORM_KEY)
+        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey("isOnBoardingCompleted")
+        val NOTIFICATION_PERMISSION_COUNT = intPreferencesKey(name = "notificationPermissionCount")
+        val CURRENT_APP_THEME = intPreferencesKey("theme")
+        val IS_NOTIFICATION_SOUND_ACTIVE = booleanPreferencesKey("isNotificationSoundActive")
+        val IS_NOTIFICATION_VIBRATE_ACTIVE = booleanPreferencesKey("isNotificationVibrateActive")
+        val RATE_APP_DIALOG_CHOICE = intPreferencesKey("rateAppDialogChoice")
+        val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey("previousRequestTimeInMillis")
+        val PARTNER_ID = stringPreferencesKey("partnerId")
+        val SECRET_KEY = stringPreferencesKey("secretKey")
+        val SELECTED_PLATFORM = stringPreferencesKey("selectedPlatform")
     }
 
-    override fun getCurrentAppThemeSynchronously(): Int = runBlocking {
+    override fun getCurrentAppThemeIndexSynchronously(): AppThemeIndex = runBlocking {
         try {
             settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
         } catch (e: Exception) {
             Timber.e("getCurrentAppThemeSynchronously Exception: $e")
             0
-        }
-    }
-
-    override fun isOnBoardingCompletedSynchronously(): Boolean = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
-        } catch (e: Exception) {
-            Timber.e("isOnBoardingCompletedSynchronously Exception: $e")
-            false
         }
     }
 
@@ -76,11 +60,45 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentAppTheme(): Int = try {
+    override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
+        } catch (e: Exception) {
+            Timber.e("isOnBoardingCompleted Exception: $e")
+            false
+        }
+    }
+
+    override suspend fun getNotificationPermissionCount(): Int = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+        } catch (e: Exception) {
+            Timber.e("getNotificationPermissionCount Exception: $e")
+            0
+        }
+    }
+
+    override suspend fun getCurrentAppThemeIndex(): AppThemeIndex = try {
         settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
     } catch (e: Exception) {
         Timber.e("getCurrentAppTheme Exception: $e")
         0
+    }
+
+    override suspend fun getCurrentAppLocaleString(): AppLocaleString? = try {
+        val localeList = AppCompatDelegate.getApplicationLocales()
+
+        if (localeList.isEmpty) {
+            Timber.i("Locale list is Empty.")
+            null
+        } else {
+            val localeString = localeList[0].toString()
+            Timber.i("Current app locale is $localeString")
+            localeString
+        }
+    } catch (e: Exception) {
+        Timber.e("getCurrentAppLocaleString Exception: $e")
+        null
     }
 
     override suspend fun isNotificationSoundActive(): Boolean = try {
@@ -144,7 +162,18 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun setCurrentAppTheme(index: Int) {
+    override suspend fun setNotificationPermissionCount(count: Int) {
+        try {
+            settingsDataStore.edit { preferences ->
+                preferences[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] = count
+                Timber.i("Notification permission count edited to $count")
+            }
+        } catch (e: Exception) {
+            Timber.e("setNotificationPermissionCount Exception: $e")
+        }
+    }
+
+    override suspend fun setCurrentAppTheme(index: AppThemeIndex) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.CURRENT_APP_THEME] = index
@@ -153,6 +182,18 @@ class PreferencesRepositoryImp @Inject constructor(
         } catch (e: Exception) {
             Timber.e("setCurrentAppTheme Exception: $e")
         }
+    }
+
+    override suspend fun setCurrentAppLocale(
+        localeTag: String,
+        newLayoutDirection: Int
+    ): Boolean = try {
+        val isActivityRestartNeeded = isActivityRestartNeeded(newLayoutDirection)
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(localeTag))
+        isActivityRestartNeeded
+    } catch (e: Exception) {
+        Timber.e("setCurrentAppLocale Exception: $e")
+        false
     }
 
     override suspend fun isNotificationSoundActive(isActive: Boolean) {
@@ -240,5 +281,11 @@ class PreferencesRepositoryImp @Inject constructor(
         } catch (e: Exception) {
             Timber.e("setSelectedPlatform Exception: $e")
         }
+    }
+
+    private fun isActivityRestartNeeded(newLayoutDirection: Int): Boolean {
+        val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
+        val currentLayoutDirection = currentLocale?.layoutDirection
+        return currentLayoutDirection != newLayoutDirection
     }
 }

@@ -1,9 +1,9 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
 
 import androidx.appcompat.app.AppCompatDelegate
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DARK
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DEFAULT
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_LIGHT
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.THEME_INDEX_DARK
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.THEME_INDEX_DEFAULT
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.THEME_INDEX_LIGHT
 
 object SettingsHelper {
 
