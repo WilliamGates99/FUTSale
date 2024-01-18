@@ -24,7 +24,7 @@
         android:theme="@style/Theme.FUTSale"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".core.presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.FUTSale.SplashScreen"
