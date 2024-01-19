@@ -2,10 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
 
 object Constants {
 
-    // DataStore Constants
-    const val DATASTORE_NAME_SETTINGS = "settings"
-    const val DATASTORE_NAME_SETTINGS_TEST = "settings_test"
-
     // Room Database Constants
     const val DSFUT_DATABASE_NAME = "dsfut_db"
 

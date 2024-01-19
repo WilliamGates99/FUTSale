@@ -106,5 +106,4 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
             }
         })
 }
-
  */

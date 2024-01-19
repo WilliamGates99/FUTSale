@@ -544,5 +544,4 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         )
     }
 }
-
  */

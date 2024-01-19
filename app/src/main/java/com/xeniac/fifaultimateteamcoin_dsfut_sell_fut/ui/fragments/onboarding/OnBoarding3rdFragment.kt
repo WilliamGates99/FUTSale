@@ -35,5 +35,4 @@ class OnBoarding3rdFragment : Fragment(R.layout.fragment_onboarding_3rd) {
         viewPager?.currentItem = ONBOARDING_4TH_INDEX
     }
 }
-
  */

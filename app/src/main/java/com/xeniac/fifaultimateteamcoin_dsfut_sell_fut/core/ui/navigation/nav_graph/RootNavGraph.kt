@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingScreen
 
 @Composable
@@ -26,7 +27,7 @@ fun SetupRootNavGraph(
         }
 
         composable(route = Screen.HomeScreen.route) {
-            // MainScreen(rootNavController = navController)
+            HomeScreen(rootNavController = navController)
         }
     }
 }

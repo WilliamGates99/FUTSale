@@ -13,12 +13,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DATASTORE_NAME_SETTINGS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DSFUT_DATABASE_NAME
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.DsfutDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import dagger.Module
 import dagger.Provides
@@ -29,21 +25,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+class AppModule {
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideSettingsDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME_SETTINGS) }
+            produceFile = { context.preferencesDataStoreFile(name = "settings") }
         )
 
     @Provides
@@ -62,21 +59,21 @@ object AppModule {
         preferencesRepository: PreferencesRepository
     ): Boolean = preferencesRepository.isNotificationVibrateActiveSynchronously()
 
-    @Singleton
+    /*
     @Provides
+    @Singleton
     fun provideDsfutDatabase(
         @ApplicationContext context: Context
     ) = Room.databaseBuilder(context, DsfutDatabase::class.java, DSFUT_DATABASE_NAME).build()
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideDsfutDao(
         database: DsfutDatabase
     ) = database.dsfutDao()
 
-    /*
-    @Singleton
     @Provides
+    @Singleton
     fun provideRetrofitInstance(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -92,24 +89,27 @@ object AppModule {
             .build()
     }
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideDsfutApi(retrofitInstance: Retrofit): DsfutApi =
         retrofitInstance.create(DsfutApi::class.java)
     */
 
-    @Singleton
     @Provides
-    fun provideDecimalFormat() = DecimalFormat("00")
+    @Singleton
+    fun provideDecimalFormat() = DecimalFormat(
+        /* pattern = */ "00",
+        /* symbols = */ DecimalFormatSymbols(Locale.US)
+    )
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideNotificationManager(
         @ApplicationContext context: Context
     ) = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideCancelNotificationPendingIntent(
         @ApplicationContext context: Context
     ): PendingIntent = PendingIntent.getActivity(
@@ -119,8 +119,8 @@ object AppModule {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
     )
 
-    @Singleton
     @Provides
+    @Singleton
     @Named("muted_pick_up_notification")
     fun provideMutedBasePickUpNotificationBuilder(
         @ApplicationContext context: Context,
@@ -144,8 +144,8 @@ object AppModule {
         setVibrate(null)
     }
 
-    @Singleton
     @Provides
+    @Singleton
     @Named("sounded_pick_up_notification")
     fun provideSoundedBasePickUpNotificationBuilder(
         @ApplicationContext context: Context,

@@ -13,7 +13,6 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepositoryImp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DATASTORE_NAME_SETTINGS_TEST
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_PC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +44,7 @@ class PreferencesRepositoryImpTest {
 
     private val testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
         scope = testScope,
-        produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME_SETTINGS_TEST) }
+        produceFile = { context.preferencesDataStoreFile(name = "settings_test") }
     )
 
     private val testRepository: PreferencesRepository = PreferencesRepositoryImp(testDataStore)

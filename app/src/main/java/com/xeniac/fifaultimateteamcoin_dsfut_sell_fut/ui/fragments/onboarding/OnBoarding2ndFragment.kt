@@ -35,5 +35,4 @@ class OnBoarding2ndFragment : Fragment(R.layout.fragment_onboarding_2nd) {
         viewPager?.currentItem = ONBOARDING_3RD_INDEX
     }
 }
-
  */

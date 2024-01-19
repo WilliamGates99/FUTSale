@@ -163,5 +163,4 @@ class OnBoarding4thFragment : Fragment(R.layout.fragment_onboarding_4th) {
         btnStart.text = requireContext().getString(R.string.onboarding_fourth_btn_start)
     }
 }
-
  */
