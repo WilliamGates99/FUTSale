@@ -7,10 +7,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRep
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(ViewModelScoped::class)
+@InstallIn(ViewModelComponent::class)
 abstract class RepositoryModule {
 
     @Binds

@@ -5,10 +5,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(ViewModelScoped::class)
+@InstallIn(ViewModelComponent::class)
 class CoreModule {
 
     @Provides
