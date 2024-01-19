@@ -1,14 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,6 +10,7 @@ class MainViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
+    /*
     private val _rateAppDialogChoiceLiveData: MutableLiveData<Event<Int>> = MutableLiveData()
     val rateAppDialogChoiceLiveData: LiveData<Event<Int>> = _rateAppDialogChoiceLiveData
 
@@ -24,7 +19,7 @@ class MainViewModel @Inject constructor(
     val previousRequestTimeInMillisLiveData:
             LiveData<Event<Long>> = _previousRequestTimeInMillisLiveData
 
-    fun isOnBoardingCompleted() = preferencesRepository.isOnBoardingCompletedSynchronously()
+    fun isOnBoardingCompleted() = preferencesRepository.isOnBoardingCompleted()
 
     fun getRateAppDialogChoice() = viewModelScope.launch {
         safeGetRateAppDialogChoice()
@@ -58,4 +53,6 @@ class MainViewModel @Inject constructor(
     private suspend fun safeSetPreviousRequestTimeInMillis() {
         preferencesRepository.setPreviousRequestTimeInMillis(Calendar.getInstance().timeInMillis)
     }
+
+     */
 }

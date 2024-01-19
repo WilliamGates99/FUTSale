@@ -1,48 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
-import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import com.vmadalin.easypermissions.EasyPermissions
-import com.vmadalin.easypermissions.models.PermissionRequest
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPickUpBinding
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_DSFUT_BLOCK
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_1
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ERROR_NETWORK_CONNECTION_2
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getTimeUntilExpiryInMillis
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.isPickedPlayerNotExpired
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showActionSnackbarError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNetworkFailureError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showNormalSnackbarError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showUnavailableNetworkConnectionError
-import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import java.text.DecimalFormat
-import javax.inject.Inject
-import javax.inject.Named
-
+/*
 @AndroidEntryPoint
 class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.PermissionCallbacks {
 
@@ -586,3 +544,5 @@ class PickUpFragment : Fragment(R.layout.fragment_pick_up), EasyPermissions.Perm
         )
     }
 }
+
+ */

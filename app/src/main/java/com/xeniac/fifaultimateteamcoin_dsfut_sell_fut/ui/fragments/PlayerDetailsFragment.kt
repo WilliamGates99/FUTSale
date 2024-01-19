@@ -1,25 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
-import android.os.Bundle
-import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentPlayerDetailsBinding
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.PickUpViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import ir.tapsell.plus.AdShowListener
-import ir.tapsell.plus.TapsellPlus
-import ir.tapsell.plus.model.TapsellPlusAdModel
-import ir.tapsell.plus.model.TapsellPlusErrorModel
-import java.text.DecimalFormat
-import javax.inject.Inject
-
+/*
 @AndroidEntryPoint
 class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
 
@@ -125,3 +106,5 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details) {
             }
         })
 }
+
+ */

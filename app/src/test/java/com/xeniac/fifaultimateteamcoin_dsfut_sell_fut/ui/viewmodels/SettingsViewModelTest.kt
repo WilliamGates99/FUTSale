@@ -8,8 +8,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_PERSIAN_IRAN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.LOCALE_INDEX_PERSIAN_IRAN
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule

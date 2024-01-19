@@ -2,15 +2,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
 
 import androidx.lifecycle.LiveData
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.DsfutDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.DsfutApi
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import timber.log.Timber
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -42,6 +41,7 @@ class DsfutRepositoryImp @Inject constructor(
         val timestamp = DateHelper.getCurrentTimeInMillis()
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
+        /*
         val response = dsfutApi.pickUpPlayer(
             fifaVersion = fifaVersion,
             platform = platform,
@@ -88,6 +88,8 @@ class DsfutRepositoryImp @Inject constructor(
                 Resource.Success(player)
             } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
         } ?: Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
+        */
+        Resource.Error(UiText.StringResource(R.string.error_something_went_wrong)) // TEMP
     } catch (e: Exception) {
         Timber.e("pickUpPlayer Exception: ${e.message}")
         Resource.Error(UiText.DynamicString(e.message.toString()))

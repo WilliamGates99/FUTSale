@@ -1,28 +1,27 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.DsfutRepositoryImp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.PreferencesRepositoryImp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelScoped::class)
 abstract class RepositoryModule {
 
     @Binds
-    @Singleton
-    abstract fun bindDsfutRepository(
-        dsfutRepositoryImp: DsfutRepositoryImp
-    ): DsfutRepository
-
-    @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindPreferencesRepository(
         preferencesRepositoryImp: PreferencesRepositoryImp
     ): PreferencesRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDsfutRepository(
+        dsfutRepositoryImp: DsfutRepositoryImp
+    ): DsfutRepository
 }

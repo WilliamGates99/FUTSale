@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
 
 class FakePreferencesRepositoryImp : PreferencesRepository {
 
@@ -15,7 +15,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
     private var storedSecretKey: String? = null
     private var selectedPlatform = SELECTED_PLATFORM_CONSOLE
 
-    override fun getCurrentAppThemeSynchronously(): Int = currentAppTheme
+    override fun getCurrentAppThemeIndexSynchronously(): Int = currentAppTheme
 
     override fun isOnBoardingCompletedSynchronously(): Boolean = isOnBoardingCompleted
 
@@ -23,7 +23,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override fun isNotificationVibrateActiveSynchronously(): Boolean = isNotificationVibrateActive
 
-    override suspend fun getCurrentAppTheme(): Int = currentAppTheme
+    override suspend fun getCurrentAppThemeIndex(): Int = currentAppTheme
 
     override suspend fun isNotificationSoundActive(): Boolean = isNotificationSoundActive
 

@@ -11,10 +11,11 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_NAME_SETTINGS_TEST
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_CONSOLE
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SELECTED_PLATFORM_PC
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepositoryImp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DATASTORE_NAME_SETTINGS_TEST
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_PC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -74,8 +75,8 @@ class PreferencesRepositoryImpTest {
     fun fetchInitialSynchronousPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
-        val initialCurrentAppTheme = testRepository.getCurrentAppThemeSynchronously()
-        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
+        val initialCurrentAppTheme = testRepository.getCurrentAppThemeIndexSynchronously()
+        val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         val initialIsNotificationSoundActive =
             testRepository.isNotificationSoundActiveSynchronously()
         val initialIsNotificationVibrateActive =
@@ -91,7 +92,7 @@ class PreferencesRepositoryImpTest {
     fun fetchInitialPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
-        val initialCurrentAppTheme = testRepository.getCurrentAppTheme()
+        val initialCurrentAppTheme = testRepository.getCurrentAppThemeIndex()
         val initialIsNotificationSoundActive = testRepository.isNotificationSoundActive()
         val initialIsNotificationVibrateActive = testRepository.isNotificationVibrateActive()
         val initialRateAppDialogChoice = testRepository.getRateAppDialogChoice()
@@ -129,7 +130,7 @@ class PreferencesRepositoryImpTest {
 
         testRepository.isOnBoardingCompleted(true)
 
-        val isOnBoardingCompleted = testRepository.isOnBoardingCompletedSynchronously()
+        val isOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         assertThat(isOnBoardingCompleted).isTrue()
     }
 
@@ -140,7 +141,7 @@ class PreferencesRepositoryImpTest {
         val testValue = 1
         testRepository.setCurrentAppTheme(testValue)
 
-        val currentAppTheme = testRepository.getCurrentAppTheme()
+        val currentAppTheme = testRepository.getCurrentAppThemeIndex()
         assertThat(currentAppTheme).isEqualTo(testValue)
     }
 

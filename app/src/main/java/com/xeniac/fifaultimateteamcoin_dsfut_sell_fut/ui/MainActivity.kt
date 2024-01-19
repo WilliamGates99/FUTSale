@@ -1,45 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui
 
-import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
-import com.applovin.mediation.MaxAd
-import com.applovin.mediation.MaxAdListener
-import com.applovin.mediation.MaxError
-import com.applovin.mediation.ads.MaxInterstitialAd
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.NetworkConnectivityObserver
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.ActivityMainBinding
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.ConnectivityObserver
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.MainViewModel
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.AlertDialogHelper.showThreeBtnAlertDialog
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromFirstInstallTime
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getDaysFromPreviousRequestTime
 import dagger.hilt.android.AndroidEntryPoint
-import ir.tapsell.plus.AdRequestCallback
-import ir.tapsell.plus.TapsellPlus
-import ir.tapsell.plus.model.TapsellPlusAdModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), MaxAdListener {
+class MainActivity : AppCompatActivity() {
 
+    /*
     private val viewModel by viewModels<MainViewModel>()
     private var shouldShowSplashScreen = true
 
@@ -81,7 +48,7 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
     private fun mainInit() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        connectivityObserver = NetworkConnectivityObserver(this)
+        connectivityObserver = ConnectivityObserverImpl(this)
 
         networkConnectivityObserver()
         setupBottomNavView()
@@ -288,4 +255,5 @@ class MainActivity : AppCompatActivity(), MaxAdListener {
                 }
             })
     }
+     */
 }

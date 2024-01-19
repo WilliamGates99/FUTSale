@@ -1,52 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments
 
-import android.os.Bundle
-import android.view.View
-import android.view.View.VISIBLE
-import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.airbnb.lottie.LottieDrawable
-import com.applovin.mediation.MaxAd
-import com.applovin.mediation.MaxAdRevenueListener
-import com.applovin.mediation.MaxError
-import com.applovin.mediation.nativeAds.MaxNativeAdListener
-import com.applovin.mediation.nativeAds.MaxNativeAdLoader
-import com.applovin.mediation.nativeAds.MaxNativeAdView
-import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
-import com.google.android.material.snackbar.Snackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentProfileBinding
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels.ProfileViewModel
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ANIM_SPEED_PROFILE_SAVED
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ANIM_SPEED_PROFILE_TYPING
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_PARTNER_ID
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_SECRET_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_PROFILE_PARTNER_ID
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.SAVE_INSTANCE_PROFILE_SECRET_KEY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_CONSOLE
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_NOTIFICATIONS_PC
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_PLAYERS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_RULES
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_STATISTICS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.URL_DSFUT_WALLET
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.LinkHelper.openLink
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SnackbarHelper.showSomethingWentWrongError
-import ir.tapsell.plus.AdHolder
-import ir.tapsell.plus.AdRequestCallback
-import ir.tapsell.plus.AdShowListener
-import ir.tapsell.plus.TapsellPlus
-import ir.tapsell.plus.model.TapsellPlusAdModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import timber.log.Timber
-
+/*
 class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListener {
 
     private var _binding: FragmentProfileBinding? = null
@@ -416,3 +370,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), MaxAdRevenueListene
         }
     }
 }
+
+ */

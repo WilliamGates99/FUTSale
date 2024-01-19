@@ -1,33 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
-import android.os.Build
-import android.util.LayoutDirection
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
-import androidx.core.text.layoutDirection
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_GREAT_BRITAIN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_ENGLISH_UNITED_STATES
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_DEFAULT
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_ENGLISH_GREAT_BRITAIN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_ENGLISH_UNITED_STATES
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_INDEX_PERSIAN_IRAN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.LOCALE_PERSIAN_IRAN
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DARK
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_DEFAULT
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.THEME_INDEX_LIGHT
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.SettingsHelper.setAppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +10,7 @@ class SettingsViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
+    /*
     private val _currentLanguageLiveData: MutableLiveData<Event<UiText>> = MutableLiveData()
     val currentLanguageLiveData: LiveData<Event<UiText>> = _currentLanguageLiveData
 
@@ -126,7 +102,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private suspend fun safeGetCurrentTheme() {
-        val currentThemeIndex = preferencesRepository.getCurrentAppTheme()
+        val currentThemeIndex = preferencesRepository.getCurrentAppThemeIndex()
 
         when (currentThemeIndex) {
             THEME_INDEX_DEFAULT -> _currentThemeLiveData.postValue(
@@ -259,4 +235,5 @@ class SettingsViewModel @Inject constructor(
             false
         } else currentLayoutDirection != newLayoutDirection
     }
+     */
 }

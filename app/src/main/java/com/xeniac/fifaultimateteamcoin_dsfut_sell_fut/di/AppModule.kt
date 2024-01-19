@@ -14,14 +14,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DATASTORE_NAME_SETTINGS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.DSFUT_DATABASE_NAME
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.DsfutDatabase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.DsfutApi
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DATASTORE_NAME_SETTINGS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DSFUT_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,15 +28,10 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -55,7 +48,7 @@ object AppModule {
 
     @Provides
     fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int =
-        preferencesRepository.getCurrentAppThemeSynchronously()
+        preferencesRepository.getCurrentAppThemeIndexSynchronously()
 
     @Provides
     @Named("notification_sound")
@@ -81,6 +74,7 @@ object AppModule {
         database: DsfutDatabase
     ) = database.dsfutDao()
 
+    /*
     @Singleton
     @Provides
     fun provideRetrofitInstance(): Retrofit {
@@ -102,6 +96,7 @@ object AppModule {
     @Provides
     fun provideDsfutApi(retrofitInstance: Retrofit): DsfutApi =
         retrofitInstance.create(DsfutApi::class.java)
+    */
 
     @Singleton
     @Provides

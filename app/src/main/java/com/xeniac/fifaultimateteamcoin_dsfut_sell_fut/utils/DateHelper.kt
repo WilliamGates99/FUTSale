@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
 import java.util.*
 import java.util.concurrent.TimeUnit
 

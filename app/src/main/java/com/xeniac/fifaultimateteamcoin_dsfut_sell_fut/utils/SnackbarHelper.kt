@@ -1,14 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 
-import android.content.Context
-import android.view.View
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
-import com.google.android.material.snackbar.Snackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-
 object SnackbarHelper {
 
+    /*
     fun showNormalSnackbarError(view: View, message: String): Snackbar = Snackbar.make(
         view, message, LENGTH_LONG
     ).apply { show() }
@@ -55,4 +49,5 @@ object SnackbarHelper {
         context.getString(R.string.error_intent_app_not_found),
         LENGTH_LONG
     ).apply { show() }
+    */
 }

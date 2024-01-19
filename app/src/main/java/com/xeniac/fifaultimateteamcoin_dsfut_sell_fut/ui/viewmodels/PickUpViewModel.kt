@@ -1,22 +1,10 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.viewmodels
 
-import android.os.CountDownTimer
-import androidx.lifecycle.*
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.COUNT_DOWN_INTERVAL_IN_MILLIS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.DELAY_TIME_AUTO_PICK_UP
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +14,7 @@ class PickUpViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    /*
     private val _selectedPlatformIndexLiveData: MutableLiveData<Event<String>> = MutableLiveData()
     val selectedPlatformIndexLiveData: LiveData<Event<String>> = _selectedPlatformIndexLiveData
 
@@ -289,4 +278,6 @@ class PickUpViewModel @Inject constructor(
                 }
             }.start()
     }
+
+     */
 }

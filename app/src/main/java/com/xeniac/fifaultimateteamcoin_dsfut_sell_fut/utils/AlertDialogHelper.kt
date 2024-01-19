@@ -1,11 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
 
-import android.content.Context
-import androidx.annotation.StringRes
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-
 object AlertDialogHelper {
 
+    /*
     fun showOneBtnAlertDialog(
         context: Context,
         @StringRes message: Int,
@@ -70,4 +67,5 @@ object AlertDialogHelper {
         }
         show()
     }
+    */
 }

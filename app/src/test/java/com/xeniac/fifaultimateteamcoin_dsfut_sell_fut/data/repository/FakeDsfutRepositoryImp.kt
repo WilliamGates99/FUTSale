@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.DsfutRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
 
 class FakeDsfutRepositoryImp : DsfutRepository {
 

@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.repository.FakePreferencesRepositoryImp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.domain.repository.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -38,7 +38,7 @@ class OnBoardingViewModelTest {
             testViewModel.completeOnBoarding(partnerId, secretKey)
 
             val isOnBoardingCompleted = fakePreferencesRepository
-                .isOnBoardingCompletedSynchronously()
+                .isOnBoardingCompleted()
             val storedPartnerId = fakePreferencesRepository.getPartnerId()
             val storedSecretKey = fakePreferencesRepository.getSecretKey()
 

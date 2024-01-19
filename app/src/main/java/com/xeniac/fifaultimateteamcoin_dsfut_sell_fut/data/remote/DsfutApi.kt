@@ -1,14 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.remote.models.DsfutResponse
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-
 interface DsfutApi {
 
+    /*
     @GET(BuildConfig.RETROFIT_FEED_URL)
     suspend fun pickUpPlayer(
         @Path("game_year") fifaVersion: Int,
@@ -23,4 +17,5 @@ interface DsfutApi {
         @Query("take_after")
         takeAfter: Int?
     ): Response<DsfutResponse>
+    */
 }

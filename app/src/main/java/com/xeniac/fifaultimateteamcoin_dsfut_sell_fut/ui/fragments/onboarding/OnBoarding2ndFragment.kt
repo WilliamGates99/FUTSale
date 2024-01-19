@@ -1,15 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.fragments.onboarding
 
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.databinding.FragmentOnboarding2ndBinding
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.ui.OnBoardingActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_1ST_INDEX
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.Constants.ONBOARDING_3RD_INDEX
-
+/*
 class OnBoarding2ndFragment : Fragment(R.layout.fragment_onboarding_2nd) {
 
     private var _binding: FragmentOnboarding2ndBinding? = null
@@ -44,3 +35,5 @@ class OnBoarding2ndFragment : Fragment(R.layout.fragment_onboarding_2nd) {
         viewPager?.currentItem = ONBOARDING_3RD_INDEX
     }
 }
+
+ */
