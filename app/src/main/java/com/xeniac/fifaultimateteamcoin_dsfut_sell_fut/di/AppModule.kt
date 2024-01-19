@@ -15,6 +15,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import dagger.Module
 import dagger.Provides
@@ -36,16 +37,18 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSettingsDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "settings") }
-        )
+    fun provideSettingsDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = PreferenceDataStoreFactory.create(
+        corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+        produceFile = { context.preferencesDataStoreFile(name = "settings") }
+    )
 
     @Provides
-    fun provideAppThemeIndex(preferencesRepository: PreferencesRepository): Int =
-        preferencesRepository.getCurrentAppThemeIndexSynchronously()
+    fun provideAppThemeIndex(
+        preferencesRepository: PreferencesRepository
+    ): AppTheme = preferencesRepository.getCurrentAppThemeIndexSynchronously()
 
     @Provides
     @Named("notification_sound")
@@ -97,7 +100,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideDecimalFormat() = DecimalFormat(
+    fun provideDecimalFormat(): DecimalFormat = DecimalFormat(
         /* pattern = */ "00",
         /* symbols = */ DecimalFormatSymbols(Locale.US)
     )

@@ -6,8 +6,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.SettingsHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,8 +16,8 @@ import javax.inject.Inject
 @HiltAndroidApp
 class BaseApplication : Application() {
 
-    @set:Inject
-    var currentAppThemeIndex = 0
+    @Inject
+    lateinit var currentAppTheme: AppTheme
 
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -35,7 +36,7 @@ class BaseApplication : Application() {
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
-    private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppThemeIndex)
+    private fun setAppTheme() = SettingsHelper.setAppTheme(currentAppTheme.index)
 
     private fun createMutedPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
