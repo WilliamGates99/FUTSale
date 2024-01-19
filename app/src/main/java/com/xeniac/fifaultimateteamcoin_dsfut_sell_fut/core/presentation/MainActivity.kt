@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
+                    val rootNavController = rememberNavController()
 
                     if (startDestination.isNotBlank()) {
                         SetupRootNavGraph(
-                            navController = navController,
+                            rootNavController = rootNavController,
                             startDestination = startDestination
                         )
                     }

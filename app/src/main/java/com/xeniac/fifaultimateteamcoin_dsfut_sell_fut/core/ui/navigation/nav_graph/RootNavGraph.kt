@@ -14,20 +14,28 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.present
 
 @Composable
 fun SetupRootNavGraph(
-    navController: NavHostController,
+    rootNavController: NavHostController,
     startDestination: String
 ) {
     NavHost(
-        navController = navController,
+        navController = rootNavController,
         startDestination = startDestination,
         route = NavGraphs.ROUTE_ROOT
     ) {
         composable(route = Screen.OnboardingScreen.route) {
-            OnboardingScreen()
+            OnboardingScreen(
+                onNavigateToHomeScreen = {
+                    rootNavController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.OnboardingScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable(route = Screen.HomeScreen.route) {
-            HomeScreen(rootNavController = navController)
+            HomeScreen(rootNavController = rootNavController)
         }
     }
 }
