@@ -36,9 +36,9 @@
     <string name="onboarding_fourth_hint_partner_id">Enter your partner ID</string>
     <string name="onboarding_fourth_title_secret_key">Secret Key</string>
     <string name="onboarding_fourth_hint_secret_key">Enter your secret key</string>
-    <string name="onboarding_fourth_btn_register">If you don\'t have a DSFUT account, <font fgcolor="#1C53F4"><b>click here</b></font> to create one.</string>
+    <string name="onboarding_fourth_btn_register"><![CDATA[If you don\'t have a DSFUT account, <font color="#%s"><b>click here</b></font> to create one.]]></string>
     <string name="onboarding_fourth_btn_start">Get Started</string>
-    <string name="onboarding_fourth_btn_agreement">By logging in, you agree to our <font fgcolor="#1C53F4"><b>Privacy Policy</b></font>.</string>
+    <string name="onboarding_fourth_btn_agreement"><![CDATA[By logging in, you agree to our <font color="#%s"><b>Privacy Policy</b></font>.]]></string>
 
 
     <string name="main_menu_title_pick_up">Pick Up</string>
