@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 val StatusBarColorV21 = Color(0x33000000)
 val NavigationBarColorV26 = Color(0x63FFFFFF)
 
+val Neutral50 = Color(0xFF767873)
+
 val primaryLight = Color(0xFF006E2A)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF21FB6E)
