@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnBoardingCompletedUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnboardingCompletedUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getIsOnBoardingCompletedUseCase: Lazy<GetIsOnBoardingCompletedUseCase>
+    private val getIsOnboardingCompletedUseCase: Lazy<GetIsOnboardingCompletedUseCase>
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
@@ -29,9 +29,9 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getPostSplashDestination() = viewModelScope.launch {
-        val isOnBoardingCompleted = getIsOnBoardingCompletedUseCase.get()()
+        val isOnboardingCompleted = getIsOnboardingCompletedUseCase.get()()
 
-        if (isOnBoardingCompleted) {
+        if (isOnboardingCompleted) {
             _postSplashDestination.value = Screen.HomeScreen.route
         } else {
             _postSplashDestination.value = Screen.OnboardingScreen.route

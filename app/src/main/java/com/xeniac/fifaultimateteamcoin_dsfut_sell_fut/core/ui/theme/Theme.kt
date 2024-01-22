@@ -78,10 +78,11 @@ private val darkScheme = darkColorScheme(
     inversePrimary = inversePrimaryDark
 )
 
+// TODO: ENABLE DYNAMIC_COLOR
 @Composable
 fun FutSaleTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true, // Dynamic color is available on Android 12+
+    dynamicColor: Boolean = false, // Dynamic color is available on Android 12+
     content: @Composable() () -> Unit
 ) {
     val colorScheme = when {

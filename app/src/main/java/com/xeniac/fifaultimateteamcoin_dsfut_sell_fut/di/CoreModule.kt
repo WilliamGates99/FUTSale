@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnBoardingCompletedUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnboardingCompletedUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +16,5 @@ internal object CoreModule {
     @ViewModelScoped
     fun provideGetIsOnBoardingCompletedUseCase(
         preferencesRepository: PreferencesRepository
-    ): GetIsOnBoardingCompletedUseCase = GetIsOnBoardingCompletedUseCase(preferencesRepository)
+    ): GetIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(preferencesRepository)
 }
