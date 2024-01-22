@@ -14,7 +14,7 @@ internal object CoreModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetIsOnBoardingCompletedUseCase(
+    fun provideGetIsOnboardingCompletedUseCase(
         preferencesRepository: PreferencesRepository
     ): GetIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(preferencesRepository)
 }
