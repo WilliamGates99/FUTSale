@@ -2,11 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -71,8 +68,6 @@ fun OnboardingScreen(
         }
     }
 
-    // TODO: ON BACK HANDLER
-
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = Modifier
@@ -80,15 +75,17 @@ fun OnboardingScreen(
             .background(color = if (isSystemInDarkTheme()) surfaceContainerDark else surfaceContainerLight)
     ) { innerPadding ->
         OnboardingPager(
-            partnerIdState = partnerIdState.text,
-            secretKeyState = secretKeyState.text,
+            partnerIdState = partnerIdState,
+            secretKeyState = secretKeyState,
             onPartnerIdChange = { newPartnerId ->
                 viewModel.onEvent(OnboardingEvent.PartnerIdChanged(newPartnerId))
             },
             onSecretKeyChange = { newSecretKey ->
                 viewModel.onEvent(OnboardingEvent.SecretKeyChanged(newSecretKey))
             },
-            onStartBtnClick = { viewModel.onEvent(OnboardingEvent.SaveUserData) },
+            onStartBtnClick = {
+                // viewModel.onEvent(OnboardingEvent.SaveUserData)
+            },
             onRegisterBtnClick = {
                 shouldShowIntentAppNotFoundError = LinkHelper.openLink(
                     context = context,
@@ -103,7 +100,6 @@ fun OnboardingScreen(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
                 .padding(
                     top = innerPadding.calculateTopPadding(),
                     bottom = innerPadding.calculateBottomPadding()

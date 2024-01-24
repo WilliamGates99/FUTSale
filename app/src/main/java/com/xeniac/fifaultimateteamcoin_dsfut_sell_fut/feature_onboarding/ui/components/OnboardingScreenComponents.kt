@@ -1,23 +1,31 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.ui.components
 
 import android.text.SpannableStringBuilder
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RawRes
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,9 +34,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,16 +49,19 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.BouncingDotIndicator
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral50
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral30
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral70
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.toAnnotatedString
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingPager(
-    partnerIdState: String,
-    secretKeyState: String,
+    partnerIdState: CustomTextFieldState,
+    secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
     onPartnerIdChange: (newPartnerId: String) -> Unit,
     onSecretKeyChange: (newSecretKey: String) -> Unit,
@@ -58,6 +72,12 @@ fun OnboardingPager(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { 4 })
 
+    BackHandler(enabled = pagerState.settledPage != 0) {
+        scope.launch {
+            pagerState.animateScrollToPage(page = pagerState.settledPage - 1)
+        }
+    }
+
     Column(modifier = modifier) {
         BouncingDotIndicator(
             count = pagerState.pageCount,
@@ -67,6 +87,7 @@ fun OnboardingPager(
 
         HorizontalPager(
             state = pagerState,
+            beyondBoundsPageCount = 1,
             userScrollEnabled = true,
             modifier = Modifier
                 .fillMaxWidth()
@@ -139,6 +160,7 @@ fun OnboardingPageOne(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(
                 start = 24.dp,
                 end = 24.dp,
@@ -199,7 +221,10 @@ fun OnboardingPageOne(
 
             Button(
                 onClick = onNextBtnClick,
-                modifier = Modifier.width(114.dp)
+                modifier = Modifier.defaultMinSize(
+                    minWidth = 114.dp,
+                    minHeight = ButtonDefaults.MinHeight
+                )
             ) {
                 Text(
                     text = stringResource(id = R.string.onboarding_btn_next),
@@ -228,6 +253,7 @@ fun OnboardingPageTwo(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(
                 start = 24.dp,
                 end = 24.dp,
@@ -288,7 +314,10 @@ fun OnboardingPageTwo(
 
             Button(
                 onClick = onNextBtnClick,
-                modifier = Modifier.width(114.dp)
+                modifier = Modifier.defaultMinSize(
+                    minWidth = 114.dp,
+                    minHeight = ButtonDefaults.MinHeight
+                )
             ) {
                 Text(
                     text = stringResource(id = R.string.onboarding_btn_next),
@@ -317,6 +346,7 @@ fun OnboardingPageThree(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(
                 start = 24.dp,
                 end = 24.dp,
@@ -376,7 +406,10 @@ fun OnboardingPageThree(
 
             Button(
                 onClick = onNextBtnClick,
-                modifier = Modifier.width(114.dp)
+                modifier = Modifier.defaultMinSize(
+                    minWidth = 114.dp,
+                    minHeight = ButtonDefaults.MinHeight
+                )
             ) {
                 Text(
                     text = stringResource(id = R.string.onboarding_btn_next),
@@ -392,14 +425,16 @@ fun OnboardingPageThree(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun OnboardingPageFour(
-    partnerIdState: String,
-    secretKeyState: String,
+    partnerIdState: CustomTextFieldState,
+    secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
+    isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     title: String = stringResource(id = R.string.onboarding_fourth_title),
     @RawRes lottieAnimation: Int = R.raw.anim_onboarding_4th,
     primaryColorHex: String = MaterialTheme.colorScheme.primary.toArgb()
         .toHexString(HexFormat.UpperCase)
         .removeRange(0, 2),
+    textBtnNeutralColor: Color = if (isSystemInDarkTheme) Neutral70 else Neutral30,
     onPartnerIdChange: (newPartnerId: String) -> Unit,
     onSecretKeyChange: (newSecretKey: String) -> Unit,
     onStartBtnClick: () -> Unit,
@@ -413,11 +448,13 @@ fun OnboardingPageFour(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.ime)
+            .verticalScroll(rememberScrollState())
             .padding(
-                start = 20.dp,
-                end = 20.dp,
+                start = 16.dp,
+                end = 16.dp,
                 top = 20.dp,
-                bottom = 12.dp
+                bottom = 4.dp
             )
     ) {
         LottieAnimation(
@@ -429,7 +466,7 @@ fun OnboardingPageFour(
                 .fillMaxHeight(fraction = 0.3f)
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
         Text(
             text = title,
@@ -439,15 +476,19 @@ fun OnboardingPageFour(
             lineHeight = 24.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 8.dp)
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
             onClick = onRegisterBtnClick,
-            shape = RoundedCornerShape(4.dp),
-            contentPadding = PaddingValues(all = 4.dp)
+            shape = RoundedCornerShape(8.dp),
+            contentPadding = PaddingValues(all = 8.dp),
+            modifier = Modifier
+                .defaultMinSize(
+                    minWidth = ButtonDefaults.MinWidth,
+                    minHeight = 24.dp
+                )
+                .align(Alignment.Start)
         ) {
             Text(
                 text = HtmlCompat.fromHtml(
@@ -459,14 +500,87 @@ fun OnboardingPageFour(
                     ).toString(),
                     HtmlCompat.FROM_HTML_MODE_COMPACT
                 ).toAnnotatedString(),
-                color = Neutral50,
+                color = textBtnNeutralColor,
                 fontSize = 14.sp,
                 lineHeight = 18.sp
             )
-
         }
-        Spacer(modifier = Modifier.height(28.dp))
 
-        // TODO: TEXTFIELD -> CREATE CUSTOM TEXTFIELD FILE
+        Spacer(modifier = Modifier.height(20.dp))
+
+        CustomOutlinedTextField(
+            isLoading = false,
+            value = partnerIdState.text,
+            onValueChange = onPartnerIdChange,
+            title = stringResource(id = R.string.onboarding_fourth_title_partner_id),
+            placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
+            errorText = partnerIdState.errorText?.asString(),
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomOutlinedTextField(
+            isLoading = false,
+            value = secretKeyState.text,
+            onValueChange = onSecretKeyChange,
+            title = stringResource(id = R.string.onboarding_fourth_title_secret_key),
+            placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
+            errorText = secretKeyState.errorText?.asString(),
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done,
+            keyboardAction = onStartBtnClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Button(
+            onClick = onStartBtnClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 44.dp)
+                .padding(horizontal = 8.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.onboarding_fourth_btn_start),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                lineHeight = 22.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        TextButton(
+            onClick = onPrivacyPolicyBtnClick,
+            shape = RoundedCornerShape(8.dp),
+            contentPadding = PaddingValues(all = 8.dp),
+            modifier = Modifier.defaultMinSize(
+                minWidth = ButtonDefaults.MinWidth,
+                minHeight = 24.dp
+            )
+        ) {
+            Text(
+                text = HtmlCompat.fromHtml(
+                    SpannableStringBuilder(
+                        stringResource(
+                            id = R.string.onboarding_fourth_btn_agreement,
+                            primaryColorHex
+                        )
+                    ).toString(),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                ).toAnnotatedString(),
+                color = textBtnNeutralColor,
+                fontSize = 12.sp,
+                lineHeight = 16.sp
+            )
+        }
     }
 }
