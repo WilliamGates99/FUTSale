@@ -84,7 +84,7 @@ fun OnboardingScreen(
                 viewModel.onEvent(OnboardingEvent.SecretKeyChanged(newSecretKey))
             },
             onStartBtnClick = {
-                // viewModel.onEvent(OnboardingEvent.SaveUserData)
+                viewModel.onEvent(OnboardingEvent.SaveUserData)
             },
             onRegisterBtnClick = {
                 shouldShowIntentAppNotFoundError = LinkHelper.openLink(
