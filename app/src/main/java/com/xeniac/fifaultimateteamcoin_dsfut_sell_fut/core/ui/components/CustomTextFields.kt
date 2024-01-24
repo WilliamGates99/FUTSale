@@ -56,7 +56,7 @@ fun CustomOutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    isError: Boolean = false,
+    isError: Boolean = errorText != null,
     isPasswordTextField: Boolean = false,
     singleLine: Boolean = true,
     minLines: Int = 1,
