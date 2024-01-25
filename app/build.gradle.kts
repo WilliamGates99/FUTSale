@@ -294,7 +294,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Jetpack Compose
-    val composeBoM = platform("androidx.compose:compose-bom:2023.10.01")
+    val composeBoM = platform("androidx.compose:compose-bom:2024.01.00")
     implementation(composeBoM)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3") // Material Design 3
@@ -345,7 +345,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Firebase BoM and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Firebase Cloud Messaging
@@ -383,14 +383,14 @@ dependencies {
     */
 
     // Local Unit Test Libraries
-    testImplementation("com.google.truth:truth:1.2.0")
+    testImplementation("com.google.truth:truth:1.3.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("androidx.room:room-testing:2.6.1")
 
     // Instrumentation Test Libraries
-    androidTestImplementation("com.google.truth:truth:1.2.0")
+    androidTestImplementation("com.google.truth:truth:1.3.0")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
