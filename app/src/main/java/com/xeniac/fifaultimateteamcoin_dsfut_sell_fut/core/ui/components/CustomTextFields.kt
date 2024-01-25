@@ -70,8 +70,8 @@ fun CustomOutlinedTextField(
     textFontSize: TextUnit = 16.sp,
     textLineHeight: TextUnit = TextUnit.Unspecified,
     textFontWeight: FontWeight = FontWeight.Normal,
-    textAlign: TextAlign? = null,
-    textDirection: TextDirection? = null,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    textDirection: TextDirection = TextDirection.Unspecified,
     textStyle: TextStyle = LocalTextStyle.current.copy(
         fontSize = textFontSize,
         lineHeight = textLineHeight,
