@@ -19,6 +19,10 @@ internal fun Context.findActivity(): Activity {
 fun Activity.openAppSettings() {
     Intent(
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", packageName, null)
+        Uri.fromParts(
+            /* scheme = */ "package",
+            /* ssp = */ packageName,
+            /* fragment = */ null
+        )
     ).also(::startActivity)
 }
