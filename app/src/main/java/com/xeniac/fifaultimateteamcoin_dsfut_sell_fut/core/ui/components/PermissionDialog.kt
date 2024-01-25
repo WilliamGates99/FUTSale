@@ -2,10 +2,12 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +41,10 @@ fun PermissionDialog(
     ) else stringResource(
         id = R.string.permissions_error_btn_confirm
     ),
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    iconContentColor: Color = MaterialTheme.colorScheme.secondary,
+    titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
+    textContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     dismissButtonText: String? = null,
     onConfirmClick: () -> Unit,
     onOpenAppSettingsClick: () -> Unit,
@@ -47,6 +53,10 @@ fun PermissionDialog(
     AlertDialog(
         modifier = modifier,
         properties = dialogProperties,
+        containerColor = containerColor,
+        iconContentColor = iconContentColor,
+        titleContentColor = titleContentColor,
+        textContentColor = textContentColor,
         onDismissRequest = onDismiss,
         icon = {
             Icon(
@@ -69,7 +79,7 @@ fun PermissionDialog(
                 text = permissionHelper.getMessage(isPermanentlyDeclined).asString(),
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Medium
             )
         },
         confirmButton = {
@@ -87,7 +97,7 @@ fun PermissionDialog(
                     text = confirmButtonText,
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 )
             }
         },
@@ -98,7 +108,7 @@ fun PermissionDialog(
                         text = dismissButtonText,
                         fontSize = 14.sp,
                         lineHeight = 20.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
