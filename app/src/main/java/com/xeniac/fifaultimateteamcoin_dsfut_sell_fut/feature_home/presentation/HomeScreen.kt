@@ -1,21 +1,123 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
-import androidx.compose.foundation.layout.Box
+import android.Manifest
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.PermissionDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.openAppSettings
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.util.PostNotificationsPermissionHelper
 
 @Composable
 fun HomeScreen(
-    rootNavController: NavHostController
+    rootNavController: NavHostController,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(text = "Home Screen")
+    val context = LocalContext.current
+    val activity by remember { derivedStateOf { context.findActivity() } }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val homeNavController = rememberNavController()
+
+    val backStackEntry by homeNavController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpScreen.route
+
+//    val shouldBottomAppBarBeVisible = BottomNavBarMenuItem.entries.find { menuItem ->
+//        if (menuItem.route == NavGraphs.ROUTE_EXERCISES) {
+//            currentRoute == Screen.ExerciseCategoriesScreen.route
+//        } else {
+//            currentRoute == menuItem.route
+//        }
+//    } != null
+
+    val isRunningAndroid13OrNewer by remember {
+        derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
+    }
+
+    @SuppressLint("InlinedApi")
+    if (isRunningAndroid13OrNewer) {
+        val permissionDialogQueue by homeViewModel.permissionDialogQueue.collectAsStateWithLifecycle()
+        val isPermissionDialogVisible by homeViewModel.isPermissionDialogVisible.collectAsStateWithLifecycle()
+
+        val notificationPermissionResultLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            homeViewModel.onEvent(
+                HomeEvent.OnPermissionResult(
+                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    isGranted = isGranted
+                )
+            )
+        }
+
+        LaunchedEffect(key1 = Unit) {
+            notificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        AnimatedVisibility(
+            visible = isPermissionDialogVisible,
+            enter = scaleIn(),
+            exit = scaleOut()
+        ) {
+            permissionDialogQueue.reversed().forEach { permission ->
+                PermissionDialog(
+                    icon = painterResource(id = R.drawable.ic_dialog_post_notification),
+                    permissionHelper = when (permission) {
+                        Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionHelper()
+                        else -> return@forEach
+                    },
+                    isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                        /* activity = */ activity,
+                        /* permission = */ permission
+                    ),
+                    onConfirmClick = {
+                        notificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    },
+                    onOpenAppSettingsClick = activity::openAppSettings,
+                    onDismiss = {
+                        homeViewModel.onEvent(HomeEvent.DismissDialog(permission))
+                    }
+                )
+            }
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {
+            // TODO: IMPLEMENT BOTTOM NAV BAR
+        }
+    ) { innerPadding ->
+        SetupHomeNavGraph(
+            rootNavController = rootNavController,
+            homeNavController = homeNavController,
+            bottomPadding = innerPadding.calculateBottomPadding()
+        )
     }
 }
