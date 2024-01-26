@@ -6,9 +6,12 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,6 +35,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.openAppSettings
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.components.CustomNavigationBar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.util.PostNotificationsPermissionHelper
 
 @Composable
@@ -46,14 +51,9 @@ fun HomeScreen(
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpScreen.route
-
-//    val shouldBottomAppBarBeVisible = BottomNavBarMenuItem.entries.find { menuItem ->
-//        if (menuItem.route == NavGraphs.ROUTE_EXERCISES) {
-//            currentRoute == Screen.ExerciseCategoriesScreen.route
-//        } else {
-//            currentRoute == menuItem.route
-//        }
-//    } != null
+    val shouldBottomAppBarBeVisible = NavigationBarItems.entries.find { navigationBarItem ->
+        currentRoute == navigationBarItem.route
+    } != null
 
     val isRunningAndroid13OrNewer by remember {
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
@@ -111,7 +111,30 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            // TODO: IMPLEMENT BOTTOM NAV BAR
+            AnimatedVisibility(
+                visible = shouldBottomAppBarBeVisible,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CustomNavigationBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    currentRoute = currentRoute,
+                    onItemClick = { route ->
+                        homeNavController.navigate(route) {
+                            // Avoid multiple copies of the same destination when re-selecting the same item
+                            launchSingleTop = true
+
+                            /*
+                            Pop up to the start destination of the graph to
+                            avoid building up a large stack of destinations
+                            on the back stack as user selects items
+                             */
+                            popUpTo(Screen.PickUpScreen.route)
+                        }
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         SetupHomeNavGraph(
