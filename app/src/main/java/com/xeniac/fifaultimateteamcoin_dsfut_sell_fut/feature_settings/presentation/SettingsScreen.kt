@@ -8,9 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    bottomPadding: Dp,
+    settingsViewModel: SettingsViewModel = hiltViewModel()
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()

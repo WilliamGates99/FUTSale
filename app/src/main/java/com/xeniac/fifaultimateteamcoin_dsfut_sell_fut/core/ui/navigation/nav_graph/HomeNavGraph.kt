@@ -35,7 +35,7 @@ fun SetupHomeNavGraph(
         }
 
         composable(route = Screen.SettingsScreen.route) {
-            SettingsScreen()
+            SettingsScreen(bottomPadding = bottomPadding)
         }
     }
 }
