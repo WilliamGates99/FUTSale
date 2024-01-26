@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
@@ -60,6 +61,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingPager(
+    bottomPadding: Dp,
     partnerIdState: CustomTextFieldState,
     secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
@@ -95,6 +97,7 @@ fun OnboardingPager(
         ) { position ->
             when (position) {
                 0 -> OnboardingPageOne(
+                    bottomPadding = bottomPadding,
                     onSkipBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.pageCount - 1)
@@ -107,6 +110,7 @@ fun OnboardingPager(
                     }
                 )
                 1 -> OnboardingPageTwo(
+                    bottomPadding = bottomPadding,
                     onBackBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.settledPage - 1)
@@ -119,6 +123,7 @@ fun OnboardingPager(
                     }
                 )
                 2 -> OnboardingPageThree(
+                    bottomPadding = bottomPadding,
                     onBackBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.settledPage - 1)
@@ -131,6 +136,7 @@ fun OnboardingPager(
                     }
                 )
                 3 -> OnboardingPageFour(
+                    bottomPadding = bottomPadding,
                     partnerIdState = partnerIdState,
                     secretKeyState = secretKeyState,
                     onPartnerIdChange = onPartnerIdChange,
@@ -146,6 +152,7 @@ fun OnboardingPager(
 
 @Composable
 fun OnboardingPageOne(
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.onboarding_first_title),
     description: String = stringResource(id = R.string.onboarding_first_description),
@@ -165,7 +172,7 @@ fun OnboardingPageOne(
                 start = 24.dp,
                 end = 24.dp,
                 top = 20.dp,
-                bottom = 24.dp
+                bottom = bottomPadding + 12.dp
             )
     ) {
         LottieAnimation(
@@ -239,6 +246,7 @@ fun OnboardingPageOne(
 
 @Composable
 fun OnboardingPageTwo(
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.onboarding_second_title),
     description: String = stringResource(id = R.string.onboarding_second_description),
@@ -258,7 +266,7 @@ fun OnboardingPageTwo(
                 start = 24.dp,
                 end = 24.dp,
                 top = 20.dp,
-                bottom = 24.dp
+                bottom = bottomPadding + 12.dp
             )
     ) {
         LottieAnimation(
@@ -332,6 +340,7 @@ fun OnboardingPageTwo(
 
 @Composable
 fun OnboardingPageThree(
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.onboarding_third_title),
     description: String = stringResource(id = R.string.onboarding_third_description),
@@ -351,7 +360,7 @@ fun OnboardingPageThree(
                 start = 24.dp,
                 end = 24.dp,
                 top = 20.dp,
-                bottom = 24.dp
+                bottom = bottomPadding + 12.dp
             )
     ) {
         LottieAnimation(
@@ -425,6 +434,7 @@ fun OnboardingPageThree(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun OnboardingPageFour(
+    bottomPadding: Dp,
     partnerIdState: CustomTextFieldState,
     secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
@@ -454,7 +464,7 @@ fun OnboardingPageFour(
                 start = 16.dp,
                 end = 16.dp,
                 top = 20.dp,
-                bottom = 4.dp
+                bottom = bottomPadding
             )
     ) {
         LottieAnimation(

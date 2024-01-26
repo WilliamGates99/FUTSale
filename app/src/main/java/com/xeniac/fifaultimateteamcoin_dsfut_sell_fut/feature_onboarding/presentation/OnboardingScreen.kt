@@ -75,6 +75,7 @@ fun OnboardingScreen(
             .background(color = if (isSystemInDarkTheme()) surfaceContainerDark else surfaceContainerLight)
     ) { innerPadding ->
         OnboardingPager(
+            bottomPadding = innerPadding.calculateBottomPadding(),
             partnerIdState = partnerIdState,
             secretKeyState = secretKeyState,
             onPartnerIdChange = { newPartnerId ->
@@ -100,10 +101,7 @@ fun OnboardingScreen(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding()
-                )
+                .padding(top = innerPadding.calculateTopPadding())
         )
     }
 }
