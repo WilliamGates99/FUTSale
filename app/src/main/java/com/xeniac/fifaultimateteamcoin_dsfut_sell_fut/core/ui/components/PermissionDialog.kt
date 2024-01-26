@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
@@ -68,18 +69,22 @@ fun PermissionDialog(
             {
                 Text(
                     text = title,
-                    fontSize = 24.sp,
-                    lineHeight = 32.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        lineHeight = 32.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
             }
         },
         text = {
             Text(
                 text = permissionHelper.getMessage(isPermanentlyDeclined).asString(),
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontWeight = FontWeight.Medium
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = FontWeight.Medium
+                )
             )
         },
         confirmButton = {
