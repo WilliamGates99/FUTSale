@@ -23,9 +23,9 @@ interface PreferencesRepository {
 
     suspend fun getCurrentAppLocale(): AppLocale
 
-    suspend fun isNotificationSoundActive(): Boolean
+    suspend fun isNotificationSoundEnabled(): Boolean
 
-    suspend fun isNotificationVibrateActive(): Boolean
+    suspend fun isNotificationVibrateEnabled(): Boolean
 
     suspend fun getRateAppDialogChoice(): Int
 
@@ -45,9 +45,9 @@ interface PreferencesRepository {
 
     suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded
 
-    suspend fun isNotificationSoundActive(isActive: Boolean)
+    suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
 
-    suspend fun isNotificationVibrateActive(isActive: Boolean)
+    suspend fun isNotificationVibrateEnabled(isEnabled: Boolean)
 
     suspend fun setRateAppDialogChoice(value: Int)
 

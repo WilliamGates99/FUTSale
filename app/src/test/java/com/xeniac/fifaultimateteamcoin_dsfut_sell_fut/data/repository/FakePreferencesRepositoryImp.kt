@@ -25,7 +25,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
 
     override suspend fun getCurrentAppThemeIndex(): Int = currentAppTheme
 
-    override suspend fun isNotificationSoundActive(): Boolean = isNotificationSoundActive
+    override suspend fun isNotificationSoundEnabled(): Boolean = isNotificationSoundActive
 
     override suspend fun isNotificationVibrateActive(): Boolean = isNotificationVibrateActive
 
@@ -47,7 +47,7 @@ class FakePreferencesRepositoryImp : PreferencesRepository {
         currentAppTheme = index
     }
 
-    override suspend fun isNotificationSoundActive(isActive: Boolean) {
+    override suspend fun isNotificationSoundEnabled(isActive: Boolean) {
         isNotificationSoundActive = isActive
     }
 

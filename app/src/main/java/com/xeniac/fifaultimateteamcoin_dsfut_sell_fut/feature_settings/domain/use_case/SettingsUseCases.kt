@@ -5,10 +5,10 @@ import dagger.Lazy
 data class SettingsUseCases(
     val getCurrentAppThemeUseCase: Lazy<GetCurrentAppThemeUseCase>,
     val getCurrentAppLocaleUseCase: Lazy<GetCurrentAppLocaleUseCase>,
-    val getIsNotificationSoundActiveUseCase: Lazy<GetIsNotificationSoundActiveUseCase>,
-    val getIsNotificationVibrateActiveUseCase: Lazy<GetIsNotificationVibrateActiveUseCase>,
+    val getIsNotificationSoundEnabledUseCase: Lazy<GetIsNotificationSoundEnabledUseCase>,
+    val getIsNotificationVibrateEnabledUseCase: Lazy<GetIsNotificationVibrateEnabledUseCase>,
     val setCurrentAppThemeUseCase: Lazy<SetCurrentAppThemeUseCase>,
     val setCurrentAppLocaleUseCase: Lazy<SetCurrentAppLocaleUseCase>,
-    val setIsNotificationSoundActiveUseCase: Lazy<SetIsNotificationSoundActiveUseCase>,
-    val setIsNotificationVibrateActiveUseCase: Lazy<SetIsNotificationVibrateActiveUseCase>
+    val setIsNotificationSoundEnabledUseCase: Lazy<SetIsNotificationSoundEnabledUseCase>,
+    val setIsNotificationVibrateEnabledUseCase: Lazy<SetIsNotificationVibrateEnabledUseCase>
 )

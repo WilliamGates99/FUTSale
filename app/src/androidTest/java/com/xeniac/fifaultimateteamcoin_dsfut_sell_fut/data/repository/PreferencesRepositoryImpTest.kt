@@ -92,7 +92,7 @@ class PreferencesRepositoryImpTest {
         testDataStore.edit { it.clear() }
 
         val initialCurrentAppTheme = testRepository.getCurrentAppThemeIndex()
-        val initialIsNotificationSoundActive = testRepository.isNotificationSoundActive()
+        val initialIsNotificationSoundActive = testRepository.isNotificationSoundEnabled()
         val initialIsNotificationVibrateActive = testRepository.isNotificationVibrateActive()
         val initialRateAppDialogChoice = testRepository.getRateAppDialogChoice()
         val initialPreviousRequestTimeInMillis = testRepository.getPreviousRequestTimeInMillis()
@@ -148,9 +148,9 @@ class PreferencesRepositoryImpTest {
     fun writeIsNotificationSoundActive() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
-        testRepository.isNotificationSoundActive(false)
+        testRepository.isNotificationSoundEnabled(false)
 
-        val isNotificationSoundActive = testRepository.isNotificationSoundActive()
+        val isNotificationSoundActive = testRepository.isNotificationSoundEnabled()
         assertThat(isNotificationSoundActive).isFalse()
     }
 

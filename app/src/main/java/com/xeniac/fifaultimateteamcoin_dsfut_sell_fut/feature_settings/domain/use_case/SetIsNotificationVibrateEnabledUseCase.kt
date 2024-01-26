@@ -2,8 +2,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.u
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
 
-class GetIsNotificationSoundActiveUseCase(
+class SetIsNotificationVibrateEnabledUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(): Boolean = preferencesRepository.isNotificationSoundActive()
+    suspend operator fun invoke(isEnabled: Boolean) {
+        preferencesRepository.isNotificationVibrateEnabled(isEnabled)
+    }
 }

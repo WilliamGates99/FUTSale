@@ -30,8 +30,8 @@ class PreferencesRepositoryImp @Inject constructor(
         val IS_ONBOARDING_COMPLETED = booleanPreferencesKey("isOnBoardingCompleted")
         val NOTIFICATION_PERMISSION_COUNT = intPreferencesKey(name = "notificationPermissionCount")
         val CURRENT_APP_THEME = intPreferencesKey("theme")
-        val IS_NOTIFICATION_SOUND_ACTIVE = booleanPreferencesKey("isNotificationSoundActive")
-        val IS_NOTIFICATION_VIBRATE_ACTIVE = booleanPreferencesKey("isNotificationVibrateActive")
+        val IS_NOTIFICATION_SOUND_ENABLED = booleanPreferencesKey("isNotificationSoundActive")
+        val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey("isNotificationVibrateActive")
         val RATE_APP_DIALOG_CHOICE = intPreferencesKey("rateAppDialogChoice")
         val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey("previousRequestTimeInMillis")
         val PARTNER_ID = stringPreferencesKey("partnerId")
@@ -57,7 +57,7 @@ class PreferencesRepositoryImp @Inject constructor(
 
     override fun isNotificationSoundActiveSynchronously(): Boolean = runBlocking {
         try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ACTIVE] ?: true
+            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
         } catch (e: Exception) {
             Timber.e("isNotificationSoundActiveSynchronously Exception: $e")
             true
@@ -66,7 +66,7 @@ class PreferencesRepositoryImp @Inject constructor(
 
     override fun isNotificationVibrateActiveSynchronously(): Boolean = runBlocking {
         try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ACTIVE] ?: true
+            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
         } catch (e: Exception) {
             Timber.e("isNotificationVibrateActiveSynchronously Exception: $e")
             true
@@ -125,17 +125,17 @@ class PreferencesRepositoryImp @Inject constructor(
         AppLocaleDto.DEFAULT.toAppLocale()
     }
 
-    override suspend fun isNotificationSoundActive(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ACTIVE] ?: true
+    override suspend fun isNotificationSoundEnabled(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
     } catch (e: Exception) {
-        Timber.e("isNotificationSoundActive Exception: $e")
+        Timber.e("isNotificationSoundEnabled Exception: $e")
         true
     }
 
-    override suspend fun isNotificationVibrateActive(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ACTIVE] ?: true
+    override suspend fun isNotificationVibrateEnabled(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
     } catch (e: Exception) {
-        Timber.e("isNotificationVibrateActive Exception: $e")
+        Timber.e("isNotificationVibrateEnabled Exception: $e")
         true
     }
 
@@ -219,25 +219,25 @@ class PreferencesRepositoryImp @Inject constructor(
         false
     }
 
-    override suspend fun isNotificationSoundActive(isActive: Boolean) {
+    override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.IS_NOTIFICATION_SOUND_ACTIVE] = isActive
-                Timber.i("isNotificationSoundActive edited to $isActive")
+                it[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] = isEnabled
+                Timber.i("isNotificationSoundEnabled edited to $isEnabled")
             }
         } catch (e: Exception) {
-            Timber.e("isNotificationSoundActive Exception: $e")
+            Timber.e("isNotificationSoundEnabled Exception: $e")
         }
     }
 
-    override suspend fun isNotificationVibrateActive(isActive: Boolean) {
+    override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ACTIVE] = isActive
-                Timber.i("isNotificationVibrateActive edited to $isActive")
+                it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] = isEnabled
+                Timber.i("isNotificationVibrateEnabled edited to $isEnabled")
             }
         } catch (e: Exception) {
-            Timber.e("isNotificationVibrateActive Exception: $e")
+            Timber.e("isNotificationVibrateEnabled Exception: $e")
         }
     }
 
