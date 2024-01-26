@@ -10,8 +10,11 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
 import kotlinx.coroutines.flow.first
@@ -36,16 +39,16 @@ class PreferencesRepositoryImp @Inject constructor(
         val SELECTED_PLATFORM = stringPreferencesKey("selectedPlatform")
     }
 
-    override fun getCurrentAppThemeIndexSynchronously(): AppTheme = runBlocking {
+    override fun getCurrentAppThemeSynchronously(): AppTheme = runBlocking {
         try {
             val appThemeIndex = settingsDataStore
                 .data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
-            when (appThemeIndex) {
-                0 -> AppThemeDto.DEFAULT
-                1 -> AppThemeDto.LIGHT
-                2 -> AppThemeDto.DARK
-                else -> AppThemeDto.DEFAULT
-            }.toAppTheme()
+
+            val appThemeDto = AppThemeDto.entries.find {
+                it.index == appThemeIndex
+            } ?: AppThemeDto.DEFAULT
+
+            appThemeDto.toAppTheme()
         } catch (e: Exception) {
             Timber.e("getCurrentAppThemeSynchronously Exception: $e")
             AppThemeDto.DEFAULT.toAppTheme()
@@ -88,33 +91,38 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentAppThemeIndex(): AppTheme = try {
+    override suspend fun getCurrentAppTheme(): AppTheme = try {
         val appThemeIndex = settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
-        when (appThemeIndex) {
-            0 -> AppThemeDto.DEFAULT
-            1 -> AppThemeDto.LIGHT
-            2 -> AppThemeDto.DARK
-            else -> AppThemeDto.DEFAULT
-        }.toAppTheme()
+
+        val appThemeDto = AppThemeDto.entries.find {
+            it.index == appThemeIndex
+        } ?: AppThemeDto.DEFAULT
+
+        appThemeDto.toAppTheme()
     } catch (e: Exception) {
         Timber.e("getCurrentAppTheme Exception: $e")
         AppThemeDto.DEFAULT.toAppTheme()
     }
 
-    override suspend fun getCurrentAppLocaleString(): AppLocaleString? = try {
-        val localeList = AppCompatDelegate.getApplicationLocales()
+    override suspend fun getCurrentAppLocale(): AppLocale = try {
+        val appLocaleList = AppCompatDelegate.getApplicationLocales()
 
-        if (localeList.isEmpty) {
-            Timber.i("Locale list is Empty.")
-            null
+        if (appLocaleList.isEmpty) {
+            Timber.i("App locale list is Empty.")
+            AppLocaleDto.DEFAULT.toAppLocale()
         } else {
-            val localeString = localeList[0].toString()
-            Timber.i("Current app locale is $localeString")
-            localeString
+            val localeString = appLocaleList[0].toString()
+            Timber.i("Current app locale string is $localeString")
+
+            val appLocaleDto = AppLocaleDto.entries.find {
+                it.localeString == localeString
+            } ?: AppLocaleDto.DEFAULT
+
+            appLocaleDto.toAppLocale()
         }
     } catch (e: Exception) {
         Timber.e("getCurrentAppLocaleString Exception: $e")
-        null
+        AppLocaleDto.DEFAULT.toAppLocale()
     }
 
     override suspend fun isNotificationSoundActive(): Boolean = try {
@@ -189,11 +197,11 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun setCurrentAppTheme(index: Int) {
+    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.CURRENT_APP_THEME] = index
-                Timber.i("AppTheme edited to $index")
+                it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
+                Timber.i("AppTheme edited to ${appThemeDto.index}")
             }
         } catch (e: Exception) {
             Timber.e("setCurrentAppTheme Exception: $e")
@@ -201,11 +209,10 @@ class PreferencesRepositoryImp @Inject constructor(
     }
 
     override suspend fun setCurrentAppLocale(
-        localeTag: String,
-        newLayoutDirection: Int
-    ): Boolean = try {
-        val isActivityRestartNeeded = isActivityRestartNeeded(newLayoutDirection)
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(localeTag))
+        appLocaleDto: AppLocaleDto
+    ): IsActivityRestartNeeded = try {
+        val isActivityRestartNeeded = isActivityRestartNeeded(appLocaleDto.direction)
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(appLocaleDto.tag))
         isActivityRestartNeeded
     } catch (e: Exception) {
         Timber.e("setCurrentAppLocale Exception: $e")

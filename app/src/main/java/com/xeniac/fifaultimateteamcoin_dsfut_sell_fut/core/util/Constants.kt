@@ -17,26 +17,6 @@ object Constants {
     const val URL_DONATE = "https://xeniacdev.github.io/donate"
     const val URL_CROWDIN = "https://crowdin.com/project/fifa-ultimate-team-coin"
 
-    // App Theme Constants
-    const val THEME_INDEX_DEFAULT = 0
-    const val THEME_INDEX_LIGHT = 1
-    const val THEME_INDEX_DARK = 2
-
-    // App Locale Constants
-    const val LOCALE_ENGLISH_UNITED_STATES = "en-US"
-    const val LOCALE_ENGLISH_GREAT_BRITAIN = "en-GB"
-    const val LOCALE_PERSIAN_IRAN = "fa-IR"
-    const val LOCALE_INDEX_DEFAULT = 0
-    const val LOCALE_INDEX_ENGLISH_UNITED_STATES = 1
-    const val LOCALE_INDEX_ENGLISH_GREAT_BRITAIN = 2
-    const val LOCALE_INDEX_PERSIAN_IRAN = 3
-
-    // OnBoarding ViewPager Items Index
-    const val ONBOARDING_1ST_INDEX = 0
-    const val ONBOARDING_2ND_INDEX = 1
-    const val ONBOARDING_3RD_INDEX = 2
-    const val ONBOARDING_4TH_INDEX = 3
-
     // Google Play In-App Reviews API Constants
     const val IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME = 10
     const val IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME = 5

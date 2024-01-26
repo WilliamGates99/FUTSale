@@ -1,13 +1,15 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
 
-
-typealias AppLocaleString = String
+typealias IsActivityRestartNeeded = Boolean
 
 interface PreferencesRepository {
 
-    fun getCurrentAppThemeIndexSynchronously(): AppTheme
+    fun getCurrentAppThemeSynchronously(): AppTheme
 
     fun isNotificationSoundActiveSynchronously(): Boolean
 
@@ -17,9 +19,9 @@ interface PreferencesRepository {
 
     suspend fun getNotificationPermissionCount(): Int
 
-    suspend fun getCurrentAppThemeIndex(): AppTheme
+    suspend fun getCurrentAppTheme(): AppTheme
 
-    suspend fun getCurrentAppLocaleString(): AppLocaleString?
+    suspend fun getCurrentAppLocale(): AppLocale
 
     suspend fun isNotificationSoundActive(): Boolean
 
@@ -39,9 +41,9 @@ interface PreferencesRepository {
 
     suspend fun setNotificationPermissionCount(count: Int)
 
-    suspend fun setCurrentAppTheme(index: Int)
+    suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 
-    suspend fun setCurrentAppLocale(localeTag: String, newLayoutDirection: Int): Boolean
+    suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded
 
     suspend fun isNotificationSoundActive(isActive: Boolean)
 
