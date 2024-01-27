@@ -114,7 +114,7 @@
     <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
 
 
-    <string name="settings_text_title">تنظیمات</string>
+    <string name="settings_app_bar_title">تنظیمات</string>
     <string name="settings_title_settings">تنظیمات</string>
     <string name="settings_text_settings_language">زبان</string>
     <string name="settings_text_settings_language_default">پیش‌فرض سیستم</string>
