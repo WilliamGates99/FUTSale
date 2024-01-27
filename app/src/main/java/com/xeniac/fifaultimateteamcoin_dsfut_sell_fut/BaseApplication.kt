@@ -35,7 +35,7 @@ class BaseApplication : Application() {
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
-    private fun setAppTheme() = currentAppTheme.setAppTheme
+    private fun setAppTheme() = currentAppTheme.setAppTheme()
 
     private fun createMutedPickUpPlayerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
