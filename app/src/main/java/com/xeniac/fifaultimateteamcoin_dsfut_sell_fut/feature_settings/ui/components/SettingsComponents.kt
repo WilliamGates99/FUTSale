@@ -32,14 +32,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
 
 enum class MiscellaneousRowItems(
     @DrawableRes val icon: Int,
     @StringRes val title: Int,
-    val url: String
+    val url: String?
 ) {
     Donate(
         icon = R.drawable.ic_settings_donate,
@@ -54,7 +53,7 @@ enum class MiscellaneousRowItems(
     RateUs(
         icon = R.drawable.ic_settings_rate_us,
         title = R.string.settings_text_miscellaneous_rate_us,
-        url = BuildConfig.URL_APP_STORE
+        url = null
     ),
     PrivacyPolicy(
         icon = R.drawable.ic_settings_privacy_policy,
@@ -99,7 +98,7 @@ fun MiscellaneousCard(
     titleFontWeight: FontWeight = FontWeight.ExtraBold,
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
     cardShape: Shape = RoundedCornerShape(12.dp),
-    onItemClick: (url: String) -> Unit
+    onItemClick: (url: String?) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -125,6 +124,7 @@ fun MiscellaneousCard(
                     title = stringResource(id = miscellaneousItem.title),
                     onClick = { onItemClick(miscellaneousItem.url) }
                 )
+                // TODO: CHECK STORE URL WITH LEGACY VERSION
 
                 val isNotLastItem = index != MiscellaneousRowItems.entries.size - 1
                 if (isNotLastItem) {

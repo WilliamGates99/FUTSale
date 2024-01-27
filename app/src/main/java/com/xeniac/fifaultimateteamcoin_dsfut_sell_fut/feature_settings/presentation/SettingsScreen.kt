@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.LinkHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiEvent
@@ -131,10 +130,12 @@ fun SettingsScreen(
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),
                 onItemClick = { url ->
-                    shouldShowIntentAppNotFoundError = LinkHelper.openLink(
-                        context = context,
-                        urlString =url
-                    )
+                    shouldShowIntentAppNotFoundError = url?.let {
+                        LinkHelper.openLink(
+                            context = context,
+                            urlString = url
+                        )
+                    } ?: LinkHelper.openAppPageInStore(context)
                 }
             )
         }
