@@ -5,7 +5,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.Preference
 class SetIsNotificationVibrateEnabledUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(isEnabled: Boolean) {
+    suspend operator fun invoke(isEnabled: Boolean): Boolean {
         preferencesRepository.isNotificationVibrateEnabled(isEnabled)
+        return isEnabled
     }
 }

@@ -32,13 +32,13 @@ class SettingsViewModel @Inject constructor(
         initialValue = AppLocale.DEFAULT
     )
 
-    val isNotificationSoundActive = savedStateHandle.getStateFlow(
-        key = "isNotificationSoundActive",
+    val isNotificationSoundEnabled = savedStateHandle.getStateFlow(
+        key = "isNotificationSoundEnabled",
         initialValue = true
     )
 
-    val isNotificationVibrateActive = savedStateHandle.getStateFlow(
-        key = "isNotificationVibrateActive",
+    val isNotificationVibrateEnabled = savedStateHandle.getStateFlow(
+        key = "isNotificationVibrateEnabled",
         initialValue = true
     )
 
@@ -51,16 +51,16 @@ class SettingsViewModel @Inject constructor(
     init {
         getCurrentAppTheme()
         getCurrentAppLocale()
-        getIsNotificationSoundActive()
-        getIsNotificationVibrateActive()
+        getIsNotificationSoundEnabled()
+        getIsNotificationVibrateEnabled()
     }
 
     fun onEvent(event: SettingsEvent) {
         when (event) {
             SettingsEvent.GetCurrentAppTheme -> getCurrentAppTheme()
             SettingsEvent.GetCurrentAppLocale -> getCurrentAppLocale()
-            SettingsEvent.GetIsNotificationSoundActive -> getIsNotificationSoundActive()
-            SettingsEvent.GetIsNotificationVibrateActive -> getIsNotificationVibrateActive()
+            SettingsEvent.GetIsNotificationSoundEnabled -> getIsNotificationSoundEnabled()
+            SettingsEvent.GetIsNotificationVibrateEnabled -> getIsNotificationVibrateEnabled()
             is SettingsEvent.SetCurrentAppTheme -> setCurrentAppTheme(event.newAppTheme)
             is SettingsEvent.SetCurrentAppLocale -> setCurrentAppLocale(event.newAppLocale)
             is SettingsEvent.SetNotificationSoundSwitch -> setNotificationSoundSwitch(event.isEnabled)
@@ -76,13 +76,13 @@ class SettingsViewModel @Inject constructor(
         savedStateHandle["appLocale"] = settingsUseCases.getCurrentAppLocaleUseCase.get()()
     }
 
-    private fun getIsNotificationSoundActive() = viewModelScope.launch {
-        savedStateHandle["isNotificationSoundActive"] = settingsUseCases
+    private fun getIsNotificationSoundEnabled() = viewModelScope.launch {
+        savedStateHandle["isNotificationSoundEnabled"] = settingsUseCases
             .getIsNotificationSoundEnabledUseCase.get()()
     }
 
-    private fun getIsNotificationVibrateActive() = viewModelScope.launch {
-        savedStateHandle["isNotificationVibrateActive"] = settingsUseCases
+    private fun getIsNotificationVibrateEnabled() = viewModelScope.launch {
+        savedStateHandle["isNotificationVibrateEnabled"] = settingsUseCases
             .getIsNotificationVibrateEnabledUseCase.get()()
     }
 
@@ -107,10 +107,13 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setNotificationSoundSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        settingsUseCases.setIsNotificationSoundEnabledUseCase.get()(isEnabled)
+        savedStateHandle["isNotificationSoundEnabled"] = settingsUseCases
+            .setIsNotificationSoundEnabledUseCase.get()(isEnabled)
+
     }
 
     private fun setNotificationVibrateSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        settingsUseCases.setIsNotificationVibrateEnabledUseCase.get()(isEnabled)
+        savedStateHandle["isNotificationVibrateEnabled"] = settingsUseCases
+            .setIsNotificationVibrateEnabledUseCase.get()(isEnabled)
     }
 }

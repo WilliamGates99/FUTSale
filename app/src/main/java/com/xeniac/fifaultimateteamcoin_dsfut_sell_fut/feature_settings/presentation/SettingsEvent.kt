@@ -6,8 +6,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
 sealed class SettingsEvent {
     data object GetCurrentAppTheme : SettingsEvent()
     data object GetCurrentAppLocale : SettingsEvent()
-    data object GetIsNotificationSoundActive : SettingsEvent()
-    data object GetIsNotificationVibrateActive : SettingsEvent()
+    data object GetIsNotificationSoundEnabled : SettingsEvent()
+    data object GetIsNotificationVibrateEnabled : SettingsEvent()
 
     data class SetCurrentAppTheme(val newAppTheme: AppTheme) : SettingsEvent()
     data class SetCurrentAppLocale(val newAppLocale: AppLocale) : SettingsEvent()

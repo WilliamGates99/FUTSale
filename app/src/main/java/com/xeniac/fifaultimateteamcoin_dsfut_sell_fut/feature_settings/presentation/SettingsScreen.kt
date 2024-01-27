@@ -54,11 +54,12 @@ fun SettingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
+    val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val appTheme by viewModel.appTheme.collectAsStateWithLifecycle()
     val appLocale by viewModel.appLocale.collectAsStateWithLifecycle()
-    val isNotificationSoundActive by viewModel.isNotificationSoundActive.collectAsStateWithLifecycle()
-    val isNotificationVibrateActive by viewModel.isNotificationVibrateActive.collectAsStateWithLifecycle()
+    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle()
+    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle()
 
     var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
 
@@ -119,13 +120,25 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = bottomPadding,
                     start = horizontalPadding,
-                    end = horizontalPadding
+                    end = horizontalPadding,
+                    top = innerPadding.calculateTopPadding() + verticalPadding,
+                    bottom = bottomPadding + verticalPadding
                 )
         ) {
-            SettingsCard(modifier = Modifier.fillMaxWidth())
+            SettingsCard(
+                appLocale = appLocale,
+                appTheme = appTheme,
+                isNotificationSoundEnabled = isNotificationSoundEnabled,
+                isNotificationVibrateEnabled = isNotificationVibrateEnabled,
+                onNotificationSoundChange = { isChecked ->
+                    viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
+                },
+                onNotificationVibrateChange = { isChecked ->
+                    viewModel.onEvent(SettingsEvent.SetNotificationVibrateSwitch(isChecked))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),

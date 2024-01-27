@@ -78,7 +78,7 @@ fun MiscellaneousCard(
         modifier = modifier
     ) {
         Text(
-            text = title,
+            text = title.uppercase(),
             fontSize = titleFontSize,
             fontWeight = titleFontWeight,
             color = titleColor,
