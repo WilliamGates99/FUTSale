@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.component
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -79,11 +81,16 @@ fun CustomNavigationBar(
                     disabledTextColor = MaterialTheme.colorScheme.onSurface
                 ),
                 icon = {
-                    Icon(
-                        painter = painterResource(id = if (isSelected) navigationBarItem.activeIconId else navigationBarItem.inactiveIconId),
-                        contentDescription = stringResource(id = navigationBarItem.title),
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier.size(iconSize)
-                    )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = if (isSelected) navigationBarItem.activeIconId else navigationBarItem.inactiveIconId),
+                            contentDescription = stringResource(id = navigationBarItem.title)
+                        )
+                    }
+
                 },
                 label = {
                     Text(
