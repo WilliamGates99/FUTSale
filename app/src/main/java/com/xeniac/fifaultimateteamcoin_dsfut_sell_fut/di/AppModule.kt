@@ -48,7 +48,7 @@ internal object AppModule {
     @Provides
     fun provideAppThemeIndex(
         preferencesRepository: PreferencesRepository
-    ): AppTheme = preferencesRepository.getCurrentAppThemeIndexSynchronously()
+    ): AppTheme = preferencesRepository.getCurrentAppThemeSynchronously()
 
     @Provides
     @Named("notification_sound")
