@@ -1,16 +1,20 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model
 
+import android.os.Parcelable
 import android.util.LayoutDirection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 enum class AppLocale(
     val index: Int,
     val tag: String?,
     val localeString: String?,
     val direction: Int,
-    val text: UiText
-) {
+    val text: @RawValue UiText
+) : Parcelable {
     DEFAULT(
         index = 0,
         tag = null,
