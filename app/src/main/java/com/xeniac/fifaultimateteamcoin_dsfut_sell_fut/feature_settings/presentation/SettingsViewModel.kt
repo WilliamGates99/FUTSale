@@ -22,24 +22,24 @@ class SettingsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases
 ) : ViewModel() {
 
-    val appTheme = savedStateHandle.getStateFlow<AppTheme?>(
+    val appTheme = savedStateHandle.getStateFlow(
         key = "appTheme",
-        initialValue = null
+        initialValue = AppTheme.DEFAULT
     )
 
-    val appLocale = savedStateHandle.getStateFlow<AppLocale?>(
+    val appLocale = savedStateHandle.getStateFlow(
         key = "appLocale",
-        initialValue = null
+        initialValue = AppLocale.DEFAULT
     )
 
-    val isNotificationSoundActive = savedStateHandle.getStateFlow<Boolean?>(
+    val isNotificationSoundActive = savedStateHandle.getStateFlow(
         key = "isNotificationSoundActive",
-        initialValue = null
+        initialValue = true
     )
 
-    val isNotificationVibrateActive = savedStateHandle.getStateFlow<Boolean?>(
+    val isNotificationVibrateActive = savedStateHandle.getStateFlow(
         key = "isNotificationVibrateActive",
-        initialValue = null
+        initialValue = true
     )
 
     private val _setAppThemeEventChannel = Channel<Event>()
