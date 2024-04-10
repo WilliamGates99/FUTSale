@@ -9,13 +9,14 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
+    id("androidx.room")
     id("com.google.gms.google-services") // Google Services plugin
     id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
     // id("applovin-quality-service")
 }
 
-val properties = gradleLocalProperties(rootDir)
+val properties = gradleLocalProperties(rootDir, providers)
 
 // applovin {
 //     apiKey = properties.getProperty("APPLOVIN_API_KEY")
@@ -105,6 +106,15 @@ android {
         */
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(path = properties.getProperty("KEY_STORE_PATH"))
+            storePassword = properties.getProperty("KEY_STORE_PASSWORD")
+            keyAlias = properties.getProperty("KEY_ALIAS")
+            keyPassword = properties.getProperty("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         debug {
             versionNameSuffix = " - debug"
@@ -124,6 +134,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -218,7 +230,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
+
+    room {
+        schemaDirectory("$projectDir/roomSchemas")
     }
 
     packaging {
@@ -236,6 +252,10 @@ android {
             enableSplit = false
         }
     }
+}
+
+hilt {
+    enableAggregatingTask = true
 }
 
 androidComponents {
@@ -266,25 +286,6 @@ androidComponents {
     }
 }
 
-ksp {
-    // Export room db schemas
-    arg(RoomSchemaArgProvider(File(projectDir, "roomSchemas")))
-}
-
-hilt {
-    enableAggregatingTask = true
-}
-
-class RoomSchemaArgProvider(
-    @get:InputDirectory
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    val schemaDir: File
-) : CommandLineArgumentProvider {
-    override fun asArguments(): Iterable<String> {
-        return listOf("room.schemaLocation=${schemaDir.path}")
-    }
-}
-
 dependencies {
     // Java 8+ API Desugaring Support
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
@@ -294,7 +295,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Jetpack Compose
-    val composeBoM = platform("androidx.compose:compose-bom:2024.01.00")
+    val composeBoM = platform("androidx.compose:compose-bom:2024.04.00")
     implementation(composeBoM)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3") // Material Design 3
@@ -311,41 +312,45 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
     // Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    ksp("com.google.dagger:hilt-compiler:2.50")
+    val hiltVersion = "2.51.1"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // Architectural Components
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0") // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0") // ViewModel Utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0") // Lifecycles Only (without ViewModel or LiveData)
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0") // Lifecycle Utilities for Compose
+    val androidLifecycleVersion = "2.7.0"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$androidLifecycleVersion") // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$androidLifecycleVersion") // ViewModel Utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$androidLifecycleVersion") // Lifecycles Only (without ViewModel or LiveData)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$androidLifecycleVersion") // Lifecycle Utilities for Compose
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     // Coroutines Support for Firebase
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
 
     // Ktor Client Library
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-okhttp:2.3.7") // Ktor OkHttp Engine
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
-    implementation("io.ktor:ktor-client-logging:2.3.7")
+    val ktorVersion = "2.3.9"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion") // Ktor OkHttp Engine
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
     // Kotlin JSON Serialization Library
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // Room Library
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1") // Kotlin Extensions and Coroutines support for Room
-    ksp("androidx.room:room-compiler:2.6.1")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion") // Kotlin Extensions and Coroutines support for Room
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     // Preferences DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Firebase BoM and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Firebase Cloud Messaging
@@ -359,12 +364,13 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     // Lottie Library
-    implementation("com.airbnb.android:lottie-compose:6.3.0")
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
 
     // Coil Library
-    implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation("io.coil-kt:coil-svg:2.5.0")
-    implementation("io.coil-kt:coil-gif:2.5.0")
+    implementation(platform("io.coil-kt:coil-bom:2.6.0"))
+    implementation("io.coil-kt:coil-compose")
+    implementation("io.coil-kt:coil-svg")
+    implementation("io.coil-kt:coil-gif")
 
     // Google Play In-App Reviews API
     implementation("com.google.android.play:review-ktx:2.0.1")
@@ -396,8 +402,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.50")
-    kspAndroidTest("com.google.dagger:hilt-compiler:2.50")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kspAndroidTest("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // UI Test Libraries
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
