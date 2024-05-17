@@ -31,8 +31,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 34
-        versionCode = 11 // TODO UPGRADE AFTER EACH RELEASE
-        versionName = "1.2.0" // TODO UPGRADE AFTER EACH RELEASE
+        versionCode = 11
+        versionName = "1.2.0"
 
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
@@ -44,9 +44,9 @@ android {
         }
 
         buildConfigField(
-            "String",
-            "KTOR_HTTP_BASE_URL",
-            properties.getProperty("KTOR_HTTP_BASE_URL")
+            type = "String",
+            name = "KTOR_HTTP_BASE_URL",
+            value = properties.getProperty("KTOR_HTTP_BASE_URL")
         )
 
         /*
@@ -167,15 +167,15 @@ android {
             dimension = "market"
 
             buildConfigField(
-                "String",
-                "URL_APP_STORE",
-                "\"https://play.google.com/store/apps/details?id=com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
+                type = "String",
+                name = "URL_APP_STORE",
+                value = "\"https://play.google.com/store/apps/details?id=com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
 
             buildConfigField(
-                "String",
-                "PACKAGE_NAME_APP_STORE",
-                "\"com.android.vending\""
+                type = "String",
+                name = "PACKAGE_NAME_APP_STORE",
+                value = "\"com.android.vending\""
             )
         }
 
@@ -183,15 +183,15 @@ android {
             dimension = "market"
 
             buildConfigField(
-                "String",
-                "URL_APP_STORE",
-                "\"https://cafebazaar.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
+                type = "String",
+                name = "URL_APP_STORE",
+                value = "\"https://cafebazaar.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
 
             buildConfigField(
-                "String",
-                "PACKAGE_NAME_APP_STORE",
-                "\"com.farsitel.bazaar\""
+                type = "String",
+                name = "PACKAGE_NAME_APP_STORE",
+                value = "\"com.farsitel.bazaar\""
             )
         }
 
@@ -199,15 +199,15 @@ android {
             dimension = "market"
 
             buildConfigField(
-                "String",
-                "URL_APP_STORE",
-                "\"https://myket.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
+                type = "String",
+                name = "URL_APP_STORE",
+                value = "\"https://myket.ir/app/com.xeniac.fifaultimateteamcoin_dsfut_sell_fut\""
             )
 
             buildConfigField(
-                "String",
-                "PACKAGE_NAME_APP_STORE",
-                "\"ir.mservices.market\""
+                type = "String",
+                name = "PACKAGE_NAME_APP_STORE",
+                value = "\"ir.mservices.market\""
             )
         }
     }
@@ -230,7 +230,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     room {
@@ -290,18 +290,18 @@ dependencies {
     // Java 8+ API Desugaring Support
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Jetpack Compose
-    val composeBoM = platform("androidx.compose:compose-bom:2024.04.00")
+    val composeBoM = platform("androidx.compose:compose-bom:2024.05.00")
     implementation(composeBoM)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3") // Material Design 3
     implementation("androidx.compose.runtime:runtime-livedata") // Compose Integration with LiveData
-    implementation("androidx.activity:activity-compose:1.8.2") // Compose Integration with Activities
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0") // Compose Navigation Integration with Hilt
+    implementation("androidx.activity:activity-compose:1.9.0") // Compose Integration with Activities
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // Compose Navigation Integration with Hilt
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1") // Compose Constraint Layout
 
     // Android Studio Compose Preview Support
@@ -309,7 +309,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Dagger - Hilt
     val hiltVersion = "2.51.1"
@@ -324,13 +324,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$androidLifecycleVersion") // Lifecycle Utilities for Compose
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    val coroutinesVersion = "1.8.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // Coroutines Support for Firebase
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion")
 
     // Ktor Client Library
-    val ktorVersion = "2.3.9"
+    val ktorVersion = "2.3.11"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion") // Ktor OkHttp Engine
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
@@ -347,10 +348,10 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
 
     // Preferences DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Firebase BoM and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Firebase Cloud Messaging
@@ -389,19 +390,20 @@ dependencies {
     */
 
     // Local Unit Test Libraries
-    testImplementation("com.google.truth:truth:1.3.0")
+    val truthVersion = "1.4.2"
+    testImplementation("com.google.truth:truth:$truthVersion")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
     testImplementation("androidx.room:room-testing:2.6.1")
 
     // Instrumentation Test Libraries
-    androidTestImplementation("com.google.truth:truth:1.3.0")
+    androidTestImplementation("com.google.truth:truth:$truthVersion")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
     kspAndroidTest("com.google.dagger:hilt-compiler:$hiltVersion")
 
