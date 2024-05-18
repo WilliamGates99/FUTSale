@@ -3,16 +3,16 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
-    id("androidx.room")
-    id("com.google.gms.google-services") // Google Services plugin
-    id("com.google.firebase.crashlytics")
-    id("com.google.firebase.firebase-perf")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.room)
+    alias(libs.plugins.google.services) // Google Services plugin
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.perf)
     // id("applovin-quality-service")
 }
 
@@ -288,93 +288,83 @@ androidComponents {
 
 dependencies {
     // Java 8+ API Desugaring Support
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.core.splashscreen)
 
     // Jetpack Compose
-    val composeBoM = platform("androidx.compose:compose-bom:2024.05.00")
-    implementation(composeBoM)
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3") // Material Design 3
-    implementation("androidx.compose.runtime:runtime-livedata") // Compose Integration with LiveData
-    implementation("androidx.activity:activity-compose:1.9.0") // Compose Integration with Activities
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // Compose Navigation Integration with Hilt
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1") // Compose Constraint Layout
-
-    // Android Studio Compose Preview Support
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3) // Material Design 3
+    implementation(libs.compose.runtime.livedata) // Compose Integration with LiveData
+    implementation(libs.compose.ui.tooling.preview) // Android Studio Compose Preview Support
+    debugImplementation(libs.compose.ui.tooling) // Android Studio Compose Preview Support
+    implementation(libs.activity.compose) // Compose Integration with Activities
+    implementation(libs.constraintlayout.compose) // Compose Constraint Layout
+    implementation(libs.navigation.compose) // Compose Navigation
+    implementation(libs.hilt.navigation.compose) // Compose Navigation Integration with Hilt
 
     // Dagger - Hilt
-    val hiltVersion = "2.51.1"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    ksp("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     // Architectural Components
-    val androidLifecycleVersion = "2.7.0"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$androidLifecycleVersion") // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$androidLifecycleVersion") // ViewModel Utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$androidLifecycleVersion") // Lifecycles Only (without ViewModel or LiveData)
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$androidLifecycleVersion") // Lifecycle Utilities for Compose
+    implementation(libs.lifecycle.viewmodel.ktx) // ViewModel
+    implementation(libs.lifecycle.viewmodel.compose) // ViewModel Utilities for Compose
+    implementation(libs.lifecycle.runtime.ktx) // Lifecycles Only (without ViewModel or LiveData)
+    implementation(libs.lifecycle.runtime.compose) // Lifecycle Utilities for Compose
 
     // Coroutines
-    val coroutinesVersion = "1.8.1"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation(libs.kotlinx.coroutines.android)
 
     // Coroutines Support for Firebase
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion")
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // Ktor Client Library
-    val ktorVersion = "2.3.11"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-okhttp:$ktorVersion") // Ktor OkHttp Engine
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp) // Ktor OkHttp Engine
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
 
     // Kotlin JSON Serialization Library
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
 
     // Room Library
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion") // Kotlin Extensions and Coroutines support for Room
-    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx) // Kotlin Extensions and Coroutines support for Room
+    ksp(libs.room.compiler)
 
     // Preferences DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.datastore.preferences)
 
     // Firebase BoM and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
 
     // Firebase Cloud Messaging
-    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation(libs.firebase.messaging.ktx)
 
     // Firebase Release & Monitor
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-perf-ktx")
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.perf.ktx)
 
     // Timber Library
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(libs.timber)
 
     // Lottie Library
-    implementation("com.airbnb.android:lottie-compose:6.4.0")
+    implementation(libs.lottie.compose)
 
     // Coil Library
-    implementation(platform("io.coil-kt:coil-bom:2.6.0"))
-    implementation("io.coil-kt:coil-compose")
-    implementation("io.coil-kt:coil-svg")
-    implementation("io.coil-kt:coil-gif")
+    implementation(platform(libs.coil.bom))
+    implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
+    implementation(libs.coil.gif)
 
     // Google Play In-App Reviews API
-    implementation("com.google.android.play:review-ktx:2.0.1")
+    implementation(libs.play.review.ktx)
 
     /*
     // Applovin Libraries
@@ -390,28 +380,27 @@ dependencies {
     */
 
     // Local Unit Test Libraries
-    val truthVersion = "1.4.2"
-    testImplementation("com.google.truth:truth:$truthVersion")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-    testImplementation("androidx.room:room-testing:2.6.1")
+    testImplementation(libs.truth)
+    testImplementation(libs.junit)
+    testImplementation(libs.arch.core.testing) // Test Helpers for LiveData
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.room.testing)
 
     // Instrumentation Test Libraries
-    androidTestImplementation("com.google.truth:truth:$truthVersion")
-    androidTestImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.arch.core:core-testing:2.2.0") // Test Helpers for LiveData
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
-    kspAndroidTest("com.google.dagger:hilt-compiler:$hiltVersion")
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.test.core)
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.arch.core.testing) // Test Helpers for LiveData
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
 
     // UI Test Libraries
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(composeBoM)
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
 
 val releaseRootDir = "${rootDir}/app"

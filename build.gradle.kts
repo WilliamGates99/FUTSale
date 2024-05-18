@@ -9,13 +9,14 @@
 // }
 
 plugins {
-    id("com.android.application") version "8.4.0" apply false // Android Gradle Plugin Version
-    id("org.jetbrains.kotlin.android") version "1.9.24" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24" apply false
-    id("com.google.devtools.ksp") version "1.9.24-1.0.20" apply false // KSP Plugin
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false
-    id("androidx.room") version "2.6.1" apply false
-    id("com.google.gms.google-services") version "4.4.1" apply false // Google Services plugin
-    id("com.google.firebase.crashlytics") version "2.9.9" apply false
-    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
+    alias(libs.plugins.android.application) apply false // Android Gradle Plugin Version
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.ksp) apply false // KSP Plugin
+    alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.room) apply false
+    alias(libs.plugins.google.services) apply false // Google Services plugin
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.firebase.perf) apply false
 }
