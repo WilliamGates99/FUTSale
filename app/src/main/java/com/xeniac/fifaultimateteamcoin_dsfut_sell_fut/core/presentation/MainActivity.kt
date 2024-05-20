@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     val rootNavController = rememberNavController()
 
-                    if (startDestination.isNotBlank()) {
+                    startDestination?.let { destination ->
                         SetupRootNavGraph(
                             rootNavController = rootNavController,
-                            startDestination = startDestination
+                            startDestination = destination
                         )
                     }
                 }

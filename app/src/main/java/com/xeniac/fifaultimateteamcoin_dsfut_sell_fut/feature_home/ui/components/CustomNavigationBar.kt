@@ -24,31 +24,31 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 
 enum class NavigationBarItems(
-    val route: String,
+    val screen: Screen,
     @StringRes val title: Int,
     @DrawableRes val inactiveIconId: Int,
     @DrawableRes val activeIconId: Int
 ) {
     PickUp(
-        route = Screen.PickUpScreen.route,
+        screen = Screen.PickUpScreen,
         title = R.string.home_nav_title_pick_up,
         inactiveIconId = R.drawable.ic_home_nav_pick_up_outlined,
         activeIconId = R.drawable.ic_home_nav_pick_up_filled
     ),
     Profile(
-        route = Screen.ProfileScreen.route,
+        screen = Screen.ProfileScreen,
         title = R.string.home_nav_title_profile,
         inactiveIconId = R.drawable.ic_home_nav_profile_outlined,
         activeIconId = R.drawable.ic_home_nav_profile_filled
     ),
     History(
-        route = Screen.HistoryScreen.route,
+        screen = Screen.HistoryScreen,
         title = R.string.home_nav_title_history,
         inactiveIconId = R.drawable.ic_home_nav_history_outlined,
         activeIconId = R.drawable.ic_home_nav_history_filled
     ),
     Settings(
-        route = Screen.SettingsScreen.route,
+        screen = Screen.SettingsScreen,
         title = R.string.home_nav_title_settings,
         inactiveIconId = R.drawable.ic_home_nav_settings_outlined,
         activeIconId = R.drawable.ic_home_nav_settings_filled
@@ -61,11 +61,11 @@ fun CustomNavigationBar(
     modifier: Modifier = Modifier,
     alwaysShowLabel: Boolean = true,
     iconSize: Dp = 24.dp,
-    onItemClick: (route: String) -> Unit
+    onItemClick: (screen: Screen) -> Unit
 ) {
     NavigationBar(modifier = modifier) {
         NavigationBarItems.entries.forEach { navigationBarItem ->
-            val isSelected = currentRoute == navigationBarItem.route
+            val isSelected = currentRoute.contains(navigationBarItem.screen.toString())
 
             NavigationBarItem(
                 enabled = !isSelected,
@@ -103,7 +103,7 @@ fun CustomNavigationBar(
                     )
                 },
                 onClick = {
-                    onItemClick(navigationBarItem.route)
+                    onItemClick(navigationBarItem.screen)
                 }
             )
         }

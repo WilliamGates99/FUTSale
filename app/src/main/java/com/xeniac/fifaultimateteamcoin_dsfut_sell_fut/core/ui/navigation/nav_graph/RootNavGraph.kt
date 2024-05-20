@@ -15,18 +15,17 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.present
 @Composable
 fun SetupRootNavGraph(
     rootNavController: NavHostController,
-    startDestination: String
+    startDestination: Screen
 ) {
     NavHost(
         navController = rootNavController,
-        startDestination = startDestination,
-        route = NavGraphs.ROUTE_ROOT
+        startDestination = startDestination
     ) {
-        composable(route = Screen.OnboardingScreen.route) {
+        composable<Screen.OnboardingScreen> {
             OnboardingScreen(
                 onNavigateToHomeScreen = {
-                    rootNavController.navigate(Screen.HomeScreen.route) {
-                        popUpTo(Screen.OnboardingScreen.route) {
+                    rootNavController.navigate(Screen.HomeScreen) {
+                        popUpTo(Screen.OnboardingScreen) {
                             inclusive = true
                         }
                     }
@@ -34,7 +33,7 @@ fun SetupRootNavGraph(
             )
         }
 
-        composable(route = Screen.HomeScreen.route) {
+        composable<Screen.HomeScreen> {
             HomeScreen(rootNavController = rootNavController)
         }
     }
@@ -49,9 +48,4 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
         navController.getBackStackEntry(navGraphRoute)
     }
     return hiltViewModel(parentEntry)
-}
-
-object NavGraphs {
-    const val ROUTE_ROOT = "nav_graph_root"
-    const val ROUTE_HOME = "nav_graph_home"
 }

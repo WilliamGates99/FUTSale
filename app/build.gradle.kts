@@ -293,6 +293,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.core.splashscreen)
+    implementation(libs.kotlinx.serialization.json) // Kotlin JSON Serialization Library
 
     // Jetpack Compose
     implementation(platform(libs.compose.bom))
@@ -328,9 +329,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
-
-    // Kotlin JSON Serialization Library
-    implementation(libs.kotlinx.serialization.json)
 
     // Room Library
     implementation(libs.room.runtime)

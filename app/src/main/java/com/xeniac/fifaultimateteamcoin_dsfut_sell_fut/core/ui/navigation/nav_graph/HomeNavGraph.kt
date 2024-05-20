@@ -19,22 +19,21 @@ fun SetupHomeNavGraph(
 ) {
     NavHost(
         navController = homeNavController,
-        startDestination = Screen.PickUpScreen.route,
-        route = NavGraphs.ROUTE_HOME
+        startDestination = Screen.PickUpScreen
     ) {
-        composable(route = Screen.PickUpScreen.route) {
+        composable<Screen.PickUpScreen> {
             PickUpScreen()
         }
 
-        composable(route = Screen.ProfileScreen.route) {
+        composable<Screen.ProfileScreen> {
             ProfileScreen()
         }
 
-        composable(route = Screen.HistoryScreen.route) {
+        composable<Screen.HistoryScreen> {
             HistoryScreen()
         }
 
-        composable(route = Screen.SettingsScreen.route) {
+        composable<Screen.SettingsScreen> {
             SettingsScreen(bottomPadding = bottomPadding)
         }
     }

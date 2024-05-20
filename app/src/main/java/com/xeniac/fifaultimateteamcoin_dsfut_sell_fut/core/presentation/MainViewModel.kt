@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _postSplashDestination = MutableStateFlow("")
+    private val _postSplashDestination = MutableStateFlow<Screen?>(null)
     val postSplashDestination = _postSplashDestination.asStateFlow()
 
     init {
@@ -32,9 +32,9 @@ class MainViewModel @Inject constructor(
         val isOnboardingCompleted = getIsOnboardingCompletedUseCase.get()()
 
         if (isOnboardingCompleted) {
-            _postSplashDestination.value = Screen.HomeScreen.route
+            _postSplashDestination.value = Screen.HomeScreen
         } else {
-            _postSplashDestination.value = Screen.OnboardingScreen.route
+            _postSplashDestination.value = Screen.OnboardingScreen
         }
 
         delay(1.seconds) // 1 second delay to solve the blank screen after showing splash screen

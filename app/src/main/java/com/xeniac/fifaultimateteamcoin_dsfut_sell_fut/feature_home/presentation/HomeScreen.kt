@@ -50,9 +50,9 @@ fun HomeScreen(
     val homeNavController = rememberNavController()
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpScreen.route
+    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpScreen.toString()
     val shouldBottomAppBarBeVisible = NavigationBarItems.entries.find { navigationBarItem ->
-        currentRoute == navigationBarItem.route
+        currentRoute.contains(navigationBarItem.screen.toString())
     } != null
 
     val isRunningAndroid13OrNewer by remember {
@@ -120,8 +120,8 @@ fun HomeScreen(
                 CustomNavigationBar(
                     modifier = Modifier.fillMaxWidth(),
                     currentRoute = currentRoute,
-                    onItemClick = { route ->
-                        homeNavController.navigate(route) {
+                    onItemClick = { screen ->
+                        homeNavController.navigate(screen) {
                             // Avoid multiple copies of the same destination when re-selecting the same item
                             launchSingleTop = true
 
@@ -130,7 +130,7 @@ fun HomeScreen(
                             avoid building up a large stack of destinations
                             on the back stack as user selects items
                              */
-                            popUpTo(Screen.PickUpScreen.route)
+                            popUpTo(Screen.PickUpScreen)
                         }
                     }
                 )
