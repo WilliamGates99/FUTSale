@@ -39,7 +39,7 @@ class OnboardingViewModel @Inject constructor(
                 )
             }
             is OnboardingEvent.SecretKeyChanged -> {
-                savedStateHandle["secretKeyState"] = onboardingState.value.copy(
+                savedStateHandle["onboardingState"] = onboardingState.value.copy(
                     secretKey = event.secretKey,
                     secretKeyErrorText = null
                 )

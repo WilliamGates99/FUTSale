@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -141,6 +142,7 @@ fun OnboardingPageFour(
             onValueChange = onPartnerIdChange,
             title = stringResource(id = R.string.onboarding_fourth_title_partner_id),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
+            leadingIcon = painterResource(id = R.drawable.ic_core_textfield_partner_id),
             errorText = onboardingState.partnerIdErrorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
@@ -157,6 +159,7 @@ fun OnboardingPageFour(
             onValueChange = onSecretKeyChange,
             title = stringResource(id = R.string.onboarding_fourth_title_secret_key),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
+            leadingIcon = painterResource(id = R.drawable.ic_core_textfield_secret_key),
             errorText = onboardingState.secretKeyErrorText?.asString(),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,

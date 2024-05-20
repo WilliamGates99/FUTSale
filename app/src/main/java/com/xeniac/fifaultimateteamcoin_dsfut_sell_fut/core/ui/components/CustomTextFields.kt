@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,8 +65,9 @@ fun CustomOutlinedTextField(
     shape: Shape = RoundedCornerShape(12.dp),
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     titleFontSize: TextUnit = 14.sp,
+    titleLineHeight: TextUnit = TextUnit.Unspecified,
     titleFontWeight: FontWeight = FontWeight.Bold,
-    titleMaxLines: Int = 1,
+    titleMaxLines: Int = Int.MAX_VALUE,
     titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     textFontSize: TextUnit = 16.sp,
     textLineHeight: TextUnit = TextUnit.Unspecified,
@@ -94,17 +96,17 @@ fun CustomOutlinedTextField(
     trailingIconContentDescription: String? = null,
     trailingIconSize: Dp = 24.dp,
     keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.None,
-    autoCorrect: Boolean = true,
+    autoCorrectEnabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = keyboardType,
         imeAction = imeAction,
         capitalization = keyboardCapitalization,
-        autoCorrect = autoCorrect
+        autoCorrectEnabled = autoCorrectEnabled
     ),
     spaceBetweenTitleAndTextField: Dp = 4.dp,
-    onValueChange: (newValue: String) -> Unit,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
+    onValueChange: (newValue: String) -> Unit,
     keyboardAction: () -> Unit = {}
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
@@ -118,6 +120,7 @@ fun CustomOutlinedTextField(
             Text(
                 text = title,
                 fontSize = titleFontSize,
+                lineHeight = titleLineHeight,
                 fontWeight = titleFontWeight,
                 maxLines = titleMaxLines,
                 color = titleColor
@@ -178,19 +181,24 @@ fun CustomOutlinedTextField(
             },
             leadingIcon = if (leadingIcon != null) {
                 {
-                    Icon(
-                        painter = leadingIcon,
-                        contentDescription = leadingIconContentDescription,
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier.size(leadingIconSize)
-                    )
+                    ) {
+                        Icon(
+                            painter = leadingIcon,
+                            contentDescription = leadingIconContentDescription,
+                            modifier = Modifier.size(leadingIconSize)
+                        )
+                    }
                 }
             } else null,
             trailingIcon = when {
                 isPasswordTextField -> {
                     {
-                        IconButton(onClick = {
-                            isPasswordVisible = !isPasswordVisible
-                        }) {
+                        IconButton(
+                            onClick = { isPasswordVisible = !isPasswordVisible }
+                        ) {
                             Icon(
                                 painter = if (isPasswordVisible) painterResource(
                                     id = R.drawable.ic_password_toggle_visible
@@ -204,11 +212,16 @@ fun CustomOutlinedTextField(
                 }
                 trailingIcon != null -> {
                     {
-                        Icon(
-                            painter = trailingIcon,
-                            contentDescription = trailingIconContentDescription,
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier.size(trailingIconSize)
-                        )
+                        ) {
+                            Icon(
+                                painter = trailingIcon,
+                                contentDescription = trailingIconContentDescription,
+                                modifier = Modifier.size(trailingIconSize)
+                            )
+                        }
                     }
                 }
                 else -> null
