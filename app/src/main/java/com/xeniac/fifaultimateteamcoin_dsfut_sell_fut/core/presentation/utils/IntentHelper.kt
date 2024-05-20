@@ -4,16 +4,28 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 
 typealias AppNotFound = Boolean
 
-object LinkHelper {
+object IntentHelper {
+
+    fun openLinkInInAppBrowser(context: Context, urlString: String) {
+        val intent = CustomTabsIntent.Builder().build().apply {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        intent.launchUrl(
+            /* context = */ context,
+            /* url = */ Uri.parse(urlString)
+        )
+    }
 
     /**
      * returns true if app was not found
      */
-    fun openLink(context: Context, urlString: String): AppNotFound = try {
+    fun openLinkInBrowser(context: Context, urlString: String): AppNotFound = try {
         Intent().apply {
             action = Intent.ACTION_VIEW
             data = Uri.parse(urlString)
@@ -33,6 +45,6 @@ object LinkHelper {
         }
         false
     } catch (e: ActivityNotFoundException) {
-        openLink(context, BuildConfig.URL_APP_STORE)
+        openLinkInBrowser(context, BuildConfig.URL_APP_STORE)
     }
 }

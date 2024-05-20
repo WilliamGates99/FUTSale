@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PickedUpPlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
 
 data class PickedUpPlayer(
     val name: String,
@@ -9,7 +9,7 @@ data class PickedUpPlayer(
     val rating: Int,
     val priceStart: Int,
     val priceNow: Int,
-    val pickUpTimeInMillis: String = getCurrentTimeInMillis(),
+    val pickUpTimeInMillis: Long = getCurrentTimeInMillis(),
     val id: Int? = null
 ) {
     fun toPickedUpPlayerEntity(): PickedUpPlayerEntity = PickedUpPlayerEntity(
@@ -18,7 +18,7 @@ data class PickedUpPlayer(
         rating = rating,
         priceStart = priceStart,
         priceNow = priceNow,
-        pickUpTimeInMillis = pickUpTimeInMillis,
+        pickUpTimeInMillis = pickUpTimeInMillis.toString(),
         id = id
     )
 }

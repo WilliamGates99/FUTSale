@@ -33,11 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.LinkHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restart
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.util.SettingsUiEvent
@@ -79,7 +79,7 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
-            is SettingsUiEvent.RestartActivity -> context.findActivity().restart()
+            is SettingsUiEvent.RestartActivity -> context.findActivity().restartActivity()
             is UiEvent.ShowSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
@@ -144,11 +144,11 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onItemClick = { url ->
                     shouldShowIntentAppNotFoundError = url?.let {
-                        LinkHelper.openLink(
+                        IntentHelper.openLinkInBrowser(
                             context = context,
                             urlString = url
                         )
-                    } ?: LinkHelper.openAppPageInStore(context)
+                    } ?: IntentHelper.openAppPageInStore(context)
                 }
             )
         }

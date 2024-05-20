@@ -11,14 +11,13 @@ class CompleteOnboardingUseCase(
     suspend operator fun invoke(
         partnerId: String?,
         secretKey: String?
-    ): Resource<Nothing> =
-        try {
-            preferencesRepository.setPartnerId(partnerId = partnerId)
-            preferencesRepository.setSecretKey(secretKey = secretKey)
-            preferencesRepository.isOnBoardingCompleted(isCompleted = true)
-            Resource.Success()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
-        }
+    ): Resource<Nothing> = try {
+        preferencesRepository.setPartnerId(partnerId = partnerId)
+        preferencesRepository.setSecretKey(secretKey = secretKey)
+        preferencesRepository.isOnBoardingCompleted(isCompleted = true)
+        Resource.Success()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
+    }
 }

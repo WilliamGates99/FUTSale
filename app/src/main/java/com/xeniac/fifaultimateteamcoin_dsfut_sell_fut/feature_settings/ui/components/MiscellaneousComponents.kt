@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 
 enum class MiscellaneousRowItems(
     @DrawableRes val icon: Int,

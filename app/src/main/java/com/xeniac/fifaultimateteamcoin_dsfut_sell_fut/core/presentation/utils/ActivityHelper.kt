@@ -27,7 +27,7 @@ fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-fun Activity.restart() {
+fun Activity.restartActivity() {
     Intent(
         /* packageContext = */ this,
         /* cls = */ this::class.java

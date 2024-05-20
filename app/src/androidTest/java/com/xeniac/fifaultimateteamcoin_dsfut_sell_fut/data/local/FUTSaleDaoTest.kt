@@ -3,9 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.FutSaleDatabase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PickedUpPlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,11 +32,11 @@ class FUTSaleDaoTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: FUTSaleDatabase
+    lateinit var database: FutSaleDatabase
 
     @Inject
     @Named("test_dao")
-    lateinit var dao: FUTSaleDao
+    lateinit var dao: PlayersDao
 
     @Before
     fun setup() {
@@ -54,7 +56,7 @@ class FUTSaleDaoTest {
             rating = 69,
             priceStart = 420,
             priceNow = 500,
-            pickUpTimeInMillis = getCurrentTimeInMillis()
+            pickUpTimeInMillis = getCurrentTimeInMillis().toString()
         )
         dao.insertPickedUpPlayer(pickedUpPlayer)
 
@@ -70,7 +72,7 @@ class FUTSaleDaoTest {
             rating = 69,
             priceStart = 420,
             priceNow = 500,
-            pickUpTimeInMillis = getCurrentTimeInMillis(),
+            pickUpTimeInMillis = getCurrentTimeInMillis().toString(),
         )
         dao.insertPickedUpPlayer(pickedUpPlayer)
         dao.deletePickedUpPlayer(pickedUpPlayer)

@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,14 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerDark
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerLight
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.LinkHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.ui.components.OnboardingPager
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.util.OnboardingUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerDark
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerLight
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components.OnboardingPager
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,12 +39,10 @@ fun OnboardingScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val partnerIdState by viewModel.partnerIdState.collectAsStateWithLifecycle()
-    val secretKeyState by viewModel.secretKeyState.collectAsStateWithLifecycle()
-
+    val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
     var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
 
-    ObserverAsEvent(flow = viewModel.setIsOnboardingCompletedEventChannel) { event ->
+    ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
             is OnboardingUiEvent.NavigateToHomeScreen -> onNavigateToHomeScreen()
             is UiEvent.ShowSnackbar -> {
@@ -70,14 +67,12 @@ fun OnboardingScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = if (isSystemInDarkTheme()) surfaceContainerDark else surfaceContainerLight)
+        containerColor = if (isSystemInDarkTheme()) surfaceContainerDark else surfaceContainerLight,
+        modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         OnboardingPager(
             bottomPadding = innerPadding.calculateBottomPadding(),
-            partnerIdState = partnerIdState,
-            secretKeyState = secretKeyState,
+            onboardingState = onboardingState,
             onPartnerIdChange = { newPartnerId ->
                 viewModel.onEvent(OnboardingEvent.PartnerIdChanged(newPartnerId))
             },
@@ -88,13 +83,13 @@ fun OnboardingScreen(
                 viewModel.onEvent(OnboardingEvent.SaveUserData)
             },
             onRegisterBtnClick = {
-                shouldShowIntentAppNotFoundError = LinkHelper.openLink(
+                shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
                     context = context,
                     urlString = Constants.URL_DSFUT
                 )
             },
             onPrivacyPolicyBtnClick = {
-                shouldShowIntentAppNotFoundError = LinkHelper.openLink(
+                IntentHelper.openLinkInInAppBrowser(
                     context = context,
                     urlString = Constants.URL_PRIVACY_POLICY
                 )

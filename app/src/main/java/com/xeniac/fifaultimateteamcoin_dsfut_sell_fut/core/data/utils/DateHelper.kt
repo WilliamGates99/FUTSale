@@ -1,10 +1,10 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
-import java.util.*
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.PLAYER_EXPIRY_TIME_IN_MILLIS
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 object DateHelper {
@@ -33,10 +33,7 @@ object DateHelper {
         return TimeUnit.MILLISECONDS.toDays(currentTimeInMillis - previousRequestTimeInMillis)
     }
 
-    fun getCurrentTimeInMillis(): String {
-        val calendar = Calendar.getInstance()
-        return calendar.timeInMillis.toString()
-    }
+    fun getCurrentTimeInMillis(): Long = Calendar.getInstance().timeInMillis
 
     fun isPickedPlayerNotExpired(pickUpTimeInMillis: String): Boolean {
         val currentTimeInMillis = Calendar.getInstance().timeInMillis
