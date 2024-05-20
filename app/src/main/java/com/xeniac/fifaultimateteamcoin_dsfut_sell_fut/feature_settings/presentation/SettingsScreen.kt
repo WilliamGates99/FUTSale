@@ -33,11 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.LinkHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.restart
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.LinkHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restart
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.util.SettingsUiEvent

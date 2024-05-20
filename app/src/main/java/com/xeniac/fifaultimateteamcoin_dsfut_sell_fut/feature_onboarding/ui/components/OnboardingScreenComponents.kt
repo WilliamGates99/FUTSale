@@ -55,7 +55,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.Bouncin
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral70
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.toAnnotatedString
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.toAnnotatedString
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

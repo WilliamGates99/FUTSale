@@ -1,9 +1,9 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

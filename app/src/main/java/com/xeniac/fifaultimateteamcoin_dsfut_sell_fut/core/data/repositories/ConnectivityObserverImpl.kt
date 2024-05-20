@@ -1,6 +1,5 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
@@ -10,12 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ConnectivityObserverImpl(context: Context) : ConnectivityObserver {
-
-    private val connectivityManager = context.getSystemService(
-        Context.CONNECTIVITY_SERVICE
-    ) as ConnectivityManager
+class ConnectivityObserverImpl @Inject constructor(
+    private val connectivityManager: ConnectivityManager
+) : ConnectivityObserver {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun observe(): Flow<ConnectivityObserver.Status> {

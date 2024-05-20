@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.states.CustomTextFieldState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.util.OnboardingUiEvent
 import dagger.Lazy

@@ -3,11 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presenta
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SettingsUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.util.SettingsUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,6 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
 import dagger.Module
 import dagger.Provides

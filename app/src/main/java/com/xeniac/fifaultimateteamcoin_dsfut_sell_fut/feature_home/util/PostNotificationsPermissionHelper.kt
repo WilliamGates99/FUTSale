@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.util
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.PermissionHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.PermissionHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
 
 class PostNotificationsPermissionHelper : PermissionHelper {
     override fun getMessage(isPermanentlyDeclined: Boolean): UiText {

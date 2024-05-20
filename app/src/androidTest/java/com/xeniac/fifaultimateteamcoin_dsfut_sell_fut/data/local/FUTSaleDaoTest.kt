@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PickedUpPlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.getOrAwaitValue
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.utils.DateHelper.getCurrentTimeInMillis
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -48,7 +48,7 @@ class FUTSaleDaoTest {
 
     @Test
     fun insertPickedUpPlayer() = runTest {
-        val pickedUpPlayer = PickedUpPlayer(
+        val pickedUpPlayer = PickedUpPlayerEntity(
             name = "name",
             position = "FW",
             rating = 69,
@@ -64,7 +64,7 @@ class FUTSaleDaoTest {
 
     @Test
     fun deletePickedUpPlayer() = runTest {
-        val pickedUpPlayer = PickedUpPlayer(
+        val pickedUpPlayer = PickedUpPlayerEntity(
             name = "name",
             position = "FW",
             rating = 69,

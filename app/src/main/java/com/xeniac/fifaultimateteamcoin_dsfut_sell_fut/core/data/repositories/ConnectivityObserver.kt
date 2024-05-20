@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import kotlinx.coroutines.flow.Flow
 

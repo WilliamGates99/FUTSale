@@ -1,11 +1,12 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 
 typealias IsActivityRestartNeeded = Boolean
+typealias SelectedPlatform = String
 
 interface PreferencesRepository {
 
@@ -15,13 +16,13 @@ interface PreferencesRepository {
 
     fun isNotificationVibrateActiveSynchronously(): Boolean
 
-    suspend fun isOnBoardingCompleted(): Boolean
-
-    suspend fun getNotificationPermissionCount(): Int
-
     suspend fun getCurrentAppTheme(): AppTheme
 
     suspend fun getCurrentAppLocale(): AppLocale
+
+    suspend fun isOnBoardingCompleted(): Boolean
+
+    suspend fun getNotificationPermissionCount(): Int
 
     suspend fun isNotificationSoundEnabled(): Boolean
 
@@ -35,15 +36,15 @@ interface PreferencesRepository {
 
     suspend fun getSecretKey(): String?
 
-    suspend fun getSelectedPlatform(): String
-
-    suspend fun isOnBoardingCompleted(isCompleted: Boolean)
-
-    suspend fun setNotificationPermissionCount(count: Int)
+    suspend fun getSelectedPlatform(): SelectedPlatform
 
     suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 
     suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded
+
+    suspend fun isOnBoardingCompleted(isCompleted: Boolean)
+
+    suspend fun setNotificationPermissionCount(count: Int)
 
     suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
 

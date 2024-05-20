@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -10,26 +10,26 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants.SELECTED_PLATFORM_CONSOLE
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
-class PreferencesRepositoryImp @Inject constructor(
+class PreferencesRepositoryImpl @Inject constructor(
     private val settingsDataStore: DataStore<Preferences>
 ) : PreferencesRepository {
 
     private object PreferencesKeys {
+        val CURRENT_APP_THEME = intPreferencesKey("theme")
         val IS_ONBOARDING_COMPLETED = booleanPreferencesKey("isOnBoardingCompleted")
         val NOTIFICATION_PERMISSION_COUNT = intPreferencesKey(name = "notificationPermissionCount")
-        val CURRENT_APP_THEME = intPreferencesKey("theme")
         val IS_NOTIFICATION_SOUND_ENABLED = booleanPreferencesKey("isNotificationSoundActive")
         val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey("isNotificationVibrateActive")
         val RATE_APP_DIALOG_CHOICE = intPreferencesKey("rateAppDialogChoice")
@@ -73,24 +73,6 @@ class PreferencesRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
-        } catch (e: Exception) {
-            Timber.e("isOnBoardingCompleted Exception: $e")
-            false
-        }
-    }
-
-    override suspend fun getNotificationPermissionCount(): Int = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
-        } catch (e: Exception) {
-            Timber.e("getNotificationPermissionCount Exception: $e")
-            0
-        }
-    }
-
     override suspend fun getCurrentAppTheme(): AppTheme = try {
         val appThemeIndex = settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
@@ -121,8 +103,26 @@ class PreferencesRepositoryImp @Inject constructor(
             appLocaleDto.toAppLocale()
         }
     } catch (e: Exception) {
-        Timber.e("getCurrentAppLocaleString Exception: $e")
+        Timber.e("getCurrentAppLocale Exception: $e")
         AppLocaleDto.DEFAULT.toAppLocale()
+    }
+
+    override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
+        } catch (e: Exception) {
+            Timber.e("isOnBoardingCompleted Exception: $e")
+            false
+        }
+    }
+
+    override suspend fun getNotificationPermissionCount(): Int = runBlocking {
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+        } catch (e: Exception) {
+            Timber.e("getNotificationPermissionCount Exception: $e")
+            0
+        }
     }
 
     override suspend fun isNotificationSoundEnabled(): Boolean = try {
@@ -167,12 +167,38 @@ class PreferencesRepositoryImp @Inject constructor(
         null
     }
 
-    override suspend fun getSelectedPlatform(): String = try {
+    override suspend fun getSelectedPlatform(): SelectedPlatform = try {
         settingsDataStore.data
-            .first()[PreferencesKeys.SELECTED_PLATFORM] ?: SELECTED_PLATFORM_CONSOLE
+            .first()[PreferencesKeys.SELECTED_PLATFORM] ?: Constants.SELECTED_PLATFORM_CONSOLE
     } catch (e: Exception) {
         Timber.e("getSelectedPlatform Exception: $e")
-        SELECTED_PLATFORM_CONSOLE
+        Constants.SELECTED_PLATFORM_CONSOLE
+    }
+
+    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
+                Timber.i("AppTheme edited to ${appThemeDto.index}")
+            }
+        } catch (e: Exception) {
+            Timber.e("setCurrentAppTheme Exception: $e")
+        }
+    }
+
+    override suspend fun setCurrentAppLocale(
+        appLocaleDto: AppLocaleDto
+    ): IsActivityRestartNeeded = try {
+        val isActivityRestartNeeded = isActivityRestartNeeded(
+            newLayoutDirection = appLocaleDto.layoutDirection
+        )
+        AppCompatDelegate.setApplicationLocales(
+            /* locales = */ LocaleListCompat.forLanguageTags(appLocaleDto.languageTag)
+        )
+        isActivityRestartNeeded
+    } catch (e: Exception) {
+        Timber.e("setCurrentAppLocale Exception: $e")
+        false
     }
 
     override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
@@ -195,28 +221,6 @@ class PreferencesRepositoryImp @Inject constructor(
         } catch (e: Exception) {
             Timber.e("setNotificationPermissionCount Exception: $e")
         }
-    }
-
-    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
-        try {
-            settingsDataStore.edit {
-                it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
-                Timber.i("AppTheme edited to ${appThemeDto.index}")
-            }
-        } catch (e: Exception) {
-            Timber.e("setCurrentAppTheme Exception: $e")
-        }
-    }
-
-    override suspend fun setCurrentAppLocale(
-        appLocaleDto: AppLocaleDto
-    ): IsActivityRestartNeeded = try {
-        val isActivityRestartNeeded = isActivityRestartNeeded(appLocaleDto.direction)
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(appLocaleDto.tag))
-        isActivityRestartNeeded
-    } catch (e: Exception) {
-        Timber.e("setCurrentAppLocale Exception: $e")
-        false
     }
 
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {

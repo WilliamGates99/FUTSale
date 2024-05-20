@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils
 
 abstract class ResultError {
     object BlankField : ResultError()

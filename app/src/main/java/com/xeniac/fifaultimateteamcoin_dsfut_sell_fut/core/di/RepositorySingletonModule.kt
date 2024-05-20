@@ -1,7 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepositoryImp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.ConnectivityObserverImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +17,12 @@ abstract class RepositorySingletonModule {
     @Binds
     @Singleton
     abstract fun bindPreferencesRepository(
-        preferencesRepositoryImp: PreferencesRepositoryImp
+        preferencesRepositoryImpl: PreferencesRepositoryImpl
     ): PreferencesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindConnectivityObserver(
+        connectivityObserverImp: ConnectivityObserverImpl
+    ): ConnectivityObserver
 }

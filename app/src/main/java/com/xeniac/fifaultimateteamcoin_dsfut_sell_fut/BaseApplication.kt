@@ -15,7 +15,7 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.services.PickUpPlayerNotificationService
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.Dispatcher

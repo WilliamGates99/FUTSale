@@ -1,14 +1,17 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 
+import android.os.Parcelable
 import androidx.appcompat.app.AppCompatDelegate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
+import kotlinx.parcelize.Parcelize
 
-enum class AppThemeDto(
+@Parcelize
+enum class AppTheme(
     val index: Int,
     val text: UiText,
     val setAppTheme: () -> Unit
-) {
+) : Parcelable {
     DEFAULT(
         index = 0,
         text = UiText.StringResource(R.string.settings_text_settings_theme_default),

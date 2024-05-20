@@ -1,11 +1,11 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.model.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
 
 class SetCurrentAppThemeUseCase(
     private val preferencesRepository: PreferencesRepository

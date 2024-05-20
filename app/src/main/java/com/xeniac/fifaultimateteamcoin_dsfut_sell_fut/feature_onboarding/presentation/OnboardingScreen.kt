@@ -24,9 +24,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerDark
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.surfaceContainerLight
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.LinkHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.LinkHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.ui.components.OnboardingPager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.util.OnboardingUiEvent
 import kotlinx.coroutines.launch
