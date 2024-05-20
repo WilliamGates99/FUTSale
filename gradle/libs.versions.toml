@@ -16,6 +16,7 @@ ktor = "2.3.11"
 room = "2.6.1"
 datastorePreferences = "1.1.1"
 firebase-bom = "33.0.0"
+inAppBrowser = "1.8.0"
 timber = "5.0.1"
 lottieCompose = "6.4.0"
 coil-bom = "2.6.0"
@@ -91,6 +92,9 @@ firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analy
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
 firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+
+# In-App Browser
+browser = { module = "androidx.browser:browser", version.ref = "inAppBrowser" }
 
 # Timber Library
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

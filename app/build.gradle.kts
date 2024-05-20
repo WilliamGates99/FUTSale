@@ -349,6 +349,9 @@ dependencies {
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.perf.ktx)
 
+    // In-App Browser
+    implementation(libs.browser)
+
     // Timber Library
     implementation(libs.timber)
 
