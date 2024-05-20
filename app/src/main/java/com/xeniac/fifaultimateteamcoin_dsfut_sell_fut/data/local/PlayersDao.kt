@@ -5,7 +5,7 @@ import androidx.room.*
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUpPlayer
 
 @Dao
-interface DsfutDao {
+interface PlayersDao {
 
     @Upsert
     suspend fun insertPickedUpPlayer(pickedUpPlayer: PickedUpPlayer)

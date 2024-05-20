@@ -8,7 +8,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.models.PickedUp
     entities = [PickedUpPlayer::class],
     version = 1
 )
-abstract class DsfutDatabase : RoomDatabase() {
+abstract class FutSaleDatabase : RoomDatabase() {
 
-    abstract fun dsfutDao(): DsfutDao
+    abstract fun playersDao(): PlayersDao
 }

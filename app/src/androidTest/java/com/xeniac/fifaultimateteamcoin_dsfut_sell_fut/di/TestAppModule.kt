@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
 
 import android.content.Context
 import androidx.room.Room
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.DsfutDatabase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.data.local.FUTSaleDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,13 +18,13 @@ object TestAppModule {
     @Named("test_db")
     fun provideInMemoryDb(
         @ApplicationContext context: Context
-    ) = Room.inMemoryDatabaseBuilder(context, DsfutDatabase::class.java)
+    ) = Room.inMemoryDatabaseBuilder(context, FUTSaleDatabase::class.java)
         .allowMainThreadQueries()
         .build()
 
     @Provides
     @Named("test_dao")
     fun provideTestDao(
-        @Named("test_db") database: DsfutDatabase
+        @Named("test_db") database: FUTSaleDatabase
     ) = database.dsfutDao()
 }

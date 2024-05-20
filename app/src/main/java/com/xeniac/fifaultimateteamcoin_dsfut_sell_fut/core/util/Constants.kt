@@ -2,9 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.util
 
 object Constants {
 
-    // Room Database Constants
-    const val DSFUT_DATABASE_NAME = "dsfut_db"
-
     // Web URLs
     const val URL_DSFUT = "https://dsfut.net"
     const val URL_DSFUT_WALLET = "https://dsfut.net/wallet"

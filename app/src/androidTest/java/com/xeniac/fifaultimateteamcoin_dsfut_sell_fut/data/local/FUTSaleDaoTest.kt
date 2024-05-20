@@ -20,7 +20,7 @@ import javax.inject.Named
 @ExperimentalCoroutinesApi
 @SmallTest
 @HiltAndroidTest
-class DsfutDaoTest {
+class FUTSaleDaoTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -30,11 +30,11 @@ class DsfutDaoTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: DsfutDatabase
+    lateinit var database: FUTSaleDatabase
 
     @Inject
     @Named("test_dao")
-    lateinit var dao: DsfutDao
+    lateinit var dao: FUTSaleDao
 
     @Before
     fun setup() {
