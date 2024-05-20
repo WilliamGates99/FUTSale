@@ -89,7 +89,7 @@ fun OnboardingPager(
 
         HorizontalPager(
             state = pagerState,
-            beyondBoundsPageCount = 1,
+            beyondViewportPageCount = 1,
             userScrollEnabled = true,
             modifier = Modifier
                 .fillMaxWidth()
