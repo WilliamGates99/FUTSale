@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.di
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
@@ -18,17 +18,15 @@ internal object HomeModule {
     @ViewModelScoped
     fun provideGetNotificationPermissionCountUseCase(
         preferencesRepository: PreferencesRepository
-    ): GetNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
-        preferencesRepository
-    )
+    ): GetNotificationPermissionCountUseCase =
+        GetNotificationPermissionCountUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
     fun provideSetNotificationPermissionCountUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetNotificationPermissionCountUseCase = SetNotificationPermissionCountUseCase(
-        preferencesRepository
-    )
+    ): SetNotificationPermissionCountUseCase =
+        SetNotificationPermissionCountUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped

@@ -5,7 +5,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Pre
 class SetNotificationPermissionCountUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(count: Int) {
-        preferencesRepository.setNotificationPermissionCount(count)
-    }
+    suspend operator fun invoke(
+        count: Int
+    ) = preferencesRepository.setNotificationPermissionCount(count)
 }
