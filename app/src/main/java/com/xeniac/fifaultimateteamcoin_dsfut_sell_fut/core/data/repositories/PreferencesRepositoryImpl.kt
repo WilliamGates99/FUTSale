@@ -16,6 +16,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SelectedPlatform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

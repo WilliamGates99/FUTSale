@@ -1,6 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetNotificationPermissionCountUseCase

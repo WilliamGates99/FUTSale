@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
 
 import android.os.Build
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
