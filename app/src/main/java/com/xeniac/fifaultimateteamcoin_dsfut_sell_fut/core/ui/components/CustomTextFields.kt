@@ -63,7 +63,12 @@ fun CustomOutlinedTextField(
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     shape: Shape = RoundedCornerShape(12.dp),
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        errorSupportingTextColor = MaterialTheme.colorScheme.error,
+        focusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        unfocusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+    ),
     titleFontSize: TextUnit = 14.sp,
     titleLineHeight: TextUnit = TextUnit.Unspecified,
     titleFontWeight: FontWeight = FontWeight.Bold,
@@ -84,7 +89,6 @@ fun CustomOutlinedTextField(
     supportingText: String? = null,
     supportingTextFontSize: TextUnit = 12.sp,
     supportingTextFontWeight: FontWeight = FontWeight.Normal,
-    supportingTextColor: Color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
     placeholderFontSize: TextUnit = 16.sp,
     placeholderFontWeight: FontWeight = FontWeight.Normal,
     placeholderMaxLines: Int = 1,
@@ -162,8 +166,7 @@ fun CustomOutlinedTextField(
                         Text(
                             text = supportingText,
                             fontSize = supportingTextFontSize,
-                            fontWeight = supportingTextFontWeight,
-                            color = supportingTextColor
+                            fontWeight = supportingTextFontWeight
                         )
                     }
                 }
@@ -172,8 +175,7 @@ fun CustomOutlinedTextField(
                         Text(
                             text = errorText,
                             fontSize = supportingTextFontSize,
-                            fontWeight = supportingTextFontWeight,
-                            color = supportingTextColor
+                            fontWeight = supportingTextFontWeight
                         )
                     }
                 }
