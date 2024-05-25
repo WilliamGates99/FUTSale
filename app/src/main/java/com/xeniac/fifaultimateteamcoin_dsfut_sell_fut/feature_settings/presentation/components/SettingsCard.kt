@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -34,17 +34,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
 
 @Composable
 fun SettingsCard(
-    appLocale: AppLocale,
-    appTheme: AppTheme,
-    isNotificationSoundEnabled: Boolean,
-    isNotificationVibrateEnabled: Boolean,
+    settingsState: SettingsState,
     modifier: Modifier = Modifier,
     titlePadding: PaddingValues = PaddingValues(horizontal = 8.dp),
     title: String = stringResource(id = R.string.settings_title_settings),
@@ -76,38 +72,38 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_language),
                 title = stringResource(id = R.string.settings_text_settings_language),
-                currentValue = appLocale.text.asString(),
+                currentValue = settingsState.appLocale.text.asString(),
                 onClick = {
                     // TODO: OPEN DIALOG
                 }
             )
 
-            Divider()
+            HorizontalDivider()
 
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_theme),
                 title = stringResource(id = R.string.settings_text_settings_theme),
-                currentValue = appTheme.text.asString(),
+                currentValue = settingsState.appTheme.text.asString(),
                 onClick = {
                     // TODO: OPEN DIALOG
                 }
             )
 
-            Divider()
+            HorizontalDivider()
 
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_sound),
                 title = stringResource(id = R.string.settings_text_settings_notification_sound),
-                isChecked = isNotificationSoundEnabled,
+                isChecked = settingsState.isNotificationSoundEnabled,
                 onCheckedChange = onNotificationSoundChange
             )
 
-            Divider()
+            HorizontalDivider()
 
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_vibrate),
                 title = stringResource(id = R.string.settings_text_settings_notification_vibrate),
-                isChecked = isNotificationVibrateEnabled,
+                isChecked = settingsState.isNotificationVibrateEnabled,
                 onCheckedChange = onNotificationVibrateChange
             )
         }

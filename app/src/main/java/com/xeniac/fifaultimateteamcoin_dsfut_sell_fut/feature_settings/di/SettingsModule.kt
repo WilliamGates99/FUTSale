@@ -22,15 +22,15 @@ internal object SettingsModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetCurrentAppThemeUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(preferencesRepository)
-
-    @Provides
-    @ViewModelScoped
     fun provideGetCurrentAppLocaleUseCase(
         preferencesRepository: PreferencesRepository
     ): GetCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetCurrentAppThemeUseCase(
+        preferencesRepository: PreferencesRepository
+    ): GetCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
@@ -50,15 +50,15 @@ internal object SettingsModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetCurrentAppThemeUseCase(
-        preferencesRepository: PreferencesRepository
-    ): SetCurrentAppThemeUseCase = SetCurrentAppThemeUseCase(preferencesRepository)
-
-    @Provides
-    @ViewModelScoped
     fun provideSetCurrentAppLocaleUseCase(
         preferencesRepository: PreferencesRepository
     ): SetCurrentAppLocaleUseCase = SetCurrentAppLocaleUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSetCurrentAppThemeUseCase(
+        preferencesRepository: PreferencesRepository
+    ): SetCurrentAppThemeUseCase = SetCurrentAppThemeUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
@@ -79,21 +79,21 @@ internal object SettingsModule {
     @Provides
     @ViewModelScoped
     fun provideSettingsUseCases(
-        getCurrentAppThemeUseCase: GetCurrentAppThemeUseCase,
         getCurrentAppLocaleUseCase: GetCurrentAppLocaleUseCase,
+        getCurrentAppThemeUseCase: GetCurrentAppThemeUseCase,
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
-        setCurrentAppThemeUseCase: SetCurrentAppThemeUseCase,
         setCurrentAppLocaleUseCase: SetCurrentAppLocaleUseCase,
+        setCurrentAppThemeUseCase: SetCurrentAppThemeUseCase,
         setIsNotificationSoundEnabledUseCase: SetIsNotificationSoundEnabledUseCase,
         setIsNotificationVibrateEnabledUseCase: SetIsNotificationVibrateEnabledUseCase
     ): SettingsUseCases = SettingsUseCases(
-        { getCurrentAppThemeUseCase },
         { getCurrentAppLocaleUseCase },
+        { getCurrentAppThemeUseCase },
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
-        { setCurrentAppThemeUseCase },
         { setCurrentAppLocaleUseCase },
+        { setCurrentAppThemeUseCase },
         { setIsNotificationSoundEnabledUseCase },
         { setIsNotificationVibrateEnabledUseCase }
     )

@@ -38,9 +38,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ob
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.MiscellaneousCard
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components.SettingsCard
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.util.SettingsUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,26 +56,9 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val appTheme by viewModel.appTheme.collectAsStateWithLifecycle()
-    val appLocale by viewModel.appLocale.collectAsStateWithLifecycle()
-    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle()
-    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle()
+    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
-
-    ObserverAsEvent(flow = viewModel.setAppThemeEventChannel) { event ->
-        when (event) {
-            is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
-            is UiEvent.ShowSnackbar -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
-        }
-    }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -88,6 +71,49 @@ fun SettingsScreen(
                     )
                 }
             }
+        }
+    }
+
+    ObserverAsEvent(flow = viewModel.setAppThemeEventChannel) { event ->
+        when (event) {
+            is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    ObserverAsEvent(flow = viewModel.setNotificationSoundEventChannel) { event ->
+        when (event) {
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    ObserverAsEvent(flow = viewModel.setNotificationVibrateEventChannel) { event ->
+        when (event) {
+            is UiEvent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+            else -> Unit
         }
     }
 
@@ -127,10 +153,7 @@ fun SettingsScreen(
                 )
         ) {
             SettingsCard(
-                appLocale = appLocale,
-                appTheme = appTheme,
-                isNotificationSoundEnabled = isNotificationSoundEnabled,
-                isNotificationVibrateEnabled = isNotificationVibrateEnabled,
+                settingsState = settingsState,
                 onNotificationSoundChange = { isChecked ->
                     viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
                 },
@@ -142,13 +165,16 @@ fun SettingsScreen(
 
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),
+                openAppPageInStore = {
+                    IntentHelper.openAppPageInStore(context)
+                },
                 onItemClick = { url ->
-                    shouldShowIntentAppNotFoundError = url?.let {
-                        IntentHelper.openLinkInBrowser(
+                    url?.let {
+                        shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
                             context = context,
                             urlString = url
                         )
-                    } ?: IntentHelper.openAppPageInStore(context)
+                    }
                 }
             )
         }

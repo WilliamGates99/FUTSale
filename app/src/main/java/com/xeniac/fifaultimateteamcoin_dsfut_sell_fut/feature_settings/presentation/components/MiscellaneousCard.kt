@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.ui.components
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 
 enum class MiscellaneousRowItems(
     @DrawableRes val icon: Int,
@@ -58,7 +58,7 @@ enum class MiscellaneousRowItems(
     PrivacyPolicy(
         icon = R.drawable.ic_settings_privacy_policy,
         title = R.string.settings_text_miscellaneous_privacy_policy,
-        url = Constants.URL_PRIVACY_POLICY
+        url = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.URL_PRIVACY_POLICY
     )
 }
 
@@ -71,6 +71,7 @@ fun MiscellaneousCard(
     titleFontWeight: FontWeight = FontWeight.ExtraBold,
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
     cardShape: Shape = RoundedCornerShape(12.dp),
+    openAppPageInStore: () -> Unit,
     onItemClick: (url: String?) -> Unit
 ) {
     Column(
@@ -95,12 +96,17 @@ fun MiscellaneousCard(
                 CardClickableLinkRowItem(
                     icon = painterResource(id = miscellaneousItem.icon),
                     title = stringResource(id = miscellaneousItem.title),
-                    onClick = { onItemClick(miscellaneousItem.url) }
+                    onClick = {
+                        when (miscellaneousItem) {
+                            MiscellaneousRowItems.RateUs -> openAppPageInStore()
+                            else -> onItemClick(miscellaneousItem.url)
+                        }
+                    }
                 )
 
                 val isNotLastItem = index != MiscellaneousRowItems.entries.size - 1
                 if (isNotLastItem) {
-                    Divider()
+                    HorizontalDivider()
                 }
             }
         }
