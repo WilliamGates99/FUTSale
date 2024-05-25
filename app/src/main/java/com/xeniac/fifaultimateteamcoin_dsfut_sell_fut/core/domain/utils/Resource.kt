@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+
 sealed class Resource<T>(
     val data: T? = null,
     val message: UiText? = null

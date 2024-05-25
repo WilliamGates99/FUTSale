@@ -4,6 +4,5 @@ import dagger.Lazy
 
 data class MainUseCases(
     val getCurrentAppLocaleUseCase: Lazy<GetCurrentAppLocaleUseCase>,
-    val setCurrentAppLocaleUseCase: Lazy<SetCurrentAppLocaleUseCase>,
     val getIsOnboardingCompletedUseCase: Lazy<GetIsOnboardingCompletedUseCase>
 )

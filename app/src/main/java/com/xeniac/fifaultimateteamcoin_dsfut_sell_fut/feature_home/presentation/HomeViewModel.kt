@@ -1,26 +1,24 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.states.HomeState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeUseCases: HomeUseCases
+    private val homeUseCases: HomeUseCases,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val notificationPermissionCount = MutableStateFlow(0)
-
-    private val _permissionDialogQueue = MutableStateFlow<MutableList<String>>(mutableListOf())
-    val permissionDialogQueue = _permissionDialogQueue.asStateFlow()
-
-    private val _isPermissionDialogVisible = MutableStateFlow(false)
-    val isPermissionDialogVisible = _isPermissionDialogVisible.asStateFlow()
+    val homeState = savedStateHandle.getStateFlow(
+        key = "homeState",
+        initialValue = HomeState()
+    )
 
     fun onEvent(event: HomeEvent) {
         when (event) {
@@ -28,7 +26,7 @@ class HomeViewModel @Inject constructor(
                 permission = event.permission,
                 isGranted = event.isGranted
             )
-            is HomeEvent.DismissDialog -> dismissDialog(permission = event.permission)
+            is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog(permission = event.permission)
         }
     }
 
@@ -36,23 +34,30 @@ class HomeViewModel @Inject constructor(
         permission: String,
         isGranted: Boolean
     ) = viewModelScope.launch {
-        notificationPermissionCount.value = homeUseCases
-            .getNotificationPermissionCountUseCase.get()()
+        savedStateHandle["homeState"] = homeState.value.copy(
+            notificationPermissionCount = homeUseCases.getNotificationPermissionCountUseCase.get()()
+        )
 
-        val shouldAskForNotificationPermission = notificationPermissionCount.value < 1 &&
-                !isGranted && !permissionDialogQueue.value.contains(permission)
+        val shouldAskForPermission = homeState.value.run {
+            notificationPermissionCount < 1 && !permissionDialogQueue.contains(permission) && !isGranted
+        }
 
-        if (shouldAskForNotificationPermission) {
-            _permissionDialogQueue.value.add(permission)
-            _isPermissionDialogVisible.value = true
+        if (shouldAskForPermission) {
+            savedStateHandle["homeState"] = homeState.value.copy(
+                permissionDialogQueue = listOf(permission),
+                isPermissionDialogVisible = true
+            )
         }
     }
 
-    private fun dismissDialog(permission: String) = viewModelScope.launch {
+    private fun dismissPermissionDialog(permission: String) = viewModelScope.launch {
         homeUseCases.setNotificationPermissionCountUseCase.get()(
-            count = notificationPermissionCount.value.plus(1)
+            count = homeState.value.notificationPermissionCount.plus(1)
         )
-        _permissionDialogQueue.value.remove(permission)
-        _isPermissionDialogVisible.value = false
+
+        savedStateHandle["homeState"] = homeState.value.copy(
+            permissionDialogQueue = emptyList(),
+            isPermissionDialogVisible = false
+        )
     }
 }

@@ -35,9 +35,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.op
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.PermissionDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.components.CustomNavigationBar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.components.NavigationBarItems
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.util.PostNotificationsPermissionHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
 
 @Composable
 fun HomeScreen(
@@ -61,10 +61,9 @@ fun HomeScreen(
 
     @SuppressLint("InlinedApi")
     if (isRunningAndroid13OrNewer) {
-        val permissionDialogQueue by homeViewModel.permissionDialogQueue.collectAsStateWithLifecycle()
-        val isPermissionDialogVisible by homeViewModel.isPermissionDialogVisible.collectAsStateWithLifecycle()
+        val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
 
-        val notificationPermissionResultLauncher = rememberLauncherForActivityResult(
+        val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             homeViewModel.onEvent(
@@ -76,15 +75,15 @@ fun HomeScreen(
         }
 
         LaunchedEffect(key1 = Unit) {
-            notificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            postNotificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
         AnimatedVisibility(
-            visible = isPermissionDialogVisible,
+            visible = homeState.isPermissionDialogVisible,
             enter = scaleIn(),
             exit = scaleOut()
         ) {
-            permissionDialogQueue.reversed().forEach { permission ->
+            homeState.permissionDialogQueue.reversed().forEach { permission ->
                 PermissionDialog(
                     icon = painterResource(id = R.drawable.ic_dialog_post_notification),
                     permissionHelper = when (permission) {
@@ -96,11 +95,13 @@ fun HomeScreen(
                         /* permission = */ permission
                     ),
                     onConfirmClick = {
-                        notificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        postNotificationPermissionResultLauncher.launch(
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )
                     },
                     onOpenAppSettingsClick = activity::openAppSettings,
                     onDismiss = {
-                        homeViewModel.onEvent(HomeEvent.DismissDialog(permission))
+                        homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
                     }
                 )
             }

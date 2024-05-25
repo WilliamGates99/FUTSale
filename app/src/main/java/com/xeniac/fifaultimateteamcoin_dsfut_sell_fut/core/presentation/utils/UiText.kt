@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
 
 import android.content.Context
 import android.os.Parcelable

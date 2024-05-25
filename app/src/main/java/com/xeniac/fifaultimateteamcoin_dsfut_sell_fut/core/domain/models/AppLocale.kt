@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 import android.os.Parcelable
 import androidx.compose.ui.unit.LayoutDirection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

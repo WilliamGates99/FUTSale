@@ -5,7 +5,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 
 class SetCurrentAppThemeUseCase(
     private val preferencesRepository: PreferencesRepository

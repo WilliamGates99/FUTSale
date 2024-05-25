@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.ui.components
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

@@ -6,5 +6,5 @@ sealed class HomeEvent {
         val isGranted: Boolean
     ) : HomeEvent()
 
-    data class DismissDialog(val permission: String) : HomeEvent()
+    data class DismissPermissionDialog(val permission: String) : HomeEvent()
 }

@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val completeOnboardingUseCase: Lazy<CompleteOnboardingUseCase>
+    private val completeOnboardingUseCase: Lazy<CompleteOnboardingUseCase>,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val onboardingState = savedStateHandle.getStateFlow(

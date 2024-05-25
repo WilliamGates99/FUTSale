@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 
 enum class AppThemeDto(
     val index: Int,

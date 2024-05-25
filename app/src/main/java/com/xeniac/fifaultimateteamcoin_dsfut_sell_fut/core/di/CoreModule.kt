@@ -4,7 +4,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetCurrentAppLocaleUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnboardingCompletedUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.MainUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.SetCurrentAppLocaleUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,12 +22,6 @@ internal object CoreModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetCurrentAppLocaleUseCase(
-        preferencesRepository: PreferencesRepository
-    ): SetCurrentAppLocaleUseCase = SetCurrentAppLocaleUseCase(preferencesRepository)
-
-    @Provides
-    @ViewModelScoped
     fun provideGetIsOnboardingCompletedUseCase(
         preferencesRepository: PreferencesRepository
     ): GetIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(preferencesRepository)
@@ -37,11 +30,9 @@ internal object CoreModule {
     @ViewModelScoped
     fun provideMainUseCases(
         getCurrentAppLocaleUseCase: GetCurrentAppLocaleUseCase,
-        setCurrentAppLocaleUseCase: SetCurrentAppLocaleUseCase,
         getIsOnboardingCompletedUseCase: GetIsOnboardingCompletedUseCase
     ): MainUseCases = MainUseCases(
         { getCurrentAppLocaleUseCase },
-        { setCurrentAppLocaleUseCase },
         { getIsOnboardingCompletedUseCase }
     )
 }

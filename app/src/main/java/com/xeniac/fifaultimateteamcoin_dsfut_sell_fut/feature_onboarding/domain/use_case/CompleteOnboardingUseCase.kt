@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 
 class CompleteOnboardingUseCase(
     private val preferencesRepository: PreferencesRepository
