@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
@@ -40,8 +41,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import kotlinx.coroutines.launch
 
@@ -61,6 +64,8 @@ fun SettingsScreen(
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle(initialValue = SettingsState())
 
     var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
+    var isLocaleDialogVisible by remember { mutableStateOf(false) }
+    var isThemeDialogVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -157,23 +162,10 @@ fun SettingsScreen(
             SettingsCard(
                 settingsState = settingsState,
                 onLanguageClick = {
-                    // TODO: OPEN DIALOG
+                    isLocaleDialogVisible = true
                 },
                 onThemeClick = {
-                    // TODO: OPEN DIALOG
-                    settingsState.appTheme?.let {
-                        when (it) {
-                            AppTheme.Default -> viewModel.onEvent(
-                                SettingsEvent.SetCurrentAppTheme(AppTheme.Dark)
-                            )
-                            AppTheme.Light -> viewModel.onEvent(
-                                SettingsEvent.SetCurrentAppTheme(AppTheme.Dark)
-                            )
-                            AppTheme.Dark -> viewModel.onEvent(
-                                SettingsEvent.SetCurrentAppTheme(AppTheme.Light)
-                            )
-                        }
-                    }
+                    isThemeDialogVisible = true
                 },
                 onNotificationSoundChange = { isChecked ->
                     viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
@@ -200,4 +192,26 @@ fun SettingsScreen(
             )
         }
     }
+
+    LocaleDialog(
+        currentAppLocale = settingsState.appLocale ?: AppLocale.Default,
+        isVisible = isLocaleDialogVisible,
+        onDismiss = {
+            isLocaleDialogVisible = false
+        },
+        onLocaleSelected = { newAppLocale ->
+            viewModel.onEvent(SettingsEvent.SetCurrentAppLocale(newAppLocale))
+        }
+    )
+
+    ThemeDialog(
+        currentAppTheme = settingsState.appTheme ?: AppTheme.Default,
+        isVisible = isThemeDialogVisible,
+        onDismiss = {
+            isThemeDialogVisible = false
+        },
+        onThemeSelected = { newAppTheme ->
+            viewModel.onEvent(SettingsEvent.SetCurrentAppTheme(newAppTheme))
+        }
+    )
 }

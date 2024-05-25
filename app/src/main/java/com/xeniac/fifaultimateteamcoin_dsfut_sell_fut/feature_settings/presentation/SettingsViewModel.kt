@@ -64,30 +64,34 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
-        val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
-            newAppLocale = newAppLocale
-        )
+        if (newAppLocale != settingsState.value.appLocale) {
+            val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
+                newAppLocale = newAppLocale
+            )
 
-        when (isActivityRestartNeeded) {
-            true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
-            false -> Unit
+            when (isActivityRestartNeeded) {
+                true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
+                false -> Unit
+            }
         }
     }
 
     private fun setCurrentAppTheme(newAppTheme: AppTheme) = viewModelScope.launch {
-        when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
-            is Result.Success -> {
-                _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
-                savedStateHandle["settingsState"] = settingsState.value.copy(
-                    appTheme = newAppTheme
-                )
-            }
-            is Result.Error -> {
-                when (result.error) {
-                    is AppThemeError.SomethingWentWrong -> {
-                        _setAppThemeEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                        )
+        if (newAppTheme != settingsState.value.appTheme) {
+            when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
+                is Result.Success -> {
+                    _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
+                    savedStateHandle["settingsState"] = settingsState.value.copy(
+                        appTheme = newAppTheme
+                    )
+                }
+                is Result.Error -> {
+                    when (result.error) {
+                        is AppThemeError.SomethingWentWrong -> {
+                            _setAppThemeEventChannel.send(
+                                UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                            )
+                        }
                     }
                 }
             }
