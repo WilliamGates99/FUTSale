@@ -1,9 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.utils.OnboardingError
 
 class CompleteOnboardingUseCase(
     private val preferencesRepository: PreferencesRepository
@@ -11,13 +10,13 @@ class CompleteOnboardingUseCase(
     suspend operator fun invoke(
         partnerId: String?,
         secretKey: String?
-    ): Resource<Nothing> = try {
+    ): Result<Unit, OnboardingError> = try {
         preferencesRepository.setPartnerId(partnerId = partnerId)
         preferencesRepository.setSecretKey(secretKey = secretKey)
         preferencesRepository.isOnBoardingCompleted(isCompleted = true)
-        Resource.Success()
+        Result.Success(Unit)
     } catch (e: Exception) {
         e.printStackTrace()
-        Resource.Error(UiText.StringResource(R.string.error_something_went_wrong))
+        Result.Error(OnboardingError.SomethingWentWrong)
     }
 }

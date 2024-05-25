@@ -11,6 +11,7 @@ class SetIsNotificationVibrateEnabledUseCase(
         preferencesRepository.isNotificationVibrateEnabled(isEnabled)
         Result.Success(Unit)
     } catch (e: Exception) {
+        e.printStackTrace()
         Result.Error(NotificationVibrateError.SomethingWentWrong)
     }
 }

@@ -11,6 +11,7 @@ class SetIsNotificationSoundEnabledUseCase(
         preferencesRepository.isNotificationSoundEnabled(isEnabled)
         Result.Success(Unit)
     } catch (e: Exception) {
+        e.printStackTrace()
         Result.Error(NotificationSoundError.SomethingWentWrong)
     }
 }

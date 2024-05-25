@@ -3,11 +3,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Resource
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.utils.OnboardingError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,16 +62,21 @@ class OnboardingViewModel @Inject constructor(
         )
 
         when (result) {
-            is Resource.Success -> {
+            is Result.Success -> {
                 _completeOnboardingEventChannel.send(OnboardingUiEvent.NavigateToHomeScreen)
                 savedStateHandle["secretKeyState"] = onboardingState.value.copy(
                     isCompleteLoading = false
                 )
             }
-            is Resource.Error -> {
-                result.message?.let { message ->
-                    _completeOnboardingEventChannel.send(UiEvent.ShowSnackbar(message))
+            is Result.Error -> {
+                when (result.error) {
+                    OnboardingError.SomethingWentWrong -> {
+                        _completeOnboardingEventChannel.send(
+                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                        )
+                    }
                 }
+
                 savedStateHandle["secretKeyState"] = onboardingState.value.copy(
                     isCompleteLoading = false
                 )
