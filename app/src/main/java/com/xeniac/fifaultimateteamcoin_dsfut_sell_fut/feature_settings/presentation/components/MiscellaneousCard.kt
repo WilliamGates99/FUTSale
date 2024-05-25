@@ -72,7 +72,8 @@ fun MiscellaneousCard(
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
     cardShape: Shape = RoundedCornerShape(12.dp),
     openAppPageInStore: () -> Unit,
-    onItemClick: (url: String?) -> Unit
+    openUrlInInAppBrowser: (url: String?) -> Unit,
+    openUrlInBrowser: (url: String?) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -99,7 +100,10 @@ fun MiscellaneousCard(
                     onClick = {
                         when (miscellaneousItem) {
                             MiscellaneousRowItems.RateUs -> openAppPageInStore()
-                            else -> onItemClick(miscellaneousItem.url)
+                            MiscellaneousRowItems.PrivacyPolicy -> openUrlInInAppBrowser(
+                                miscellaneousItem.url
+                            )
+                            else -> openUrlInBrowser(miscellaneousItem.url)
                         }
                     }
                 )

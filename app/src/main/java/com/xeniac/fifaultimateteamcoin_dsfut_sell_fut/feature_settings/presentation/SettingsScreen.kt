@@ -181,7 +181,15 @@ fun SettingsScreen(
                 openAppPageInStore = {
                     IntentHelper.openAppPageInStore(context)
                 },
-                onItemClick = { url ->
+                openUrlInInAppBrowser = { url ->
+                    url?.let {
+                        IntentHelper.openLinkInInAppBrowser(
+                            context = context,
+                            urlString = url
+                        )
+                    }
+                },
+                openUrlInBrowser = { url ->
                     url?.let {
                         shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
                             context = context,
