@@ -33,11 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
@@ -56,7 +58,7 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle(initialValue = SettingsState())
 
     var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
 
@@ -154,6 +156,25 @@ fun SettingsScreen(
         ) {
             SettingsCard(
                 settingsState = settingsState,
+                onLanguageClick = {
+                    // TODO: OPEN DIALOG
+                },
+                onThemeClick = {
+                    // TODO: OPEN DIALOG
+                    settingsState.appTheme?.let {
+                        when (it) {
+                            AppTheme.Default -> viewModel.onEvent(
+                                SettingsEvent.SetCurrentAppTheme(AppTheme.Dark)
+                            )
+                            AppTheme.Light -> viewModel.onEvent(
+                                SettingsEvent.SetCurrentAppTheme(AppTheme.Dark)
+                            )
+                            AppTheme.Dark -> viewModel.onEvent(
+                                SettingsEvent.SetCurrentAppTheme(AppTheme.Light)
+                            )
+                        }
+                    }
+                },
                 onNotificationSoundChange = { isChecked ->
                     viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
                 },

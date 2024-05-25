@@ -3,6 +3,16 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 
-fun AppLocale.toAppLocaleDto(): AppLocaleDto = AppLocaleDto.valueOf(this.toString())
+fun AppLocale.toAppLocaleDto(): AppLocaleDto = when (this) {
+    AppLocale.Default -> AppLocaleDto.Default
+    AppLocale.EnglishGB -> AppLocaleDto.EnglishGB
+    AppLocale.EnglishUS -> AppLocaleDto.EnglishUS
+    AppLocale.FarsiIR -> AppLocaleDto.FarsiIR
+}
 
-fun AppLocaleDto.toAppLocale(): AppLocale = AppLocale.valueOf(this.toString())
+fun AppLocaleDto.toAppLocale(): AppLocale = when (this) {
+    AppLocaleDto.Default -> AppLocale.Default
+    AppLocaleDto.EnglishGB -> AppLocale.EnglishGB
+    AppLocaleDto.EnglishUS -> AppLocale.EnglishUS
+    AppLocaleDto.FarsiIR -> AppLocale.FarsiIR
+}

@@ -47,14 +47,18 @@ class PreferencesRepositoryImpl @Inject constructor(
             val appThemeIndex = settingsDataStore
                 .data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
-            val appThemeDto = AppThemeDto.entries.find {
-                it.index == appThemeIndex
-            } ?: AppThemeDto.DEFAULT
+            val appThemeDto = when (appThemeIndex) {
+                AppThemeDto.Default.index -> AppThemeDto.Default
+                AppThemeDto.Light.index -> AppThemeDto.Light
+                AppThemeDto.Dark.index -> AppThemeDto.Dark
+                else -> AppThemeDto.Default
+            }
 
             appThemeDto.toAppTheme()
         } catch (e: Exception) {
-            Timber.e("getCurrentAppThemeSynchronously Exception: $e")
-            AppThemeDto.DEFAULT.toAppTheme()
+            Timber.e("getCurrentAppThemeSynchronously failed:")
+            e.printStackTrace()
+            AppThemeDto.Default.toAppTheme()
         }
     }
 
@@ -62,7 +66,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         try {
             settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
         } catch (e: Exception) {
-            Timber.e("isNotificationSoundActiveSynchronously Exception: $e")
+            Timber.e("isNotificationSoundActiveSynchronously failed:")
+            e.printStackTrace()
             true
         }
     }
@@ -71,7 +76,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         try {
             settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
         } catch (e: Exception) {
-            Timber.e("isNotificationVibrateActiveSynchronously Exception: $e")
+            Timber.e("isNotificationVibrateActiveSynchronously failed:")
+            e.printStackTrace()
             true
         }
     }
@@ -79,14 +85,18 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun getCurrentAppTheme(): AppTheme = try {
         val appThemeIndex = settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
-        val appThemeDto = AppThemeDto.entries.find {
-            it.index == appThemeIndex
-        } ?: AppThemeDto.DEFAULT
+        val appThemeDto = when (appThemeIndex) {
+            AppThemeDto.Default.index -> AppThemeDto.Default
+            AppThemeDto.Light.index -> AppThemeDto.Light
+            AppThemeDto.Dark.index -> AppThemeDto.Dark
+            else -> AppThemeDto.Default
+        }
 
         appThemeDto.toAppTheme()
     } catch (e: Exception) {
-        Timber.e("getCurrentAppTheme Exception: $e")
-        AppThemeDto.DEFAULT.toAppTheme()
+        Timber.e("getCurrentAppTheme failed:")
+        e.printStackTrace()
+        AppThemeDto.Default.toAppTheme()
     }
 
     override suspend fun getCurrentAppLocale(): AppLocale = try {
@@ -94,27 +104,33 @@ class PreferencesRepositoryImpl @Inject constructor(
 
         if (appLocaleList.isEmpty) {
             Timber.i("App locale list is Empty.")
-            AppLocaleDto.DEFAULT.toAppLocale()
+            AppLocaleDto.Default.toAppLocale()
         } else {
             val localeString = appLocaleList[0].toString()
             Timber.i("Current app locale string is $localeString")
 
-            val appLocaleDto = AppLocaleDto.entries.find {
-                it.localeString == localeString
-            } ?: AppLocaleDto.DEFAULT
+            val appLocaleDto = when (localeString) {
+                AppLocaleDto.Default.localeString -> AppLocaleDto.Default
+                AppLocaleDto.EnglishUS.localeString -> AppLocaleDto.EnglishUS
+                AppLocaleDto.EnglishGB.localeString -> AppLocaleDto.EnglishGB
+                AppLocaleDto.FarsiIR.localeString -> AppLocaleDto.FarsiIR
+                else -> AppLocaleDto.Default
+            }
 
             appLocaleDto.toAppLocale()
         }
     } catch (e: Exception) {
-        Timber.e("getCurrentAppLocale Exception: $e")
-        AppLocaleDto.DEFAULT.toAppLocale()
+        Timber.e("getCurrentAppLocale failed:")
+        e.printStackTrace()
+        AppLocaleDto.Default.toAppLocale()
     }
 
     override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
         try {
             settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
         } catch (e: Exception) {
-            Timber.e("isOnBoardingCompleted Exception: $e")
+            Timber.e("isOnBoardingCompleted failed:")
+            e.printStackTrace()
             false
         }
     }
@@ -123,7 +139,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         try {
             settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
         } catch (e: Exception) {
-            Timber.e("getNotificationPermissionCount Exception: $e")
+            Timber.e("getNotificationPermissionCount failed:")
+            e.printStackTrace()
             0
         }
     }
@@ -131,42 +148,48 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun isNotificationSoundEnabled(): Boolean = try {
         settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
     } catch (e: Exception) {
-        Timber.e("isNotificationSoundEnabled Exception: $e")
+        Timber.e("isNotificationSoundEnabled failed:")
+        e.printStackTrace()
         true
     }
 
     override suspend fun isNotificationVibrateEnabled(): Boolean = try {
         settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
     } catch (e: Exception) {
-        Timber.e("isNotificationVibrateEnabled Exception: $e")
+        Timber.e("isNotificationVibrateEnabled failed:")
+        e.printStackTrace()
         true
     }
 
     override suspend fun getRateAppDialogChoice(): Int = try {
         settingsDataStore.data.first()[PreferencesKeys.RATE_APP_DIALOG_CHOICE] ?: 0
     } catch (e: Exception) {
-        Timber.e("getRateAppDialogChoice Exception: $e")
+        Timber.e("getRateAppDialogChoice failed:")
+        e.printStackTrace()
         0
     }
 
     override suspend fun getPreviousRequestTimeInMillis(): Long = try {
         settingsDataStore.data.first()[PreferencesKeys.PREVIOUS_REQUEST_TIME_IN_MILLIS] ?: 0L
     } catch (e: Exception) {
-        Timber.e("getPreviousRequestTimeInMillis Exception: $e")
+        Timber.e("getPreviousRequestTimeInMillis failed:")
+        e.printStackTrace()
         0L
     }
 
     override suspend fun getPartnerId(): String? = try {
         settingsDataStore.data.first()[PreferencesKeys.PARTNER_ID]
     } catch (e: Exception) {
-        Timber.e("getPartnerId Exception: $e")
+        Timber.e("getPartnerId failed:")
+        e.printStackTrace()
         null
     }
 
     override suspend fun getSecretKey(): String? = try {
         settingsDataStore.data.first()[PreferencesKeys.SECRET_KEY]
     } catch (e: Exception) {
-        Timber.e("getSecretKey Exception: $e")
+        Timber.e("getSecretKey failed:")
+        e.printStackTrace()
         null
     }
 
@@ -174,7 +197,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         settingsDataStore.data
             .first()[PreferencesKeys.SELECTED_PLATFORM] ?: Constants.SELECTED_PLATFORM_CONSOLE
     } catch (e: Exception) {
-        Timber.e("getSelectedPlatform Exception: $e")
+        Timber.e("getSelectedPlatform failed:")
+        e.printStackTrace()
         Constants.SELECTED_PLATFORM_CONSOLE
     }
 
@@ -185,7 +209,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("AppTheme edited to ${appThemeDto.index}")
             }
         } catch (e: Exception) {
-            Timber.e("setCurrentAppTheme Exception: $e")
+            Timber.e("setCurrentAppTheme failed:")
+            e.printStackTrace()
         }
     }
 
@@ -200,7 +225,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         )
         isActivityRestartNeeded
     } catch (e: Exception) {
-        Timber.e("setCurrentAppLocale Exception: $e")
+        Timber.e("setCurrentAppLocale failed:")
+        e.printStackTrace()
         false
     }
 
@@ -211,7 +237,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("isOnBoardingCompleted edited to $isCompleted")
             }
         } catch (e: Exception) {
-            Timber.e("isOnBoardingCompleted Exception: $e")
+            Timber.e("isOnBoardingCompleted failed:")
+            e.printStackTrace()
         }
     }
 
@@ -222,7 +249,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("Notification permission count edited to $count")
             }
         } catch (e: Exception) {
-            Timber.e("setNotificationPermissionCount Exception: $e")
+            Timber.e("setNotificationPermissionCount failed:")
+            e.printStackTrace()
         }
     }
 
@@ -233,7 +261,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("isNotificationSoundEnabled edited to $isEnabled")
             }
         } catch (e: Exception) {
-            Timber.e("isNotificationSoundEnabled Exception: $e")
+            Timber.e("isNotificationSoundEnabled failed:")
+            e.printStackTrace()
         }
     }
 
@@ -244,7 +273,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("isNotificationVibrateEnabled edited to $isEnabled")
             }
         } catch (e: Exception) {
-            Timber.e("isNotificationVibrateEnabled Exception: $e")
+            Timber.e("isNotificationVibrateEnabled failed:")
+            e.printStackTrace()
         }
     }
 
@@ -255,7 +285,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("RateAppDialogChoice edited to $value")
             }
         } catch (e: Exception) {
-            Timber.e("setRateAppDialogChoice Exception: $e")
+            Timber.e("setRateAppDialogChoice failed:")
+            e.printStackTrace()
         }
     }
 
@@ -266,7 +297,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("PreviousRequestTimeInMillis edited to $timeInMillis")
             }
         } catch (e: Exception) {
-            Timber.e("setPreviousRequestTimeInMillis Exception: $e")
+            Timber.e("setPreviousRequestTimeInMillis failed:")
+            e.printStackTrace()
         }
     }
 
@@ -282,7 +314,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setPartnerId Exception: $e")
+            Timber.e("setPartnerId failed:")
+            e.printStackTrace()
         }
     }
 
@@ -298,7 +331,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setSecretKey Exception: $e")
+            Timber.e("setSecretKey failed:")
+            e.printStackTrace()
         }
     }
 
@@ -309,7 +343,8 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("SelectedPlatform edited to $platform")
             }
         } catch (e: Exception) {
-            Timber.e("setSelectedPlatform Exception: $e")
+            Timber.e("setSelectedPlatform failed:")
+            e.printStackTrace()
         }
     }
 

@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SettingsState(
-    val appLocale: AppLocale = AppLocale.DEFAULT,
-    val appTheme: AppTheme = AppTheme.DEFAULT,
-    val isNotificationSoundEnabled: Boolean = true,
-    val isNotificationVibrateEnabled: Boolean = true
+    val appLocale: AppLocale? = null,
+    val appTheme: AppTheme? = null,
+    val isNotificationSoundEnabled: Boolean? = null,
+    val isNotificationVibrateEnabled: Boolean? = null
 ) : Parcelable

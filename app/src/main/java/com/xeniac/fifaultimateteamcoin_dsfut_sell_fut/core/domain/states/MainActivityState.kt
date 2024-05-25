@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MainActivityState(
-    val currentAppLocale: AppLocale = AppLocale.DEFAULT,
+    val currentAppLocale: AppLocale = AppLocale.Default,
     val isSplashScreenLoading: Boolean = true,
     val postSplashDestination: Screen? = null
 ) : Parcelable

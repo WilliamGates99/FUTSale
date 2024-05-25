@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
@@ -48,6 +50,8 @@ fun SettingsCard(
     titleFontWeight: FontWeight = FontWeight.ExtraBold,
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
     cardShape: Shape = RoundedCornerShape(12.dp),
+    onLanguageClick: () -> Unit,
+    onThemeClick: () -> Unit,
     onNotificationSoundChange: (isChecked: Boolean) -> Unit,
     onNotificationVibrateChange: (isChecked: Boolean) -> Unit
 ) {
@@ -72,10 +76,14 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_language),
                 title = stringResource(id = R.string.settings_text_settings_language),
-                currentValue = settingsState.appLocale.text.asString(),
-                onClick = {
-                    // TODO: OPEN DIALOG
-                }
+                currentValue = when (settingsState.appLocale) {
+                    AppLocale.Default -> stringResource(id = R.string.settings_text_settings_language_default)
+                    AppLocale.EnglishUS -> stringResource(id = R.string.settings_text_settings_language_english_us)
+                    AppLocale.EnglishGB -> stringResource(id = R.string.settings_text_settings_language_english_gb)
+                    AppLocale.FarsiIR -> stringResource(id = R.string.settings_text_settings_language_farsi_ir)
+                    null -> null
+                },
+                onClick = onLanguageClick
             )
 
             HorizontalDivider()
@@ -83,10 +91,13 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_theme),
                 title = stringResource(id = R.string.settings_text_settings_theme),
-                currentValue = settingsState.appTheme.text.asString(),
-                onClick = {
-                    // TODO: OPEN DIALOG
-                }
+                currentValue = when (settingsState.appTheme) {
+                    AppTheme.Default -> stringResource(id = R.string.settings_text_settings_theme_default)
+                    AppTheme.Light -> stringResource(id = R.string.settings_text_settings_theme_light)
+                    AppTheme.Dark -> stringResource(id = R.string.settings_text_settings_theme_dark)
+                    null -> null
+                },
+                onClick = onThemeClick
             )
 
             HorizontalDivider()
@@ -114,7 +125,7 @@ fun SettingsCard(
 fun CardTextRowItem(
     icon: Painter,
     title: String,
-    currentValue: String,
+    currentValue: String?,
     modifier: Modifier = Modifier,
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     rowPadding: PaddingValues = PaddingValues(
@@ -165,7 +176,7 @@ fun CardTextRowItem(
         )
 
         Text(
-            text = currentValue,
+            text = currentValue ?: "",
             fontSize = currentValueFontSize,
             fontWeight = currentValueFontWeight,
             color = currentValueColor
@@ -177,7 +188,7 @@ fun CardTextRowItem(
 fun CardSwitchRowItem(
     icon: Painter,
     title: String,
-    isChecked: Boolean,
+    isChecked: Boolean?,
     modifier: Modifier = Modifier,
     rowPadding: PaddingValues = PaddingValues(
         horizontal = 12.dp,
@@ -223,7 +234,8 @@ fun CardSwitchRowItem(
         )
 
         Switch(
-            checked = isChecked,
+            enabled = isChecked != null,
+            checked = isChecked ?: false,
             onCheckedChange = onCheckedChange,
             modifier = Modifier.height(32.dp)
         )
