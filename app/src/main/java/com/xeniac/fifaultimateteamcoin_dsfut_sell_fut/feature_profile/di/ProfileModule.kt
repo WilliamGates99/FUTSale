@@ -5,7 +5,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdatePartnerIdUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdateSecretKeyUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ProfileValidation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey
 import dagger.Module
@@ -28,16 +27,6 @@ object ProfileModule {
 
     @Provides
     @ViewModelScoped
-    fun provideProfileValidation(
-        validatePartnerId: ValidatePartnerId,
-        validateSecretKey: ValidateSecretKey
-    ): ProfileValidation = ProfileValidation(
-        { validatePartnerId },
-        { validateSecretKey }
-    )
-
-    @Provides
-    @ViewModelScoped
     fun provideGetProfileUseCase(
         preferencesRepository: PreferencesRepository
     ): GetProfileUseCase = GetProfileUseCase(preferencesRepository)
@@ -45,14 +34,22 @@ object ProfileModule {
     @Provides
     @ViewModelScoped
     fun provideUpdatePartnerIdUseCase(
-        preferencesRepository: PreferencesRepository
-    ): UpdatePartnerIdUseCase = UpdatePartnerIdUseCase(preferencesRepository)
+        preferencesRepository: PreferencesRepository,
+        validatePartnerId: ValidatePartnerId
+    ): UpdatePartnerIdUseCase = UpdatePartnerIdUseCase(
+        preferencesRepository,
+        validatePartnerId
+    )
 
     @Provides
     @ViewModelScoped
     fun provideUpdateSecretKeyUseCase(
-        preferencesRepository: PreferencesRepository
-    ): UpdateSecretKeyUseCase = UpdateSecretKeyUseCase(preferencesRepository)
+        preferencesRepository: PreferencesRepository,
+        validateSecretKey: ValidateSecretKey
+    ): UpdateSecretKeyUseCase = UpdateSecretKeyUseCase(
+        preferencesRepository,
+        validateSecretKey
+    )
 
     @Provides
     @ViewModelScoped

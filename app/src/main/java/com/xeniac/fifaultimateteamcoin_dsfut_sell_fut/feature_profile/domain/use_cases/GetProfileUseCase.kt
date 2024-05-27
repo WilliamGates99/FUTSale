@@ -6,8 +6,15 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.sta
 class GetProfileUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(): ProfileState = ProfileState(
-        partnerId = preferencesRepository.getPartnerId() ?: "",
-        secretKey = preferencesRepository.getSecretKey() ?: ""
-    )
+    suspend operator fun invoke(): ProfileState {
+        val partnerId = preferencesRepository.getPartnerId()
+        val secretKey = preferencesRepository.getSecretKey()
+
+        return ProfileState(
+            partnerId = partnerId ?: "",
+            secretKey = secretKey ?: "",
+            isPartnerIdSaved = partnerId != null,
+            isSecretKeySaved = secretKey != null
+        )
+    }
 }
