@@ -133,7 +133,7 @@ fun CardClickableLinkRowItem(
     titleFontSize: TextUnit = 16.sp,
     titleFontWeight: FontWeight = FontWeight.SemiBold,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
-    linkIcon: Painter = painterResource(id = R.drawable.ic_link),
+    linkIcon: Painter = painterResource(id = R.drawable.ic_core_link),
     linkIconSize: Dp = 16.dp,
     linkIconColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit
