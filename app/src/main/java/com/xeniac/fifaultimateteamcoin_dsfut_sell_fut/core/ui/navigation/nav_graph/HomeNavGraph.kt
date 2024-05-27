@@ -26,7 +26,7 @@ fun SetupHomeNavGraph(
         }
 
         composable<Screen.ProfileScreen> {
-            ProfileScreen()
+            ProfileScreen(bottomPadding = bottomPadding)
         }
 
         composable<Screen.HistoryScreen> {

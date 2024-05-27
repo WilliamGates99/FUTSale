@@ -100,20 +100,23 @@
     <string name="pick_up_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
 
 
-    <string name="profile_text_title">پروفایل</string>
+    <string name="profile_app_bar_title">پروفایل</string>
     <string name="profile_textfield_title_partner_id">شناسه پارتنر</string>
     <string name="profile_textfield_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
     <string name="profile_textfield_partner_id_error_invalid">یک شناسه پارتنر معتبر وارد کنید</string>
     <string name="profile_textfield_title_secret_key">کلید محرمانه</string>
     <string name="profile_textfield_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
     <string name="profile_textfield_secret_key_error_invalid">یک کلید محرمانه معتبر وارد کنید</string>
-    <string name="profile_title_links">لینک‌ها</string>
-    <string name="profile_text_links_wallet">کیف پول</string>
-    <string name="profile_text_links_players">بازیکنان</string>
-    <string name="profile_text_links_statistics">آمار</string>
-    <string name="profile_text_links_rules">قوانین</string>
-    <string name="profile_text_links_notifications_console">اعلان‌های بازیکنان کنسول</string>
-    <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
+    <string name="profile_title_account_links">لینک‌های حساب</string>
+    <string name="profile_text_account_links_wallet">کیف پول</string>
+    <string name="profile_text_account_links_purchased_players">بازیکنان خریداری شده</string>
+    <string name="profile_text_account_links_rules">قوانین</string>
+    <string name="profile_text_account_links_statistics">آمار</string>
+    <string name="profile_title_other_links">لینک‌های دیگر</string>
+    <string name="profile_text_other_links_dsfut_news">اخبار DSFUT</string>
+    <string name="profile_text_other_links_console_notifications">اعلان‌های بازیکنان کنسول</string>
+    <string name="profile_text_other_links_pc_notifications">اعلان‌های بازیکنان کامپیوتر</string>
+    <string name="profile_text_other_links_dsfut_website">سایت DSFUT</string>
 
 
     <string name="settings_app_bar_title">تنظیمات</string>

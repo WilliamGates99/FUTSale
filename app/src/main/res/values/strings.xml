@@ -119,20 +119,23 @@
     <string name="pick_up_notification_title_fail">Auto pick up player failed</string>
 
 
-    <string name="profile_text_title">Profile</string>
+    <string name="profile_app_bar_title">Profile</string>
     <string name="profile_textfield_title_partner_id">Partner ID</string>
     <string name="profile_textfield_hint_partner_id">Enter your partner ID</string>
     <string name="profile_textfield_partner_id_error_invalid">Enter a valid partner ID</string>
     <string name="profile_textfield_title_secret_key">Secret Key</string>
     <string name="profile_textfield_hint_secret_key">Enter your secret key</string>
     <string name="profile_textfield_secret_key_error_invalid">Enter a valid secret key</string>
-    <string name="profile_title_links">Links</string>
-    <string name="profile_text_links_wallet">Wallet</string>
-    <string name="profile_text_links_players">Players</string>
-    <string name="profile_text_links_statistics">Statistics</string>
-    <string name="profile_text_links_rules">Rules</string>
-    <string name="profile_text_links_notifications_console">Console Players Notifications</string>
-    <string name="profile_text_links_notifications_pc">PC Players Notifications</string>
+    <string name="profile_title_account_links">Account Links</string>
+    <string name="profile_text_account_links_wallet">Wallet</string>
+    <string name="profile_text_account_links_purchased_players">Purchased Players</string>
+    <string name="profile_text_account_links_rules">Rules</string>
+    <string name="profile_text_account_links_statistics">Statistics</string>
+    <string name="profile_title_other_links">Other Links</string>
+    <string name="profile_text_other_links_dsfut_news">DSFUT News</string>
+    <string name="profile_text_other_links_console_notifications">Console Players Notifications</string>
+    <string name="profile_text_other_links_pc_notifications">PC Players Notifications</string>
+    <string name="profile_text_other_links_dsfut_website">DSFUT Website</string>
 
 
     <string name="settings_app_bar_title">Settings</string>
