@@ -50,11 +50,11 @@ class ProfileViewModel @Inject constructor(
             ProfileEvent.GetProfile -> getProfile()
             is ProfileEvent.PartnerIdChanged -> {
                 updatePartnerIdJob?.cancel()
-                updatePartnerIdJob = updatePartnerId(event.partnerId.trim())
+                updatePartnerIdJob = updatePartnerId(partnerId = event.partnerId.trim())
             }
             is ProfileEvent.SecretKeyChanged -> {
                 updateSecretKeyJob?.cancel()
-                updateSecretKeyJob = updatePartnerId(event.secretKey.trim())
+                updateSecretKeyJob = updateSecretKey(secretKey = event.secretKey.trim())
             }
         }
     }
