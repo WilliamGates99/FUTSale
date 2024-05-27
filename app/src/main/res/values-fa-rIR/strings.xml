@@ -22,7 +22,7 @@
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
     <string name="error_btn_confirm">تایید</string>
-    
+
 
     <string name="core_textfield_content_description_password_toggle_show">نمایش کلمه عبور</string>
     <string name="core_textfield_content_description_password_toggle_hide">پنهان کردن کلمه عبور</string>
@@ -101,10 +101,12 @@
 
 
     <string name="profile_text_title">پروفایل</string>
-    <string name="profile_title_partner_id">شناسه پارتنر</string>
-    <string name="profile_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
-    <string name="profile_title_secret_key">کلید محرمانه</string>
-    <string name="profile_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
+    <string name="profile_textfield_title_partner_id">شناسه پارتنر</string>
+    <string name="profile_textfield_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
+    <string name="profile_textfield_partner_id_error_invalid">یک شناسه پارتنر معتبر وارد کنید</string>
+    <string name="profile_textfield_title_secret_key">کلید محرمانه</string>
+    <string name="profile_textfield_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
+    <string name="profile_textfield_secret_key_error_invalid">یک کلید محرمانه معتبر وارد کنید</string>
     <string name="profile_title_links">لینک‌ها</string>
     <string name="profile_text_links_wallet">کیف پول</string>
     <string name="profile_text_links_players">بازیکنان</string>

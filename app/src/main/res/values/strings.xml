@@ -120,10 +120,12 @@
 
 
     <string name="profile_text_title">Profile</string>
-    <string name="profile_title_partner_id">Partner ID</string>
-    <string name="profile_hint_partner_id">Enter your partner ID</string>
-    <string name="profile_title_secret_key">Secret Key</string>
-    <string name="profile_hint_secret_key">Enter your secret key</string>
+    <string name="profile_textfield_title_partner_id">Partner ID</string>
+    <string name="profile_textfield_hint_partner_id">Enter your partner ID</string>
+    <string name="profile_textfield_partner_id_error_invalid">Enter a valid partner ID</string>
+    <string name="profile_textfield_title_secret_key">Secret Key</string>
+    <string name="profile_textfield_hint_secret_key">Enter your secret key</string>
+    <string name="profile_textfield_secret_key_error_invalid">Enter a valid secret key</string>
     <string name="profile_title_links">Links</string>
     <string name="profile_text_links_wallet">Wallet</string>
     <string name="profile_text_links_players">Players</string>
