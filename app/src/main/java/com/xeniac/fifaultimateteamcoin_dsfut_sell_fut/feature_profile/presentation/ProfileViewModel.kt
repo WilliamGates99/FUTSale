@@ -66,6 +66,7 @@ class ProfileViewModel @Inject constructor(
     private fun updatePartnerId(partnerId: String): Job = viewModelScope.launch {
         savedStateHandle["profileState"] = profileState.value.copy(
             partnerId = partnerId,
+            partnerIdErrorText = null,
             isPartnerIdLoading = true
         )
 
@@ -75,6 +76,10 @@ class ProfileViewModel @Inject constructor(
             partnerId = partnerId
         )
 
+        if (updatePartnerIdResult.partnerIdError != null) {
+            checkPartnerIdError(updatePartnerIdResult.partnerIdError)
+        }
+
         when (updatePartnerIdResult.result) {
             is Result.Success -> {
                 savedStateHandle["profileState"] = profileState.value.copy(
@@ -83,25 +88,7 @@ class ProfileViewModel @Inject constructor(
                 )
             }
             is Result.Error -> {
-                when (updatePartnerIdResult.result.error) {
-                    PartnerIdError.InvalidPartnerId -> {
-                        savedStateHandle["profileState"] = profileState.value.copy(
-                            partnerIdErrorText = UiText.StringResource(R.string.profile_textfield_partner_id_error_invalid),
-                            isPartnerIdSaved = false,
-                            isPartnerIdLoading = false
-                        )
-                    }
-                    PartnerIdError.SomethingWentWrong -> {
-                        savedStateHandle["profileState"] = profileState.value.copy(
-                            isPartnerIdSaved = false,
-                            isPartnerIdLoading = false
-                        )
-
-                        _updatePartnerIdEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                        )
-                    }
-                }
+                checkPartnerIdError(updatePartnerIdResult.result.error)
             }
             null -> {
                 savedStateHandle["profileState"] = profileState.value.copy(
@@ -111,9 +98,32 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    private suspend fun checkPartnerIdError(partnerIdError: PartnerIdError) {
+        when (partnerIdError) {
+            PartnerIdError.InvalidPartnerId -> {
+                savedStateHandle["profileState"] = profileState.value.copy(
+                    partnerIdErrorText = UiText.StringResource(R.string.profile_textfield_partner_id_error_invalid),
+                    isPartnerIdSaved = false,
+                    isPartnerIdLoading = false
+                )
+            }
+            PartnerIdError.SomethingWentWrong -> {
+                savedStateHandle["profileState"] = profileState.value.copy(
+                    isPartnerIdSaved = false,
+                    isPartnerIdLoading = false
+                )
+
+                _updatePartnerIdEventChannel.send(
+                    UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                )
+            }
+        }
+    }
+
     private fun updateSecretKey(secretKey: String): Job = viewModelScope.launch {
         savedStateHandle["profileState"] = profileState.value.copy(
             secretKey = secretKey,
+            secretKeyErrorText = null,
             isSecretKeyLoading = true
         )
 
@@ -123,6 +133,10 @@ class ProfileViewModel @Inject constructor(
             secretKey = secretKey
         )
 
+        if (updateSecretKeyResult.secretKeyError != null) {
+            checkSecretKeyError(updateSecretKeyResult.secretKeyError)
+        }
+
         when (updateSecretKeyResult.result) {
             is Result.Success -> {
                 savedStateHandle["profileState"] = profileState.value.copy(
@@ -131,29 +145,33 @@ class ProfileViewModel @Inject constructor(
                 )
             }
             is Result.Error -> {
-                when (updateSecretKeyResult.result.error) {
-                    SecretKeyError.InvalidSecretKey -> {
-                        savedStateHandle["profileState"] = profileState.value.copy(
-                            partnerIdErrorText = UiText.StringResource(R.string.profile_textfield_secret_key_error_invalid),
-                            isSecretKeySaved = false,
-                            isSecretKeyLoading = false
-                        )
-                    }
-                    SecretKeyError.SomethingWentWrong -> {
-                        savedStateHandle["profileState"] = profileState.value.copy(
-                            isSecretKeySaved = false,
-                            isSecretKeyLoading = false
-                        )
-
-                        _updateSecretKeyEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                        )
-                    }
-                }
+                checkSecretKeyError(updateSecretKeyResult.result.error)
             }
             null -> {
                 savedStateHandle["profileState"] = profileState.value.copy(
                     isSecretKeyLoading = false
+                )
+            }
+        }
+    }
+
+    private suspend fun checkSecretKeyError(secretKeyError: SecretKeyError) {
+        when (secretKeyError) {
+            SecretKeyError.InvalidSecretKey -> {
+                savedStateHandle["profileState"] = profileState.value.copy(
+                    secretKeyErrorText = UiText.StringResource(R.string.profile_textfield_secret_key_error_invalid),
+                    isSecretKeySaved = false,
+                    isSecretKeyLoading = false
+                )
+            }
+            SecretKeyError.SomethingWentWrong -> {
+                savedStateHandle["profileState"] = profileState.value.copy(
+                    isSecretKeySaved = false,
+                    isSecretKeyLoading = false
+                )
+
+                _updateSecretKeyEventChannel.send(
+                    UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                 )
             }
         }

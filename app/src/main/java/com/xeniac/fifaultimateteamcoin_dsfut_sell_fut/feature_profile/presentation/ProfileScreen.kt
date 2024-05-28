@@ -38,6 +38,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ob
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.ProfileTextFields
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,12 +119,20 @@ fun ProfileScreen(
                     bottom = bottomPadding + verticalPadding
                 )
         ) {
-            // TODO: TOP
-
-            // TODO: SPACER
+            ProfileTextFields(
+                profileState = profileState,
+                onPartnerIdChange = { newPartnerId ->
+                    viewModel.onEvent(
+                        ProfileEvent.PartnerIdChanged(newPartnerId.filter { it.isDigit() })
+                    )
+                },
+                onSecretKeyChange = { newSecretKey ->
+                    viewModel.onEvent(ProfileEvent.SecretKeyChanged(newSecretKey))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             AccountLinks(
-                modifier = Modifier.fillMaxWidth(),
                 openUrlInBrowser = { url ->
                     url?.let {
                         shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
@@ -131,13 +140,11 @@ fun ProfileScreen(
                             urlString = url
                         )
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
 
-            // TODO: SPACER
-
             OtherLinks(
-                modifier = Modifier.fillMaxWidth(),
                 openUrlInInAppBrowser = { url ->
                     url?.let {
                         IntentHelper.openLinkInInAppBrowser(
@@ -145,7 +152,8 @@ fun ProfileScreen(
                             urlString = url
                         )
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

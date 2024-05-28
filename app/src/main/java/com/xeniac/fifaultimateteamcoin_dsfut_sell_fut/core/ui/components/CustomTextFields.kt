@@ -96,7 +96,8 @@ fun CustomOutlinedTextField(
     leadingIcon: Painter? = null,
     leadingIconContentDescription: String? = null,
     leadingIconSize: Dp = 24.dp,
-    trailingIcon: Painter? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    trailingIconPainter: Painter? = null,
     trailingIconContentDescription: String? = null,
     trailingIconSize: Dp = 24.dp,
     keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.None,
@@ -212,21 +213,21 @@ fun CustomOutlinedTextField(
                         }
                     }
                 }
-                trailingIcon != null -> {
+                trailingIconPainter != null -> {
                     {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.size(trailingIconSize)
                         ) {
                             Icon(
-                                painter = trailingIcon,
+                                painter = trailingIconPainter,
                                 contentDescription = trailingIconContentDescription,
                                 modifier = Modifier.size(trailingIconSize)
                             )
                         }
                     }
                 }
-                else -> null
+                else -> trailingIcon
             },
             visualTransformation = if (isPasswordTextField && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = keyboardOptions,
