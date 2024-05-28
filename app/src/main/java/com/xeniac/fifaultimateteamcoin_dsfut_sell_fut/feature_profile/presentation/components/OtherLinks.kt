@@ -81,16 +81,16 @@ fun OtherLinks(
             shape = cardShape,
             modifier = Modifier.fillMaxWidth()
         ) {
-            AccountLinkRowItems.entries.forEachIndexed { index, accountLinkRowItem ->
+            OtherLinkRowItems.entries.forEachIndexed { index, otherLinkRowItem ->
                 CardClickableLinkRowItem(
-                    icon = painterResource(id = accountLinkRowItem.icon),
-                    title = stringResource(id = accountLinkRowItem.title),
+                    icon = painterResource(id = otherLinkRowItem.icon),
+                    title = stringResource(id = otherLinkRowItem.title),
                     onClick = {
-                        openUrlInInAppBrowser(accountLinkRowItem.url)
+                        openUrlInInAppBrowser(otherLinkRowItem.url)
                     }
                 )
 
-                val isNotLastItem = index != AccountLinkRowItems.entries.size - 1
+                val isNotLastItem = index != OtherLinkRowItems.entries.size - 1
                 if (isNotLastItem) {
                     HorizontalDivider()
                 }
