@@ -47,7 +47,7 @@
     <string name="onboarding_fourth_btn_agreement"><![CDATA[با ورود، شما <font color="#%s"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.]]></string>
 
 
-    <string name="home_nav_title_pick_up">گرفتن</string>
+    <string name="home_nav_title_pick_up_player">گرفتن</string>
     <string name="home_nav_title_profile">پروفایل</string>
     <string name="home_nav_title_history">تاریخچه</string>
     <string name="home_nav_title_settings">تنظیمات</string>

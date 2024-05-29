@@ -29,11 +29,11 @@ enum class NavigationBarItems(
     @DrawableRes val inactiveIconId: Int,
     @DrawableRes val activeIconId: Int
 ) {
-    PickUp(
-        screen = Screen.PickUpScreen,
-        title = R.string.home_nav_title_pick_up,
-        inactiveIconId = R.drawable.ic_home_nav_pick_up_outlined,
-        activeIconId = R.drawable.ic_home_nav_pick_up_filled
+    PickUpPlayer(
+        screen = Screen.PickUpPlayerScreen,
+        title = R.string.home_nav_title_pick_up_player,
+        inactiveIconId = R.drawable.ic_home_nav_pick_up_player_outlined,
+        activeIconId = R.drawable.ic_home_nav_pick_up_player_filled
     ),
     Profile(
         screen = Screen.ProfileScreen,

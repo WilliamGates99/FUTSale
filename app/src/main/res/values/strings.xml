@@ -47,7 +47,7 @@
     <string name="onboarding_fourth_btn_agreement"><![CDATA[By logging in, you agree to our <font color="#%s"><b>Privacy Policy</b></font>.]]></string>
 
 
-    <string name="home_nav_title_pick_up">Pick Up</string>
+    <string name="home_nav_title_pick_up_player">Pick Up</string>
     <string name="home_nav_title_profile">Profile</string>
     <string name="home_nav_title_history">History</string>
     <string name="home_nav_title_settings">Settings</string>

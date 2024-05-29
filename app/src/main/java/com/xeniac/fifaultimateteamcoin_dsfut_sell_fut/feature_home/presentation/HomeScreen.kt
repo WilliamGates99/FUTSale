@@ -50,7 +50,7 @@ fun HomeScreen(
     val homeNavController = rememberNavController()
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpScreen.toString()
+    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpPlayerScreen.toString()
     val shouldBottomAppBarBeVisible = NavigationBarItems.entries.find { navigationBarItem ->
         currentRoute.contains(navigationBarItem.screen.toString())
     } != null
@@ -130,7 +130,7 @@ fun HomeScreen(
                             avoid building up a large stack of destinations
                             on the back stack as user selects items
                              */
-                            popUpTo(Screen.PickUpScreen)
+                            popUpTo(Screen.PickUpPlayerScreen)
                         }
                     }
                 )
