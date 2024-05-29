@@ -59,45 +59,50 @@
     <string name="main_rate_app_dialog_neutral">بعدا بهم یادآوری کن</string>
 
 
-    <string name="pick_up_text_title">گرفتن بازیکن</string>
-    <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
-    <string name="pick_up_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
-    <string name="pick_up_title_platform">پلتفرم:</string>
-    <string name="pick_up_toggle_platform_console">کنسول</string>
-    <string name="pick_up_toggle_platform_pc">کامپیوتر</string>
-    <string name="pick_up_title_price_min">حداقل قیمت</string>
-    <string name="pick_up_title_price_max">حداکثر قیمت</string>
-    <string name="pick_up_title_take_after">گرفتن بعد از</string>
-    <string name="pick_up_hint_take_after">4 ثانیه</string>
-    <string name="pick_up_helper_optional">اختیاری</string>
-    <string name="pick_up_btn_pick_auto">گرفتن خودکار</string>
-    <string name="pick_up_btn_pick_auto_cancel">لغو</string>
-    <string name="pick_up_btn_pick_once">یکبار گرفتن</string>
-    <string name="pick_up_title_player_price_start">قیمت اولیه</string>
-    <string name="pick_up_title_player_price_now">قیمت خرید در لحظه</string>
-    <string name="pick_up_text_player_timer_finished">منقضی‌شده</string>
-    <string name="pick_up_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
-    <string name="pick_up_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>
+    <string name="pick_up_player_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
+    <string name="pick_up_player_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
+    <string name="pick_up_player_title_platform">پلتفرم:</string>
+    <string name="pick_up_player_toggle_platform_console">کنسول</string>
+    <string name="pick_up_player_toggle_platform_pc">کامپیوتر</string>
+    <string name="pick_up_player_title_price_min">حداقل قیمت</string>
+    <string name="pick_up_player_title_price_max">حداکثر قیمت</string>
+    <string name="pick_up_player_title_take_after">گرفتن بعد از</string>
+    <string name="pick_up_player_hint_take_after">4 ثانیه</string>
+    <string name="pick_up_player_helper_optional">اختیاری</string>
+    <string name="pick_up_player_btn_pick_auto">گرفتن خودکار</string>
+    <string name="pick_up_player_btn_pick_auto_cancel">لغو</string>
+    <string name="pick_up_player_btn_pick_once">یکبار گرفتن</string>
+    <string name="pick_up_player_title_player_price_start">قیمت اولیه</string>
+    <string name="pick_up_player_title_player_price_now">قیمت خرید در لحظه</string>
+    <string name="pick_up_player_text_player_timer_finished">منقضی‌شده</string>
+    <string name="pick_up_player_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_min_price">لطفا یک قیمت معتبر وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_max_price">لطفا یک قیمت معتبر وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_take_after">لطفا یک زمان معتبر وارد کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
-    <string name="pick_up_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
-    <string name="pick_up_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
-    <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
-    <string name="pick_up_error_dsfut_sign">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
-    <string name="pick_up_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
-    <string name="pick_up_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
-    <string name="pick_up_notification_title_success">%s با موفقیت گرفته شد</string>
-    <string name="pick_up_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
+    <string name="pick_up_player_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
+    <string name="pick_up_player_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
+    <string name="pick_up_player_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
+    <string name="pick_up_player_error_dsfut_parameters">یک یا همه پارامترهای ورودی نا‌معتبر هستند.</string>
+    <string name="pick_up_player_error_dsfut_signature">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
+    <string name="pick_up_player_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
+    <string name="pick_up_player_error_dsfut_unit_time">خطای ساعت یونیکس.</string>
+    <string name="pick_up_player_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
+    <string name="pick_up_player_notification_title_success">%s با موفقیت گرفته شد</string>
+    <string name="pick_up_player_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
 
 
     <string name="profile_app_bar_title">پروفایل</string>

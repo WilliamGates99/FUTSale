@@ -19,7 +19,7 @@ sealed class PickUpPlayerError : Error() {
         data object ClientRequestException : Network()
         data object ServerResponseException : Network()
 
-        data object DsfutBlock : Network()
+        data class DsfutBlock(val message: String) : Network()
         data object DsfutEmpty : Network()
         data object DsfutLimit : Network()
         data object DsfutMaintenance : Network()
@@ -30,7 +30,7 @@ sealed class PickUpPlayerError : Error() {
         data object SomethingWentWrong : Network()
     }
 
-    data object Local : PickUpPlayerError() {
+    sealed class Local : PickUpPlayerError() {
         data object SomethingWentWrong : PickUpPlayerError()
     }
 }

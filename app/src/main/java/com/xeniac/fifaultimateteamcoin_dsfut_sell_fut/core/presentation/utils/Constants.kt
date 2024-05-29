@@ -17,5 +17,4 @@ object Constants {
 
     // Countdown Timer Constants
     const val COUNT_DOWN_INTERVAL_IN_MILLIS = 1000L // 1 Second
-    const val PLAYER_EXPIRY_TIME_IN_MILLIS = 3 * 60 * 1000L // 3 Minutes -> 180,000 Milli Seconds
 }

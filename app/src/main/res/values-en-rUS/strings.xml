@@ -59,45 +59,50 @@
     <string name="main_rate_app_dialog_neutral">Remind me later</string>
 
 
-    <string name="pick_up_text_title">Pick Up Player</string>
-    <string name="pick_up_title_instruction">Follow the steps below to buy a player:</string>
-    <string name="pick_up_text_instruction">1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font fgcolor="#1C53F4"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.</string>
-    <string name="pick_up_title_platform">Platform:</string>
-    <string name="pick_up_toggle_platform_console">Console</string>
-    <string name="pick_up_toggle_platform_pc">PC</string>
-    <string name="pick_up_title_price_min">Min Price</string>
-    <string name="pick_up_title_price_max">Max Price</string>
-    <string name="pick_up_title_take_after">Take After</string>
-    <string name="pick_up_hint_take_after">4 Seconds</string>
-    <string name="pick_up_helper_optional">Optional</string>
-    <string name="pick_up_btn_pick_auto">Auto Pick Up</string>
-    <string name="pick_up_btn_pick_auto_cancel">Cancel</string>
-    <string name="pick_up_btn_pick_once">Pick Once</string>
-    <string name="pick_up_title_player_price_start">Start Price</string>
-    <string name="pick_up_title_player_price_now">Buy Now Price</string>
-    <string name="pick_up_text_player_timer_finished">Expired</string>
-    <string name="pick_up_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
-    <string name="pick_up_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_player_app_bar_title">Pick Up Player</string>
+    <string name="pick_up_player_title_instruction">Follow the steps below to buy a player:</string>
+    <string name="pick_up_player_text_instruction">1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font fgcolor="#1C53F4"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.</string>
+    <string name="pick_up_player_title_platform">Platform:</string>
+    <string name="pick_up_player_toggle_platform_console">Console</string>
+    <string name="pick_up_player_toggle_platform_pc">PC</string>
+    <string name="pick_up_player_title_price_min">Min Price</string>
+    <string name="pick_up_player_title_price_max">Max Price</string>
+    <string name="pick_up_player_title_take_after">Take After</string>
+    <string name="pick_up_player_hint_take_after">4 Seconds</string>
+    <string name="pick_up_player_helper_optional">Optional</string>
+    <string name="pick_up_player_btn_pick_auto">Auto Pick Up</string>
+    <string name="pick_up_player_btn_pick_auto_cancel">Cancel</string>
+    <string name="pick_up_player_btn_pick_once">Pick Once</string>
+    <string name="pick_up_player_title_player_price_start">Start Price</string>
+    <string name="pick_up_player_title_player_price_now">Buy Now Price</string>
+    <string name="pick_up_player_text_player_timer_finished">Expired</string>
+    <string name="pick_up_player_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
+    <string name="pick_up_player_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_player_error_invalid_min_price">Please enter a valid price.</string>
+    <string name="pick_up_player_error_invalid_max_price">Please enter a valid price.</string>
+    <string name="pick_up_player_error_invalid_take_after">Please enter a valid time.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_one">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minute.</string>
+    <string name="pick_up_player_error_dsfut_block_one">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minute.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_two">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_two">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_few">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_few">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_many">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_many">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_other">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
-    <string name="pick_up_error_dsfut_empty">There are no players available for redemption.</string>
-    <string name="pick_up_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
-    <string name="pick_up_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
-    <string name="pick_up_error_dsfut_sign">Please check the entered values for the partner ID and secret key in the Profile page.</string>
-    <string name="pick_up_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
-    <string name="pick_up_error_dsfut_canceled">Auto pick player canceled.</string>
-    <string name="pick_up_notification_title_success">%s was picked up successfully</string>
-    <string name="pick_up_notification_title_fail">Auto pick up player failed</string>
+    <string name="pick_up_player_error_dsfut_block_other">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_empty">There are no players available for redemption.</string>
+    <string name="pick_up_player_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
+    <string name="pick_up_player_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
+    <string name="pick_up_player_error_dsfut_parameters">One or all of the entered parameters are invalid.</string>
+    <string name="pick_up_player_error_dsfut_signature">Please check the entered values for the partner ID and secret key in the Profile page.</string>
+    <string name="pick_up_player_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
+    <string name="pick_up_player_error_dsfut_unit_time">Unix time error.</string>
+    <string name="pick_up_player_error_dsfut_canceled">Auto pick player canceled.</string>
+    <string name="pick_up_player_notification_title_success">%s was picked up successfully</string>
+    <string name="pick_up_player_notification_title_fail">Auto pick up player failed</string>
 
 
     <string name="profile_app_bar_title">Profile</string>

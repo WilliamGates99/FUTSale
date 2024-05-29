@@ -24,6 +24,8 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.network.UnresolvedAddressException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -33,6 +35,13 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val preferencesRepository: Lazy<PreferencesRepository>,
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
+
+    override fun observeThreeLatestPlayers(): Flow<List<Player>> = playerDao.get()
+        .observeThreeLatestPlayers().map { playerEntities ->
+            playerEntities.filter {
+                DateHelper.isPickedPlayerNotExpired(it.pickUpTimeInMillis)
+            }.map { it.toPlayer() }
+        }
 
     override suspend fun pickUpPlayer(
         partnerId: String,
@@ -70,7 +79,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                     Result.Success(playerDto.toPlayer())
                 } else {
                     val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
-                        Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock
+                        Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock(message = pickUpPlayerResponseDto.message)
                         Constants.ERROR_DSFUT_EMPTY -> PickUpPlayerError.Network.DsfutEmpty
                         Constants.ERROR_DSFUT_LIMIT -> PickUpPlayerError.Network.DsfutLimit
                         Constants.ERROR_DSFUT_MAINTENANCE -> PickUpPlayerError.Network.DsfutMaintenance

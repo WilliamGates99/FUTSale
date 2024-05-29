@@ -2,7 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveThreeLatestPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
@@ -40,6 +42,12 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    fun provideObserveThreeLatestPlayersUseCase(
+        pickUpPlayerRepository: PickUpPlayerRepository
+    ): ObserveThreeLatestPlayersUseCase = ObserveThreeLatestPlayersUseCase(pickUpPlayerRepository)
+
+    @Provides
+    @ViewModelScoped
     fun providePickUpPlayerUseCase(
         preferencesRepository: PreferencesRepository,
         pickUpPlayerRepository: PickUpPlayerRepository,
@@ -56,5 +64,15 @@ object PickUpPlayerModule {
         validateMinPrice = validateMinPrice,
         validateMaxPrice = validateMaxPrice,
         validateTakeAfter = validateTakeAfter
+    )
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetThreeLatestPlayersUseCase(
+        observeThreeLatestPlayersUseCase: ObserveThreeLatestPlayersUseCase,
+        pickUpPlayerUseCase: PickUpPlayerUseCase
+    ): PickUpPlayerUseCases = PickUpPlayerUseCases(
+        { observeThreeLatestPlayersUseCase },
+        { pickUpPlayerUseCase }
     )
 }

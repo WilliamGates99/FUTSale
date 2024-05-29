@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlayersDao {
@@ -19,9 +20,12 @@ interface PlayersDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
+    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC LIMIT 3")
+    fun observeThreeLatestPlayers(): Flow<List<PlayerEntity>>
+
     @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
-    suspend fun getPlayers(): List<PlayerEntity>
+    fun observeAllPlayers(): Flow<List<PlayerEntity>>
 
     @Query("SELECT * FROM players WHERE id = :id")
-    suspend fun getPlayer(id: Int): PlayerEntity
+    fun getPlayer(id: Int): Flow<PlayerEntity>
 }

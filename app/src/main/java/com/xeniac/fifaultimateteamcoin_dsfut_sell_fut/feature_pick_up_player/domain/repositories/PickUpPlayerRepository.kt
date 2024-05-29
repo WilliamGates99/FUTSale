@@ -4,8 +4,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
+import kotlinx.coroutines.flow.Flow
 
 interface PickUpPlayerRepository {
+
+    fun observeThreeLatestPlayers(): Flow<List<Player>>
 
     suspend fun pickUpPlayer(
         partnerId: String,
