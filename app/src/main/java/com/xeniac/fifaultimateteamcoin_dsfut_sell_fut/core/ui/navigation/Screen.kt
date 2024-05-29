@@ -15,7 +15,7 @@ sealed class Screen : Parcelable {
     data object HomeScreen : Screen()
 
     @Serializable
-    data object PickUpScreen : Screen()
+    data object PickUpPlayerScreen : Screen()
 
     @Serializable
     data object ProfileScreen : Screen()
