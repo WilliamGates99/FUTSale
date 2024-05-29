@@ -23,6 +23,6 @@ abstract class RepositorySingletonModule {
     @Binds
     @Singleton
     abstract fun bindConnectivityObserver(
-        connectivityObserverImp: ConnectivityObserverImpl
+        connectivityObserverImpl: ConnectivityObserverImpl
     ): ConnectivityObserver
 }
