@@ -26,22 +26,4 @@ object Constants {
     // Countdown Timer Constants
     const val COUNT_DOWN_INTERVAL_IN_MILLIS = 1000L // 1 Second
     const val PLAYER_EXPIRY_TIME_IN_MILLIS = 3 * 60 * 1000L // 3 Minutes -> 180,000 Milli Seconds
-
-    // Response Errors
-    const val ERROR_NETWORK_CONNECTION_1 = "SSL handshake timed out"
-    const val ERROR_NETWORK_CONNECTION_2 = "Unable to resolve host"
-    const val ERROR_DSFUT_BLOCK = "block"
-    const val ERROR_DSFUT_EMPTY = "empty"
-    const val ERROR_DSFUT_LIMIT = "limit"
-    const val ERROR_DSFUT_MAINTENANCE = "maintenance"
-    const val ERROR_DSFUT_SIGN = "sign"
-    const val ERROR_DSFUT_THROTTLE = "throttle"
-
-    // OnBoarding Fragment SaveInstanceState Keys
-    const val SAVE_INSTANCE_ONBOARDING_PARTNER_ID = "save_instance_onboarding_partner_id"
-    const val SAVE_INSTANCE_ONBOARDING_SECRET_KEY = "save_instance_onboarding_secret_key"
-
-    // Profile Fragment SaveInstanceState Keys
-    const val SAVE_INSTANCE_PROFILE_PARTNER_ID = "save_instance_profile_partner_id"
-    const val SAVE_INSTANCE_PROFILE_SECRET_KEY = "save_instance_profile_secret_key"
 }

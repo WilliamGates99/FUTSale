@@ -1,18 +1,27 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PickedUpPlayerEntity
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 
 @Dao
 interface PlayersDao {
 
-    @Upsert
-    suspend fun insertPickedUpPlayer(pickedUpPlayer: PickedUpPlayerEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlayer(playerEntity: PlayerEntity)
+
+    @Query("DELETE FROM players")
+    suspend fun clearPlayers()
 
     @Delete
-    suspend fun deletePickedUpPlayer(pickedUpPlayer: PickedUpPlayerEntity)
+    suspend fun deletePlayer(playerEntity: PlayerEntity)
 
-    @Query("SELECT * FROM picked_up_players ORDER BY pickUpTimeInMillis DESC")
-    fun observeAllPickedUpPlayers(): LiveData<List<PickedUpPlayerEntity>>
+    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
+    suspend fun getPlayers(): List<PlayerEntity>
+
+    @Query("SELECT * FROM players WHERE id = :id")
+    suspend fun getPlayer(id: Int): PlayerEntity
 }

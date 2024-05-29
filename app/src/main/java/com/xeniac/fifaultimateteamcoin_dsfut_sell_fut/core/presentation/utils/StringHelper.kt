@@ -12,6 +12,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 /**
  * Converts a [Spanned] into an [AnnotatedString] trying to keep as much formatting as possible.
@@ -54,4 +56,11 @@ fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
             )
         }
     }
+}
+
+fun formatNumber(input: Int): String {
+    return DecimalFormat(
+        /* pattern = */ "#,###",
+        /* symbols = */ DecimalFormatSymbols.getInstance()
+    ).format(input)
 }
