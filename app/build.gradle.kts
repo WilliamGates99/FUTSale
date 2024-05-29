@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
@@ -226,11 +227,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "21"
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        jvmTarget = "22"
     }
 
     room {
