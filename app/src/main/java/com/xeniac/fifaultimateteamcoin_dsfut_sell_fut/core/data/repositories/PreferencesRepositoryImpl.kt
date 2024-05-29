@@ -12,14 +12,15 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SelectedPlatform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -193,13 +194,18 @@ class PreferencesRepositoryImpl @Inject constructor(
         null
     }
 
-    override suspend fun getSelectedPlatform(): SelectedPlatform = try {
-        settingsDataStore.data
-            .first()[PreferencesKeys.SELECTED_PLATFORM] ?: Constants.SELECTED_PLATFORM_CONSOLE
+    override suspend fun getSelectedPlatform(): Platform = try {
+        val selectedPlatform = settingsDataStore.data.first()[PreferencesKeys.SELECTED_PLATFORM]
+
+        val platformDto = PlatformDto.entries.find {
+            it.value == selectedPlatform
+        } ?: PlatformDto.CONSOLE
+
+        platformDto.toPlatform()
     } catch (e: Exception) {
         Timber.e("getSelectedPlatform failed:")
         e.printStackTrace()
-        Constants.SELECTED_PLATFORM_CONSOLE
+        PlatformDto.CONSOLE.toPlatform()
     }
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
@@ -336,11 +342,11 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setSelectedPlatform(platform: String) {
+    override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.SELECTED_PLATFORM] = platform
-                Timber.i("SelectedPlatform edited to $platform")
+                it[PreferencesKeys.SELECTED_PLATFORM] = platformDto.value
+                Timber.i("SelectedPlatform edited to ${platformDto.value}")
             }
         } catch (e: Exception) {
             Timber.e("setSelectedPlatform failed:")

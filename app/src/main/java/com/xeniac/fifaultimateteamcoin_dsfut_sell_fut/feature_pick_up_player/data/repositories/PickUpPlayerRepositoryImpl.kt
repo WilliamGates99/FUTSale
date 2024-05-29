@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
@@ -29,11 +30,11 @@ import javax.inject.Inject
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: HttpClient,
+    private val preferencesRepository: Lazy<PreferencesRepository>,
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
     override suspend fun pickUpPlayer(
-        platform: String,
         partnerId: String,
         secretKey: String,
         minPrice: String?,
@@ -45,7 +46,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         val response = httpClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = platform,
+                platform = preferencesRepository.get().getSelectedPlatform().value,
                 partnerId = partnerId,
                 timestamp = timestamp,
                 signature = signature

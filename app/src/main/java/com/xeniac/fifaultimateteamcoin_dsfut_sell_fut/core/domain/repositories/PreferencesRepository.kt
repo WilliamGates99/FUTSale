@@ -2,11 +2,12 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 
 typealias IsActivityRestartNeeded = Boolean
-typealias SelectedPlatform = String
 
 interface PreferencesRepository {
 
@@ -36,7 +37,7 @@ interface PreferencesRepository {
 
     suspend fun getSecretKey(): String?
 
-    suspend fun getSelectedPlatform(): SelectedPlatform
+    suspend fun getSelectedPlatform(): Platform
 
     suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 
@@ -58,5 +59,5 @@ interface PreferencesRepository {
 
     suspend fun setSecretKey(secretKey: String?)
 
-    suspend fun setSelectedPlatform(platform: String)
+    suspend fun setSelectedPlatform(platformDto: PlatformDto)
 }

@@ -3,6 +3,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Error
 
 sealed class PickUpPlayerError : Error() {
+    data object BlankPartnerId : PickUpPlayerError()
+    data object BlankSecretKey : PickUpPlayerError()
+    data object InvalidPartnerId : PickUpPlayerError()
     data object InvalidMinPrice : PickUpPlayerError()
     data object InvalidMaxPrice : PickUpPlayerError()
     data object InvalidTakeAfter : PickUpPlayerError()
