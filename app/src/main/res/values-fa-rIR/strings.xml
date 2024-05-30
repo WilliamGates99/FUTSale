@@ -77,7 +77,9 @@
     <string name="pick_up_player_title_player_price_now">قیمت خرید در لحظه</string>
     <string name="pick_up_player_text_player_timer_finished">منقضی‌شده</string>
     <string name="pick_up_player_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_player_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_blank_partner_id_and_secret_key">لطفا شناسه پارتنر و کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
     <string name="pick_up_player_error_invalid_min_price">لطفا یک قیمت معتبر وارد کنید.</string>
     <string name="pick_up_player_error_invalid_max_price">لطفا یک قیمت معتبر وارد کنید.</string>
     <string name="pick_up_player_error_invalid_take_after">لطفا یک زمان معتبر وارد کنید.</string>

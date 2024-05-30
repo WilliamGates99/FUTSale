@@ -7,7 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.BlankPartnerId -> UiText.StringResource(R.string.pick_up_player_error_blank_partner_id)
     PickUpPlayerError.BlankSecretKey -> UiText.StringResource(R.string.pick_up_player_error_blank_secret_key)
-    PickUpPlayerError.InvalidPartnerId -> UiText.StringResource(R.string.pick_up_player_error_blank_partner_id)
+    PickUpPlayerError.InvalidPartnerId -> UiText.StringResource(R.string.pick_up_player_error_invalid_partner_id)
     PickUpPlayerError.InvalidMinPrice -> UiText.StringResource(R.string.pick_up_player_error_invalid_min_price)
     PickUpPlayerError.InvalidMaxPrice -> UiText.StringResource(R.string.pick_up_player_error_invalid_max_price)
     PickUpPlayerError.InvalidTakeAfter -> UiText.StringResource(R.string.pick_up_player_error_invalid_take_after)

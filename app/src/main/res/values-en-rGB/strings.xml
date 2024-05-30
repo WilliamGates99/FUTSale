@@ -77,7 +77,9 @@
     <string name="pick_up_player_title_player_price_now">Buy Now Price</string>
     <string name="pick_up_player_text_player_timer_finished">Expired</string>
     <string name="pick_up_player_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
+    <string name="pick_up_player_error_invalid_partner_id">Please enter your partner ID in the Profile page.</string>
     <string name="pick_up_player_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_player_error_blank_partner_id_and_secret_key">Please enter your partner ID and secret key in the Profile page.</string>
     <string name="pick_up_player_error_invalid_min_price">Please enter a valid price.</string>
     <string name="pick_up_player_error_invalid_max_price">Please enter a valid price.</string>
     <string name="pick_up_player_error_invalid_take_after">Please enter a valid time.</string>

@@ -48,7 +48,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         secretKey: String,
         minPrice: String?,
         maxPrice: String?,
-        takeAfter: Int?
+        takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
         val timestamp = DateHelper.getCurrentTimeInMillis()
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
@@ -63,7 +63,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         ) {
             parameter(key = "min_buy", value = minPrice)
             parameter(key = "max_buy", value = maxPrice)
-            parameter(key = "take_after", value = takeAfter)
+            parameter(key = "take_after", value = takeAfterDelayInSeconds)
         }
 
         Timber.i("Pick up player response call = ${response.request.call}")

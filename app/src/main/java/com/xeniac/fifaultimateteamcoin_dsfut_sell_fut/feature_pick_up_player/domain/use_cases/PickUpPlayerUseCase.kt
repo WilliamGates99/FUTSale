@@ -21,7 +21,7 @@ class PickUpPlayerUseCase(
     suspend operator fun invoke(
         minPrice: String? = null,
         maxPrice: String? = null,
-        takeAfter: Int? = null
+        takeAfterDelayInSeconds: Int? = null
     ): PickUpPlayerResult {
         val partnerId = preferencesRepository.getPartnerId()
         val secretKey = preferencesRepository.getSecretKey()
@@ -30,7 +30,7 @@ class PickUpPlayerUseCase(
         val secretKeyError = validateSecretKey(secretKey)
         val minPriceError = validateMinPrice(minPrice)
         val maxPriceError = validateMaxPrice(maxPrice)
-        val takeAfterError = takeAfter?.let { validateTakeAfter(it) }
+        val takeAfterError = takeAfterDelayInSeconds?.let { validateTakeAfter(it) }
 
         val hasError = listOf(
             partnerIdError,
@@ -56,7 +56,7 @@ class PickUpPlayerUseCase(
                 secretKey = secretKey ?: "",
                 minPrice = minPrice,
                 maxPrice = maxPrice,
-                takeAfter = takeAfter,
+                takeAfterDelayInSeconds = takeAfterDelayInSeconds,
             )
         )
     }

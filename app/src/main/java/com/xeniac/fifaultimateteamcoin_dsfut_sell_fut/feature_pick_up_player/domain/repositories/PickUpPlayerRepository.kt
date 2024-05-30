@@ -15,7 +15,7 @@ interface PickUpPlayerRepository {
         secretKey: String,
         minPrice: String?,
         maxPrice: String?,
-        takeAfter: Int?
+        takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError>
 
     sealed class EndPoints(val url: String) {
