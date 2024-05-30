@@ -39,6 +39,7 @@ data class PlayerEntity(
         contracts = contracts,
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
+        pickUpTimeInMillis = pickUpTimeInMillis,
         id = id
     )
 }

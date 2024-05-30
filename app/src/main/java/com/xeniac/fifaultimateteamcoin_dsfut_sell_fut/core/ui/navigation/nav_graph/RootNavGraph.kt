@@ -30,7 +30,7 @@ fun SetupRootNavGraph(
         }
 
         composable<Screen.HomeScreen> {
-            HomeScreen(rootNavController = rootNavController)
+            HomeScreen()
         }
     }
 }

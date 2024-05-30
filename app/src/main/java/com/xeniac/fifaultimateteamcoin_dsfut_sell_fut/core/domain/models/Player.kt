@@ -4,7 +4,9 @@ import android.os.Parcelable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Player(
     val tradeID: Long,
@@ -20,6 +22,7 @@ data class Player(
     val contracts: Int,
     val chemistryStyle: String,
     val chemistryStyleID: Int,
+    val pickUpTimeInMillis: String = "",
     val id: Int? = null
 ) : Parcelable {
     fun toPlayerDto(): PlayerDto = PlayerDto(
@@ -53,6 +56,7 @@ data class Player(
         contracts = contracts,
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
+        pickUpTimeInMillis = pickUpTimeInMillis,
         id = id
     )
 }
