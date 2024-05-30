@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,9 +13,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.utils.PickUpPlayerUiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.utils.asUiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -162,7 +162,6 @@ class PickUpPlayerViewModel @Inject constructor(
                     is Result.Success -> {
                         result.data.let { player ->
                             savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                                pickedUpPlayer = player,
                                 isAutoPickUpLoading = false
                             )
 
@@ -170,7 +169,7 @@ class PickUpPlayerViewModel @Inject constructor(
                                 PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification
                             )
                             _autoPickUpPlayerEventChannel.send(
-                                PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen
+                                PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
                             )
                         }
                     }
@@ -282,12 +281,11 @@ class PickUpPlayerViewModel @Inject constructor(
                 is Result.Success -> {
                     result.data.let { player ->
                         savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            pickedUpPlayer = player,
                             isPickUpOnceLoading = false
                         )
 
                         _pickUpPlayerOnceEventChannel.send(
-                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen
+                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
                         )
                     }
                 }

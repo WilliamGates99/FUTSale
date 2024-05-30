@@ -44,12 +44,12 @@ class PickUpPlayerNotificationService @Inject constructor(
         val pickUpSuccessNotification = if (isNotificationSoundActive) {
             baseSoundedPickUpNotificationBuilder.apply {
                 setContentTitle(
-                    context.getString(R.string.pick_up_notification_title_success, playerName)
+                    context.getString(R.string.pick_up_player_notification_title_success, playerName)
                 )
             }
         } else {
             baseMutedPickUpNotificationBuilder.setContentTitle(
-                context.getString(R.string.pick_up_notification_title_success, playerName)
+                context.getString(R.string.pick_up_player_notification_title_success, playerName)
             )
         }
 
@@ -71,12 +71,12 @@ class PickUpPlayerNotificationService @Inject constructor(
     ) {
         val pickUpFailedNotificationBuilder = if (isNotificationSoundActive) {
             baseSoundedPickUpNotificationBuilder.apply {
-                setContentTitle(context.getString(R.string.pick_up_notification_title_fail))
+                setContentTitle(context.getString(R.string.pick_up_player_notification_title_fail))
                 setContentText(message)
             }
         } else {
             baseMutedPickUpNotificationBuilder.apply {
-                setContentTitle(context.getString(R.string.pick_up_notification_title_fail))
+                setContentTitle(context.getString(R.string.pick_up_player_notification_title_fail))
                 setContentText(message)
             }
         }

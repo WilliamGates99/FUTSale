@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 
 import android.os.Parcelable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import kotlinx.parcelize.Parcelize
 
@@ -17,6 +16,5 @@ data class PickUpPlayerState(
     val maxPriceErrorText: UiText? = null,
     val takeAfterErrorText: UiText? = null,
     val isAutoPickUpLoading: Boolean = false,
-    val isPickUpOnceLoading: Boolean = false,
-    val pickedUpPlayer: Player? = null
+    val isPickUpOnceLoading: Boolean = false
 ) : Parcelable

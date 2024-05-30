@@ -75,8 +75,9 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    playerDao.get().insertPlayer(playerDto!!.toPlayerEntity())
-                    Result.Success(playerDto.toPlayer())
+                    val playerEntity = playerDto!!.toPlayerEntity()
+                    playerDao.get().insertPlayer(playerEntity)
+                    Result.Success(playerEntity.toPlayer())
                 } else {
                     val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
                         Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock(message = pickUpPlayerResponseDto.message)
