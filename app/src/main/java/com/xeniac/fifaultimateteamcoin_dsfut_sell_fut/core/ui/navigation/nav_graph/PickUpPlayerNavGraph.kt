@@ -4,7 +4,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
@@ -17,26 +16,22 @@ fun NavGraphBuilder.pickUpPlayerNavGraph(
     homeNavController: NavHostController,
     bottomPadding: Dp
 ) {
-    navigation<Screen>(
-        startDestination = Screen.PickUpPlayerScreen
-    ) {
-        composable<Screen.PickUpPlayerScreen> {
-            PickUpPlayerScreen(
-                bottomPadding = bottomPadding,
-                onNavigateToPickedUpPlayerInfoScreen = { player ->
-                    homeNavController.navigate(Screen.PickedUpPlayerInfoScreen(player = player))
-                }
-            )
-        }
+    composable<Screen.PickUpPlayerScreen> {
+        PickUpPlayerScreen(
+            bottomPadding = bottomPadding,
+            onNavigateToPickedUpPlayerInfoScreen = { player ->
+                homeNavController.navigate(Screen.PickedUpPlayerInfoScreen(player = player))
+            }
+        )
+    }
 
-        composable<Screen.PickedUpPlayerInfoScreen>(
-            typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-        ) { backStackEntry ->
-            val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
+    composable<Screen.PickedUpPlayerInfoScreen>(
+        typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
+    ) { backStackEntry ->
+        val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
 
-            PickedUpPlayerInfoScreen(
-                player = args.player
-            )
-        }
+        PickedUpPlayerInfoScreen(
+            player = args.player
+        )
     }
 }
