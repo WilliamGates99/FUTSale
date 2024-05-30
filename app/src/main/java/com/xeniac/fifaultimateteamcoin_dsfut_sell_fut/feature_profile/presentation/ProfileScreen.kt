@@ -60,7 +60,7 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
@@ -74,7 +74,7 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updateSecretKeyEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),

@@ -89,7 +89,7 @@ class SettingsViewModel @Inject constructor(
                     when (result.error) {
                         is AppThemeError.SomethingWentWrong -> {
                             _setAppThemeEventChannel.send(
-                                UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                                UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                             )
                         }
                     }
@@ -109,7 +109,7 @@ class SettingsViewModel @Inject constructor(
                 when (result.error) {
                     NotificationSoundError.SomethingWentWrong -> {
                         _setNotificationSoundEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                         )
                     }
                 }
@@ -129,7 +129,7 @@ class SettingsViewModel @Inject constructor(
                 when (result.error) {
                     NotificationVibrateError.SomethingWentWrong -> {
                         _setNotificationVibrateEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                         )
                     }
                 }

@@ -72,7 +72,7 @@ class OnboardingViewModel @Inject constructor(
                 when (result.error) {
                     OnboardingError.SomethingWentWrong -> {
                         _completeOnboardingEventChannel.send(
-                            UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                         )
                     }
                 }

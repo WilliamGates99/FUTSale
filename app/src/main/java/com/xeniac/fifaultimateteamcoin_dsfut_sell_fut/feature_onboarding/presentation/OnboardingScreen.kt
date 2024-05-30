@@ -45,7 +45,7 @@ fun OnboardingScreen(
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
             is OnboardingUiEvent.NavigateToHomeScreen -> onNavigateToHomeScreen()
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),

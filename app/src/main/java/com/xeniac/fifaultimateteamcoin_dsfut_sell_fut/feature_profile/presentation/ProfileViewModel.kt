@@ -113,7 +113,7 @@ class ProfileViewModel @Inject constructor(
                 )
 
                 _updatePartnerIdEventChannel.send(
-                    UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                    UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                 )
             }
         }
@@ -170,7 +170,7 @@ class ProfileViewModel @Inject constructor(
                 )
 
                 _updateSecretKeyEventChannel.send(
-                    UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                    UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
                 )
             }
         }

@@ -69,7 +69,7 @@ fun SettingsScreen(
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.RestartActivity -> context.findActivity().restartActivity()
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
@@ -83,7 +83,7 @@ fun SettingsScreen(
     ObserverAsEvent(flow = viewModel.setAppThemeEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
@@ -97,7 +97,7 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationSoundEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
@@ -111,7 +111,7 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationVibrateEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowSnackbar -> {
+            is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
