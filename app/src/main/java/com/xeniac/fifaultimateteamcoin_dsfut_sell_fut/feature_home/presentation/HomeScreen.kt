@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -41,7 +40,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 
 @Composable
 fun HomeScreen(
-    rootNavController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -139,7 +137,6 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         SetupHomeNavGraph(
-            rootNavController = rootNavController,
             homeNavController = homeNavController,
             bottomPadding = innerPadding.calculateBottomPadding()
         )
