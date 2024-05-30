@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.states.ProfileState
@@ -32,10 +31,10 @@ class ProfileViewModel @Inject constructor(
         initialValue = ProfileState()
     )
 
-    private val _updatePartnerIdEventChannel = Channel<Event>()
+    private val _updatePartnerIdEventChannel = Channel<UiEvent>()
     val updatePartnerIdEventChannel = _updatePartnerIdEventChannel.receiveAsFlow()
 
-    private val _updateSecretKeyEventChannel = Channel<Event>()
+    private val _updateSecretKeyEventChannel = Channel<UiEvent>()
     val updateSecretKeyEventChannel = _updateSecretKeyEventChannel.receiveAsFlow()
 
     private var updatePartnerIdJob: Job? = null

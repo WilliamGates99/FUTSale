@@ -68,6 +68,7 @@ fun ProfileScreen(
                     )
                 }
             }
+            else -> Unit
         }
     }
 
@@ -81,6 +82,7 @@ fun ProfileScreen(
                     )
                 }
             }
+            else -> Unit
         }
     }
 
