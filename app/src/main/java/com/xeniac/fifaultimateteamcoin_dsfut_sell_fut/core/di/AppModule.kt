@@ -37,7 +37,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.serialization.json.Json
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -109,15 +111,18 @@ internal object AppModule {
         database: FutSaleDatabase
     ) = database.playersDao()
 
+    @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-        scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-        produceFile = { context.preferencesDataStoreFile(name = "settings") }
-    )
+    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "settings") }
+        )
+    }
 
     @Provides
     fun provideAppThemeIndex(
