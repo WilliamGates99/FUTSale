@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: HttpClient,
@@ -96,6 +97,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             }
             else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
         }
+    } catch (e: CancellationException) {
+        Timber.e("Pick up player CancellationException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.CancellationException)
     } catch (e: UnresolvedAddressException) { // When device is offline
         Timber.e("Pick up player UnresolvedAddressException:}")
         e.printStackTrace()

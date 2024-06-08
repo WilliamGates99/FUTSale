@@ -12,6 +12,8 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.InvalidMaxPrice -> UiText.StringResource(R.string.pick_up_player_error_invalid_max_price)
     PickUpPlayerError.InvalidTakeAfter -> UiText.StringResource(R.string.pick_up_player_error_invalid_take_after)
 
+    PickUpPlayerError.CancellationException -> UiText.DynamicString("CancellationException")
+
     PickUpPlayerError.Network.Offline -> UiText.StringResource(R.string.error_network_connection_unavailable)
     PickUpPlayerError.Network.ConnectTimeoutException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.HttpRequestTimeoutException -> UiText.StringResource(R.string.error_network_failure)
