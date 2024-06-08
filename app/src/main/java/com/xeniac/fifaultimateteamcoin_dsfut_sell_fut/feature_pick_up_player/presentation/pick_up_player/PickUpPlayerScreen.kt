@@ -3,10 +3,13 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -39,6 +42,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import kotlinx.coroutines.launch
 
@@ -261,6 +265,7 @@ fun PickUpPlayerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.ime)
                 .verticalScroll(rememberScrollState())
                 .padding(
                     start = horizontalPadding,
@@ -269,6 +274,8 @@ fun PickUpPlayerScreen(
                     bottom = bottomPadding + verticalPadding
                 )
         ) {
+            // TODO: THREE PLAYERS PAGER
+
             InstructionTexts(modifier = Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -283,7 +290,17 @@ fun PickUpPlayerScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // TODO: PRICES
+            PriceTextFields(
+                pickUpPlayerState = pickUpPlayerState,
+                onMinPriceChange = { newPrice ->
+                    viewModel.onEvent(PickUpPlayerEvent.MinPriceChanged(newPrice))
+                },
+                onMaxPriceChange = { newPrice ->
+                    viewModel.onEvent(PickUpPlayerEvent.MaxPriceChanged(newPrice))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
 
             Spacer(modifier = Modifier.height(14.dp))
 

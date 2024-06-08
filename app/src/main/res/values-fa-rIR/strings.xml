@@ -68,8 +68,8 @@
     <string name="pick_up_player_title_platform">پلتفرم:</string>
     <string name="pick_up_player_segmented_btn_platform_console">کنسول</string>
     <string name="pick_up_player_segmented_btn_platform_pc">کامپیوتر</string>
-    <string name="pick_up_player_title_price_min">حداقل قیمت</string>
-    <string name="pick_up_player_title_price_max">حداکثر قیمت</string>
+    <string name="pick_up_player_title_min_price">حداقل قیمت</string>
+    <string name="pick_up_player_title_max_price">حداکثر قیمت</string>
     <string name="pick_up_player_title_take_after">گرفتن بعد از</string>
     <string name="pick_up_player_hint_take_after">4 ثانیه</string>
     <string name="pick_up_player_helper_optional">اختیاری</string>

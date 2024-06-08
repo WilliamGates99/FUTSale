@@ -71,10 +71,10 @@
     <string name="pick_up_player_title_platform">Platform:</string>
     <string name="pick_up_player_segmented_btn_platform_console">Console</string>
     <string name="pick_up_player_segmented_btn_platform_pc">PC</string>
-    <string name="pick_up_player_title_price_min">Min Price</string>
-    <string name="pick_up_player_hint_price_min" translatable="false">10000</string>
-    <string name="pick_up_player_title_price_max">Max Price</string>
-    <string name="pick_up_player_hint_price_max" translatable="false">50000</string>
+    <string name="pick_up_player_title_min_price">Min Price</string>
+    <string name="pick_up_player_hint_min_price" translatable="false">10000</string>
+    <string name="pick_up_player_title_max_price">Max Price</string>
+    <string name="pick_up_player_hint_max_price" translatable="false">50000</string>
     <string name="pick_up_player_title_take_after">Take After</string>
     <string name="pick_up_player_hint_take_after">4 Seconds</string>
     <string name="pick_up_player_helper_optional">Optional</string>
