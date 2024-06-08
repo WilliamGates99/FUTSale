@@ -67,7 +67,7 @@
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>
     <string name="pick_up_player_title_instruction">Follow the steps below to buy a player:</string>
     <!--Placeholder is for the color value-->
-    <string name="pick_up_player_text_instruction"><![CDATA[1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font color="#%s"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.]]></string>
+    <string name="pick_up_player_text_instruction"><![CDATA[1. Choose your game platform.<br>2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)<br>3. Click the <font color="#%s"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.<br>4. Wait until a player pops.]]></string>
     <string name="pick_up_player_title_platform">Platform:</string>
     <string name="pick_up_player_segmented_btn_platform_console">Console</string>
     <string name="pick_up_player_segmented_btn_platform_pc">PC</string>

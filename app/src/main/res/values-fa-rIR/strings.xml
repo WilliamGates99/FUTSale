@@ -64,7 +64,7 @@
     <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>
     <string name="pick_up_player_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
     <!--Placeholder is for the color value-->
-    <string name="pick_up_player_text_instruction"><![CDATA[1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font color="#%s"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.]]></string>
+    <string name="pick_up_player_text_instruction"><![CDATA[1. پلتفرم بازی خود را انتخاب کنید.<br>2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)<br>3. روی دکمه <font color="#%s"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.<br>4. صبر کنید تا یک بازیکن ظاهر شود.]]></string>
     <string name="pick_up_player_title_platform">پلتفرم:</string>
     <string name="pick_up_player_segmented_btn_platform_console">کنسول</string>
     <string name="pick_up_player_segmented_btn_platform_pc">کامپیوتر</string>
