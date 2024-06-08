@@ -11,7 +11,7 @@ data class PickUpPlayerResponseDto(
     @SerialName("message")
     val message: String,
     @SerialName("player")
-    val playerDto: PlayerDto?
+    val playerDto: PlayerDto? = null
 ) {
     fun toPickUpPlayerResponse(): PickUpPlayerResponse = PickUpPlayerResponse(
         error = error,
