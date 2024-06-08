@@ -169,9 +169,9 @@ fun OnboardingPageFour(
 
         Button(
             onClick = onStartBtnClick,
+            contentPadding = PaddingValues(vertical = 12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 44.dp)
                 .padding(horizontal = 8.dp)
         ) {
             Text(
