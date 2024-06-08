@@ -274,6 +274,10 @@ fun PickUpPlayerScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             PlatformSelector(
+                pickUpPlayerState = pickUpPlayerState,
+                onPlatformClick = { newPlatform ->
+                    viewModel.onEvent(PickUpPlayerEvent.PlatformChanged(newPlatform))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
