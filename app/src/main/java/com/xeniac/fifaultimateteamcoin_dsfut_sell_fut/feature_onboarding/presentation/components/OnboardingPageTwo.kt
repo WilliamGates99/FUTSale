@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 import androidx.annotation.RawRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -112,6 +113,10 @@ fun OnboardingPageTwo(
 
             Button(
                 onClick = onNextBtnClick,
+                contentPadding = PaddingValues(
+                    horizontal = 24.dp,
+                    vertical = 12.dp
+                ),
                 modifier = Modifier.defaultMinSize(
                     minWidth = 114.dp,
                     minHeight = ButtonDefaults.MinHeight
