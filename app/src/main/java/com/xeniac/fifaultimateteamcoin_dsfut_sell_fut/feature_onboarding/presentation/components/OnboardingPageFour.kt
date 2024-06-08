@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components
 
-import android.text.SpannableStringBuilder
 import androidx.annotation.RawRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -32,19 +31,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.HtmlCompat
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.toAnnotatedString
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral70
@@ -119,15 +118,12 @@ fun OnboardingPageFour(
                 .align(Alignment.Start)
         ) {
             Text(
-                text = HtmlCompat.fromHtml(
-                    SpannableStringBuilder(
-                        stringResource(
-                            id = R.string.onboarding_fourth_btn_register,
-                            primaryColorHex
-                        )
-                    ).toString(),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT
-                ).toAnnotatedString(),
+                text = AnnotatedString.fromHtml(
+                    stringResource(
+                        id = R.string.onboarding_fourth_btn_register,
+                        primaryColorHex
+                    )
+                ),
                 color = textBtnNeutralColor,
                 fontSize = 14.sp,
                 lineHeight = 18.sp
@@ -198,15 +194,12 @@ fun OnboardingPageFour(
             )
         ) {
             Text(
-                text = HtmlCompat.fromHtml(
-                    SpannableStringBuilder(
-                        stringResource(
-                            id = R.string.onboarding_fourth_btn_agreement,
-                            primaryColorHex
-                        )
-                    ).toString(),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT
-                ).toAnnotatedString(),
+                text = AnnotatedString.fromHtml(
+                    stringResource(
+                        id = R.string.onboarding_fourth_btn_agreement,
+                        primaryColorHex
+                    )
+                ),
                 color = textBtnNeutralColor,
                 fontSize = 12.sp,
                 lineHeight = 16.sp
