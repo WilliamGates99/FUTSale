@@ -35,7 +35,7 @@ fun InstructionTexts(
         primaryColorHex
     ),
     instructionFontSize: TextUnit = 14.sp,
-    instructionLineHeight: TextUnit = 16.sp,
+    instructionLineHeight: TextUnit = 18.sp,
     instructionFontWeight: FontWeight = FontWeight.Normal,
     instructionColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
