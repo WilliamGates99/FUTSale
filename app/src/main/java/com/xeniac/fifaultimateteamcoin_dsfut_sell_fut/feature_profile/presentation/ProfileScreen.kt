@@ -99,7 +99,12 @@ fun ProfileScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = bottomPadding)
+            )
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
