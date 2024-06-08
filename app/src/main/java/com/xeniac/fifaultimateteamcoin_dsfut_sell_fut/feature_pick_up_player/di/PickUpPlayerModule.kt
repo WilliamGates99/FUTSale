@@ -2,9 +2,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveThreeLatestPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.SetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
@@ -48,6 +50,18 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetSelectedPlatformUseCase(
+        preferencesRepository: PreferencesRepository
+    ): GetSelectedPlatformUseCase = GetSelectedPlatformUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSetSelectedPlatformUseCase(
+        preferencesRepository: PreferencesRepository
+    ): SetSelectedPlatformUseCase = SetSelectedPlatformUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
     fun providePickUpPlayerUseCase(
         preferencesRepository: PreferencesRepository,
         pickUpPlayerRepository: PickUpPlayerRepository,
@@ -70,9 +84,13 @@ object PickUpPlayerModule {
     @ViewModelScoped
     fun provideGetThreeLatestPlayersUseCase(
         observeThreeLatestPlayersUseCase: ObserveThreeLatestPlayersUseCase,
+        getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
+        setSelectedPlatformUseCase: SetSelectedPlatformUseCase,
         pickUpPlayerUseCase: PickUpPlayerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeThreeLatestPlayersUseCase },
+        { getSelectedPlatformUseCase },
+        { setSelectedPlatformUseCase },
         { pickUpPlayerUseCase }
     )
 }

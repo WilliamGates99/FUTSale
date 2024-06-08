@@ -42,8 +42,10 @@
     <string name="onboarding_fourth_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
     <string name="onboarding_fourth_title_secret_key">کلید محرمانه</string>
     <string name="onboarding_fourth_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
+    <!--Placeholder is for the color value-->
     <string name="onboarding_fourth_btn_register"><![CDATA[اگر حساب DSFUT ندارید، <font color="#%s"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.]]></string>
     <string name="onboarding_fourth_btn_start">شروع کنیم</string>
+    <!--Placeholder is for the color value-->
     <string name="onboarding_fourth_btn_agreement"><![CDATA[با ورود، شما <font color="#%s"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.]]></string>
 
 
@@ -61,10 +63,11 @@
 
     <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>
     <string name="pick_up_player_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
-    <string name="pick_up_player_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
+    <!--Placeholder is for the color value-->
+    <string name="pick_up_player_text_instruction"><![CDATA[1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font color="#%s"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.]]></string>
     <string name="pick_up_player_title_platform">پلتفرم:</string>
-    <string name="pick_up_player_toggle_platform_console">کنسول</string>
-    <string name="pick_up_player_toggle_platform_pc">کامپیوتر</string>
+    <string name="pick_up_player_segmented_btn_platform_console">کنسول</string>
+    <string name="pick_up_player_segmented_btn_platform_pc">کامپیوتر</string>
     <string name="pick_up_player_title_price_min">حداقل قیمت</string>
     <string name="pick_up_player_title_price_max">حداکثر قیمت</string>
     <string name="pick_up_player_title_take_after">گرفتن بعد از</string>
@@ -103,6 +106,7 @@
     <string name="pick_up_player_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
     <string name="pick_up_player_error_dsfut_unit_time">خطای ساعت یونیکس.</string>
     <string name="pick_up_player_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
+    <string name="pick_up_player_error_btn_open_profile">برو به پروفایل</string>
     <string name="pick_up_player_notification_title_success">%s با موفقیت گرفته شد</string>
     <string name="pick_up_player_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
 

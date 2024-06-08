@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
@@ -13,6 +14,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PlatformError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.asUiText
@@ -37,6 +39,9 @@ class PickUpPlayerViewModel @Inject constructor(
         initialValue = PickUpPlayerState()
     )
 
+    private val _changePlatformEventChannel = Channel<Event>()
+    val changePlatformEventChannel = _changePlatformEventChannel.receiveAsFlow()
+
     private val _autoPickUpPlayerEventChannel = Channel<Event>()
     val autoPickUpPlayerEventChannel = _autoPickUpPlayerEventChannel.receiveAsFlow()
 
@@ -45,13 +50,14 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private var autoPickUpPlayerJob: Job? = null
 
+    init {
+        getSelectedPlatform()
+    }
+
     fun onEvent(event: PickUpPlayerEvent) {
         when (event) {
-            is PickUpPlayerEvent.PlatformChanged -> {
-                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    selectedPlatform = event.platform
-                )
-            }
+            PickUpPlayerEvent.GetSelectedPlatform -> getSelectedPlatform()
+            is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
             is PickUpPlayerEvent.MinPriceChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
                     minPrice = event.minPrice,
@@ -77,6 +83,31 @@ class PickUpPlayerViewModel @Inject constructor(
             PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
             PickUpPlayerEvent.AutoPickUpPlayer -> autoPickUpPlayer()
             PickUpPlayerEvent.PickUpPlayerOnce -> pickUpPlayerOnce()
+        }
+    }
+
+    private fun getSelectedPlatform() = viewModelScope.launch {
+        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()()
+        )
+    }
+
+    private fun setSelectedPlatform(platform: Platform) = viewModelScope.launch {
+        when (val result = pickUpPlayerUseCases.setSelectedPlatformUseCase.get()(platform)) {
+            is Result.Success -> {
+                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    selectedPlatform = platform
+                )
+            }
+            is Result.Error -> {
+                when (result.error) {
+                    PlatformError.SomethingWentWrong -> {
+                        _changePlatformEventChannel.send(
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                        )
+                    }
+                }
+            }
         }
     }
 

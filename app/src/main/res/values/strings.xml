@@ -42,8 +42,10 @@
     <string name="onboarding_fourth_hint_partner_id">Enter your partner ID</string>
     <string name="onboarding_fourth_title_secret_key">Secret Key</string>
     <string name="onboarding_fourth_hint_secret_key">Enter your secret key</string>
+    <!--Placeholder is for the color value-->
     <string name="onboarding_fourth_btn_register"><![CDATA[If you don\'t have a DSFUT account, <font color="#%s"><b>click here</b></font> to create one.]]></string>
     <string name="onboarding_fourth_btn_start">Get Started</string>
+    <!--Placeholder is for the color value-->
     <string name="onboarding_fourth_btn_agreement"><![CDATA[By logging in, you agree to our <font color="#%s"><b>Privacy Policy</b></font>.]]></string>
 
 
@@ -64,10 +66,11 @@
 
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>
     <string name="pick_up_player_title_instruction">Follow the steps below to buy a player:</string>
-    <string name="pick_up_player_text_instruction">1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font fgcolor="#1C53F4"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.</string>
+    <!--Placeholder is for the color value-->
+    <string name="pick_up_player_text_instruction"><![CDATA[1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font color="#%s"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.]]></string>
     <string name="pick_up_player_title_platform">Platform:</string>
-    <string name="pick_up_player_toggle_platform_console">Console</string>
-    <string name="pick_up_player_toggle_platform_pc">PC</string>
+    <string name="pick_up_player_segmented_btn_platform_console">Console</string>
+    <string name="pick_up_player_segmented_btn_platform_pc">PC</string>
     <string name="pick_up_player_title_price_min">Min Price</string>
     <string name="pick_up_player_hint_price_min" translatable="false">10000</string>
     <string name="pick_up_player_title_price_max">Max Price</string>
@@ -122,6 +125,7 @@
     <string name="pick_up_player_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
     <string name="pick_up_player_error_dsfut_unit_time">Unix time error.</string>
     <string name="pick_up_player_error_dsfut_canceled">Auto pick player canceled.</string>
+    <string name="pick_up_player_error_btn_open_profile">Open Profile</string>
     <string name="pick_up_player_notification_title_success">%s was picked up successfully</string>
     <string name="pick_up_player_notification_title_fail">Auto pick up player failed</string>
 
@@ -175,6 +179,12 @@
 
 
     <string name="player_details_text_title">%s was picked up successfully.</string>
+    <!--
+    Placeholders:
+    • %1$s: Minute
+    • %2$s: Seconds
+    Sample: 02:52
+    -->
     <string name="player_details_text_timer" translatable="false">%1$s:%2$s</string>
     <string name="player_details_title_rating">Rating</string>
     <string name="player_details_title_position">Position</string>

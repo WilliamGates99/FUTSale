@@ -19,6 +19,12 @@ fun NavGraphBuilder.pickUpPlayerNavGraph(
     composable<Screen.PickUpPlayerScreen> {
         PickUpPlayerScreen(
             bottomPadding = bottomPadding,
+            onNavigateToProfileScreen = {
+                homeNavController.navigate(Screen.ProfileScreen) {
+                    launchSingleTop = true
+                    popUpTo(Screen.PickUpPlayerScreen)
+                }
+            },
             onNavigateToPickedUpPlayerInfoScreen = { player ->
                 homeNavController.navigate(Screen.PickedUpPlayerInfoScreen(player = player))
             }
