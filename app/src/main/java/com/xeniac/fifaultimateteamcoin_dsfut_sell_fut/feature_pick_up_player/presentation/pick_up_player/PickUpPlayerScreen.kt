@@ -41,6 +41,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ob
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
@@ -142,11 +143,11 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.player)
             }
-            is UiEvent.ShowShortSnackbar -> {
+            is UiEvent.ShowLongSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
+                        duration = SnackbarDuration.Long
                     )
                 }
             }
@@ -220,11 +221,11 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.player)
             }
-            is UiEvent.ShowShortSnackbar -> {
+            is UiEvent.ShowLongSnackbar -> {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
+                        duration = SnackbarDuration.Long
                     )
                 }
             }
@@ -238,9 +239,7 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            // TODO: RETRY PICK ONCE
-                        }
+                        SnackbarResult.ActionPerformed -> pickUpPlayerOnce(viewModel)
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -249,7 +248,12 @@ fun PickUpPlayerScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = bottomPadding)
+            )
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -309,10 +313,34 @@ fun PickUpPlayerScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             // TODO: AUTO BTN
+//            Button(
+//                onClick = { pickUpPlayerOnce(viewModel) },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .defaultMinSize(minHeight = 44.dp)
+//                    .padding(horizontal = 8.dp)
+//            ) {
+//                Text(
+//                    text = stringResource(id = R.string.onboarding_fourth_btn_start),
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 16.sp,
+//                    lineHeight = 22.sp
+//                )
+//            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // TODO: ONCE BTN
+            PickUpOnceButton(
+                pickUpPlayerState = pickUpPlayerState,
+                onClick = { pickUpPlayerOnce(viewModel) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+            )
         }
     }
+}
+
+private fun pickUpPlayerOnce(viewModel: PickUpPlayerViewModel) {
+    viewModel.onEvent(PickUpPlayerEvent.PickUpPlayerOnce)
 }

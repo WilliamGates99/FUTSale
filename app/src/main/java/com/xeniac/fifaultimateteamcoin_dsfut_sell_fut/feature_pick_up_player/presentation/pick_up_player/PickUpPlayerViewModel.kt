@@ -218,7 +218,7 @@ class PickUpPlayerViewModel @Inject constructor(
                             }
                             else -> {
                                 _autoPickUpPlayerEventChannel.send(
-                                    UiEvent.ShowShortSnackbar(error.asUiText())
+                                    UiEvent.ShowLongSnackbar(error.asUiText())
                                 )
 
                                 savedStateHandle["pickUpPlayerState"] =
@@ -328,7 +328,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 }
                 is Result.Error -> {
                     _pickUpPlayerOnceEventChannel.send(
-                        UiEvent.ShowShortSnackbar(result.error.asUiText())
+                        UiEvent.ShowLongSnackbar(result.error.asUiText())
                     )
 
                     savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
