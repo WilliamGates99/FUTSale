@@ -40,6 +40,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.AutoPickUpButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
@@ -161,9 +162,7 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            // TODO: RETRY AUTO PICK UP
-                        }
+                        SnackbarResult.ActionPerformed -> autoPickUpPlayer(viewModel)
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -312,21 +311,14 @@ fun PickUpPlayerScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // TODO: AUTO BTN
-//            Button(
-//                onClick = { pickUpPlayerOnce(viewModel) },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .defaultMinSize(minHeight = 44.dp)
-//                    .padding(horizontal = 8.dp)
-//            ) {
-//                Text(
-//                    text = stringResource(id = R.string.onboarding_fourth_btn_start),
-//                    fontWeight = FontWeight.Bold,
-//                    fontSize = 16.sp,
-//                    lineHeight = 22.sp
-//                )
-//            }
+            AutoPickUpButton(
+                pickUpPlayerState = pickUpPlayerState,
+                onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
+                onCancelClick = { viewModel.onEvent(PickUpPlayerEvent.CancelAutoPickUpPlayer) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -339,6 +331,10 @@ fun PickUpPlayerScreen(
             )
         }
     }
+}
+
+private fun autoPickUpPlayer(viewModel: PickUpPlayerViewModel) {
+    viewModel.onEvent(PickUpPlayerEvent.AutoPickUpPlayer)
 }
 
 private fun pickUpPlayerOnce(viewModel: PickUpPlayerViewModel) {

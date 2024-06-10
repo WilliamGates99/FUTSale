@@ -113,9 +113,6 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun cancelAutoPickUpPlayer() {
         autoPickUpPlayerJob?.cancel()
-        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-            isAutoPickUpLoading = true
-        )
     }
 
     private fun autoPickUpPlayer() {
