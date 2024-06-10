@@ -10,4 +10,13 @@
         <item quantity="other">@string/pick_up_player_error_dsfut_block_other</item>
     </plurals>
 
+    <plurals name="pick_up_player_title_take_after" translatable="false">
+        <item quantity="zero">@string/pick_up_player_title_take_after_zero</item>
+        <item quantity="one">@string/pick_up_player_title_take_after_one</item>
+        <item quantity="two">@string/pick_up_player_title_take_after_two</item>
+        <item quantity="few">@string/pick_up_player_title_take_after_few</item>
+        <item quantity="many">@string/pick_up_player_title_take_after_many</item>
+        <item quantity="other">@string/pick_up_player_title_take_after_other</item>
+    </plurals>
+
 </resources>

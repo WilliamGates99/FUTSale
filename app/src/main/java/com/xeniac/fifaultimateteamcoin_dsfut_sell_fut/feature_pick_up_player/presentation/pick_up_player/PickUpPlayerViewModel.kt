@@ -72,12 +72,15 @@ class PickUpPlayerViewModel @Inject constructor(
             }
             is PickUpPlayerEvent.TakeAfterCheckedChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    isTakeAfterChecked = event.isChecked
+                    isTakeAfterChecked = event.isChecked,
+                    takeAfterDelayInSeconds = if (event.isChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else 0,
+                    takeAfterErrorText = null
                 )
             }
             is PickUpPlayerEvent.TakeAfterSliderChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    takeAfterDelayInSeconds = event.delayInSeconds
+                    takeAfterDelayInSeconds = event.delayInSeconds,
+                    takeAfterErrorText = null
                 )
             }
             PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()

@@ -70,8 +70,19 @@
     <string name="pick_up_player_segmented_btn_platform_pc">PC</string>
     <string name="pick_up_player_title_min_price">Min Price</string>
     <string name="pick_up_player_title_max_price">Max Price</string>
-    <string name="pick_up_player_title_take_after">Take After</string>
-    <string name="pick_up_player_hint_take_after">4 Seconds</string>
+    <string name="pick_up_player_title_take_after">Pick the player with delay?</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_zero">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_one">Pick the player after %d second.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_two">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_few">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_many">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_other">Pick the player after %d seconds.</string>
     <string name="pick_up_player_helper_optional">Optional</string>
     <string name="pick_up_player_btn_pick_auto">Auto Pick Up</string>
     <string name="pick_up_player_btn_pick_auto_cancel">Cancel</string>

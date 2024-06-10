@@ -70,8 +70,19 @@
     <string name="pick_up_player_segmented_btn_platform_pc">کامپیوتر</string>
     <string name="pick_up_player_title_min_price">حداقل قیمت</string>
     <string name="pick_up_player_title_max_price">حداکثر قیمت</string>
-    <string name="pick_up_player_title_take_after">گرفتن بعد از</string>
-    <string name="pick_up_player_hint_take_after">4 ثانیه</string>
+    <string name="pick_up_player_title_take_after">بازیکن با تاخیر گرفته بشه؟</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_zero">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_one">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_two">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_few">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_many">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_other">بازیکن بعد از %d ثانیه گرفته میشه.</string>
     <string name="pick_up_player_helper_optional">اختیاری</string>
     <string name="pick_up_player_btn_pick_auto">گرفتن خودکار</string>
     <string name="pick_up_player_btn_pick_auto_cancel">لغو</string>

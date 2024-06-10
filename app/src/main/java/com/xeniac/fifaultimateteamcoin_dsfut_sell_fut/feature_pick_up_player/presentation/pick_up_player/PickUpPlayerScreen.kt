@@ -335,12 +335,17 @@ fun PickUpPlayerScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-
             Spacer(modifier = Modifier.height(14.dp))
 
-            // TODO: TAKE AFTER
             TakeAfterSlider(
-                modifier = Modifier.fillMaxWidth()
+                pickUpPlayerState = pickUpPlayerState,
+                modifier = Modifier.fillMaxWidth(),
+                onCheckedChange = { isChecked ->
+                    viewModel.onEvent(PickUpPlayerEvent.TakeAfterCheckedChanged(isChecked))
+                },
+                onSliderValueChangeFinished = { sliderPosition ->
+                    viewModel.onEvent(PickUpPlayerEvent.TakeAfterSliderChanged(sliderPosition))
+                }
             )
 
             Spacer(modifier = Modifier.height(40.dp))
