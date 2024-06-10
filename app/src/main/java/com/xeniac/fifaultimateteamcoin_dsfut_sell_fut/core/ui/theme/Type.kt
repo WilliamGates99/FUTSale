@@ -3,18 +3,19 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 val futSaleFont = FontFamily(
     listOf(
-        Font(R.font.font_extra_light),
-        Font(R.font.font_light),
-        Font(R.font.font_regular),
-        Font(R.font.font_medium),
-        Font(R.font.font_semi_bold),
-        Font(R.font.font_bold),
-        Font(R.font.font_extra_bold),
-        Font(R.font.font_black)
+        Font(resId = R.font.font_extra_light, weight = FontWeight.ExtraLight),
+        Font(resId = R.font.font_light, weight = FontWeight.Light),
+        Font(resId = R.font.font_regular, weight = FontWeight.Normal),
+        Font(resId = R.font.font_medium, weight = FontWeight.Medium),
+        Font(resId = R.font.font_semi_bold, weight = FontWeight.SemiBold),
+        Font(resId = R.font.font_bold, weight = FontWeight.Bold),
+        Font(resId = R.font.font_extra_bold, weight = FontWeight.ExtraBold),
+        Font(resId = R.font.font_black, weight = FontWeight.Black)
     )
 )
 
