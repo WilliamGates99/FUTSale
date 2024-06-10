@@ -45,6 +45,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pre
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.TakeAfterSlider
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import kotlinx.coroutines.launch
 
@@ -138,6 +139,21 @@ fun PickUpPlayerScreen(
                     }
                 }
             }
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
+                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
+                        duration = SnackbarDuration.Indefinite,
+                        withDismissAction = true
+                    )
+
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
+                        SnackbarResult.Dismissed -> Unit
+                    }
+                }
+            }
             PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification -> {
                 // TODO: NOTIF
             }
@@ -206,6 +222,21 @@ fun PickUpPlayerScreen(
                 scope.launch {
                     val result = snackbarHostState.showSnackbar(
                         message = context.getString(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
+                        duration = SnackbarDuration.Indefinite,
+                        withDismissAction = true
+                    )
+
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
+                        SnackbarResult.Dismissed -> Unit
+                    }
+                }
+            }
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
                         duration = SnackbarDuration.Indefinite,
                         withDismissAction = true
@@ -308,6 +339,9 @@ fun PickUpPlayerScreen(
             Spacer(modifier = Modifier.height(14.dp))
 
             // TODO: TAKE AFTER
+            TakeAfterSlider(
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
 

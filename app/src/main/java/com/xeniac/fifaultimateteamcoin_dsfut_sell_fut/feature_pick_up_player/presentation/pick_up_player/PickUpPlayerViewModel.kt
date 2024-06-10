@@ -213,6 +213,16 @@ class PickUpPlayerViewModel @Inject constructor(
                                         isAutoPickUpLoading = false
                                     )
                             }
+                            PickUpPlayerError.Network.DsfutSignature -> {
+                                _autoPickUpPlayerEventChannel.send(
+                                    PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())
+                                )
+
+                                savedStateHandle["pickUpPlayerState"] =
+                                    pickUpPlayerState.value.copy(
+                                        isAutoPickUpLoading = false
+                                    )
+                            }
                             else -> {
                                 _autoPickUpPlayerEventChannel.send(
                                     UiEvent.ShowLongSnackbar(error.asUiText())
@@ -324,13 +334,26 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
                 }
                 is Result.Error -> {
-                    _pickUpPlayerOnceEventChannel.send(
-                        UiEvent.ShowLongSnackbar(result.error.asUiText())
-                    )
+                    when (val error = result.error) {
+                        PickUpPlayerError.Network.DsfutSignature -> {
+                            _pickUpPlayerOnceEventChannel.send(
+                                PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())
+                            )
 
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                        isPickUpOnceLoading = false
-                    )
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                isPickUpOnceLoading = false
+                            )
+                        }
+                        else -> {
+                            _pickUpPlayerOnceEventChannel.send(
+                                UiEvent.ShowLongSnackbar(error.asUiText())
+                            )
+
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                isPickUpOnceLoading = false
+                            )
+                        }
+                    }
                 }
                 null -> {
                     savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
