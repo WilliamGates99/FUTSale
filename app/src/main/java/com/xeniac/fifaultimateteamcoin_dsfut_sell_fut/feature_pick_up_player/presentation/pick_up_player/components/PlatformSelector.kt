@@ -45,7 +45,7 @@ enum class PlatformItems(
 fun PlatformSelector(
     pickUpPlayerState: PickUpPlayerState,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = !pickUpPlayerState.isAutoPickUpLoading || !pickUpPlayerState.isPickUpOnceLoading,
+    isEnabled: Boolean = !(pickUpPlayerState.isAutoPickUpLoading || pickUpPlayerState.isPickUpOnceLoading),
     title: String = stringResource(id = R.string.pick_up_player_title_platform),
     titleFontSize: TextUnit = 14.sp,
     titleLineHeight: TextUnit = 14.sp,
