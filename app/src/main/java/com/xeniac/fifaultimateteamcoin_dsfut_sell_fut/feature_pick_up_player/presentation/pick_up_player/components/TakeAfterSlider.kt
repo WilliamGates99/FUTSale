@@ -13,6 +13,7 @@ import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipDefaults
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,8 +45,10 @@ fun TakeAfterSlider(
     pickUpPlayerState: PickUpPlayerState,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    colors: SliderColors = SliderDefaults.colors(),
     sliderInitialPosition: Float = pickUpPlayerState.takeAfterDelayInSeconds.toFloat(),
     isLoading: Boolean = pickUpPlayerState.isAutoPickUpLoading || pickUpPlayerState.isPickUpOnceLoading,
+    isEnabled: Boolean = pickUpPlayerState.isTakeAfterChecked && !isLoading,
     sliderValueRange: ClosedFloatingPointRange<Float> = 1f..60f,
     sliderSteps: Int = 57, // 57 + 2 ends of the slider = 59 steps
     errorTextFontSize: TextUnit = 12.sp,
@@ -82,19 +86,20 @@ fun TakeAfterSlider(
         )
 
         Slider(
-            enabled = pickUpPlayerState.isTakeAfterChecked && !isLoading,
+            enabled = isEnabled,
             value = sliderPosition,
             steps = sliderSteps,
             valueRange = sliderValueRange,
             interactionSource = interactionSource,
+            colors = colors,
             thumb = {
                 Label(
                     interactionSource = interactionSource,
                     label = {
                         RichTooltip(
                             colors = TooltipDefaults.richTooltipColors().copy(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             shape = CircleShape
                         ) {
@@ -111,7 +116,11 @@ fun TakeAfterSlider(
                 ) {
                     SliderDefaults.Thumb(
                         enabled = !isLoading,
-                        interactionSource = interactionSource
+                        interactionSource = interactionSource,
+                        colors = if (isEnabled) colors else colors.copy(
+                            thumbColor = colors.thumbColor.copy(alpha = 0.38f)
+                                .compositeOver(MaterialTheme.colorScheme.surface)
+                        )
                     )
                 }
             },
