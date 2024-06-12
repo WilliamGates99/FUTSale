@@ -63,7 +63,7 @@
 
     <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>
     <string name="pick_up_player_latest_player_timer_expired">منقضی‌شده</string>
-    <string name="pick_up_player_latest_player_title_chemistry_style">کمیستری:</string>
+    <string name="pick_up_player_latest_player_title_chemistry_style">سبک کمیستری:</string>
     <string name="pick_up_player_latest_player_title_start_price">قیمت اولیه:</string>
     <string name="pick_up_player_latest_player_title_buy_now_price">قیمت خرید در لحظه:</string>
     <string name="pick_up_player_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
