@@ -48,8 +48,8 @@ fun OnboardingPager(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-        ) { position ->
-            when (position) {
+        ) { scrollPosition ->
+            when (scrollPosition) {
                 0 -> OnboardingPageOne(
                     bottomPadding = bottomPadding,
                     onSkipBtnClick = {
