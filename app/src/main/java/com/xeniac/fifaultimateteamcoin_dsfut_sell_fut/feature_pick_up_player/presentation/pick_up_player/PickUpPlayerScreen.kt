@@ -42,6 +42,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.AutoPickUpButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
@@ -64,7 +65,7 @@ fun PickUpPlayerScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val threeLatestPlayers by viewModel.observeThreeLatestPlayers().collectAsStateWithLifecycle(
+    val latestPickedPlayers by viewModel.observeLatestPickedPlayers().collectAsStateWithLifecycle(
         initialValue = emptyList()
     )
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
@@ -302,72 +303,84 @@ fun PickUpPlayerScreen(
                 .windowInsetsPadding(WindowInsets.ime)
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
                     top = innerPadding.calculateTopPadding() + verticalPadding,
                     bottom = bottomPadding + verticalPadding
                 )
         ) {
-            // TODO: THREE PLAYERS PAGER
-
-            InstructionTexts(modifier = Modifier.fillMaxWidth())
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            PlatformSelector(
-                pickUpPlayerState = pickUpPlayerState,
-                onPlatformClick = { newPlatform ->
-                    viewModel.onEvent(PickUpPlayerEvent.PlatformChanged(newPlatform))
+            LatestPlayersPagers(
+                latestPickedPlayers = latestPickedPlayers,
+                timerText = "00:01", // TODO: TEMP
+                onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
+                onCountdownStart = { expiryTimeInMillis ->
+                    viewModel.onEvent(PickUpPlayerEvent.StartCountdown(expiryTimeInMillis))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
-
-            PriceTextFields(
-                pickUpPlayerState = pickUpPlayerState,
-                onMinPriceChange = { newPrice ->
-                    viewModel.onEvent(PickUpPlayerEvent.MinPriceChanged(newPrice))
-                },
-                onMaxPriceChange = { newPrice ->
-                    viewModel.onEvent(PickUpPlayerEvent.MaxPriceChanged(newPrice))
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            TakeAfterSlider(
-                pickUpPlayerState = pickUpPlayerState,
-                modifier = Modifier.fillMaxWidth(),
-                onCheckedChange = { isChecked ->
-                    viewModel.onEvent(PickUpPlayerEvent.TakeAfterCheckedChanged(isChecked))
-                },
-                onSliderValueChangeFinished = { sliderPosition ->
-                    viewModel.onEvent(PickUpPlayerEvent.TakeAfterSliderChanged(sliderPosition))
-                }
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            AutoPickUpButton(
-                pickUpPlayerState = pickUpPlayerState,
-                onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
-                onCancelClick = { viewModel.onEvent(PickUpPlayerEvent.CancelAutoPickUpPlayer) },
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            )
+                    .padding(horizontal = horizontalPadding)
+            ) {
+                InstructionTexts(modifier = Modifier.fillMaxWidth())
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            PickUpOnceButton(
-                pickUpPlayerState = pickUpPlayerState,
-                onClick = { pickUpPlayerOnce(viewModel) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-            )
+                PlatformSelector(
+                    pickUpPlayerState = pickUpPlayerState,
+                    onPlatformClick = { newPlatform ->
+                        viewModel.onEvent(PickUpPlayerEvent.PlatformChanged(newPlatform))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                PriceTextFields(
+                    pickUpPlayerState = pickUpPlayerState,
+                    onMinPriceChange = { newPrice ->
+                        viewModel.onEvent(PickUpPlayerEvent.MinPriceChanged(newPrice))
+                    },
+                    onMaxPriceChange = { newPrice ->
+                        viewModel.onEvent(PickUpPlayerEvent.MaxPriceChanged(newPrice))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                TakeAfterSlider(
+                    pickUpPlayerState = pickUpPlayerState,
+                    modifier = Modifier.fillMaxWidth(),
+                    onCheckedChange = { isChecked ->
+                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterCheckedChanged(isChecked))
+                    },
+                    onSliderValueChangeFinished = { sliderPosition ->
+                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterSliderChanged(sliderPosition))
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
+                AutoPickUpButton(
+                    pickUpPlayerState = pickUpPlayerState,
+                    onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
+                    onCancelClick = { viewModel.onEvent(PickUpPlayerEvent.CancelAutoPickUpPlayer) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                PickUpOnceButton(
+                    pickUpPlayerState = pickUpPlayerState,
+                    onClick = { pickUpPlayerOnce(viewModel) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                )
+            }
         }
     }
 }

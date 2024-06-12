@@ -13,4 +13,6 @@ sealed class PickUpPlayerEvent {
     data object CancelAutoPickUpPlayer : PickUpPlayerEvent()
     data object AutoPickUpPlayer : PickUpPlayerEvent()
     data object PickUpPlayerOnce : PickUpPlayerEvent()
+
+    data class StartCountdown(val expiryTimeInMs: Long) : PickUpPlayerEvent()
 }

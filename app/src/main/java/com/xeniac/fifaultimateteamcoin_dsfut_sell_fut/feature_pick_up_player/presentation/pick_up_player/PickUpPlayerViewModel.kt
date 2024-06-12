@@ -32,7 +32,8 @@ class PickUpPlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    fun observeThreeLatestPlayers() = pickUpPlayerUseCases.observeThreeLatestPlayersUseCase.get()()
+    fun observeLatestPickedPlayers() = pickUpPlayerUseCases
+        .observeLatestPickedPlayersUseCaseUseCase.get()()
 
     val pickUpPlayerState = savedStateHandle.getStateFlow(
         key = "pickUpPlayerState",
@@ -86,6 +87,7 @@ class PickUpPlayerViewModel @Inject constructor(
             PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
             PickUpPlayerEvent.AutoPickUpPlayer -> autoPickUpPlayer()
             PickUpPlayerEvent.PickUpPlayerOnce -> pickUpPlayerOnce()
+            is PickUpPlayerEvent.StartCountdown -> startCountdown(event.expiryTimeInMs)
         }
     }
 
@@ -371,5 +373,9 @@ class PickUpPlayerViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun startCountdown(expiryTimeInMs: Long) = viewModelScope.launch {
+        // TODO: Not yet implemented
     }
 }

@@ -1,12 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
@@ -25,8 +25,7 @@ import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import okhttp3.internal.toLongOrDefault
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -38,14 +37,70 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    override fun observeThreeLatestPlayers(): Flow<List<Player>> = playerDao.get()
-        .observeThreeLatestPlayers().map { playerEntities ->
-            playerEntities.filter {
-                DateHelper.isPickedPlayerNotExpired(
-                    it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
+//    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
+//        .observeLatestPickedPlayers().map { playerEntities ->
+//            playerEntities.filter {
+//                DateHelper.isPickedPlayerNotExpired(
+//                    it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
+//                )
+//            }.map { it.toPlayer() }
+//        }
+
+    // TODO: TEMP
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
+        emit(
+            listOf(
+                PlayerEntity(
+                    tradeID = "1",
+                    assetID = 1,
+                    resourceID = 1,
+                    transactionID = 1,
+                    name = "Test 1 Name",
+                    rating = 88,
+                    position = "CDM",
+                    startPrice = 10000,
+                    buyNowPrice = 15000,
+                    owners = 3,
+                    contracts = 3,
+                    chemistryStyle = "Chem Test",
+                    chemistryStyleID = 1,
+                    id = 1
+                ),
+                PlayerEntity(
+                    tradeID = "2",
+                    assetID = 2,
+                    resourceID = 2,
+                    transactionID = 2,
+                    name = "Test 2 Name",
+                    rating = 69,
+                    position = "GK",
+                    startPrice = 20000,
+                    buyNowPrice = 25000,
+                    owners = 5,
+                    contracts = 2,
+                    chemistryStyle = "Chem Style",
+                    chemistryStyleID = 2,
+                    id = 2
+                ),
+                PlayerEntity(
+                    tradeID = "3",
+                    assetID = 3,
+                    resourceID = 3,
+                    transactionID = 3,
+                    name = "Test 3 Name",
+                    rating = 95,
+                    position = "FW",
+                    startPrice = 30500,
+                    buyNowPrice = 35150,
+                    owners = 3,
+                    contracts = 3,
+                    chemistryStyle = "Chem",
+                    chemistryStyleID = 3,
+                    id = 3
                 )
-            }.map { it.toPlayer() }
-        }
+            ).map { it.toPlayer() }
+        )
+    }
 
     override suspend fun pickUpPlayer(
         partnerId: String,
