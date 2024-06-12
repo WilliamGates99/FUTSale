@@ -62,6 +62,10 @@
 
 
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>
+    <string name="pick_up_player_latest_player_timer_expired">Expired</string>
+    <string name="pick_up_player_latest_player_title_chemistry_style">Chemistry Style:</string>
+    <string name="pick_up_player_latest_player_title_start_price">Start Price:</string>
+    <string name="pick_up_player_latest_player_title_buy_now_price">Buy Now Price:</string>
     <string name="pick_up_player_title_instruction">Follow the steps below to buy a player:</string>
     <!--Placeholder is for the color value-->
     <string name="pick_up_player_text_instruction"><![CDATA[1. Choose your game platform.<br>2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)<br>3. Click the <font color="#%s"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.<br>4. Wait until a player pops.]]></string>
@@ -87,9 +91,6 @@
     <string name="pick_up_player_btn_pick_auto">Auto Pick Up</string>
     <string name="pick_up_player_btn_pick_auto_cancel">Cancel</string>
     <string name="pick_up_player_btn_pick_once">Pick Once</string>
-    <string name="pick_up_player_title_player_price_start">Start Price</string>
-    <string name="pick_up_player_title_player_price_now">Buy Now Price</string>
-    <string name="pick_up_player_text_player_timer_finished">Expired</string>
     <string name="pick_up_player_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
     <string name="pick_up_player_error_invalid_partner_id">Please enter your partner ID in the Profile page.</string>
     <string name="pick_up_player_error_blank_secret_key">Please enter your secret key in the Profile page.</string>

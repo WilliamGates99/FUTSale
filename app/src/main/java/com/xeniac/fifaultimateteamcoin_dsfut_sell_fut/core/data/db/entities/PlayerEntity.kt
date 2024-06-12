@@ -7,6 +7,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
 import okhttp3.internal.toLongOrDefault
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Entity(tableName = "players")
 data class PlayerEntity(
@@ -36,7 +39,10 @@ data class PlayerEntity(
             resourceID = resourceID,
             transactionID = transactionID,
             name = name,
-            rating = rating,
+            rating = DecimalFormat(
+                /* pattern = */ "00",
+                /* symbols = */ DecimalFormatSymbols(Locale.US)
+            ).format(rating),
             position = position,
             startPrice = formatNumber(startPrice),
             buyNowPrice = formatNumber(buyNowPrice),

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PickUpPlayerRepository {
 
-    fun observeThreeLatestPlayers(): Flow<List<Player>>
+    fun observeLatestPickedPlayers(): Flow<List<Player>>
 
     suspend fun pickUpPlayer(
         partnerId: String,

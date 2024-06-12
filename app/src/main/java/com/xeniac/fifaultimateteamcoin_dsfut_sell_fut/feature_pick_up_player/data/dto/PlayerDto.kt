@@ -5,6 +5,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Serializable
 data class PlayerDto(
@@ -59,7 +62,10 @@ data class PlayerDto(
         resourceID = resourceID,
         transactionID = transactionID,
         name = name,
-        rating = rating,
+        rating = DecimalFormat(
+            /* pattern = */ "00",
+            /* symbols = */ DecimalFormatSymbols(Locale.US)
+        ).format(rating),
         position = position,
         startPrice = formatNumber(startPrice),
         buyNowPrice = formatNumber(buyNowPrice),
