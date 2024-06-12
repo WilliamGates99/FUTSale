@@ -22,7 +22,8 @@ data class Player(
     val contracts: Int,
     val chemistryStyle: String,
     val chemistryStyleID: Int,
-    val pickUpTimeInMillis: String = "",
+    val pickUpTimeInMillis: Long = 0,
+    val expiryTimeInMillis: Long = 0,
     val id: Int? = null
 ) : Parcelable {
     fun toPlayerDto(): PlayerDto = PlayerDto(
@@ -56,7 +57,7 @@ data class Player(
         contracts = contracts,
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
-        pickUpTimeInMillis = pickUpTimeInMillis,
+        pickUpTimeInMillis = pickUpTimeInMillis.toString(),
         id = id
     )
 }
