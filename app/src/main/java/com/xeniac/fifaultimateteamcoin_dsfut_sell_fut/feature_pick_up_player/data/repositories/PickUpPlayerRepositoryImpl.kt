@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
@@ -30,7 +30,8 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import okhttp3.internal.toLongOrDefault
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -42,71 +43,15 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    // TODO: MOVE FILTER CONDITION INSIDE DAO
-//    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
-//        .observeLatestPickedPlayers().map { playerEntities ->
-//            playerEntities.filter {
-//                DateHelper.isPickedPlayerNotExpired(
-//                    it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
-//                )
-//            }.map { it.toPlayer() }
-//        }
-
-    // TODO: TEMP
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
-        emit(
-            listOf(
-                PlayerEntity(
-                    tradeID = "1",
-                    assetID = 1,
-                    resourceID = 1,
-                    transactionID = 1,
-                    name = "Test 1 Name",
-                    rating = 88,
-                    position = "CDM",
-                    startPrice = 10000,
-                    buyNowPrice = 15000,
-                    owners = 3,
-                    contracts = 3,
-                    chemistryStyle = "Chem Test",
-                    chemistryStyleID = 1,
-                    id = 1,
-                    pickUpTimeInMillis = (DateHelper.getCurrentTimeInMillis() - 170000).toString()
-                ),
-                PlayerEntity(
-                    tradeID = "2",
-                    assetID = 2,
-                    resourceID = 2,
-                    transactionID = 2,
-                    name = "Test 2 Name",
-                    rating = 69,
-                    position = "GK",
-                    startPrice = 20000,
-                    buyNowPrice = 25000,
-                    owners = 5,
-                    contracts = 2,
-                    chemistryStyle = "Chem Style",
-                    chemistryStyleID = 2,
-                    id = 2
-                ),
-                PlayerEntity(
-                    tradeID = "3",
-                    assetID = 3,
-                    resourceID = 3,
-                    transactionID = 3,
-                    name = "Test 3 Name",
-                    rating = 95,
-                    position = "FW",
-                    startPrice = 30500,
-                    buyNowPrice = 35150,
-                    owners = 3,
-                    contracts = 3,
-                    chemistryStyle = "Chem",
-                    chemistryStyleID = 3,
-                    id = 3
-                )
-            ).map { it.toPlayer() }
-        )
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> {
+        return playerDao.get()
+            .observeLatestPickedPlayers().map { playerEntities ->
+                playerEntities.filter {
+                    DateHelper.isPickedPlayerNotExpired(
+                        pickUpTimeInMs = it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
+                    )
+                }.map { it.toPlayer() }
+            }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
@@ -121,7 +66,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
                 countDownTimer = object : CountDownTimer(
                     /* millisInFuture = */ timerStartTimeInMs,
-                    /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
+                    /* countDownInterval = */ COUNT_DOWN_TIMER_INTERVAL_IN_MS
                 ) {
                     override fun onTick(millisUntilFinished: Long) {
                         trySend((millisUntilFinished / 1000).toInt())

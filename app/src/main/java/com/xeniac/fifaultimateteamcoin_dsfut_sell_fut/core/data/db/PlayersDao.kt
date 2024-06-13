@@ -20,7 +20,7 @@ interface PlayersDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
-    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC LIMIT 3")
+    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
     fun observeLatestPickedPlayers(): Flow<List<PlayerEntity>>
 
     @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")

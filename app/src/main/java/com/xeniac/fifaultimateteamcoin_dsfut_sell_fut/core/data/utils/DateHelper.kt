@@ -3,12 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 object DateHelper {
 
-    fun getCurrentTimeInMillis(): Long = Calendar.getInstance().timeInMillis
+    fun getCurrentTimeInMillis(): Long = System.currentTimeMillis()
 
     fun getDaysFromFirstInstallTime(context: Context): Long = TimeUnit.MILLISECONDS.toDays(
         /* duration = */ getCurrentTimeInMillis() - getFirstInstallTimeInMillis(context)

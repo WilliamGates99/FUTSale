@@ -65,9 +65,7 @@ fun PickUpPlayerScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val latestPickedPlayers by viewModel.observeLatestPickedPlayers().collectAsStateWithLifecycle(
-        initialValue = emptyList()
-    )
+    val latestPickedPlayers by viewModel.latestPickedPlayers.collectAsStateWithLifecycle()
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 

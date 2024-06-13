@@ -23,8 +23,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -37,8 +39,12 @@ class PickUpPlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    fun observeLatestPickedPlayers() = pickUpPlayerUseCases
-        .observeLatestPickedPlayersUseCaseUseCase.get()()
+    val latestPickedPlayers = pickUpPlayerUseCases
+        .observeLatestPickedPlayersUseCaseUseCase.get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList()
+    )
 
     val pickUpPlayerState = savedStateHandle.getStateFlow(
         key = "pickUpPlayerState",

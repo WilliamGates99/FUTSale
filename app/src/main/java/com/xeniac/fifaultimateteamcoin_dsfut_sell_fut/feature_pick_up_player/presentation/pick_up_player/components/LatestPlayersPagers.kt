@@ -49,8 +49,8 @@ fun LatestPlayersPagers(
     timerText: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(
-        start = 24.dp,
-        end = 24.dp,
+        start = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,
+        end = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,
         bottom = 20.dp
     ),
     beyondViewportPageCount: Int = 1,
