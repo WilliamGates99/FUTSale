@@ -73,12 +73,12 @@ class PickUpPlayerViewModel @Inject constructor(
     private var countDownTimerJob: Job? = null
 
     init {
-        getSelectedPlatform()
+        getPersistedData()
     }
 
     fun onEvent(event: PickUpPlayerEvent) {
         when (event) {
-            PickUpPlayerEvent.GetSelectedPlatform -> getSelectedPlatform()
+            PickUpPlayerEvent.GetPersistedData -> getPersistedData()
             is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
             is PickUpPlayerEvent.MinPriceChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
@@ -112,8 +112,10 @@ class PickUpPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun getSelectedPlatform() = viewModelScope.launch {
+    private fun getPersistedData() = viewModelScope.launch {
         savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            isNotificationSoundEnabled = pickUpPlayerUseCases.getIsNotificationSoundEnabledUseCase.get()(),
+            isNotificationVibrateEnabled = pickUpPlayerUseCases.getIsNotificationVibrateEnabledUseCase.get()(),
             selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()()
         )
     }
@@ -141,7 +143,13 @@ class PickUpPlayerViewModel @Inject constructor(
         autoPickUpPlayerJob?.cancel()
     }
 
-    private fun autoPickUpPlayer() {
+    private fun autoPickUpPlayer() = viewModelScope.launch {
+        _autoPickUpPlayerEventChannel.send(
+            PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification
+        )
+    }
+
+    private fun autoPickUpPlayerTemp() {
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {

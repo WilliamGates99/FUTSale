@@ -4,6 +4,8 @@ import dagger.Lazy
 
 data class PickUpPlayerUseCases(
     val observeLatestPickedPlayersUseCaseUseCase: Lazy<ObserveLatestPickedPlayersUseCase>,
+    val getIsNotificationSoundEnabledUseCase: Lazy<GetIsNotificationSoundEnabledUseCase>,
+    val getIsNotificationVibrateEnabledUseCase: Lazy<GetIsNotificationVibrateEnabledUseCase>,
     val getSelectedPlatformUseCase: Lazy<GetSelectedPlatformUseCase>,
     val setSelectedPlatformUseCase: Lazy<SetSelectedPlatformUseCase>,
     val pickUpPlayerUseCase: Lazy<PickUpPlayerUseCase>,

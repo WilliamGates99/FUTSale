@@ -13,10 +13,6 @@ interface PreferencesRepository {
 
     fun getCurrentAppThemeSynchronously(): AppTheme
 
-    fun isNotificationSoundActiveSynchronously(): Boolean
-
-    fun isNotificationVibrateActiveSynchronously(): Boolean
-
     suspend fun getCurrentAppTheme(): AppTheme
 
     suspend fun getCurrentAppLocale(): AppLocale

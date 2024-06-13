@@ -63,26 +63,6 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun isNotificationSoundActiveSynchronously(): Boolean = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
-        } catch (e: Exception) {
-            Timber.e("isNotificationSoundActiveSynchronously failed:")
-            e.printStackTrace()
-            true
-        }
-    }
-
-    override fun isNotificationVibrateActiveSynchronously(): Boolean = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
-        } catch (e: Exception) {
-            Timber.e("isNotificationVibrateActiveSynchronously failed:")
-            e.printStackTrace()
-            true
-        }
-    }
-
     override suspend fun getCurrentAppTheme(): AppTheme = try {
         val appThemeIndex = settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
