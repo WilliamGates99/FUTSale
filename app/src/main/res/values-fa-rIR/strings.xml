@@ -3,7 +3,9 @@
     <string name="app_name">فیفا آلتیمیت تیم کوین</string>
 
 
-    <string name="notification_channel_name_pick_up_player">گرفتن خودکار بازیکن</string>
+    <string name="notification_pick_up_player_channel_group_name">گرفتن بازیکن</string>
+    <string name="notification_pick_up_player_channel_name_default">پیش‌فرض</string>
+    <string name="notification_pick_up_player_channel_name_silent">بی‌صدا</string>
     <string name="notification_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
     <string name="notification_permission_rational_message">بدون مجوز اعلان، پس از گرفتن بازیکن، اعلانی دریافت نخواهید کرد.</string>
     <string name="notification_permission_rational_btn_positive">باشه</string>
