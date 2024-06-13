@@ -66,7 +66,8 @@ class BaseApplication : Application(), ImageLoaderFactory {
                 /* importance = */ NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 group = "channel_group_pick_up_player"
-                description = getString(R.string.notification_channel_description_pick_up_player)
+                description =
+                    getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 lightColor = ContextCompat.getColor(
                     /* context = */ this@BaseApplication,
@@ -92,7 +93,8 @@ class BaseApplication : Application(), ImageLoaderFactory {
                 /* importance = */ NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 group = "channel_group_pick_up_player"
-                description = getString(R.string.notification_channel_description_pick_up_player)
+                description =
+                    getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 lightColor = ContextCompat.getColor(
                     /* context = */ this@BaseApplication,
