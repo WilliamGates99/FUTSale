@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
@@ -57,6 +59,20 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetIsNotificationSoundEnabledUseCase(
+        preferencesRepository: PreferencesRepository
+    ): GetIsNotificationSoundEnabledUseCase =
+        GetIsNotificationSoundEnabledUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetIsNotificationVibrateEnabledUseCase(
+        preferencesRepository: PreferencesRepository
+    ): GetIsNotificationVibrateEnabledUseCase =
+        GetIsNotificationVibrateEnabledUseCase(preferencesRepository)
+
+    @Provides
+    @ViewModelScoped
     fun provideSetSelectedPlatformUseCase(
         preferencesRepository: PreferencesRepository
     ): SetSelectedPlatformUseCase = SetSelectedPlatformUseCase(preferencesRepository)
@@ -91,12 +107,16 @@ object PickUpPlayerModule {
     @ViewModelScoped
     fun provideGetThreeLatestPlayersUseCase(
         observeLatestPickedPlayersUseCase: ObserveLatestPickedPlayersUseCase,
+        getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
+        getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
         setSelectedPlatformUseCase: SetSelectedPlatformUseCase,
         pickUpPlayerUseCase: PickUpPlayerUseCase,
         startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeLatestPickedPlayersUseCase },
+        { getIsNotificationSoundEnabledUseCase },
+        { getIsNotificationVibrateEnabledUseCase },
         { getSelectedPlatformUseCase },
         { setSelectedPlatformUseCase },
         { pickUpPlayerUseCase },

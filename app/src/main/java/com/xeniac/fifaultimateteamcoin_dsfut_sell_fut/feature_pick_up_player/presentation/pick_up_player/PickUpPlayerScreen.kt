@@ -40,6 +40,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.AutoPickUpButton
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
@@ -48,6 +49,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pre
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.TakeAfterSlider
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +58,8 @@ fun PickUpPlayerScreen(
     bottomPadding: Dp,
     onNavigateToProfileScreen: () -> Unit,
     onNavigateToPickedUpPlayerInfoScreen: (player: Player) -> Unit,
-    viewModel: PickUpPlayerViewModel = hiltViewModel()
+    viewModel: PickUpPlayerViewModel = hiltViewModel(),
+    notificationService: PickUpPlayerNotificationService = requirePickUpPlayerNotificationService()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -154,8 +157,19 @@ fun PickUpPlayerScreen(
                     }
                 }
             }
-            PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification -> {
-                // TODO: NOTIF
+            is PickUpPlayerUiEvent.ShowErrorNotification -> {
+                notificationService.showFailedPickUpPlayerNotification(
+                    message = event.message.asString(context),
+                    isNotificationSoundEnabled = pickUpPlayerState.isNotificationSoundEnabled,
+                    isNotificationVibrateEnabled = pickUpPlayerState.isNotificationVibrateEnabled
+                )
+            }
+            is PickUpPlayerUiEvent.ShowSuccessNotification -> {
+                notificationService.showSuccessfulPickUpPlayerNotification(
+                    playerName = event.playerName,
+                    isNotificationSoundEnabled = pickUpPlayerState.isNotificationSoundEnabled,
+                    isNotificationVibrateEnabled = pickUpPlayerState.isNotificationVibrateEnabled
+                )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.player)
