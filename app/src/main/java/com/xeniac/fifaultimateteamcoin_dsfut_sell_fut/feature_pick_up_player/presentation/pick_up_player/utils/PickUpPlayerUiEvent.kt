@@ -10,6 +10,8 @@ sealed class PickUpPlayerUiEvent : Event() {
     data object ShowPartnerIdAndSecretKeySnackbar : PickUpPlayerUiEvent()
     data class ShowSignatureSnackbar(val message: UiText) : PickUpPlayerUiEvent()
 
-    data object ShowPlayerPickedUpSuccessfullyNotification : PickUpPlayerUiEvent()
+    data class ShowErrorNotification(val message: UiText) : PickUpPlayerUiEvent()
+    data class ShowSuccessNotification(val playerName: String) : PickUpPlayerUiEvent()
+
     data class NavigateToPickedUpPlayerInfoScreen(val player: Player) : PickUpPlayerUiEvent()
 }

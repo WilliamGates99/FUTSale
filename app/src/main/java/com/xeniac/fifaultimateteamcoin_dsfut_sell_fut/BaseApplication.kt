@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -38,9 +39,11 @@ class BaseApplication : Application(), ImageLoaderFactory {
         setupTimber()
         setAppTheme()
 
-        createPickUpPlayerNotificationChannelGroup()
-        createSilentPickUpPlayerNotificationChannel()
-        createDefaultPickUpPlayerNotificationChannel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createPickUpPlayerNotificationChannelGroup()
+            createSilentPickUpPlayerNotificationChannel()
+            createDefaultPickUpPlayerNotificationChannel()
+        }
         // initAppLovin()
         // initTapsell()
     }
@@ -49,6 +52,7 @@ class BaseApplication : Application(), ImageLoaderFactory {
 
     private fun setAppTheme() = currentAppTheme.setAppTheme()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createPickUpPlayerNotificationChannelGroup() {
         val notificationChannelGroup = NotificationChannelGroup(
             /* id = */ "channel_group_pick_up_player",
@@ -58,54 +62,52 @@ class BaseApplication : Application(), ImageLoaderFactory {
         notificationManager.createNotificationChannelGroup(notificationChannelGroup)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createSilentPickUpPlayerNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val pickUpPlayerNotificationChannel = NotificationChannel(
-                /* id = */ "notification_channel_pick_up_player_silent",
-                /* name = */ getString(R.string.notification_pick_up_player_channel_name_silent),
-                /* importance = */ NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                group = "channel_group_pick_up_player"
-                description =
-                    getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                lightColor = ContextCompat.getColor(
-                    /* context = */ this@BaseApplication,
-                    /* id = */ R.color.green
-                )
-                enableLights(true)
-                enableVibration(false)
-                setSound(
-                    /* sound = */ null,
-                    /* audioAttributes = */ null
-                )
-            }
-
-            notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
+        val pickUpPlayerNotificationChannel = NotificationChannel(
+            /* id = */ "notification_channel_pick_up_player_silent",
+            /* name = */ getString(R.string.notification_pick_up_player_channel_name_silent),
+            /* importance = */ NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            group = "channel_group_pick_up_player"
+            description =
+                getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = ContextCompat.getColor(
+                /* context = */ this@BaseApplication,
+                /* id = */ R.color.green
+            )
+            enableLights(true)
+            enableVibration(false)
+            setSound(
+                /* sound = */ null,
+                /* audioAttributes = */ null
+            )
         }
+
+        notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createDefaultPickUpPlayerNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val pickUpPlayerNotificationChannel = NotificationChannel(
-                /* id = */ "notification_channel_pick_up_player_default",
-                /* name = */ getString(R.string.notification_pick_up_player_channel_name_default),
-                /* importance = */ NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                group = "channel_group_pick_up_player"
-                description =
-                    getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                lightColor = ContextCompat.getColor(
-                    /* context = */ this@BaseApplication,
-                    /* id = */ R.color.green
-                )
-                enableLights(true)
-                enableVibration(false)
-            }
-
-            notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
+        val pickUpPlayerNotificationChannel = NotificationChannel(
+            /* id = */ "notification_channel_pick_up_player_default",
+            /* name = */ getString(R.string.notification_pick_up_player_channel_name_default),
+            /* importance = */ NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            group = "channel_group_pick_up_player"
+            description =
+                getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = ContextCompat.getColor(
+                /* context = */ this@BaseApplication,
+                /* id = */ R.color.green
+            )
+            enableLights(true)
+            enableVibration(false)
         }
+
+        notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
     }
 
     /*

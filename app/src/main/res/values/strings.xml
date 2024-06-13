@@ -88,7 +88,7 @@
     <string name="pick_up_player_hint_min_price" translatable="false">10000</string>
     <string name="pick_up_player_title_max_price">Max Price</string>
     <string name="pick_up_player_hint_max_price" translatable="false">50000</string>
-    <string name="pick_up_player_title_take_after">Pick the player with delay?</string>
+    <string name="pick_up_player_title_take_after">Pick up the player with delay?</string>
     <!--Placeholder is for the delay time-->
     <string name="pick_up_player_title_take_after_zero">Pick the player after %d seconds.</string>
     <!--Placeholder is for the delay time-->
