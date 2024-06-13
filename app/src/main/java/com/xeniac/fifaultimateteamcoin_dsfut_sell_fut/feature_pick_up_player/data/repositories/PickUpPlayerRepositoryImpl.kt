@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
@@ -66,7 +65,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
                 countDownTimer = object : CountDownTimer(
                     /* millisInFuture = */ timerStartTimeInMs,
-                    /* countDownInterval = */ COUNT_DOWN_TIMER_INTERVAL_IN_MS
+                    /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
                 ) {
                     override fun onTick(millisUntilFinished: Long) {
                         trySend((millisUntilFinished / 1000).toInt())
