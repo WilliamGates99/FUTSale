@@ -72,6 +72,10 @@ fun PickUpPlayerScreen(
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.onEvent(PickUpPlayerEvent.GetPersistedData)
+    }
+
     LaunchedEffect(key1 = pickUpPlayerState.isAutoPickUpLoading) {
         val window = context.findActivity().window
 
