@@ -6,9 +6,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
 import kotlinx.coroutines.flow.Flow
 
+typealias TimerValueInSeconds = Int
+
 interface PickUpPlayerRepository {
 
     fun observeLatestPickedPlayers(): Flow<List<Player>>
+
+    fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds>
 
     suspend fun pickUpPlayer(
         partnerId: String,

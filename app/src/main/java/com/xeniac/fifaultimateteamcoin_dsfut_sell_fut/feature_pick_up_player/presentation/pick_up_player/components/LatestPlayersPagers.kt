@@ -56,7 +56,7 @@ fun LatestPlayersPagers(
     beyondViewportPageCount: Int = 1,
     pageSpacing: Dp = 12.dp,
     onPlayerCardClick: (player: Player) -> Unit,
-    onCountdownStart: (expiryTimeInMillis: Long) -> Unit
+    onCountDownStart: (expiryTimeInMillis: Long) -> Unit
 ) {
     AnimatedVisibility(
         visible = latestPickedPlayers.isNotEmpty(),
@@ -67,7 +67,7 @@ fun LatestPlayersPagers(
         val pagerState = rememberPagerState(pageCount = { latestPickedPlayers.size })
 
         LaunchedEffect(key1 = pagerState.settledPage) {
-            onCountdownStart(latestPickedPlayers[pagerState.currentPage].expiryTimeInMillis)
+            onCountDownStart(latestPickedPlayers[pagerState.currentPage].expiryTimeInMillis)
         }
 
         Box(

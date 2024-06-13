@@ -7,6 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.SetSelectedPlatformUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
@@ -82,15 +83,23 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    fun provideStartCountDownTimerUseCase(
+        pickUpPlayerRepository: PickUpPlayerRepository
+    ): StartCountDownTimerUseCase = StartCountDownTimerUseCase(pickUpPlayerRepository)
+
+    @Provides
+    @ViewModelScoped
     fun provideGetThreeLatestPlayersUseCase(
         observeLatestPickedPlayersUseCase: ObserveLatestPickedPlayersUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
         setSelectedPlatformUseCase: SetSelectedPlatformUseCase,
-        pickUpPlayerUseCase: PickUpPlayerUseCase
+        pickUpPlayerUseCase: PickUpPlayerUseCase,
+        startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeLatestPickedPlayersUseCase },
         { getSelectedPlatformUseCase },
         { setSelectedPlatformUseCase },
-        { pickUpPlayerUseCase }
+        { pickUpPlayerUseCase },
+        { startCountDownTimerUseCase }
     )
 }

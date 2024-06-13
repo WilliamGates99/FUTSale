@@ -6,5 +6,6 @@ data class PickUpPlayerUseCases(
     val observeLatestPickedPlayersUseCaseUseCase: Lazy<ObserveLatestPickedPlayersUseCase>,
     val getSelectedPlatformUseCase: Lazy<GetSelectedPlatformUseCase>,
     val setSelectedPlatformUseCase: Lazy<SetSelectedPlatformUseCase>,
-    val pickUpPlayerUseCase: Lazy<PickUpPlayerUseCase>
+    val pickUpPlayerUseCase: Lazy<PickUpPlayerUseCase>,
+    val startCountDownTimerUseCase: Lazy<StartCountDownTimerUseCase>
 )

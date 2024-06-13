@@ -22,13 +22,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class PickUpPlayerViewModel @Inject constructor(
     private val pickUpPlayerUseCases: PickUpPlayerUseCases,
+    private val decimalFormat: DecimalFormat,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -40,6 +45,15 @@ class PickUpPlayerViewModel @Inject constructor(
         initialValue = PickUpPlayerState()
     )
 
+    private val _timerText = MutableStateFlow<UiText>(
+        UiText.StringResource(
+            R.string.pick_up_player_latest_player_timer,
+            decimalFormat.format(0),
+            decimalFormat.format(0)
+        )
+    )
+    val timerText = _timerText.asStateFlow()
+
     private val _changePlatformEventChannel = Channel<Event>()
     val changePlatformEventChannel = _changePlatformEventChannel.receiveAsFlow()
 
@@ -50,6 +64,7 @@ class PickUpPlayerViewModel @Inject constructor(
     val pickUpPlayerOnceEventChannel = _pickUpPlayerOnceEventChannel.receiveAsFlow()
 
     private var autoPickUpPlayerJob: Job? = null
+    private var countDownTimerJob: Job? = null
 
     init {
         getSelectedPlatform()
@@ -87,7 +102,7 @@ class PickUpPlayerViewModel @Inject constructor(
             PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
             PickUpPlayerEvent.AutoPickUpPlayer -> autoPickUpPlayer()
             PickUpPlayerEvent.PickUpPlayerOnce -> pickUpPlayerOnce()
-            is PickUpPlayerEvent.StartCountdown -> startCountdown(event.expiryTimeInMs)
+            is PickUpPlayerEvent.StartCountDownTimer -> startCountDownTimer(event.expiryTimeInMs)
         }
     }
 
@@ -121,6 +136,7 @@ class PickUpPlayerViewModel @Inject constructor(
     }
 
     private fun autoPickUpPlayer() {
+        autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
@@ -375,7 +391,26 @@ class PickUpPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun startCountdown(expiryTimeInMs: Long) = viewModelScope.launch {
-        // TODO: Not yet implemented
+    private fun startCountDownTimer(expiryTimeInMs: Long) {
+        countDownTimerJob?.cancel()
+        countDownTimerJob = viewModelScope.launch {
+            pickUpPlayerUseCases.startCountDownTimerUseCase.get()(expiryTimeInMs).collect { timerValueInSeconds ->
+                _timerText.update {
+                    val isTimerFinished = timerValueInSeconds == 0
+                    if (isTimerFinished) {
+                        UiText.StringResource(R.string.pick_up_player_latest_player_timer_expired)
+                    } else {
+                        val minutes = decimalFormat.format(timerValueInSeconds / 60)
+                        val seconds = decimalFormat.format(timerValueInSeconds % 60)
+
+                        UiText.StringResource(
+                            R.string.pick_up_player_latest_player_timer,
+                            minutes,
+                            seconds
+                        )
+                    }
+                }
+            }
+        }
     }
 }

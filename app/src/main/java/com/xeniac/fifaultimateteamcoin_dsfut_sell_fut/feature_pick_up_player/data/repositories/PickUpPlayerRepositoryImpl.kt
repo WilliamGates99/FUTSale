@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
+import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
@@ -7,8 +8,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
 import dagger.Lazy
 import io.ktor.client.HttpClient
@@ -24,7 +27,9 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.network.UnresolvedAddressException
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import java.util.Locale
@@ -37,6 +42,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
+    // TODO: MOVE FILTER CONDITION INSIDE DAO
 //    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
 //        .observeLatestPickedPlayers().map { playerEntities ->
 //            playerEntities.filter {
@@ -64,7 +70,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                     contracts = 3,
                     chemistryStyle = "Chem Test",
                     chemistryStyleID = 1,
-                    id = 1
+                    id = 1,
+                    pickUpTimeInMillis = (DateHelper.getCurrentTimeInMillis() - 170000).toString()
                 ),
                 PlayerEntity(
                     tradeID = "2",
@@ -102,6 +109,34 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
+        callbackFlow {
+            var countDownTimer: CountDownTimer? = null
+
+            val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTimeInMs)
+            if (isPlayerExpired) {
+                send(0)
+            } else {
+                val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
+
+                countDownTimer = object : CountDownTimer(
+                    /* millisInFuture = */ timerStartTimeInMs,
+                    /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
+                ) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        trySend((millisUntilFinished / 1000).toInt())
+                    }
+
+                    override fun onFinish() {
+                        Timber.i("Player Expiry timer is finished.")
+                        trySend(0)
+                    }
+                }.start()
+            }
+
+            awaitClose { countDownTimer?.cancel() }
+        }
+
     override suspend fun pickUpPlayer(
         partnerId: String,
         secretKey: String,
@@ -109,8 +144,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
-        val timestamp = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core
-            .data.utils.DateHelper.getCurrentTimeInMillis()
+        val timestamp = DateHelper.getCurrentTimeInMillis()
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
         val response = httpClient.get(

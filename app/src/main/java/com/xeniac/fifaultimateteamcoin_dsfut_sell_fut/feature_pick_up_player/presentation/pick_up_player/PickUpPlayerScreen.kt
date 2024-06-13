@@ -69,6 +69,7 @@ fun PickUpPlayerScreen(
         initialValue = emptyList()
     )
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
+    val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = pickUpPlayerState.isAutoPickUpLoading) {
         val window = context.findActivity().window
@@ -309,10 +310,10 @@ fun PickUpPlayerScreen(
         ) {
             LatestPlayersPagers(
                 latestPickedPlayers = latestPickedPlayers,
-                timerText = "00:01", // TODO: TEMP
+                timerText = timerText.asString(),
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
-                onCountdownStart = { expiryTimeInMillis ->
-                    viewModel.onEvent(PickUpPlayerEvent.StartCountdown(expiryTimeInMillis))
+                onCountDownStart = { expiryTimeInMillis ->
+                    viewModel.onEvent(PickUpPlayerEvent.StartCountDownTimer(expiryTimeInMillis))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
