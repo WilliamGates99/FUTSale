@@ -143,13 +143,7 @@ class PickUpPlayerViewModel @Inject constructor(
         autoPickUpPlayerJob?.cancel()
     }
 
-    private fun autoPickUpPlayer() = viewModelScope.launch {
-        _autoPickUpPlayerEventChannel.send(
-            PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification
-        )
-    }
-
-    private fun autoPickUpPlayerTemp() {
+    private fun autoPickUpPlayer() {
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
@@ -229,7 +223,7 @@ class PickUpPlayerViewModel @Inject constructor(
                             )
 
                             _autoPickUpPlayerEventChannel.send(
-                                PickUpPlayerUiEvent.ShowPlayerPickedUpSuccessfullyNotification
+                                PickUpPlayerUiEvent.ShowSuccessNotification(player.name)
                             )
                             _autoPickUpPlayerEventChannel.send(
                                 PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
@@ -259,6 +253,9 @@ class PickUpPlayerViewModel @Inject constructor(
                                     )
                             }
                             else -> {
+                                _autoPickUpPlayerEventChannel.send(
+                                    PickUpPlayerUiEvent.ShowErrorNotification(error.asUiText())
+                                )
                                 _autoPickUpPlayerEventChannel.send(
                                     UiEvent.ShowLongSnackbar(error.asUiText())
                                 )

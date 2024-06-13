@@ -4,6 +4,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -14,6 +16,7 @@ import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +54,28 @@ internal object AppModule {
     ): NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         context.getSystemService(NotificationManager::class.java)
     } else context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    @Provides
+    @Singleton
+    fun provideVibratorManager(
+        @ApplicationContext context: Context
+    ): VibratorManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        context.getSystemService(VibratorManager::class.java)
+    } else context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+
+    @Provides
+    @Singleton
+    fun provideVibrator(
+        @ApplicationContext context: Context,
+        vibratorManager: Lazy<VibratorManager>
+    ): Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        vibratorManager.get().defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            context.getSystemService(Vibrator::class.java)
+        } else context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
 
     @Provides
     @Singleton

@@ -121,8 +121,8 @@
     <string name="pick_up_player_error_dsfut_unit_time">خطای ساعت یونیکس.</string>
     <string name="pick_up_player_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
     <string name="pick_up_player_error_btn_open_profile">برو به پروفایل</string>
-    <string name="pick_up_player_notification_title_success">%s با موفقیت گرفته شد</string>
-    <string name="pick_up_player_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
+    <string name="pick_up_player_notification_successful_title">%s با موفقیت گرفته شد</string>
+    <string name="pick_up_player_notification_failed_title">گرفتن خودکار بازیکن ناموفق بود</string>
 
 
     <string name="profile_app_bar_title">پروفایل</string>

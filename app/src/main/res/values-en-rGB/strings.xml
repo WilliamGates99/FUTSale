@@ -121,8 +121,8 @@
     <string name="pick_up_player_error_dsfut_unit_time">Unix time error.</string>
     <string name="pick_up_player_error_dsfut_canceled">Auto pick player cancelled.</string>
     <string name="pick_up_player_error_btn_open_profile">Open Profile</string>
-    <string name="pick_up_player_notification_title_success">%s was picked up successfully</string>
-    <string name="pick_up_player_notification_title_fail">Auto pick up player failed</string>
+    <string name="pick_up_player_notification_successful_title">%s was picked up successfully</string>
+    <string name="pick_up_player_notification_failed_title">Auto pick up player failed</string>
 
 
     <string name="profile_app_bar_title">Profile</string>
