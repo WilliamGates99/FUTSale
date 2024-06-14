@@ -179,7 +179,7 @@
     <string name="picked_up_player_info_title_start_price">قیمت اولیه</string>
     <string name="picked_up_player_info_title_buy_now_price">قیمت خرید در لحظه</string>
     <string name="picked_up_player_info_title_owners">تعداد مالکین</string>
-    <string name="picked_up_player_info_title_contracts">Contracts</string>
+    <string name="picked_up_player_info_title_contracts">قرارداد باقیمانده</string>
     <string name="picked_up_player_info_title_chemistry_style">سبک کمیستری</string>
     <string name="picked_up_player_info_title_platform">پلتفرم</string>
     <string name="picked_up_player_info_platform_console">کنسول</string>
