@@ -175,6 +175,7 @@
 
 
     <string name="picked_up_player_info_message">%s was picked up successfully.</string>
+    <string name="picked_up_player_info_timer_expired">Expired</string>
     <string name="picked_up_player_info_title_rating">Rating</string>
     <string name="picked_up_player_info_title_position">Position</string>
     <string name="picked_up_player_info_title_start_price">Start Price</string>

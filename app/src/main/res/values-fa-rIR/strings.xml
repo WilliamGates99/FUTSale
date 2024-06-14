@@ -175,6 +175,7 @@
 
 
     <string name="picked_up_player_info_message">%s با موفقیت گرفته شد.</string>
+    <string name="picked_up_player_info_timer_expired">منقضی‌شده</string>
     <string name="picked_up_player_info_title_rating">ریتینگ</string>
     <string name="picked_up_player_info_title_position">پست</string>
     <string name="picked_up_player_info_title_start_price">قیمت اولیه</string>

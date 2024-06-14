@@ -194,6 +194,7 @@
     Sample: 02:52
     -->
     <string name="picked_up_player_info_timer" translatable="false">%1$s:%2$s</string>
+    <string name="picked_up_player_info_timer_expired">Expired</string>
     <string name="picked_up_player_info_title_rating">Rating</string>
     <string name="picked_up_player_info_title_position">Position</string>
     <string name="picked_up_player_info_title_start_price">Start Price</string>
