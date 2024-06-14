@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -28,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components.ExpiryTimer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +77,16 @@ fun PickedUpPlayerInfoScreen(
                     bottom = verticalPadding
                 )
         ) {
+            ExpiryTimer(
+                timerText = timerText.asString(),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(horizontal = horizontalPadding)
+            )
 
+            // TODO: ANIM
+
+            // TODO: OTHERS
         }
     }
 }
