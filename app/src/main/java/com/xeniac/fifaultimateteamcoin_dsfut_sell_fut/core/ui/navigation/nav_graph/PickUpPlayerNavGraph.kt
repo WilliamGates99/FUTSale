@@ -37,7 +37,8 @@ fun NavGraphBuilder.pickUpPlayerNavGraph(
         val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
 
         PickedUpPlayerInfoScreen(
-            player = args.player
+            player = args.player,
+            onNavigateUp = homeNavController::navigateUp
         )
     }
 }
