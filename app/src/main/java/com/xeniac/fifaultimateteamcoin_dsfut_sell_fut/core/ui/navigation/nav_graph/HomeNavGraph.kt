@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsScreen
 
@@ -28,9 +27,10 @@ fun SetupHomeNavGraph(
             ProfileScreen(bottomPadding = bottomPadding)
         }
 
-        composable<Screen.HistoryScreen> {
-            HistoryScreen()
-        }
+        historyNavGraph(
+            homeNavController = homeNavController,
+            bottomPadding = bottomPadding
+        )
 
         composable<Screen.SettingsScreen> {
             SettingsScreen(bottomPadding = bottomPadding)

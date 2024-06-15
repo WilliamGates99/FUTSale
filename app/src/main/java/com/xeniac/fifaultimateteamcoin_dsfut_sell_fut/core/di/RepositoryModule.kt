@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.HistoryRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.PickUpPlayerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import dagger.Binds
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindPickUpPlayerRepository(
         pickUpPlayerRepositoryImp: PickUpPlayerRepositoryImpl
     ): PickUpPlayerRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindHistoryRepository(
+        historyRepositoryImp: HistoryRepositoryImpl
+    ): HistoryRepository
 }
