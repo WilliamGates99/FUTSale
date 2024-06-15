@@ -1,7 +1,10 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
@@ -26,6 +29,7 @@ data class PlayerEntity(
     val contracts: Int,
     val chemistryStyle: String,
     val chemistryStyleID: Int,
+    @ColumnInfo(name = "platform") val platformDto: PlatformDto,
     val pickUpTimeInMillis: String = DateHelper.getCurrentTimeInMillis().toString(),
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
@@ -50,6 +54,7 @@ data class PlayerEntity(
             contracts = contracts,
             chemistryStyle = chemistryStyle,
             chemistryStyleID = chemistryStyleID,
+            platform = platformDto.toPlatform(),
             pickUpTimeInMillis = pickUpTimeInMillis,
             expiryTimeInMillis = pickUpTimeInMillis + Constants.PLAYER_EXPIRY_TIME_IN_MS,
             id = id

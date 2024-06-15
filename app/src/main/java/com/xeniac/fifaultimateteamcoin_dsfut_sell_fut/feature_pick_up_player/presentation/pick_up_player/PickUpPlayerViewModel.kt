@@ -152,9 +152,9 @@ class PickUpPlayerViewModel @Inject constructor(
                 )
 
                 val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-                    minPrice = pickUpPlayerState.value.minPrice,
-                    maxPrice = pickUpPlayerState.value.maxPrice,
-                    takeAfterDelayInSeconds = pickUpPlayerState.value.takeAfterDelayInSeconds
+                    minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
+                    maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
+                    takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
                 )
 
                 val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null
@@ -290,9 +290,9 @@ class PickUpPlayerViewModel @Inject constructor(
             )
 
             val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-                minPrice = pickUpPlayerState.value.minPrice,
-                maxPrice = pickUpPlayerState.value.maxPrice,
-                takeAfterDelayInSeconds = pickUpPlayerState.value.takeAfterDelayInSeconds
+                minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
+                maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
+                takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
             )
 
             val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null

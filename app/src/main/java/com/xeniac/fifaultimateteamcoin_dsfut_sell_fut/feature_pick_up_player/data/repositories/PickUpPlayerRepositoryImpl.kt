@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
@@ -88,12 +89,13 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
+        val platform = preferencesRepository.get().getSelectedPlatform()
         val timestamp = DateHelper.getCurrentTimeInMillis()
         val signature = getMd5Signature(partnerId, secretKey, timestamp)
 
         val response = httpClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = preferencesRepository.get().getSelectedPlatform().value,
+                platform = platform.value,
                 partnerId = partnerId,
                 timestamp = timestamp,
                 signature = signature
@@ -113,7 +115,9 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    val playerEntity = playerDto!!.toPlayerEntity()
+                    val playerEntity = playerDto!!.copy(
+                        platformDto = platform.toPlatformDto()
+                    ).toPlayerEntity()
                     playerDao.get().insertPlayer(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {
