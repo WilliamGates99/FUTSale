@@ -43,16 +43,14 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> {
-        return playerDao.get()
-            .observeLatestPickedPlayers().map { playerEntities ->
-                playerEntities.filter {
-                    DateHelper.isPickedPlayerNotExpired(
-                        pickUpTimeInMs = it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
-                    )
-                }.map { it.toPlayer() }
-            }
-    }
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
+        .observeLatestPickedPlayers().map { playerEntities ->
+            playerEntities.filter {
+                DateHelper.isPickedPlayerNotExpired(
+                    pickUpTimeInMs = it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
+                )
+            }.map { it.toPlayer() }
+        }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
