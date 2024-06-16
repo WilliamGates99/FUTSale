@@ -10,9 +10,14 @@
     See https://developer.android.com/about/versions/12/backup-restore
     -->
 
-    <exclude domain="sharedpref" />
+    <include
+        domain="sharedpref"
+        path="." />
+    <include
+        domain="database"
+        path="." />
+
     <exclude domain="root" />
-    <exclude domain="database" />
     <exclude domain="file" />
     <exclude domain="external" />
 
