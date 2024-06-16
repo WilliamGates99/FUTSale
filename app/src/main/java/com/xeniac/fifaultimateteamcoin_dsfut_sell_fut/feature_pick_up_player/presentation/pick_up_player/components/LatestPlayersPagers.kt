@@ -1,9 +1,13 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +27,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +49,7 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.calculateCurrentPageOffset
 
@@ -255,21 +265,21 @@ fun ExpiryTimer(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
     background: Color = MaterialTheme.colorScheme.errorContainer,
-    timerFontSize: TextUnit = 10.sp,
-    timerLineHeight: TextUnit = 10.sp,
-    timerFontWeight: FontWeight = FontWeight.Black,
-    timerTextAlign: TextAlign = TextAlign.Center,
-    timerMaxLines: Int = 1,
-    timerColor: Color = MaterialTheme.colorScheme.onErrorContainer
+    fontSize: TextUnit = 10.sp,
+    lineHeight: TextUnit = 10.sp,
+    fontWeight: FontWeight = FontWeight.Black,
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = 1,
+    color: Color = MaterialTheme.colorScheme.onErrorContainer
 ) {
-    Text(
-        text = timerText,
-        fontSize = timerFontSize,
-        lineHeight = timerLineHeight,
-        fontWeight = timerFontWeight,
-        textAlign = timerTextAlign,
-        maxLines = timerMaxLines,
-        color = timerColor,
+    var oldTimerText by remember { mutableStateOf(timerText) }
+
+    SideEffect {
+        oldTimerText = timerText
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(shape)
             .background(background)
@@ -278,7 +288,52 @@ fun ExpiryTimer(
                 vertical = 4.dp
             )
             .animateContentSize()
-    )
+    ) {
+        val isTimerFinished = timerText == UiText.StringResource(
+            R.string.pick_up_player_latest_player_timer_expired
+        ).asString()
+
+        if (isTimerFinished) {
+            Text(
+                text = timerText,
+                fontSize = fontSize,
+                lineHeight = lineHeight,
+                fontWeight = fontWeight,
+                textAlign = textAlign,
+                maxLines = maxLines,
+                color = color
+            )
+        } else {
+            timerText.indices.forEach { i ->
+                val oldChar = oldTimerText.getOrNull(i)
+                val newChar = timerText[i]
+                val timerChar = if (oldChar == newChar) {
+                    oldTimerText[i]
+                } else {
+                    timerText[i]
+                }
+
+                AnimatedContent(
+                    targetState = timerChar,
+                    transitionSpec = {
+                        slideInVertically { -it } togetherWith slideOutVertically { it }
+                    },
+                    label = "ExpiryTimer",
+                ) { char ->
+                    Text(
+                        text = char.toString(),
+                        fontSize = fontSize,
+                        lineHeight = lineHeight,
+                        fontWeight = fontWeight,
+                        textAlign = textAlign,
+                        maxLines = maxLines,
+                        color = color,
+                        softWrap = false
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

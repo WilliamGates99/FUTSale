@@ -1,7 +1,11 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components
 
 import androidx.annotation.RawRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +48,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Red
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.RedAlpha20
@@ -114,14 +121,14 @@ fun ExpiryTimer(
     maxLines: Int = 1,
     color: Color = Red
 ) {
-    Text(
-        text = timerText,
-        fontSize = fontSize,
-        lineHeight = lineHeight,
-        fontWeight = fontWeight,
-        textAlign = textAlign,
-        maxLines = maxLines,
-        color = color,
+    var oldTimerText by remember { mutableStateOf(timerText) }
+
+    SideEffect {
+        oldTimerText = timerText
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(shape)
             .background(background)
@@ -130,7 +137,52 @@ fun ExpiryTimer(
                 vertical = 4.dp
             )
             .animateContentSize()
-    )
+    ) {
+        val isTimerFinished = timerText == UiText.StringResource(
+            R.string.picked_up_player_info_timer_expired
+        ).asString()
+
+        if (isTimerFinished) {
+            Text(
+                text = timerText,
+                fontSize = fontSize,
+                lineHeight = lineHeight,
+                fontWeight = fontWeight,
+                textAlign = textAlign,
+                maxLines = maxLines,
+                color = color
+            )
+        } else {
+            timerText.indices.forEach { i ->
+                val oldChar = oldTimerText.getOrNull(i)
+                val newChar = timerText[i]
+                val timerChar = if (oldChar == newChar) {
+                    oldTimerText[i]
+                } else {
+                    timerText[i]
+                }
+
+                AnimatedContent(
+                    targetState = timerChar,
+                    transitionSpec = {
+                        slideInVertically { -it } togetherWith slideOutVertically { it }
+                    },
+                    label = "ExpiryTimer",
+                ) { char ->
+                    Text(
+                        text = char.toString(),
+                        fontSize = fontSize,
+                        lineHeight = lineHeight,
+                        fontWeight = fontWeight,
+                        textAlign = textAlign,
+                        maxLines = maxLines,
+                        color = color,
+                        softWrap = false
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
