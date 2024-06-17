@@ -145,6 +145,9 @@
     <string name="profile_text_other_links_dsfut_website">سایت DSFUT</string>
 
 
+    <string name="history_app_bar_title">تاریخچه</string>
+
+
     <string name="settings_app_bar_title">تنظیمات</string>
     <string name="settings_title_settings">تنظیمات</string>
     <string name="settings_text_settings_language">زبان</string>
