@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -83,7 +84,8 @@ fun CustomCheckbox(
                 color = textColor,
                 style = textStyle,
                 overflow = textOverflow,
-                softWrap = textSoftWrap
+                softWrap = textSoftWrap,
+                modifier = Modifier.animateContentSize()
             )
         }
     }
