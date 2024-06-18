@@ -50,10 +50,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.asUiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Red
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.RedAlpha20
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.utils.asUiText
 
 @Composable
 fun PickedUpPlayerInfo(
