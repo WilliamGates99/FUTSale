@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PickUpDate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerInfo
 
@@ -68,7 +69,7 @@ fun HistoryPlayerInfoScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(
                     top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = verticalPadding
+                    bottom = innerPadding.calculateBottomPadding() + verticalPadding
                 )
         ) {
             PlayerAnimation(
@@ -79,6 +80,14 @@ fun HistoryPlayerInfoScreen(
 
             PlayerInfo(
                 player = player,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
+            PickUpDate(
+                pickUpTimeInMillis = player.pickUpTimeInMillis,
                 modifier = Modifier.fillMaxWidth()
             )
         }
