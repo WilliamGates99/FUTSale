@@ -4,6 +4,7 @@ coreKtx = "1.13.1"
 appcompat = "1.6.1"
 coreSplashscreen = "1.0.1"
 kotlinxSerializationJson = "1.6.3"
+kotlinxDatetime = "0.6.0"
 compose-bom = "2024.05.00"
 activityCompose = "1.9.0"
 constraintlayoutCompose = "1.0.1"
@@ -45,6 +46,7 @@ core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 # Jetpack Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }

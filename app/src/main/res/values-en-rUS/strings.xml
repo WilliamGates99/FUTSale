@@ -211,11 +211,11 @@
     • %4$s: Hour
     • %5$s: Minute
 
-    • en-US: December 25th, 2022 - 21:18
+    • en-US: December 25th 2022 - 21:18
     • en-GB: 25th December 2022 - 21:18
-    • fa-IR: بیست و پنجم دسامبر، ۲۰۲۲ - ۲۱:۱۸
+    • fa-IR: بیست و پنجم دسامبر ۲۰۲۲ - ۲۱:۱۸
     -->
-    <string name="history_player_info_pick_up_date_format">%1$s %2$s, %3$s - %4$s:%5$s</string>
+    <string name="history_player_info_pick_up_date_time">%1$s %2$s %3$s - %4$s:%5$s</string>
     <string-array name="history_player_info_pick_up_date_day_with_suffix">
         <item>1st</item>
         <item>2nd</item>

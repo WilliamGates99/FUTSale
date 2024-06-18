@@ -291,6 +291,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.core.splashscreen)
     implementation(libs.kotlinx.serialization.json) // Kotlin JSON Serialization Library
+    implementation(libs.kotlinx.datetime) // Kotlin DateTime
 
     // Jetpack Compose
     implementation(platform(libs.compose.bom))
