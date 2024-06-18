@@ -28,7 +28,7 @@ sealed class Screen : Parcelable {
     data object HistoryScreen : Screen()
 
     @Serializable
-    data class PlayerInfoScreen(val player: Player) : Screen()
+    data class HistoryPlayerInfoScreen(val player: Player) : Screen()
 
     @Serializable
     data object SettingsScreen : Screen()

@@ -9,7 +9,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.PlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoScreen
 import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.historyNavGraph(
@@ -20,17 +20,17 @@ fun NavGraphBuilder.historyNavGraph(
         HistoryScreen(
             bottomPadding = bottomPadding,
             onNavigateToPlayerInfoScreen = { player ->
-                homeNavController.navigate(Screen.PlayerInfoScreen(player = player))
+                homeNavController.navigate(Screen.HistoryPlayerInfoScreen(player = player))
             }
         )
     }
 
-    composable<Screen.PlayerInfoScreen>(
+    composable<Screen.HistoryPlayerInfoScreen>(
         typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
     ) { backStackEntry ->
-        val args = backStackEntry.toRoute<Screen.PlayerInfoScreen>()
+        val args = backStackEntry.toRoute<Screen.HistoryPlayerInfoScreen>()
 
-        PlayerInfoScreen(
+        HistoryPlayerInfoScreen(
             player = args.player,
             onNavigateUp = homeNavController::navigateUp
         )

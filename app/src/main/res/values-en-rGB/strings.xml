@@ -29,6 +29,8 @@
     <string name="core_content_description_back">Return</string>
     <string name="core_textfield_content_description_password_toggle_show">Show Password</string>
     <string name="core_textfield_content_description_password_toggle_hide">Hide Password</string>
+    <string name="core_platform_console">Console</string>
+    <string name="core_platform_pc">PC</string>
 
 
     <string name="onboarding_btn_skip">Skip</string>
@@ -147,8 +149,6 @@
 
     <string name="history_app_bar_title">History</string>
     <string name="history_empty_list_message">You haven\'t picked up any players yet.</string>
-    <string name="history_platform_console">Console</string>
-    <string name="history_platform_pc">PC</string>
 
 
     <string name="settings_app_bar_title">Settings</string>
@@ -190,10 +190,18 @@
     <string name="picked_up_player_info_title_contracts">Contracts</string>
     <string name="picked_up_player_info_title_chemistry_style">Chemistry Style</string>
     <string name="picked_up_player_info_title_platform">Platform</string>
-    <string name="picked_up_player_info_platform_console">Console</string>
-    <string name="picked_up_player_info_platform_pc">PC</string>
     <string name="picked_up_player_info_instruction_title">What to do next?</string>
     <string name="picked_up_player_info_instruction"><![CDATA[1. Go to the transfer page of the game or the Companion app.<br>2. Find the player card in the market according to its details.<br>3. Buy the player card within 3 minutes; Otherwise, your DSFUT account will be blocked for 30 minutes.]]></string>
     <string name="picked_up_player_info_attention">Attention: It is very important to rotate FIFA accounts. That is, if one player was purchased from account #1, then the next must be purchased from account #2. It is very important that the accounts are repeated as rarely as possible, because we do not want bans for either buyers or suppliers.</string>
+
+
+    <string name="history_player_info_title_rating">Rating</string>
+    <string name="history_player_info_title_position">Position</string>
+    <string name="history_player_info_title_start_price">Start Price</string>
+    <string name="history_player_info_title_buy_now_price">Buy Now Price</string>
+    <string name="history_player_info_title_owners">Number of Owners</string>
+    <string name="history_player_info_title_contracts">Contracts</string>
+    <string name="history_player_info_title_chemistry_style">Chemistry Style</string>
+    <string name="history_player_info_title_platform">Platform</string>
 
 </resources>

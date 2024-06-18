@@ -29,6 +29,8 @@
     <string name="core_content_description_back">بازگشت</string>
     <string name="core_textfield_content_description_password_toggle_show">نمایش کلمه عبور</string>
     <string name="core_textfield_content_description_password_toggle_hide">پنهان کردن کلمه عبور</string>
+    <string name="core_platform_console">کنسول</string>
+    <string name="core_platform_pc">کامپیوتر</string>
 
 
     <string name="onboarding_btn_skip">رد کردن</string>
@@ -147,8 +149,6 @@
 
     <string name="history_app_bar_title">تاریخچه</string>
     <string name="history_empty_list_message">هنوز هیچ بازیکنی رو نگرفتی.</string>
-    <string name="history_platform_console">کنسول</string>
-    <string name="history_platform_pc">کامپیوتر</string>
 
 
     <string name="settings_app_bar_title">تنظیمات</string>
@@ -190,10 +190,18 @@
     <string name="picked_up_player_info_title_contracts">قرارداد باقیمانده</string>
     <string name="picked_up_player_info_title_chemistry_style">سبک کمیستری</string>
     <string name="picked_up_player_info_title_platform">پلتفرم</string>
-    <string name="picked_up_player_info_platform_console">کنسول</string>
-    <string name="picked_up_player_info_platform_pc">کامپیوتر</string>
     <string name="picked_up_player_info_instruction_title">بعدش چکار کنید؟</string>
     <string name="picked_up_player_info_instruction"><![CDATA[1. به صفحه ترنسفر بازی یا برنامه کمپانیون بروید.<br>2. کارت بازیکن را با توجه به جزئیات آن در مارکت پیدا کنید.<br>3. کارت بازیکن را در عرض 3 دقیقه بخرید. در غیر این صورت حساب DSFUT شما به مدت 30 دقیقه مسدود خواهد شد.]]></string>
     <string name="picked_up_player_info_attention">توجه: تعویض حساب‌های فیفا بسیار مهم است. یعنی اگر یک بازیکن از حساب شماره 1 خریداری شده باشد، بازیکن بعدی باید از حساب شماره 2 خریداری شود. بسیار مهم است که حساب‌ها تا حد امکان به ندرت تکرار شوند، زیرا نمی‌خواهیم خریداران و تامین‌کنندگان از بازی محروم شوند.</string>
+
+
+    <string name="history_player_info_title_rating">ریتینگ</string>
+    <string name="history_player_info_title_position">پست</string>
+    <string name="history_player_info_title_start_price">قیمت اولیه</string>
+    <string name="history_player_info_title_buy_now_price">قیمت خرید در لحظه</string>
+    <string name="history_player_info_title_owners">تعداد مالکین</string>
+    <string name="history_player_info_title_contracts">قرارداد باقیمانده</string>
+    <string name="history_player_info_title_chemistry_style">سبک کمیستری</string>
+    <string name="history_player_info_title_platform">پلتفرم</string>
 
 </resources>
