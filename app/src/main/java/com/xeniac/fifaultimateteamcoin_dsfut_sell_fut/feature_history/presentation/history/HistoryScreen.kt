@@ -98,7 +98,7 @@ fun HistoryScreen(
                 ) {
                     items(
                         count = pickedPlayersHistory.itemCount,
-                        key = pickedPlayersHistory.itemKey { it.id ?: it.tradeID },
+                        key = pickedPlayersHistory.itemKey { it },
                         contentType = pickedPlayersHistory.itemContentType { it }
                     ) { index ->
                         val player = pickedPlayersHistory[index]
