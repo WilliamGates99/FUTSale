@@ -203,8 +203,8 @@ fun PlatformIcon(
     ),
     contentDescription: String = stringResource(
         id = when (platform) {
-            Platform.CONSOLE -> R.string.history_platform_console
-            Platform.PC -> R.string.history_platform_pc
+            Platform.CONSOLE -> R.string.core_platform_console
+            Platform.PC -> R.string.core_platform_pc
         }
     ),
     color: Color = NeutralVariant20
