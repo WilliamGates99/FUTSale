@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +61,7 @@ fun PickedUpPlayerInfo(
     timerText: String,
     horizontalPadding: Dp,
     modifier: Modifier = Modifier,
-    @RawRes lottieAnimation: Int = R.raw.anim_pick_up_player_success,
+    @RawRes lottieAnimation: Int = R.raw.anim_pick_up_player_success
 ) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
 
@@ -75,8 +76,7 @@ fun PickedUpPlayerInfo(
                 iterations = 1,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(horizontal = 80.dp)
-                    .fillMaxWidth()
+                    .size(200.dp)
             )
 
             ExpiryTimer(
