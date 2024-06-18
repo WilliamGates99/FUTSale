@@ -55,6 +55,7 @@ internal object AppModule {
         context.getSystemService(NotificationManager::class.java)
     } else context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+    // TODO: CHECK
     @Provides
     @Singleton
     fun provideVibratorManager(

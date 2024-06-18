@@ -330,7 +330,12 @@ dependencies {
     // Room Library
     implementation(libs.room.runtime)
     implementation(libs.room.ktx) // Kotlin Extensions and Coroutines support for Room
+    implementation(libs.room.paging) // Paging 3 Integration
     ksp(libs.room.compiler)
+
+    // Paging 3 Library
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 
     // Preferences DataStore
     implementation(libs.datastore.preferences)

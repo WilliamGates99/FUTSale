@@ -14,6 +14,7 @@ androidLifecycle = "2.8.0"
 coroutines = "1.8.1"
 ktor = "2.3.11"
 room = "2.6.1"
+paging = "3.3.0"
 datastorePreferences = "1.1.1"
 firebase-bom = "33.1.0"
 inAppBrowser = "1.8.0"
@@ -81,7 +82,12 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 # Room Library
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# Paging 3 Library
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
 # Preferences DataStore
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }

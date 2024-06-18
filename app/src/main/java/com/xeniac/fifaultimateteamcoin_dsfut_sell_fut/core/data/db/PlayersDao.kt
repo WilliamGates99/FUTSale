@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -24,7 +25,7 @@ interface PlayersDao {
     fun observeLatestPickedPlayers(): Flow<List<PlayerEntity>>
 
     @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
-    fun observeAllPlayers(): Flow<List<PlayerEntity>>
+    fun pagingSource(): PagingSource<Int, PlayerEntity>
 
     @Query("SELECT * FROM players WHERE id = :id")
     fun getPlayer(id: Int): Flow<PlayerEntity>
