@@ -146,6 +146,9 @@
 
 
     <string name="history_app_bar_title">تاریخچه</string>
+    <string name="history_empty_list_message">هنوز هیچ بازیکنی رو نگرفتی.</string>
+    <string name="history_platform_console">کنسول</string>
+    <string name="history_platform_pc">کامپیوتر</string>
 
 
     <string name="settings_app_bar_title">تنظیمات</string>

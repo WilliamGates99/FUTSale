@@ -158,6 +158,9 @@
 
 
     <string name="history_app_bar_title">History</string>
+    <string name="history_empty_list_message">You haven\'t picked up any players yet.</string>
+    <string name="history_platform_console">Console</string>
+    <string name="history_platform_pc">PC</string>
 
 
     <string name="settings_app_bar_title">Settings</string>
