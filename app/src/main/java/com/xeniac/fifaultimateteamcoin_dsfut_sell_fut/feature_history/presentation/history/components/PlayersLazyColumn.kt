@@ -49,7 +49,7 @@ fun PlayersLazyColumn(
     onClick: (player: Player) -> Unit
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding,
         modifier = modifier
     ) {
