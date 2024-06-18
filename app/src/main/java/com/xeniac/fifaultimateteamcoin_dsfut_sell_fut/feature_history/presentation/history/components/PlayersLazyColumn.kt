@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -30,11 +32,44 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.dashedBorder
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant20
+
+@Composable
+fun PlayersLazyColumn(
+    pickedPlayersHistory: LazyPagingItems<Player>,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    onClick: (player: Player) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = contentPadding,
+        modifier = modifier
+    ) {
+        items(
+            count = pickedPlayersHistory.itemCount,
+            key = pickedPlayersHistory.itemKey { it },
+            contentType = pickedPlayersHistory.itemContentType { it }
+        ) { index ->
+            val player = pickedPlayersHistory[index]
+
+            player?.let {
+                PlayerCard(
+                    player = player,
+                    onClick = { onClick(player) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun PlayerCard(
@@ -44,10 +79,10 @@ fun PlayerCard(
     colors: CardColors = CardDefaults.outlinedCardColors(),
     elevation: CardElevation = CardDefaults.outlinedCardElevation(),
     borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
-    onClick: (player: Player) -> Unit
+    onClick: () -> Unit
 ) {
     Card(
-        onClick = { onClick(player) },
+        onClick = onClick,
         shape = shape,
         colors = colors,
         elevation = elevation,

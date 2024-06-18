@@ -1,12 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,12 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.EmptyListAnimation
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.PlayerCard
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.PlayersLazyColumn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,32 +81,17 @@ fun HistoryScreen(
                         )
                 )
             } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                PlayersLazyColumn(
+                    pickedPlayersHistory = pickedPlayersHistory,
                     contentPadding = PaddingValues(
                         start = horizontalPadding,
                         end = horizontalPadding,
                         top = innerPadding.calculateTopPadding() + verticalPadding,
                         bottom = bottomPadding + verticalPadding
                     ),
+                    onClick = onNavigateToPlayerInfoScreen,
                     modifier = Modifier.fillMaxSize()
-                ) {
-                    items(
-                        count = pickedPlayersHistory.itemCount,
-                        key = pickedPlayersHistory.itemKey { it },
-                        contentType = pickedPlayersHistory.itemContentType { it }
-                    ) { index ->
-                        val player = pickedPlayersHistory[index]
-
-                        player?.let {
-                            PlayerCard(
-                                player = player,
-                                onClick = onNavigateToPlayerInfoScreen,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
+                )
             }
         }
     }
