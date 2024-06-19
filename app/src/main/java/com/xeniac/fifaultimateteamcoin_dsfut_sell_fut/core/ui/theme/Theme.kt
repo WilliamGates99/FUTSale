@@ -112,6 +112,7 @@ fun FutSaleTheme(
         SideEffect {
             val window = (view.context as Activity).window
 
+            @Suppress("DEPRECATION")
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> { // Android 10 and above (29+)
                     window.statusBarColor = Color.Transparent.toArgb()
