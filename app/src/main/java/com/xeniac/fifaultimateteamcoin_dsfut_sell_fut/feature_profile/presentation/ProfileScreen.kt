@@ -133,9 +133,7 @@ fun ProfileScreen(
             ProfileTextFields(
                 profileState = profileState,
                 onPartnerIdChange = { newPartnerId ->
-                    viewModel.onEvent(
-                        ProfileEvent.PartnerIdChanged(newPartnerId.filter { it.isDigit() })
-                    )
+                    viewModel.onEvent(ProfileEvent.PartnerIdChanged(newPartnerId))
                 },
                 onSecretKeyChange = { newSecretKey ->
                     viewModel.onEvent(ProfileEvent.SecretKeyChanged(newSecretKey))

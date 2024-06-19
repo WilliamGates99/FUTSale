@@ -37,13 +37,13 @@ class OnboardingViewModel @Inject constructor(
         when (event) {
             is OnboardingEvent.PartnerIdChanged -> {
                 savedStateHandle["onboardingState"] = onboardingState.value.copy(
-                    partnerId = event.partnerId,
+                    partnerId = event.partnerId.filter { it.isDigit() }.trim(),
                     partnerIdErrorText = null
                 )
             }
             is OnboardingEvent.SecretKeyChanged -> {
                 savedStateHandle["onboardingState"] = onboardingState.value.copy(
-                    secretKey = event.secretKey,
+                    secretKey = event.secretKey.trim(),
                     secretKeyErrorText = null
                 )
             }
@@ -57,8 +57,8 @@ class OnboardingViewModel @Inject constructor(
         )
 
         val result = completeOnboardingUseCase.get()(
-            partnerId = onboardingState.value.partnerId.trim(),
-            secretKey = onboardingState.value.secretKey.trim()
+            partnerId = onboardingState.value.partnerId,
+            secretKey = onboardingState.value.secretKey
         )
 
         when (result) {

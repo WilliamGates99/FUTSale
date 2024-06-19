@@ -82,13 +82,13 @@ class PickUpPlayerViewModel @Inject constructor(
             is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
             is PickUpPlayerEvent.MinPriceChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    minPrice = event.minPrice,
+                    minPrice = event.minPrice.filter { it.isDigit() }.trim(),
                     minPriceErrorText = null
                 )
             }
             is PickUpPlayerEvent.MaxPriceChanged -> {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    maxPrice = event.maxPrice,
+                    maxPrice = event.maxPrice.filter { it.isDigit() }.trim(),
                     maxPriceErrorText = null
                 )
             }
