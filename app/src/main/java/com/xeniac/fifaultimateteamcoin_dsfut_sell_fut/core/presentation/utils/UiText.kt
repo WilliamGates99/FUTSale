@@ -19,7 +19,7 @@ sealed class UiText : Parcelable {
         vararg val args: @RawValue Any
     ) : UiText()
 
-    class PluralsResource(
+    class PluralStringResource(
         @PluralsRes val resId: Int,
         val quantity: Int,
         vararg val args: @RawValue Any
@@ -29,18 +29,18 @@ sealed class UiText : Parcelable {
     fun asString(): String = when (this) {
         is DynamicString -> value
         is StringResource -> stringResource(id = resId, *args)
-        is PluralsResource -> pluralStringResource(id = resId, count = quantity, *args)
+        is PluralStringResource -> pluralStringResource(id = resId, count = quantity, *args)
     }
 
     fun asString(context: Context): String = when (this) {
         is DynamicString -> value
         is StringResource -> context.getString(resId, *args)
-        is PluralsResource -> context.resources.getQuantityString(resId, quantity, *args)
+        is PluralStringResource -> context.resources.getQuantityString(resId, quantity, *args)
     }
 
     fun getValueOrResId(): String = when (this) {
         is DynamicString -> value
         is StringResource -> resId.toString()
-        is PluralsResource -> resId.toString()
+        is PluralStringResource -> resId.toString()
     }
 }
