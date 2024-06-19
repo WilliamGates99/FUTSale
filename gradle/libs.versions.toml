@@ -31,7 +31,7 @@ testExtJunit = "1.1.5"
 espresso = "3.5.1"
 
 # Plugins
-agp = "8.4.2"
+agp = "8.5.0"
 kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 googleServices = "4.4.2"
