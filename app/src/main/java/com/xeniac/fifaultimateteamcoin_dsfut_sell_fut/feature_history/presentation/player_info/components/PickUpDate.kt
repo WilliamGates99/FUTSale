@@ -5,15 +5,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.entrypoints.requireDecimalFormat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral60
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.asDateTime
-import java.text.DecimalFormat
 
 @Composable
 fun PickUpDate(
@@ -24,13 +21,10 @@ fun PickUpDate(
     fontWeight: FontWeight = FontWeight.Light,
     textAlign: TextAlign = TextAlign.Center,
     maxLines: Int = 1,
-    color: Color = Neutral60,
-    decimalFormat: DecimalFormat = requireDecimalFormat()
+    color: Color = Neutral60
 ) {
-    val context = LocalContext.current
-
     Text(
-        text = pickUpTimeInMillis.asDateTime(context, decimalFormat),
+        text = pickUpTimeInMillis.asDateTime(),
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = fontWeight,
