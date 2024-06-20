@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.services
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
@@ -10,6 +11,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BaseApplication
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.entrypoints.requireNotificationManager
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.services.utils.getBitmapFromUrl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.GreenNotificationLight
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -43,6 +45,18 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             setSmallIcon(R.drawable.ic_notification)
             setContentTitle(message.notification?.title)
             setContentText(message.notification?.body)
+
+            setStyle(NotificationCompat.BigTextStyle().bigText(message.notification?.body))
+
+            message.notification?.imageUrl?.let { imageUrl ->
+                val bitmap = getBitmapFromUrl(imageUrl.toString())
+                setLargeIcon(bitmap)
+                setStyle(
+                    NotificationCompat.BigPictureStyle()
+                        .bigPicture(bitmap)
+                        .bigLargeIcon(null as Bitmap?)
+                )
+            }
 
             /*
             On Android 8.0 and above these values are ignored in favor of the values set on the notification's channel.
