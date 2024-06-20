@@ -3,10 +3,16 @@
     <string name="app_name">FUTSale 24</string>
 
 
+    <string name="notification_fcm_channel_group_name">Other</string>
+    <string name="notification_fcm_channel_name_miscellaneous">Miscellaneous</string>
+
+
     <string name="notification_pick_up_player_channel_group_name">Pick Up Player</string>
     <string name="notification_pick_up_player_channel_name_default">Default</string>
     <string name="notification_pick_up_player_channel_name_silent">Silent</string>
     <string name="notification_pick_up_player_channel_description_pick_up_player">This notification will be shown after a player is picked up</string>
+
+
     <string name="notification_permission_rational_message">You won\'t receive a notification after a player is picked up without Notification Permission.</string>
     <string name="notification_permission_rational_btn_positive">OK</string>
     <string name="notification_permission_rational_btn_negative">Cancel</string>

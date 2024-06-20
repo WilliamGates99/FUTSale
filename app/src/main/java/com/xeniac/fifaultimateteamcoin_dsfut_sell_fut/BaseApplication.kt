@@ -7,7 +7,7 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.toArgb
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -18,6 +18,7 @@ import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.GreenNotificationLight
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
@@ -28,6 +29,9 @@ import javax.inject.Inject
 class BaseApplication : Application(), ImageLoaderFactory {
 
     companion object {
+        const val NOTIFICATION_CHANNEL_GROUP_ID_FCM = "group_fcm"
+        const val NOTIFICATION_CHANNEL_ID_FCM_MISCELLANEOUS = "channel_fcm_miscellaneous"
+
         const val NOTIFICATION_CHANNEL_GROUP_ID_PICK_UP_PLAYER = "group_pick_up_player"
         const val NOTIFICATION_CHANNEL_ID_PICK_UP_PLAYER_DEFAULT = "channel_pick_up_player_default"
         const val NOTIFICATION_CHANNEL_ID_PICK_UP_PLAYER_SILENT = "channel_pick_up_player_silent"
@@ -46,6 +50,9 @@ class BaseApplication : Application(), ImageLoaderFactory {
         setAppTheme()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createFcmNotificationChannelGroup()
+            createMiscellaneousFcmNotificationChannel()
+
             createPickUpPlayerNotificationChannelGroup()
             createDefaultPickUpPlayerNotificationChannel()
             createSilentPickUpPlayerNotificationChannel()
@@ -57,6 +64,32 @@ class BaseApplication : Application(), ImageLoaderFactory {
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
     private fun setAppTheme() = currentAppTheme.setAppTheme()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createFcmNotificationChannelGroup() {
+        val notificationChannelGroup = NotificationChannelGroup(
+            /* id = */ NOTIFICATION_CHANNEL_GROUP_ID_FCM,
+            /* name = */ getString(R.string.notification_fcm_channel_group_name)
+        )
+
+        notificationManager.createNotificationChannelGroup(notificationChannelGroup)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createMiscellaneousFcmNotificationChannel() {
+        val miscellaneousNotificationChannel = NotificationChannel(
+            /* id = */ NOTIFICATION_CHANNEL_ID_FCM_MISCELLANEOUS,
+            /* name = */ getString(R.string.notification_fcm_channel_name_miscellaneous),
+            /* importance = */ NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            group = NOTIFICATION_CHANNEL_GROUP_ID_FCM
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = GreenNotificationLight.toArgb()
+            enableLights(true)
+        }
+
+        notificationManager.createNotificationChannel(miscellaneousNotificationChannel)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createPickUpPlayerNotificationChannelGroup() {
@@ -76,13 +109,11 @@ class BaseApplication : Application(), ImageLoaderFactory {
             /* importance = */ NotificationManager.IMPORTANCE_HIGH
         ).apply {
             group = NOTIFICATION_CHANNEL_GROUP_ID_PICK_UP_PLAYER
-            description =
-                getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            lightColor = ContextCompat.getColor(
-                /* context = */ this@BaseApplication,
-                /* id = */ R.color.green
+            description = getString(
+                R.string.notification_pick_up_player_channel_description_pick_up_player
             )
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = GreenNotificationLight.toArgb()
             enableLights(true)
             enableVibration(false)
         }
@@ -98,13 +129,11 @@ class BaseApplication : Application(), ImageLoaderFactory {
             /* importance = */ NotificationManager.IMPORTANCE_HIGH
         ).apply {
             group = NOTIFICATION_CHANNEL_GROUP_ID_PICK_UP_PLAYER
-            description =
-                getString(R.string.notification_pick_up_player_channel_description_pick_up_player)
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            lightColor = ContextCompat.getColor(
-                /* context = */ this@BaseApplication,
-                /* id = */ R.color.green
+            description = getString(
+                R.string.notification_pick_up_player_channel_description_pick_up_player
             )
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = GreenNotificationLight.toArgb()
             enableLights(true)
             enableVibration(false)
             setSound(
