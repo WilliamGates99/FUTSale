@@ -40,8 +40,8 @@ class PickUpPlayerNotificationService @Inject constructor(
         /* channelId = */ BaseApplication.NOTIFICATION_CHANNEL_ID_PICK_UP_PLAYER_DEFAULT
     ).apply {
         setAutoCancel(true)
-        setSmallIcon(R.drawable.ic_notification)
         setContentIntent(cancelNotificationPendingIntent)
+        setSmallIcon(R.drawable.ic_notification)
 
         /*
         On Android 8.0 and above these values are ignored in favor of the values set on the notification's channel.
@@ -62,8 +62,8 @@ class PickUpPlayerNotificationService @Inject constructor(
         /* channelId = */ BaseApplication.NOTIFICATION_CHANNEL_ID_PICK_UP_PLAYER_SILENT
     ).apply {
         setAutoCancel(true)
-        setSmallIcon(R.drawable.ic_notification)
         setContentIntent(cancelNotificationPendingIntent)
+        setSmallIcon(R.drawable.ic_notification)
 
         /*
         On Android 8.0 and above these values are ignored in favor of the values set on the notification's channel.
