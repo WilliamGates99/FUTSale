@@ -46,6 +46,7 @@ class PickUpPlayerNotificationService @Inject constructor(
         On Android 8.0 and above these values are ignored in favor of the values set on the notification's channel.
         On older platforms, these values are still used, so it is still required for apps supporting those platforms.
         */
+        setPriority(NotificationCompat.PRIORITY_MAX)
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(
             /* argb = */ ContextCompat.getColor(context, R.color.green),
@@ -67,6 +68,7 @@ class PickUpPlayerNotificationService @Inject constructor(
         On Android 8.0 and above these values are ignored in favor of the values set on the notification's channel.
         On older platforms, these values are still used, so it is still required for apps supporting those platforms.
         */
+        setPriority(NotificationCompat.PRIORITY_MAX)
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(
             /* argb = */ ContextCompat.getColor(context, R.color.green),
