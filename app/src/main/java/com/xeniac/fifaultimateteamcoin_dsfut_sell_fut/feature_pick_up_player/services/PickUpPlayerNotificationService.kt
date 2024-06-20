@@ -8,10 +8,11 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BaseApplication
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.GreenNotificationLight
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -49,7 +50,7 @@ class PickUpPlayerNotificationService @Inject constructor(
         setPriority(NotificationCompat.PRIORITY_MAX)
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(
-            /* argb = */ ContextCompat.getColor(context, R.color.green),
+            /* argb = */ GreenNotificationLight.toArgb(),
             /* onMs = */ 1000,
             /* offMs = */ 1000
         )
@@ -71,7 +72,7 @@ class PickUpPlayerNotificationService @Inject constructor(
         setPriority(NotificationCompat.PRIORITY_MAX)
         setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         setLights(
-            /* argb = */ ContextCompat.getColor(context, R.color.green),
+            /* argb = */ GreenNotificationLight.toArgb(),
             /* onMs = */ 1000,
             /* offMs = */ 1000
         )

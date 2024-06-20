@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 val StatusBarColorV21 = Color(0x33000000)
 val NavigationBarColorV26 = Color(0x63FFFFFF)
 
+val GreenNotificationLight = Color(0xFF00E560)
+
 val Red = Color(0xFFFF3442)
 val RedAlpha20 = Color(0x33FF3442)
 
