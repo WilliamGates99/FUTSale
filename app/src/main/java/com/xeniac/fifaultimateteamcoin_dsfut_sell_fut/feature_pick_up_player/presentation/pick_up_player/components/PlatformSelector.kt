@@ -115,6 +115,7 @@ fun PlatformSelector(
                             textAlign = segmentedButtonLabelTextAlignment
                         )
                     },
+                    icon = {},
                     onClick = { onPlatformClick(platformItem.platform) }
                 )
             }
