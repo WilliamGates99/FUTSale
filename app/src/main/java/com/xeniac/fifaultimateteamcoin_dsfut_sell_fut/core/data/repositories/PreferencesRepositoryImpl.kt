@@ -13,14 +13,19 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatform
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toRateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -31,16 +36,22 @@ class PreferencesRepositoryImpl @Inject constructor(
 ) : PreferencesRepository {
 
     private object PreferencesKeys {
-        val CURRENT_APP_THEME = intPreferencesKey("theme")
-        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey("isOnBoardingCompleted")
+        val CURRENT_APP_THEME = intPreferencesKey(name = "theme")
+        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey(name = "isOnBoardingCompleted")
         val NOTIFICATION_PERMISSION_COUNT = intPreferencesKey(name = "notificationPermissionCount")
-        val IS_NOTIFICATION_SOUND_ENABLED = booleanPreferencesKey("isNotificationSoundActive")
-        val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey("isNotificationVibrateActive")
-        val RATE_APP_DIALOG_CHOICE = intPreferencesKey("rateAppDialogChoice")
-        val PREVIOUS_REQUEST_TIME_IN_MILLIS = longPreferencesKey("previousRequestTimeInMillis")
-        val PARTNER_ID = stringPreferencesKey("partnerId")
-        val SECRET_KEY = stringPreferencesKey("secretKey")
-        val SELECTED_PLATFORM = stringPreferencesKey("selectedPlatform")
+        val IS_NOTIFICATION_SOUND_ENABLED = booleanPreferencesKey(
+            name = "isNotificationSoundActive"
+        )
+        val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey(
+            name = "isNotificationVibrateActive"
+        )
+        val SELECTED_RATE_APP_OPTION = stringPreferencesKey(name = "selectedRateAppOption")
+        val PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS = longPreferencesKey(
+            name = "previousRateAppRequestTimeInMs"
+        )
+        val PARTNER_ID = stringPreferencesKey(name = "partnerId")
+        val SECRET_KEY = stringPreferencesKey(name = "secretKey")
+        val SELECTED_PLATFORM = stringPreferencesKey(name = "selectedPlatform")
     }
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = runBlocking {
@@ -142,21 +153,29 @@ class PreferencesRepositoryImpl @Inject constructor(
         true
     }
 
-    override suspend fun getRateAppDialogChoice(): Int = try {
-        settingsDataStore.data.first()[PreferencesKeys.RATE_APP_DIALOG_CHOICE] ?: 0
+    override suspend fun getSelectedRateAppOption(): RateAppOption = try {
+        val selectedRateAppOption = settingsDataStore.data
+            .first()[PreferencesKeys.SELECTED_RATE_APP_OPTION]
+
+        val rateAppOptionDto = RateAppOptionDto.entries.find {
+            it.value == selectedRateAppOption
+        } ?: RateAppOptionDto.NOT_SHOWN_YET
+
+        rateAppOptionDto.toRateAppOption()
     } catch (e: Exception) {
-        Timber.e("getRateAppDialogChoice failed:")
+        Timber.e("getSelectedRateAppOption failed:")
         e.printStackTrace()
-        0
+        RateAppOptionDto.NOT_SHOWN_YET.toRateAppOption()
     }
 
-    override suspend fun getPreviousRequestTimeInMillis(): Long = try {
-        settingsDataStore.data.first()[PreferencesKeys.PREVIOUS_REQUEST_TIME_IN_MILLIS] ?: 0L
-    } catch (e: Exception) {
-        Timber.e("getPreviousRequestTimeInMillis failed:")
-        e.printStackTrace()
-        0L
-    }
+    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
+        try {
+            settingsDataStore.data.first()[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS]
+        } catch (e: Exception) {
+            Timber.e("getPreviousRateAppRequestTimeInMs failed:")
+            e.printStackTrace()
+            null
+        }
 
     override suspend fun getPartnerId(): String? = try {
         settingsDataStore.data.first()[PreferencesKeys.PARTNER_ID]
@@ -264,26 +283,27 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setRateAppDialogChoice(value: Int) {
+    override suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.RATE_APP_DIALOG_CHOICE] = value
-                Timber.i("RateAppDialogChoice edited to $value")
+                it[PreferencesKeys.SELECTED_RATE_APP_OPTION] = rateAppOptionDto.value
+                Timber.i("setSelectedRateAppOption edited to ${rateAppOptionDto.value}")
             }
         } catch (e: Exception) {
-            Timber.e("setRateAppDialogChoice failed:")
+            Timber.e("setSelectedRateAppOption failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setPreviousRequestTimeInMillis(timeInMillis: Long) {
+    override suspend fun setPreviousRateAppRequestTimeInMs() {
         try {
+            val currentTimeInMs = DateHelper.getCurrentTimeInMillis()
             settingsDataStore.edit {
-                it[PreferencesKeys.PREVIOUS_REQUEST_TIME_IN_MILLIS] = timeInMillis
-                Timber.i("PreviousRequestTimeInMillis edited to $timeInMillis")
+                it[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS] = currentTimeInMs
+                Timber.i("setPreviousRateAppRequestTimeInMs edited to $currentTimeInMs")
             }
         } catch (e: Exception) {
-            Timber.e("setPreviousRequestTimeInMillis failed:")
+            Timber.e("setPreviousRateAppRequestTimeInMs failed:")
             e.printStackTrace()
         }
     }
