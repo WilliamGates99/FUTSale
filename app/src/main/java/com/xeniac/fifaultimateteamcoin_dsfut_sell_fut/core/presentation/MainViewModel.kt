@@ -24,32 +24,25 @@ class MainViewModel @Inject constructor(
     )
 
     init {
-        getCurrentAppLocale()
-        getPostSplashDestination()
+        getMainState()
     }
 
-    private fun getCurrentAppLocale() = viewModelScope.launch {
+    private fun getMainState() = viewModelScope.launch {
         savedStateHandle["mainState"] = mainState.value.copy(
-            currentAppLocale = mainUseCases.getCurrentAppLocaleUseCase.get()()
+            currentAppLocale = mainUseCases.getCurrentAppLocaleUseCase.get()(),
+            postSplashDestination = getPostSplashDestination()
         )
-    }
-
-    private fun getPostSplashDestination() = viewModelScope.launch {
-        val isOnboardingCompleted = mainUseCases.getIsOnboardingCompletedUseCase.get()()
-
-        if (isOnboardingCompleted) {
-            savedStateHandle["mainState"] = mainState.value.copy(
-                postSplashDestination = Screen.HomeScreen
-            )
-        } else {
-            savedStateHandle["mainState"] = mainState.value.copy(
-                postSplashDestination = Screen.OnboardingScreen
-            )
-        }
 
         delay(1.seconds) // 1 second delay to solve the blank screen after showing splash screen
         savedStateHandle["mainState"] = mainState.value.copy(
             isSplashScreenLoading = false
         )
+    }
+
+    private suspend fun getPostSplashDestination(): Screen {
+        val isOnboardingCompleted = mainUseCases.getIsOnboardingCompletedUseCase.get()()
+
+        return if (isOnboardingCompleted) Screen.HomeScreen
+        else Screen.OnboardingScreen
     }
 }
