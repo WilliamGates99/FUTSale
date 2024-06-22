@@ -3,10 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.model.ReviewErrorCode
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
@@ -79,9 +77,7 @@ class HomeViewModel @Inject constructor(
                 Timber.i("InAppReviews request was successful.")
                 _inAppReviewInfo.update { task.result }
             } else {
-                // There was some problem.
-                @ReviewErrorCode val errorCode = (task.exception as ReviewException).errorCode
-                Timber.e("InAppReviews request was not successful. Error Code: $errorCode")
+                Timber.e("InAppReviews request was not successful:")
                 task.exception?.printStackTrace()
             }
         }
