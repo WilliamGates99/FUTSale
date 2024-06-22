@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.HistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.HomeRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.PickUpPlayerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import dagger.Binds
@@ -13,6 +15,12 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindHomeRepository(
+        homeRepositoryImpl: HomeRepositoryImpl
+    ): HomeRepository
 
     @Binds
     @ViewModelScoped

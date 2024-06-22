@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,15 +70,9 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun requestInAppReviews() {
-        reviewManager.get().requestReviewFlow().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Timber.i("InAppReviews request was successful.")
-                _inAppReviewInfo.update { task.result }
-            } else {
-                Timber.e("InAppReviews request was not successful:")
-                task.exception?.printStackTrace()
-            }
+    private fun requestInAppReviews() = viewModelScope.launch {
+        homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
+            _inAppReviewInfo.update { reviewInfo }
         }
     }
 

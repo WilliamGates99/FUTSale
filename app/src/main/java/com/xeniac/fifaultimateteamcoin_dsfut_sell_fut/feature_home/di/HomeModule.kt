@@ -6,10 +6,12 @@ import android.os.Build
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestTimeInMsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.RequestInAppReviewsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetPreviousRateAppRequestTimeInMsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetSelectedRateAppOptionUseCase
@@ -47,6 +49,12 @@ internal object HomeModule {
     fun provideReviewManager(
         @ApplicationContext context: Context
     ): ReviewManager = ReviewManagerFactory.create(context)
+
+    @Provides
+    @ViewModelScoped
+    fun provideRequestInAppReviewsUseCase(
+        homeRepository: HomeRepository
+    ): RequestInAppReviewsUseCase = RequestInAppReviewsUseCase(homeRepository)
 
     @Provides
     @ViewModelScoped
@@ -93,6 +101,7 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideHomeUseCases(
+        requestInAppReviewsUseCase: RequestInAppReviewsUseCase,
         getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase,
         setNotificationPermissionCountUseCase: SetNotificationPermissionCountUseCase,
         getSelectedRateAppOptionUseCase: GetSelectedRateAppOptionUseCase,
@@ -100,6 +109,7 @@ internal object HomeModule {
         getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
         setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
     ): HomeUseCases = HomeUseCases(
+        { requestInAppReviewsUseCase },
         { getNotificationPermissionCountUseCase },
         { setNotificationPermissionCountUseCase },
         { getSelectedRateAppOptionUseCase },
