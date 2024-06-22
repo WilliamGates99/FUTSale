@@ -59,7 +59,7 @@ fun ProfileScreen(
 
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 
-    var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
@@ -89,8 +89,8 @@ fun ProfileScreen(
         }
     }
 
-    LaunchedEffect(key1 = shouldShowIntentAppNotFoundError) {
-        if (shouldShowIntentAppNotFoundError) {
+    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
+        if (isIntentAppNotFoundErrorVisible) {
             snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
@@ -144,7 +144,7 @@ fun ProfileScreen(
             AccountLinks(
                 openUrlInBrowser = { url ->
                     url?.let {
-                        shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
+                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
                             context = context,
                             urlString = url
                         )

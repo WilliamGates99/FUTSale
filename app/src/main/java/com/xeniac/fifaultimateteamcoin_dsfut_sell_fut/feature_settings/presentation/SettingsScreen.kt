@@ -62,7 +62,7 @@ fun SettingsScreen(
 
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
-    var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
     var isLocaleDialogVisible by remember { mutableStateOf(false) }
     var isThemeDialogVisible by remember { mutableStateOf(false) }
 
@@ -123,8 +123,8 @@ fun SettingsScreen(
         }
     }
 
-    LaunchedEffect(key1 = shouldShowIntentAppNotFoundError) {
-        if (shouldShowIntentAppNotFoundError) {
+    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
+        if (isIntentAppNotFoundErrorVisible) {
             snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
@@ -183,7 +183,7 @@ fun SettingsScreen(
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),
                 openAppPageInStore = {
-                    IntentHelper.openAppPageInStore(context)
+                    isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
                 },
                 openUrlInInAppBrowser = { url ->
                     url?.let {
@@ -195,7 +195,7 @@ fun SettingsScreen(
                 },
                 openUrlInBrowser = { url ->
                     url?.let {
-                        shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
+                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
                             context = context,
                             urlString = url
                         )

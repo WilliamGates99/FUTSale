@@ -38,7 +38,7 @@ fun OnboardingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
-    var shouldShowIntentAppNotFoundError by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
@@ -54,8 +54,8 @@ fun OnboardingScreen(
         }
     }
 
-    LaunchedEffect(key1 = shouldShowIntentAppNotFoundError) {
-        if (shouldShowIntentAppNotFoundError) {
+    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
+        if (isIntentAppNotFoundErrorVisible) {
             snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
@@ -81,7 +81,7 @@ fun OnboardingScreen(
                 viewModel.onEvent(OnboardingEvent.SaveUserData)
             },
             onRegisterBtnClick = {
-                shouldShowIntentAppNotFoundError = IntentHelper.openLinkInBrowser(
+                isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
                     context = context,
                     urlString = Constants.URL_DSFUT
                 )
