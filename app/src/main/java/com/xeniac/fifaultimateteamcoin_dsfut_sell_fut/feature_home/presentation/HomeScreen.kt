@@ -7,8 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,24 +17,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.openAppSettings
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.PermissionDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NotificationPermissionDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
+import timber.log.Timber
 
 @Composable
 fun HomeScreen(
@@ -46,6 +45,10 @@ fun HomeScreen(
     val activity by remember { derivedStateOf { context.findActivity() } }
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
+
+    val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
+    val inAppReviewInfo by homeViewModel.inAppReviewInfo.collectAsStateWithLifecycle()
+    var isAppReviewDialog by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpPlayerScreen.toString()
@@ -57,10 +60,43 @@ fun HomeScreen(
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
     }
 
+    LaunchedEffect(key1 = inAppReviewInfo) {
+        inAppReviewInfo?.let {
+            homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
+        }
+    }
+
+    ObserverAsEvent(flow = homeViewModel.inAppReviewEventChannel) { event ->
+        when (event) {
+            HomeUiEvent.ShowAppReviewDialog -> {
+                isAppReviewDialog = true
+            }
+            HomeUiEvent.LaunchInAppReview -> {
+                inAppReviewInfo?.let { reviewInfo ->
+                    homeViewModel.reviewManager.get().launchReviewFlow(
+                        activity,
+                        reviewInfo
+                    ).addOnCompleteListener {
+                        /*
+                        The flow has finished.
+                        The API does not indicate whether the user reviewed or not,
+                        or even whether the review dialog was shown.
+                        Thus, no matter the result, we continue our app flow.
+                         */
+                        if (it.isSuccessful) {
+                            Timber.i("App review flow was completed successfully.")
+                        } else {
+                            Timber.e("Something went wrong with showing the app review flow:")
+                            it.exception?.printStackTrace()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @SuppressLint("InlinedApi")
     if (isRunningAndroid13OrNewer) {
-        val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
-
         val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
         ) { isGranted ->
@@ -76,34 +112,19 @@ fun HomeScreen(
             postNotificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
-        AnimatedVisibility(
-            visible = homeState.isPermissionDialogVisible,
-            enter = scaleIn(),
-            exit = scaleOut()
-        ) {
-            homeState.permissionDialogQueue.reversed().forEach { permission ->
-                PermissionDialog(
-                    icon = painterResource(id = R.drawable.ic_dialog_post_notification),
-                    permissionHelper = when (permission) {
-                        Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionHelper()
-                        else -> return@forEach
-                    },
-                    isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
-                        /* activity = */ activity,
-                        /* permission = */ permission
-                    ),
-                    onConfirmClick = {
-                        postNotificationPermissionResultLauncher.launch(
-                            Manifest.permission.POST_NOTIFICATIONS
-                        )
-                    },
-                    onOpenAppSettingsClick = activity::openAppSettings,
-                    onDismiss = {
-                        homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
-                    }
+        NotificationPermissionDialog(
+            isVisible = homeState.isPermissionDialogVisible,
+            activity = activity,
+            permissionQueue = homeState.permissionDialogQueue,
+            onConfirmClick = {
+                postNotificationPermissionResultLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
                 )
+            },
+            onDismiss = { permission ->
+                homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
             }
-        }
+        )
     }
 
     Scaffold(
@@ -141,4 +162,21 @@ fun HomeScreen(
             bottomPadding = innerPadding.calculateBottomPadding()
         )
     }
+
+    AppReviewDialog(
+        isVisible = isAppReviewDialog,
+        onRateNowClick = {
+            homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
+            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
+        },
+        onRemindLaterClick = {
+            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToRemindLater)
+        },
+        onNeverClick = {
+            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
+        },
+        onDismiss = {
+            isAppReviewDialog = false
+        }
+    )
 }

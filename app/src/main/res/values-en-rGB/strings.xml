@@ -68,8 +68,8 @@
     <string name="home_app_review_dialog_title">Rate %s?</string>
     <string name="home_app_review_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
     <string name="home_app_review_dialog_btn_rate_now">Rate now</string>
-    <string name="home_app_review_dialog_btn_ask_later">Remind me later</string>
-    <string name="home_app_review_dialog_btn_no_thanks">No, Thanks</string>
+    <string name="home_app_review_dialog_btn_remind_later">Remind me later</string>
+    <string name="home_app_review_dialog_btn_never">No, Thanks</string>
 
 
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>

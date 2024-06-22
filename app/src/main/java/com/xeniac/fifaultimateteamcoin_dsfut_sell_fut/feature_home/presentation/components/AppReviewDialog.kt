@@ -57,11 +57,11 @@ fun AppReviewDialog(
     ),
     message: String = stringResource(id = R.string.home_app_review_dialog_message),
     rateNowButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_rate_now),
-    askLaterButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_ask_later),
-    noThanksButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_no_thanks),
+    askLaterButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_remind_later),
+    noThanksButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_never),
     onRateNowClick: () -> Unit,
-    onAskLaterClick: () -> Unit,
-    onNoThanksClick: () -> Unit,
+    onRemindLaterClick: () -> Unit,
+    onNeverClick: () -> Unit,
     onDismiss: () -> Unit
 ) {
     if (isVisible) {
@@ -121,7 +121,7 @@ fun AppReviewDialog(
                         neutralButton = {
                             TextButton(
                                 onClick = {
-                                    onAskLaterClick()
+                                    onRemindLaterClick()
                                     onDismiss()
                                 }
                             ) {
@@ -136,7 +136,7 @@ fun AppReviewDialog(
                         dismissButton = {
                             TextButton(
                                 onClick = {
-                                    onNoThanksClick()
+                                    onNeverClick()
                                     onDismiss()
                                 }
                             ) {
