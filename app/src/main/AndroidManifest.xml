@@ -5,8 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -67,17 +65,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="channel_fcm_miscellaneous" />
-
-        <!--
-        <meta-data
-        android:name="applovin.sdk.key"
-        android:value="hmVNBfwsMg8e9UdPEe6ZOWwE83xd2y2KUkDTlGBqx3DMlb0CUOK4f7AeBRRxh-QmzJneB-DPUA-cJuPFEZ7qWA"
-        tools:replace="android:value" />
-
-        <meta-data
-        android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="ca-app-pub-4429657659293031~2049225136" />
-        -->
 
     </application>
 

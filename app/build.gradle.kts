@@ -14,14 +14,9 @@ plugins {
     alias(libs.plugins.google.services) // Google Services plugin
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.perf)
-    // id("applovin-quality-service")
 }
 
 val properties = gradleLocalProperties(rootDir, providers)
-
-// applovin {
-//     apiKey = properties.getProperty("APPLOVIN_API_KEY")
-// }
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
@@ -49,62 +44,6 @@ android {
             name = "KTOR_HTTP_BASE_URL",
             value = properties.getProperty("KTOR_HTTP_BASE_URL")
         )
-
-        /*
-        buildConfigField(
-            "String",
-            "APPLOVIN_INTERSTITIAL_UNIT_ID",
-            properties.getProperty("APPLOVIN_INTERSTITIAL_UNIT_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "APPLOVIN_PROFILE_NATIVE_UNIT_ID",
-            properties.getProperty("APPLOVIN_PROFILE_NATIVE_UNIT_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "APPLOVIN_SETTINGS_NATIVE_UNIT_ID",
-            properties.getProperty("APPLOVIN_SETTINGS_NATIVE_UNIT_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID",
-            properties.getProperty("APPLOVIN_MISCELLANEOUS_NATIVE_ZONE_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "TAPSELL_KEY",
-            properties.getProperty("TAPSELL_KEY")
-        )
-
-        buildConfigField(
-            "String",
-            "TAPSELL_INTERSTITIAL_ZONE_ID",
-            properties.getProperty("TAPSELL_INTERSTITIAL_ZONE_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "TAPSELL_PROFILE_NATIVE_ZONE_ID",
-            properties.getProperty("TAPSELL_PROFILE_NATIVE_ZONE_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "TAPSELL_SETTINGS_NATIVE_ZONE_ID",
-            properties.getProperty("TAPSELL_SETTINGS_NATIVE_ZONE_ID")
-        )
-
-        buildConfigField(
-            "String",
-            "TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID",
-            properties.getProperty("TAPSELL_MISCELLANEOUS_NATIVE_ZONE_ID")
-        )
-        */
     }
 
     signingConfigs {
@@ -369,19 +308,6 @@ dependencies {
 
     // Google Play In-App Reviews API
     implementation(libs.play.review.ktx)
-
-    /*
-    // Applovin Libraries
-    implementation("com.applovin:applovin-sdk:11.11.3")
-    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
-    implementation("com.applovin.mediation:google-adapter:22.4.0.0")
-
-    // Google AdMob Library
-    implementation("com.google.android.gms:play-services-ads:22.4.0")
-
-    // Tapsell Library
-    implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.2.0")
-    */
 
     // Local Unit Test Libraries
     testImplementation(libs.truth)

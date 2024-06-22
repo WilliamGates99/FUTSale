@@ -57,8 +57,6 @@ class BaseApplication : Application(), ImageLoaderFactory {
             createDefaultPickUpPlayerNotificationChannel()
             createSilentPickUpPlayerNotificationChannel()
         }
-        // initAppLovin()
-        // initTapsell()
     }
 
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
@@ -144,28 +142,6 @@ class BaseApplication : Application(), ImageLoaderFactory {
 
         notificationManager.createNotificationChannel(pickUpPlayerNotificationChannel)
     }
-
-    /*
-    private fun initAppLovin() {
-        AppLovinSdk.getInstance(this).mediationProvider = "max"
-        AppLovinSdk.getInstance(this).initializeSdk {}
-        AppLovinPrivacySettings.setHasUserConsent(true, this)
-    }
-
-    private fun initTapsell() {
-        TapsellPlus.setDebugMode(Log.DEBUG)
-        TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY, object : TapsellPlusInitListener {
-            override fun onInitializeSuccess(adNetworks: AdNetworks?) {
-                Timber.i("onInitializeSuccess: ${adNetworks?.name}")
-            }
-
-            override fun onInitializeFailed(adNetworks: AdNetworks?, error: AdNetworkError?) {
-                Timber.e("onInitializeFailed: ${adNetworks?.name}, error: ${error?.errorMessage}")
-            }
-        })
-        TapsellPlus.setGDPRConsent(this, true)
-    }
-     */
 
     override fun newImageLoader(): ImageLoader = ImageLoader(context = this).newBuilder().apply {
         components {

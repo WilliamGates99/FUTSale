@@ -72,9 +72,6 @@
     <string name="home_app_review_dialog_btn_never">No, Thanks</string>
 
 
-    <string name="ad_indicator" translatable="false">Ad</string>
-
-
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>
     <!--
     Placeholders:
