@@ -72,7 +72,7 @@ fun OnboardingPageTwo(
     ) {
         LottieAnimation(
             composition = composition,
-            speed = 0.8f,
+            speed = 0.75f,
             iterations = LottieConstants.IterateForever,
             modifier = Modifier
                 .padding(horizontal = 20.dp)

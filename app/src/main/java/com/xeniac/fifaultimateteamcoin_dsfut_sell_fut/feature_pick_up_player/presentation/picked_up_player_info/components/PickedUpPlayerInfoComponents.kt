@@ -72,7 +72,7 @@ fun PickedUpPlayerInfo(
         Box(modifier = Modifier.fillMaxWidth()) {
             LottieAnimation(
                 composition = composition,
-                speed = 0.7f,
+                speed = 0.75f,
                 iterations = 1,
                 modifier = Modifier
                     .align(Alignment.TopCenter)

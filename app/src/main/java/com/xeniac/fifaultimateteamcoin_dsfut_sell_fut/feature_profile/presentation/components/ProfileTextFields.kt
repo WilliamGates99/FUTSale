@@ -101,7 +101,13 @@ fun PartnerIdTextField(
         profileState.isPartnerIdSaved == false -> 1
         else -> LottieConstants.IterateForever
     },
-    trailingAnimationSpeed: Float = 1f,
+    trailingAnimationSpeed: Float = when {
+        profileState.isPartnerIdLoading -> 0.7f
+        profileState.partnerIdErrorText != null -> 1f
+        profileState.isPartnerIdSaved == true -> 1f
+        profileState.isPartnerIdSaved == false -> 1f
+        else -> 1f
+    },
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Number,
     imeAction: ImeAction = ImeAction.Done,
@@ -157,7 +163,13 @@ fun SecretKeyTextField(
         profileState.isSecretKeySaved == false -> 1
         else -> LottieConstants.IterateForever
     },
-    trailingAnimationSpeed: Float = 1f,
+    trailingAnimationSpeed: Float = when {
+        profileState.isSecretKeyLoading -> 0.7f
+        profileState.secretKeyErrorText != null -> 1f
+        profileState.isSecretKeySaved == true -> 1f
+        profileState.isSecretKeySaved == false -> 1f
+        else -> 1f
+    },
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,

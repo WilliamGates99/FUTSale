@@ -21,7 +21,7 @@ fun PlayerAnimation(
 
     LottieAnimation(
         composition = composition,
-        speed = 1f,
+        speed = 0.75f,
         iterations = LottieConstants.IterateForever,
         modifier = modifier.size(250.dp)
     )
