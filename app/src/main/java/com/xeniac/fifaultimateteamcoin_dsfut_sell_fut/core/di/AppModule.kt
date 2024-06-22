@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
+import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -55,14 +56,12 @@ internal object AppModule {
         context.getSystemService(NotificationManager::class.java)
     } else context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    // TODO: CHECK
+    @RequiresApi(Build.VERSION_CODES.S)
     @Provides
     @Singleton
     fun provideVibratorManager(
         @ApplicationContext context: Context
-    ): VibratorManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.getSystemService(VibratorManager::class.java)
-    } else context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+    ): VibratorManager = context.getSystemService(VibratorManager::class.java)
 
     @Provides
     @Singleton
