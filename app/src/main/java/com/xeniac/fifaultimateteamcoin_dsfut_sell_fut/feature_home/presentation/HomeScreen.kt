@@ -11,6 +11,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
@@ -49,6 +54,7 @@ fun HomeScreen(
     val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
     val inAppReviewInfo by homeViewModel.inAppReviewInfo.collectAsStateWithLifecycle()
     var isAppReviewDialog by remember { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpPlayerScreen.toString()
@@ -92,6 +98,15 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+
+    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
+        if (isIntentAppNotFoundErrorVisible) {
+            snackbarHostState.showSnackbar(
+                message = context.getString(R.string.error_intent_app_not_found),
+                duration = SnackbarDuration.Short
+            )
         }
     }
 
@@ -166,7 +181,14 @@ fun HomeScreen(
     AppReviewDialog(
         isVisible = isAppReviewDialog,
         onRateNowClick = {
-            homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
+            when (BuildConfig.FLAVOR_market) {
+                "playStore" -> {
+                    homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
+                }
+                else -> {
+                    isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
+                }
+            }
             homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
         },
         onRemindLaterClick = {
