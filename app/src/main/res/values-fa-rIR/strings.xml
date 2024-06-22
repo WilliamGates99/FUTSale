@@ -65,11 +65,11 @@
     <string name="home_nav_title_history">تاریخچه</string>
     <string name="home_nav_title_settings">تنظیمات</string>
     <!--Placeholder is for the App Name-->
-    <string name="main_rate_app_dialog_title">امتیاز به %s؟</string>
-    <string name="main_rate_app_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>
-    <string name="main_rate_app_dialog_positive">الان امتیاز می‌دهم</string>
-    <string name="main_rate_app_dialog_negative">نه، ممنون</string>
-    <string name="main_rate_app_dialog_neutral">بعدا بهم یادآوری کن</string>
+    <string name="home_app_review_dialog_title">امتیاز به %s؟</string>
+    <string name="home_app_review_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>
+    <string name="home_app_review_dialog_btn_rate_now">الان امتیاز می‌دهم</string>
+    <string name="home_app_review_dialog_btn_ask_later">بعدا بهم یادآوری کن</string>
+    <string name="home_app_review_dialog_btn_no_thanks">نه، ممنون</string>
 
 
     <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>

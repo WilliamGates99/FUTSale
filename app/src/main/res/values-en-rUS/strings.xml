@@ -65,11 +65,11 @@
     <string name="home_nav_title_history">History</string>
     <string name="home_nav_title_settings">Settings</string>
     <!--Placeholder is for the App Name-->
-    <string name="main_rate_app_dialog_title">Rate %s?</string>
-    <string name="main_rate_app_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
-    <string name="main_rate_app_dialog_positive">Rate now</string>
-    <string name="main_rate_app_dialog_negative">No, Thanks</string>
-    <string name="main_rate_app_dialog_neutral">Remind me later</string>
+    <string name="home_app_review_dialog_title">Rate %s?</string>
+    <string name="home_app_review_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
+    <string name="home_app_review_dialog_btn_rate_now">Rate now</string>
+    <string name="home_app_review_dialog_btn_ask_later">Remind me later</string>
+    <string name="home_app_review_dialog_btn_no_thanks">No, Thanks</string>
 
 
     <string name="pick_up_player_app_bar_title">Pick Up Player</string>
