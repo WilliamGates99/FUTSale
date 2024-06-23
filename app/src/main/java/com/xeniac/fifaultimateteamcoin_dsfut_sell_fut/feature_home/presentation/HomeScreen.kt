@@ -68,9 +68,10 @@ fun HomeScreen(
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
     }
 
-    LaunchedEffect(key1 = inAppReviewInfo) {
-        inAppReviewInfo?.let {
-            homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
+    LaunchedEffect(key1 = Unit) {
+        when (BuildConfig.FLAVOR_market) {
+            "playStore" -> homeViewModel.onEvent(HomeEvent.RequestInAppReviews)
+            else -> homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
         }
     }
 
@@ -184,9 +185,7 @@ fun HomeScreen(
         isVisible = isAppReviewDialog,
         onRateNowClick = {
             when (BuildConfig.FLAVOR_market) {
-                "playStore" -> {
-                    homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
-                }
+                "playStore" -> homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
                 else -> {
                     isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
                 }

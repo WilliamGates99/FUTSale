@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
 sealed class HomeEvent {
     data object GetHomeState : HomeEvent()
+    data object RequestInAppReviews : HomeEvent()
     data object CheckSelectedRateAppOption : HomeEvent()
     data object LaunchInAppReview : HomeEvent()
     data object SetSelectedRateAppOptionToNever : HomeEvent()

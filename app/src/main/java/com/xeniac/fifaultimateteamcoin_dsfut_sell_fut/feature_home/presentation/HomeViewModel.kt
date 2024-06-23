@@ -44,12 +44,12 @@ class HomeViewModel @Inject constructor(
 
     init {
         getHomeState()
-        requestInAppReviews()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.GetHomeState -> getHomeState()
+            HomeEvent.RequestInAppReviews -> requestInAppReviews()
             HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
             HomeEvent.LaunchInAppReview -> launchInAppReview()
             is HomeEvent.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
@@ -73,6 +73,7 @@ class HomeViewModel @Inject constructor(
     private fun requestInAppReviews() = viewModelScope.launch {
         homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
             _inAppReviewInfo.update { reviewInfo }
+            checkSelectedRateAppOption()
         }
     }
 
