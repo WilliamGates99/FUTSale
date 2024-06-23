@@ -45,6 +45,9 @@ object IntentHelper {
         }
         false
     } catch (e: ActivityNotFoundException) {
-        openLinkInBrowser(context, BuildConfig.URL_APP_STORE)
+        openLinkInBrowser(
+            context = context,
+            urlString = BuildConfig.URL_APP_STORE
+        )
     }
 }
