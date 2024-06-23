@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -68,10 +69,36 @@ fun HomeScreen(
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
     }
 
+    val appUpdateResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            when (result.resultCode) {
+                RESULT_OK -> {
+                    // TODO: IMPLEMENT
+                }
+                else -> {
+                    Timber.e("Something went wrong with the app update.")
+                }
+            }
+        }
+    )
+
     LaunchedEffect(key1 = Unit) {
         when (BuildConfig.FLAVOR_market) {
             "playStore" -> homeViewModel.onEvent(HomeEvent.RequestInAppReviews)
             else -> homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
+        }
+    }
+
+    ObserverAsEvent(flow = homeViewModel.inAppUpdatesEventChannel) { event ->
+        when (event) {
+            is HomeUiEvent.StartUpdateFlow -> {
+                homeViewModel.appUpdateManager.get().startUpdateFlowForResult(
+                    event.appUpdateInfo,
+                    appUpdateResultLauncher,
+                    homeViewModel.appUpdateOptions.get()
+                )
+            }
         }
     }
 
