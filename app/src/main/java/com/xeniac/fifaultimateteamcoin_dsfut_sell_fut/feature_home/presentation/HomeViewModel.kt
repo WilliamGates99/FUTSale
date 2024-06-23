@@ -3,6 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
@@ -25,6 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    val appUpdateManager: Lazy<AppUpdateManager>,
+    val appUpdateOptions: Lazy<AppUpdateOptions>,
     val reviewManager: Lazy<ReviewManager>,
     private val firstInstallTimeInMs: Lazy<FirstInstallTimeInMs>,
     private val homeUseCases: HomeUseCases,
@@ -39,16 +43,21 @@ class HomeViewModel @Inject constructor(
     private val _inAppReviewInfo = MutableStateFlow<ReviewInfo?>(null)
     val inAppReviewInfo = _inAppReviewInfo.asStateFlow()
 
+    private val _inAppUpdatesEventChannel = Channel<Event>()
+    val inAppUpdatesEventChannel = _inAppUpdatesEventChannel.receiveAsFlow()
+
     private val _inAppReviewsEventChannel = Channel<Event>()
     val inAppReviewEventChannel = _inAppReviewsEventChannel.receiveAsFlow()
 
     init {
         getHomeState()
+        checkForAppUpdates()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.GetHomeState -> getHomeState()
+            HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
             HomeEvent.RequestInAppReviews -> requestInAppReviews()
             HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
             HomeEvent.LaunchInAppReview -> launchInAppReview()
@@ -68,6 +77,14 @@ class HomeViewModel @Inject constructor(
             selectedRateAppOption = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
             previousRateAppRequestTimeInMs = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
         )
+    }
+
+    private fun checkForAppUpdates() = viewModelScope.launch {
+        homeUseCases.checkForAppUpdatesUseCase.get()().collect { appUpdateInfo ->
+            appUpdateInfo?.let {
+                _inAppUpdatesEventChannel.send(HomeUiEvent.StartUpdateFlow(appUpdateInfo))
+            }
+        }
     }
 
     private fun requestInAppReviews() = viewModelScope.launch {

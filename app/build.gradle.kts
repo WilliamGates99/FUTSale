@@ -309,6 +309,12 @@ dependencies {
     // Google Play In-App Reviews API
     implementation(libs.play.review.ktx)
 
+    // Google Play In-App Reviews API
+    implementation(libs.play.review.ktx)
+
+    // Google Play In-App Updates API
+    implementation(libs.play.app.update.ktx)
+
     // Local Unit Test Libraries
     testImplementation(libs.truth)
     testImplementation(libs.junit)

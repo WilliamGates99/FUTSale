@@ -3,10 +3,16 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckForAppUpdatesUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestTimeInMsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
@@ -30,6 +36,30 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
+    fun provideAppUpdateType(): UpdateType = AppUpdateType.FLEXIBLE
+
+    @Provides
+    @ViewModelScoped
+    fun provideAppUpdateManager(
+        @ApplicationContext context: Context
+    ): AppUpdateManager = AppUpdateManagerFactory.create(context)
+
+    @Provides
+    @ViewModelScoped
+    fun provide(
+        appUpdateType: UpdateType
+    ): AppUpdateOptions = AppUpdateOptions.newBuilder(appUpdateType).apply {
+        setAllowAssetPackDeletion(true)
+    }.build()
+
+    @Provides
+    @ViewModelScoped
+    fun provideReviewManager(
+        @ApplicationContext context: Context
+    ): ReviewManager = ReviewManagerFactory.create(context)
+
+    @Provides
+    @ViewModelScoped
     fun provideFirstInstallTimeInMs(
         @ApplicationContext context: Context
     ): FirstInstallTimeInMs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -46,9 +76,9 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
-    fun provideReviewManager(
-        @ApplicationContext context: Context
-    ): ReviewManager = ReviewManagerFactory.create(context)
+    fun provideCheckForAppUpdatesUseCase(
+        homeRepository: HomeRepository
+    ): CheckForAppUpdatesUseCase = CheckForAppUpdatesUseCase(homeRepository)
 
     @Provides
     @ViewModelScoped
@@ -101,6 +131,7 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideHomeUseCases(
+        checkForAppUpdatesUseCase: CheckForAppUpdatesUseCase,
         requestInAppReviewsUseCase: RequestInAppReviewsUseCase,
         getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase,
         setNotificationPermissionCountUseCase: SetNotificationPermissionCountUseCase,
@@ -109,6 +140,7 @@ internal object HomeModule {
         getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
         setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
     ): HomeUseCases = HomeUseCases(
+        { checkForAppUpdatesUseCase },
         { requestInAppReviewsUseCase },
         { getNotificationPermissionCountUseCase },
         { setNotificationPermissionCountUseCase },
