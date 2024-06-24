@@ -106,8 +106,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -121,8 +120,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -136,8 +134,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = context.getString(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -151,8 +148,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -191,8 +187,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.error_btn_retry),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -211,8 +206,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -226,8 +220,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -241,8 +234,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = context.getString(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -256,8 +248,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
@@ -282,8 +273,7 @@ fun PickUpPlayerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         actionLabel = context.getString(R.string.error_btn_retry),
-                        duration = SnackbarDuration.Indefinite,
-                        withDismissAction = true
+                        duration = SnackbarDuration.Indefinite
                     )
 
                     when (result) {
