@@ -35,7 +35,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
@@ -48,6 +47,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NotificationPermissionDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.isAppInstalledFromPlayStore
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -110,9 +110,10 @@ fun HomeScreen(
     }
 
     LaunchedEffect(key1 = Unit) {
-        when (BuildConfig.FLAVOR_market) {
-            "playStore" -> homeViewModel.onEvent(HomeEvent.RequestInAppReviews)
-            else -> homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
+        if (isAppInstalledFromPlayStore()) {
+            homeViewModel.onEvent(HomeEvent.RequestInAppReviews)
+        } else {
+            homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
         }
     }
 
@@ -252,11 +253,10 @@ fun HomeScreen(
     AppReviewDialog(
         isVisible = isAppReviewDialog,
         onRateNowClick = {
-            when (BuildConfig.FLAVOR_market) {
-                "playStore" -> homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
-                else -> {
-                    isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-                }
+            if (isAppInstalledFromPlayStore()) {
+                homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
+            } else {
+                isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
             }
             homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
         },
