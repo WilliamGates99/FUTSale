@@ -75,21 +75,20 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
+        registerAppUpdateListener()
         getHomeState()
         checkForAppUpdates()
-
-        appUpdateManager.get().registerListener(installStateUpdatedListener)
     }
 
     override fun onCleared() {
-        appUpdateManager.get().unregisterListener(installStateUpdatedListener)
+        unregisterAppUpdateListener()
         super.onCleared()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.GetHomeState -> getHomeState()
             HomeEvent.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
+            HomeEvent.GetHomeState -> getHomeState()
             HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
             HomeEvent.RequestInAppReviews -> requestInAppReviews()
             HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
@@ -104,12 +103,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getHomeState() = viewModelScope.launch {
-        savedStateHandle["homeState"] = homeState.value.copy(
-            notificationPermissionCount = homeUseCases.getNotificationPermissionCountUseCase.get()(),
-            selectedRateAppOption = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
-            previousRateAppRequestTimeInMs = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
-        )
+    private fun registerAppUpdateListener() = viewModelScope.launch {
+        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
+            appUpdateManager.get().registerListener(installStateUpdatedListener)
+        }
+    }
+
+    private fun unregisterAppUpdateListener() = viewModelScope.launch {
+        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
+            appUpdateManager.get().unregisterListener(installStateUpdatedListener)
+        }
     }
 
     private fun checkIsAppUpdateStalled() = viewModelScope.launch {
@@ -130,6 +133,14 @@ class HomeViewModel @Inject constructor(
             }
             else -> Unit
         }
+    }
+
+    private fun getHomeState() = viewModelScope.launch {
+        savedStateHandle["homeState"] = homeState.value.copy(
+            notificationPermissionCount = homeUseCases.getNotificationPermissionCountUseCase.get()(),
+            selectedRateAppOption = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
+            previousRateAppRequestTimeInMs = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
+        )
     }
 
     private fun checkForAppUpdates() = viewModelScope.launch {
