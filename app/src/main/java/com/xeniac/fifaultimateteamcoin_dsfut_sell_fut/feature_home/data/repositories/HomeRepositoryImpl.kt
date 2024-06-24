@@ -3,8 +3,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.clientVersionStalenessDays
+import com.google.android.play.core.ktx.installStatus
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.google.android.play.core.review.ReviewInfo
@@ -12,6 +14,7 @@ import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.isUpdateDownloaded
 import dagger.Lazy
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +27,30 @@ class HomeRepositoryImpl @Inject constructor(
     private val appUpdateManager: Lazy<AppUpdateManager>,
     private val reviewManager: Lazy<ReviewManager>
 ) : HomeRepository {
+
+    override fun checkIsFlexibleUpdateStalled(): Flow<isUpdateDownloaded> = callbackFlow {
+        appUpdateManager.get().appUpdateInfo.addOnSuccessListener { updateInfo ->
+            val isUpdateDownloadedButNotInstalled =
+                updateInfo.installStatus == InstallStatus.DOWNLOADED
+
+            if (isUpdateDownloadedButNotInstalled) trySend(true)
+            else trySend(false)
+        }
+
+        awaitClose {}
+    }
+
+    override fun checkIsImmediateUpdateStalled(): Flow<AppUpdateInfo?> = callbackFlow {
+        appUpdateManager.get().appUpdateInfo.addOnSuccessListener { updateInfo ->
+            val isUpdateStalled =
+                updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+
+            if (isUpdateStalled) trySend(updateInfo)
+            else trySend(null)
+        }
+
+        awaitClose {}
+    }
 
     override fun checkForAppUpdates(): Flow<AppUpdateInfo?> = callbackFlow {
         appUpdateManager.get().appUpdateInfo.addOnCompleteListener { task ->

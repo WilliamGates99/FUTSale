@@ -13,6 +13,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckForAppUpdatesUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsFlexibleUpdateStalledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsImmediateUpdateStalledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestTimeInMsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
@@ -76,6 +78,18 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
+    fun provideCheckIsFlexibleUpdateStalledUseCase(
+        homeRepository: HomeRepository
+    ): CheckIsFlexibleUpdateStalledUseCase = CheckIsFlexibleUpdateStalledUseCase(homeRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideCheckIsImmediateUpdateStalledUseCase(
+        homeRepository: HomeRepository
+    ): CheckIsImmediateUpdateStalledUseCase = CheckIsImmediateUpdateStalledUseCase(homeRepository)
+
+    @Provides
+    @ViewModelScoped
     fun provideCheckForAppUpdatesUseCase(
         homeRepository: HomeRepository
     ): CheckForAppUpdatesUseCase = CheckForAppUpdatesUseCase(homeRepository)
@@ -131,6 +145,8 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideHomeUseCases(
+        checkIsFlexibleUpdateStalledUseCase: CheckIsFlexibleUpdateStalledUseCase,
+        checkIsImmediateUpdateStalledUseCase: CheckIsImmediateUpdateStalledUseCase,
         checkForAppUpdatesUseCase: CheckForAppUpdatesUseCase,
         requestInAppReviewsUseCase: RequestInAppReviewsUseCase,
         getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase,
@@ -140,6 +156,8 @@ internal object HomeModule {
         getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
         setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
     ): HomeUseCases = HomeUseCases(
+        { checkIsFlexibleUpdateStalledUseCase },
+        { checkIsImmediateUpdateStalledUseCase },
         { checkForAppUpdatesUseCase },
         { requestInAppReviewsUseCase },
         { getNotificationPermissionCountUseCase },

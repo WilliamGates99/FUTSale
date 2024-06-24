@@ -5,8 +5,13 @@ import com.google.android.play.core.review.ReviewInfo
 import kotlinx.coroutines.flow.Flow
 
 typealias UpdateType = Int
+typealias isUpdateDownloaded = Boolean
 
 interface HomeRepository {
+
+    fun checkIsFlexibleUpdateStalled(): Flow<isUpdateDownloaded>
+
+    fun checkIsImmediateUpdateStalled(): Flow<AppUpdateInfo?>
 
     fun checkForAppUpdates(): Flow<AppUpdateInfo?>
 

@@ -5,11 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.ktx.bytesDownloaded
+import com.google.android.play.core.ktx.installStatus
+import com.google.android.play.core.ktx.totalBytesToDownload
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.states.HomeState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.Constants
@@ -23,10 +30,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val appUpdateType: Lazy<UpdateType>,
     val appUpdateManager: Lazy<AppUpdateManager>,
     val appUpdateOptions: Lazy<AppUpdateOptions>,
     val reviewManager: Lazy<ReviewManager>,
@@ -49,14 +58,38 @@ class HomeViewModel @Inject constructor(
     private val _inAppReviewsEventChannel = Channel<Event>()
     val inAppReviewEventChannel = _inAppReviewsEventChannel.receiveAsFlow()
 
+    private val installStateUpdatedListener = InstallStateUpdatedListener { state ->
+        val isUpdateDownloading = state.installStatus == InstallStatus.DOWNLOADING
+        val isUpdateDownloaded = state.installStatus == InstallStatus.DOWNLOADED
+
+        when {
+            isUpdateDownloading -> {
+                val bytesDownloaded = state.bytesDownloaded
+                val totalBytesToDownload = state.totalBytesToDownload
+                Timber.i("$bytesDownloaded/$totalBytesToDownload downloaded.")
+            }
+            isUpdateDownloaded -> viewModelScope.launch {
+                _inAppUpdatesEventChannel.send(HomeUiEvent.ShowCompleteAppUpdateSnackbar)
+            }
+        }
+    }
+
     init {
         getHomeState()
         checkForAppUpdates()
+
+        appUpdateManager.get().registerListener(installStateUpdatedListener)
+    }
+
+    override fun onCleared() {
+        appUpdateManager.get().unregisterListener(installStateUpdatedListener)
+        super.onCleared()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.GetHomeState -> getHomeState()
+            HomeEvent.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
             HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
             HomeEvent.RequestInAppReviews -> requestInAppReviews()
             HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
@@ -79,10 +112,30 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    private fun checkIsAppUpdateStalled() = viewModelScope.launch {
+        when (appUpdateType.get()) {
+            AppUpdateType.IMMEDIATE -> {
+                homeUseCases.checkIsImmediateUpdateStalledUseCase.get()().collect { appUpdateInfo ->
+                    appUpdateInfo?.let {
+                        _inAppUpdatesEventChannel.send(HomeUiEvent.StartAppUpdateFlow(appUpdateInfo))
+                    }
+                }
+            }
+            AppUpdateType.FLEXIBLE -> {
+                homeUseCases.checkIsFlexibleUpdateStalledUseCase.get()().collect { isUpdateDownloaded ->
+                    if (isUpdateDownloaded) {
+                        _inAppUpdatesEventChannel.send(HomeUiEvent.ShowCompleteAppUpdateSnackbar)
+                    }
+                }
+            }
+            else -> Unit
+        }
+    }
+
     private fun checkForAppUpdates() = viewModelScope.launch {
         homeUseCases.checkForAppUpdatesUseCase.get()().collect { appUpdateInfo ->
             appUpdateInfo?.let {
-                _inAppUpdatesEventChannel.send(HomeUiEvent.StartUpdateFlow(appUpdateInfo))
+                _inAppUpdatesEventChannel.send(HomeUiEvent.StartAppUpdateFlow(appUpdateInfo))
             }
         }
     }

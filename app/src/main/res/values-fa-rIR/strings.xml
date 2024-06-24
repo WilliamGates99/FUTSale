@@ -64,6 +64,8 @@
     <string name="home_nav_title_profile">پروفایل</string>
     <string name="home_nav_title_history">تاریخچه</string>
     <string name="home_nav_title_settings">تنظیمات</string>
+    <string name="home_app_update_message">به‌روز‌رسانی با موفقیت دانلود شد! برای تکمیل نصب، لطفاً برنامه را مجدداً راه‌اندازی کنید.</string>
+    <string name="home_app_update_action">راه‌اندازی مجدد</string>
     <!--Placeholder is for the App Name-->
     <string name="home_app_review_dialog_title">امتیاز به %s؟</string>
     <string name="home_app_review_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>

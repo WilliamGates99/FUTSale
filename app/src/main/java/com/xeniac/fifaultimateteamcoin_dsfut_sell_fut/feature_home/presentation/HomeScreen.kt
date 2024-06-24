@@ -15,17 +15,23 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +48,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NotificationPermissionDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +57,10 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val activity by remember { derivedStateOf { context.findActivity() } }
+    val lifeCycleOwner = LocalLifecycleOwner.current
+    var lifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
@@ -72,16 +82,32 @@ fun HomeScreen(
     val appUpdateResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = { result ->
-            when (result.resultCode) {
-                RESULT_OK -> {
-                    // TODO: IMPLEMENT
-                }
-                else -> {
-                    Timber.e("Something went wrong with the app update.")
-                }
+            if (result.resultCode != RESULT_OK) {
+                Timber.e("Something went wrong with the in-app update flow.")
             }
         }
     )
+
+    DisposableEffect(key1 = lifeCycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycleEvent = event
+        }
+
+        lifeCycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifeCycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(key1 = lifecycleEvent) {
+        when (lifecycleEvent) {
+            Lifecycle.Event.ON_RESUME -> {
+                homeViewModel.onEvent(HomeEvent.CheckIsAppUpdateStalled)
+            }
+            else -> Unit
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         when (BuildConfig.FLAVOR_market) {
@@ -92,12 +118,27 @@ fun HomeScreen(
 
     ObserverAsEvent(flow = homeViewModel.inAppUpdatesEventChannel) { event ->
         when (event) {
-            is HomeUiEvent.StartUpdateFlow -> {
+            is HomeUiEvent.StartAppUpdateFlow -> {
                 homeViewModel.appUpdateManager.get().startUpdateFlowForResult(
                     event.appUpdateInfo,
                     appUpdateResultLauncher,
                     homeViewModel.appUpdateOptions.get()
                 )
+            }
+            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.home_app_update_message),
+                        actionLabel = context.getString(R.string.home_app_update_action)
+                    )
+
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            homeViewModel.appUpdateManager.get().completeUpdate()
+                        }
+                        SnackbarResult.Dismissed -> Unit
+                    }
+                }
             }
         }
     }
