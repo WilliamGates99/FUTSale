@@ -6,7 +6,7 @@
         <item name="windowSplashScreenBackground">@color/appIconBackground</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
-            @drawable/ic_splash_logo_xeniac
+            @drawable/ic_splash_brand_logo
         </item>
         <item name="android:windowSplashScreenBehavior" tools:targetApi="tiramisu">
             icon_preferred
