@@ -33,7 +33,7 @@ android {
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
 
-        testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
