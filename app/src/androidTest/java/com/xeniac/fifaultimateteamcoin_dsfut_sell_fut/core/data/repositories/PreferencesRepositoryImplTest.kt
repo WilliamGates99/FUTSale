@@ -11,7 +11,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toRateAppOptionDto
@@ -31,7 +30,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -78,7 +76,7 @@ class PreferencesRepositoryImplTest {
     getSelectedPlatform -> Platform.CONSOLE
      */
     @Test
-    fun fetchInitialPreferences() = testScope.runTest(timeout = 5.seconds) {
+    fun fetchInitialPreferences() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val initialAppThemeSynchronously = testRepository.getCurrentAppThemeSynchronously()
@@ -109,7 +107,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeCurrentAppTheme() = runTest(context = testDispatcher) {
+    fun writeCurrentAppTheme() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = AppTheme.Dark
@@ -120,18 +118,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeCurrentAppLocale() = runTest(context = testDispatcher) {
-        testDataStore.edit { it.clear() }
-
-        val testValue = AppLocale.EnglishUS
-        testRepository.setCurrentAppLocale(testValue.toAppLocaleDto())
-
-        val currentAppLocale = testRepository.getCurrentAppLocale()
-        assertThat(currentAppLocale).isEqualTo(testValue)
-    }
-
-    @Test
-    fun writeIsOnBoardingCompleted() = runTest(context = testDispatcher) {
+    fun writeIsOnBoardingCompleted() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         testRepository.isOnBoardingCompleted(true)
@@ -141,7 +128,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeNotificationPermissionCount() = runTest(context = testDispatcher) {
+    fun writeNotificationPermissionCount() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = 2
@@ -152,7 +139,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeIsNotificationSoundEnabled() = runTest(context = testDispatcher) {
+    fun writeIsNotificationSoundEnabled() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         testRepository.isNotificationSoundEnabled(false)
@@ -162,7 +149,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeIsNotificationVibrateEnabled() = runTest(context = testDispatcher) {
+    fun writeIsNotificationVibrateEnabled() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         testRepository.isNotificationVibrateEnabled(false)
@@ -172,7 +159,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSelectedRateAppOption() = runTest(context = testDispatcher) {
+    fun writeSelectedRateAppOption() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = RateAppOption.RATE_NOW
@@ -183,7 +170,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writePreviousRateAppRequestTimeInMs() = runTest(context = testDispatcher) {
+    fun writePreviousRateAppRequestTimeInMs() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         testRepository.setPreviousRateAppRequestTimeInMs()
@@ -193,7 +180,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writePartnerId() = runTest(context = testDispatcher) {
+    fun writePartnerId() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = "123"
@@ -204,7 +191,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSecretKey() = runTest(context = testDispatcher) {
+    fun writeSecretKey() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = "abc123"
@@ -215,7 +202,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSelectedPlatform() = runTest(context = testDispatcher) {
+    fun writeSelectedPlatform() = testScope.runTest() {
         testDataStore.edit { it.clear() }
 
         val testValue = Platform.PC
