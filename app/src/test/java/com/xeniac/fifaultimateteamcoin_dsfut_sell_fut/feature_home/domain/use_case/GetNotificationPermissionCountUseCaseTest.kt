@@ -34,8 +34,8 @@ class GetNotificationPermissionCountUseCaseTest {
     }
 
     @Test
-    fun getNotificationPermissionCount_returnsNotificationPermissionCountValue() = runTest {
-        val notificationPermissionCount = getNotificationPermissionCountUseCase()
-        assertThat(notificationPermissionCount).isEqualTo(fakePreferencesRepository.notificationPermissionCount)
+    fun getNotificationPermissionCount_returnsCurrentNotificationPermissionCountValue() = runTest {
+        val currentNotificationPermissionCount = getNotificationPermissionCountUseCase()
+        assertThat(currentNotificationPermissionCount).isEqualTo(fakePreferencesRepository.notificationPermissionCount)
     }
 }

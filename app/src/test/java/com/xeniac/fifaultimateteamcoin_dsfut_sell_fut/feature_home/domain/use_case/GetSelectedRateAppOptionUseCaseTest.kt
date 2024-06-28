@@ -34,8 +34,8 @@ class GetSelectedRateAppOptionUseCaseTest {
     }
 
     @Test
-    fun getSelectedRateAppOption_returnsSelectedRateAppOption() = runTest {
-        val selectedRateAppOption = getSelectedRateAppOptionUseCase()
-        assertThat(selectedRateAppOption).isEqualTo(fakePreferencesRepository.selectedRateAppOption)
+    fun getSelectedRateAppOption_returnsCurrentSelectedRateAppOption() = runTest {
+        val currentSelectedRateAppOption = getSelectedRateAppOptionUseCase()
+        assertThat(currentSelectedRateAppOption).isEqualTo(fakePreferencesRepository.selectedRateAppOption)
     }
 }
