@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -32,6 +33,21 @@ class CompleteOnboardingUseCaseTest {
         completeOnboardingUseCase = CompleteOnboardingUseCase(
             preferencesRepository = fakePreferencesRepository
         )
+    }
+
+    @Test
+    fun completeOnboarding_returnsSuccess() {
+        runTest {
+            val partnerId = "123"
+            val secretKey = "abc123"
+
+            val result = completeOnboardingUseCase(
+                partnerId = partnerId,
+                secretKey = secretKey
+            )
+
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
