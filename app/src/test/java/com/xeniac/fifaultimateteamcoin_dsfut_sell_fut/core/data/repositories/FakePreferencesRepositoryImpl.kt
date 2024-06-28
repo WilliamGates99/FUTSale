@@ -19,9 +19,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 
 class FakePreferencesRepositoryImpl : PreferencesRepository {
 
-    var currentAppTheme: AppTheme = AppTheme.Default
-    var currentAppLocale: AppLocale = AppLocale.Default
-    private var isOnBoardingCompleted = false
+    var appTheme: AppTheme = AppTheme.Default
+    var appLocale: AppLocale = AppLocale.Default
+    var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
     var isNotificationSoundEnabled = true
     var isNotificationVibrateEnabled = true
@@ -31,11 +31,11 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     private var storedSecretKey: String? = null
     private var selectedPlatform: Platform = Platform.CONSOLE
 
-    override fun getCurrentAppThemeSynchronously(): AppTheme = currentAppTheme
+    override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
 
-    override suspend fun getCurrentAppTheme(): AppTheme = currentAppTheme
+    override suspend fun getCurrentAppTheme(): AppTheme = appTheme
 
-    override suspend fun getCurrentAppLocale(): AppLocale = currentAppLocale
+    override suspend fun getCurrentAppLocale(): AppLocale = appLocale
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
@@ -69,11 +69,11 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     override suspend fun getSelectedPlatform(): Platform = selectedPlatform
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
-        currentAppTheme = appThemeDto.toAppTheme()
+        appTheme = appThemeDto.toAppTheme()
     }
 
     override suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded {
-        currentAppLocale = appLocaleDto.toAppLocale()
+        appLocale = appLocaleDto.toAppLocale()
         return false
     }
 
