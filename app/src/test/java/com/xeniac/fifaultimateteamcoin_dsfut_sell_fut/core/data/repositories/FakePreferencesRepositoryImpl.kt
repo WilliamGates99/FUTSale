@@ -29,7 +29,7 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
     var storedSecretKey: String? = null
-    private var selectedPlatform: Platform = Platform.CONSOLE
+    var selectedPlatform: Platform = Platform.CONSOLE
 
     fun changePartnerId(newPartnerId: String?) {
         storedPartnerId = newPartnerId
