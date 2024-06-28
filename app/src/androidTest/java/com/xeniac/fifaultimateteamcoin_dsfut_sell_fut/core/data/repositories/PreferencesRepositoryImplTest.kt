@@ -76,7 +76,7 @@ class PreferencesRepositoryImplTest {
     getSelectedPlatform -> Platform.CONSOLE
      */
     @Test
-    fun fetchInitialPreferences() = testScope.runTest() {
+    fun fetchInitialPreferences() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val initialAppThemeSynchronously = testRepository.getCurrentAppThemeSynchronously()
@@ -87,7 +87,8 @@ class PreferencesRepositoryImplTest {
         val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled()
         val initialIsNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled()
         val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption()
-        val initialPreviousRateAppRequestTime = testRepository.getPreviousRateAppRequestTimeInMs()
+        val initialPreviousRateAppRequestTime =
+            testRepository.getPreviousRateAppRequestTimeInMs()
         val initialPartnerId = testRepository.getPartnerId()
         val initialSecretKey = testRepository.getSecretKey()
         val initialSelectedPlatform = testRepository.getSelectedPlatform()
@@ -107,7 +108,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeCurrentAppTheme() = testScope.runTest() {
+    fun writeCurrentAppTheme() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = AppTheme.Dark
@@ -118,7 +119,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeIsOnBoardingCompleted() = testScope.runTest() {
+    fun writeIsOnBoardingCompleted() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         testRepository.isOnBoardingCompleted(true)
@@ -128,7 +129,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeNotificationPermissionCount() = testScope.runTest() {
+    fun writeNotificationPermissionCount() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = 2
@@ -139,7 +140,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeIsNotificationSoundEnabled() = testScope.runTest() {
+    fun writeIsNotificationSoundEnabled() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         testRepository.isNotificationSoundEnabled(false)
@@ -149,7 +150,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeIsNotificationVibrateEnabled() = testScope.runTest() {
+    fun writeIsNotificationVibrateEnabled() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         testRepository.isNotificationVibrateEnabled(false)
@@ -159,7 +160,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSelectedRateAppOption() = testScope.runTest() {
+    fun writeSelectedRateAppOption() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = RateAppOption.RATE_NOW
@@ -170,7 +171,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writePreviousRateAppRequestTimeInMs() = testScope.runTest() {
+    fun writePreviousRateAppRequestTimeInMs() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         testRepository.setPreviousRateAppRequestTimeInMs()
@@ -180,7 +181,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writePartnerId() = testScope.runTest() {
+    fun writePartnerId() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = "123"
@@ -191,7 +192,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSecretKey() = testScope.runTest() {
+    fun writeSecretKey() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = "abc123"
@@ -202,7 +203,7 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun writeSelectedPlatform() = testScope.runTest() {
+    fun writeSelectedPlatform() = testScope.runTest {
         testDataStore.edit { it.clear() }
 
         val testValue = Platform.PC
