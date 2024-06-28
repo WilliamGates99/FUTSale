@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.PreferencesRepositoryFake
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -29,7 +29,7 @@ class CompleteOnboardingUseCaseTest {
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = PreferencesRepositoryFake()
+        fakePreferencesRepository = FakePreferencesRepositoryImpl()
         completeOnboardingUseCase = CompleteOnboardingUseCase(fakePreferencesRepository)
     }
 
