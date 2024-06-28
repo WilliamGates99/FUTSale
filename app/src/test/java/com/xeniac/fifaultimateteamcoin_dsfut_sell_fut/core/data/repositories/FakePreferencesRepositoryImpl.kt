@@ -27,9 +27,17 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     var isNotificationVibrateEnabled = true
     var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
-    private var storedPartnerId: String? = null
-    private var storedSecretKey: String? = null
+    var storedPartnerId: String? = null
+    var storedSecretKey: String? = null
     private var selectedPlatform: Platform = Platform.CONSOLE
+
+    fun changePartnerId(newPartnerId: String?) {
+        storedPartnerId = newPartnerId
+    }
+
+    fun changeSecretKey(newSecretKey: String?) {
+        storedSecretKey = newSecretKey
+    }
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
 
