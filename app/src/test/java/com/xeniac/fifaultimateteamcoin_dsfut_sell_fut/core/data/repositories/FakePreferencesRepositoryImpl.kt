@@ -19,12 +19,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 
 class FakePreferencesRepositoryImpl : PreferencesRepository {
 
-    private var currentAppTheme: AppTheme = AppTheme.Default
-    private var currentAppLocale: AppLocale = AppLocale.Default
+    var currentAppTheme: AppTheme = AppTheme.Default
+    var currentAppLocale: AppLocale = AppLocale.Default
     private var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
-    private var isNotificationSoundEnabled = true
-    private var isNotificationVibrateEnabled = true
+    var isNotificationSoundEnabled = true
+    var isNotificationVibrateEnabled = true
     var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     private var storedPartnerId: String? = null
