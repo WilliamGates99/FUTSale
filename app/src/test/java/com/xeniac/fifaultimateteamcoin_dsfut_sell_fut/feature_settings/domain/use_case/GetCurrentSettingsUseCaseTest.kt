@@ -34,12 +34,16 @@ class GetCurrentSettingsUseCaseTest {
     }
 
     @Test
-    fun getCurrentSettings_returnsSettingsState() = runTest {
-        val settingsState = getCurrentSettingsUseCase()
+    fun getCurrentSettings_returnsCurrentSettingsState() = runTest {
+        val currentSettingsState = getCurrentSettingsUseCase()
 
-        assertThat(settingsState.appTheme).isEqualTo(fakePreferencesRepository.currentAppTheme)
-        assertThat(settingsState.appLocale).isEqualTo(fakePreferencesRepository.currentAppLocale)
-        assertThat(settingsState.isNotificationSoundEnabled).isEqualTo(fakePreferencesRepository.isNotificationSoundEnabled)
-        assertThat(settingsState.isNotificationVibrateEnabled).isEqualTo(fakePreferencesRepository.isNotificationVibrateEnabled)
+        assertThat(currentSettingsState.appTheme).isEqualTo(fakePreferencesRepository.appTheme)
+        assertThat(currentSettingsState.appLocale).isEqualTo(fakePreferencesRepository.appLocale)
+        assertThat(currentSettingsState.isNotificationSoundEnabled).isEqualTo(
+            fakePreferencesRepository.isNotificationSoundEnabled
+        )
+        assertThat(currentSettingsState.isNotificationVibrateEnabled).isEqualTo(
+            fakePreferencesRepository.isNotificationVibrateEnabled
+        )
     }
 }
