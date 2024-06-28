@@ -17,7 +17,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.I
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
 
-class PreferencesRepositoryFake : PreferencesRepository {
+class FakePreferencesRepositoryImpl : PreferencesRepository {
 
     private var currentAppTheme: AppTheme = AppTheme.Default
     private var currentAppLocale: AppLocale = AppLocale.Default
