@@ -29,7 +29,9 @@ class CompleteOnboardingUseCaseTest {
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        completeOnboardingUseCase = CompleteOnboardingUseCase(fakePreferencesRepository)
+        completeOnboardingUseCase = CompleteOnboardingUseCase(
+            preferencesRepository = fakePreferencesRepository
+        )
     }
 
     @Test
