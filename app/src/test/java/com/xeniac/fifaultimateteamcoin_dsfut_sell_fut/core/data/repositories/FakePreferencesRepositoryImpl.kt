@@ -22,11 +22,11 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     private var currentAppTheme: AppTheme = AppTheme.Default
     private var currentAppLocale: AppLocale = AppLocale.Default
     private var isOnBoardingCompleted = false
-    private var notificationPermissionCount = 0
+    var notificationPermissionCount = 0
     private var isNotificationSoundEnabled = true
     private var isNotificationVibrateEnabled = true
-    private var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
-    private var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
+    var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
+    var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     private var storedPartnerId: String? = null
     private var storedSecretKey: String? = null
     private var selectedPlatform: Platform = Platform.CONSOLE
