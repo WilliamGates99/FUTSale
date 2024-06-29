@@ -17,6 +17,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -25,6 +27,8 @@ class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val mutex: Mutex = Mutex()
 
     val profileState = savedStateHandle.getStateFlow(
         key = "profileState",
@@ -61,40 +65,44 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getProfile() = viewModelScope.launch {
-        savedStateHandle["profileState"] = profileUseCases.getProfileUseCase.get()()
+        mutex.withLock {
+            savedStateHandle["profileState"] = profileUseCases.getProfileUseCase.get()()
+        }
     }
 
     private fun updatePartnerId(partnerId: String): Job = viewModelScope.launch {
-        savedStateHandle["profileState"] = profileState.value.copy(
-            partnerId = partnerId,
-            partnerIdErrorText = null,
-            isPartnerIdLoading = true
-        )
+        mutex.withLock {
+            savedStateHandle["profileState"] = profileState.value.copy(
+                partnerId = partnerId,
+                partnerIdErrorText = null,
+                isPartnerIdLoading = true
+            )
 
-        delay(500.milliseconds)
+            delay(500.milliseconds)
 
-        val updatePartnerIdResult = profileUseCases.updatePartnerIdUseCase.get()(
-            partnerId = partnerId
-        )
+            val updatePartnerIdResult = profileUseCases.updatePartnerIdUseCase.get()(
+                partnerId = partnerId
+            )
 
-        if (updatePartnerIdResult.partnerIdError != null) {
-            checkPartnerIdError(updatePartnerIdResult.partnerIdError)
-        }
-
-        when (updatePartnerIdResult.result) {
-            is Result.Success -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
-                    isPartnerIdSaved = true,
-                    isPartnerIdLoading = false
-                )
+            if (updatePartnerIdResult.partnerIdError != null) {
+                checkPartnerIdError(updatePartnerIdResult.partnerIdError)
             }
-            is Result.Error -> {
-                checkPartnerIdError(updatePartnerIdResult.result.error)
-            }
-            null -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
-                    isPartnerIdLoading = false
-                )
+
+            when (updatePartnerIdResult.result) {
+                is Result.Success -> {
+                    savedStateHandle["profileState"] = profileState.value.copy(
+                        isPartnerIdSaved = true,
+                        isPartnerIdLoading = false
+                    )
+                }
+                is Result.Error -> {
+                    checkPartnerIdError(updatePartnerIdResult.result.error)
+                }
+                null -> {
+                    savedStateHandle["profileState"] = profileState.value.copy(
+                        isPartnerIdLoading = false
+                    )
+                }
             }
         }
     }
@@ -122,36 +130,38 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun updateSecretKey(secretKey: String): Job = viewModelScope.launch {
-        savedStateHandle["profileState"] = profileState.value.copy(
-            secretKey = secretKey,
-            secretKeyErrorText = null,
-            isSecretKeyLoading = true
-        )
+        mutex.withLock {
+            savedStateHandle["profileState"] = profileState.value.copy(
+                secretKey = secretKey,
+                secretKeyErrorText = null,
+                isSecretKeyLoading = true
+            )
 
-        delay(500.milliseconds)
+            delay(500.milliseconds)
 
-        val updateSecretKeyResult = profileUseCases.updateSecretKeyUseCase.get()(
-            secretKey = secretKey
-        )
+            val updateSecretKeyResult = profileUseCases.updateSecretKeyUseCase.get()(
+                secretKey = secretKey
+            )
 
-        if (updateSecretKeyResult.secretKeyError != null) {
-            checkSecretKeyError(updateSecretKeyResult.secretKeyError)
-        }
-
-        when (updateSecretKeyResult.result) {
-            is Result.Success -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
-                    isSecretKeySaved = true,
-                    isSecretKeyLoading = false
-                )
+            if (updateSecretKeyResult.secretKeyError != null) {
+                checkSecretKeyError(updateSecretKeyResult.secretKeyError)
             }
-            is Result.Error -> {
-                checkSecretKeyError(updateSecretKeyResult.result.error)
-            }
-            null -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
-                    isSecretKeyLoading = false
-                )
+
+            when (updateSecretKeyResult.result) {
+                is Result.Success -> {
+                    savedStateHandle["profileState"] = profileState.value.copy(
+                        isSecretKeySaved = true,
+                        isSecretKeyLoading = false
+                    )
+                }
+                is Result.Error -> {
+                    checkSecretKeyError(updateSecretKeyResult.result.error)
+                }
+                null -> {
+                    savedStateHandle["profileState"] = profileState.value.copy(
+                        isSecretKeyLoading = false
+                    )
+                }
             }
         }
     }

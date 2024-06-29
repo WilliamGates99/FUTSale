@@ -65,7 +65,6 @@ fun HomeScreen(
     val homeNavController = rememberNavController()
 
     val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
-    val inAppReviewInfo by homeViewModel.inAppReviewInfo.collectAsStateWithLifecycle()
     var isAppReviewDialog by remember { mutableStateOf(false) }
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -150,7 +149,7 @@ fun HomeScreen(
                 isAppReviewDialog = true
             }
             HomeUiEvent.LaunchInAppReview -> {
-                inAppReviewInfo?.let { reviewInfo ->
+                homeState.inAppReviewInfo?.let { reviewInfo ->
                     homeViewModel.reviewManager.get().launchReviewFlow(
                         activity,
                         reviewInfo

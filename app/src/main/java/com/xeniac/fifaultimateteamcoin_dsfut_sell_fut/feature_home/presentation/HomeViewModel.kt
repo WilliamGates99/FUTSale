@@ -11,7 +11,6 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.ktx.bytesDownloaded
 import com.google.android.play.core.ktx.installStatus
 import com.google.android.play.core.ktx.totalBytesToDownload
-import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
@@ -25,11 +24,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,13 +42,12 @@ class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private val mutex: Mutex = Mutex()
+
     val homeState = savedStateHandle.getStateFlow(
         key = "homeState",
         initialValue = HomeState()
     )
-
-    private val _inAppReviewInfo = MutableStateFlow<ReviewInfo?>(null)
-    val inAppReviewInfo = _inAppReviewInfo.asStateFlow()
 
     private val _inAppUpdatesEventChannel = Channel<Event>()
     val inAppUpdatesEventChannel = _inAppUpdatesEventChannel.receiveAsFlow()
@@ -136,11 +133,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getHomeState() = viewModelScope.launch {
-        savedStateHandle["homeState"] = homeState.value.copy(
-            notificationPermissionCount = homeUseCases.getNotificationPermissionCountUseCase.get()(),
-            selectedRateAppOption = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
-            previousRateAppRequestTimeInMs = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
-        )
+        mutex.withLock {
+            savedStateHandle["homeState"] = homeState.value.copy(
+                notificationPermissionCount = homeUseCases.getNotificationPermissionCountUseCase.get()(),
+                selectedRateAppOption = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
+                previousRateAppRequestTimeInMs = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
+            )
+        }
     }
 
     private fun checkForAppUpdates() = viewModelScope.launch {
@@ -152,9 +151,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun requestInAppReviews() = viewModelScope.launch {
-        homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
-            _inAppReviewInfo.update { reviewInfo }
-            checkSelectedRateAppOption()
+        mutex.withLock {
+            homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
+                savedStateHandle["homeState"] = homeState.value.copy(
+                    inAppReviewInfo = reviewInfo
+                )
+                checkSelectedRateAppOption()
+            }
         }
     }
 

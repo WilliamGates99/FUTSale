@@ -28,10 +28,7 @@ class MainViewModel @Inject constructor(
     private fun getMainState() = viewModelScope.launch {
         savedStateHandle["mainState"] = mainState.value.copy(
             currentAppLocale = mainUseCases.getCurrentAppLocaleUseCase.get()(),
-            postSplashDestination = getPostSplashDestination()
-        )
-
-        savedStateHandle["mainState"] = mainState.value.copy(
+            postSplashDestination = getPostSplashDestination(),
             isSplashScreenLoading = false
         )
     }
