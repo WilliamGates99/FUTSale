@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
@@ -10,11 +12,53 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> {
-        TODO("Not yet implemented")
+    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
+
+    fun addDummyPlayersToLatestPlayers() {
+        val playersToInsert = mutableListOf<PlayerEntity>()
+
+        ('a'..'z').forEachIndexed { index, char ->
+            playersToInsert.add(
+                PlayerEntity(
+                    tradeID = index.toString(),
+                    assetID = index,
+                    resourceID = index,
+                    transactionID = index,
+                    name = char.toString(),
+                    rating = Random.nextInt(from = 10, until = 99),
+                    position = "CDM",
+                    startPrice = 1000,
+                    buyNowPrice = 2000,
+                    owners = 1,
+                    contracts = 1,
+                    chemistryStyle = "Basic",
+                    chemistryStyleID = index,
+                    platformDto = when (Random.nextBoolean()) {
+                        true -> PlatformDto.CONSOLE
+                        false -> PlatformDto.PC
+                    },
+                    pickUpTimeInMillis = DateHelper.getCurrentTimeInMillis().plus(
+                        Random.nextLong(
+                            from = -600000, // 10 minutes ago
+                            until = 0 // Now
+                        )
+                    ).toString()
+                )
+            )
+        }
+
+        playersToInsert.shuffle()
+
+        playersToInsert.forEach { latestPlayerEntities.add(it) }
+    }
+
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
+        latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
+        emit(latestPlayerEntities.map { it.toPlayer() })
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
