@@ -7,10 +7,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.states.MainAct
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.MainUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -33,7 +31,6 @@ class MainViewModel @Inject constructor(
             postSplashDestination = getPostSplashDestination()
         )
 
-        delay(1.seconds) // 1 second delay to solve the blank screen after showing splash screen
         savedStateHandle["mainState"] = mainState.value.copy(
             isSplashScreenLoading = false
         )
