@@ -130,6 +130,7 @@ arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = 
 test-core = { module = "androidx.test:core", version.ref = "testCore" }
 test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "testExtJunit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }

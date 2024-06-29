@@ -4,19 +4,36 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.Play
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
     private var latestPlayerEntities = mutableListOf<PlayerEntity>()
+    private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
 
     fun addDummyPlayersToLatestPlayers() {
         val playersToInsert = mutableListOf<PlayerEntity>()
@@ -56,6 +73,10 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         playersToInsert.forEach { latestPlayerEntities.add(it) }
     }
 
+    fun setPickUpPlayerHttpStatusCode(httpStatusCode: HttpStatusCode) {
+        pickUpPlayerHttpStatusCode = httpStatusCode
+    }
+
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
         latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
         emit(latestPlayerEntities.map { it.toPlayer() })
@@ -87,6 +108,97 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> {
-        TODO("Not yet implemented")
+        val mockEngine = MockEngine {
+            val pickUpPlayerResponseDto = if (pickUpPlayerHttpStatusCode == HttpStatusCode.OK) {
+                PickUpPlayerResponseDto(
+                    error = "",
+                    message = "1 player popped",
+                    playerDto = PlayerDto(
+                        tradeID = 1,
+                        assetID = 1,
+                        resourceID = 1,
+                        transactionID = 1,
+                        name = "Test Player",
+                        rating = 88,
+                        position = "GK",
+                        startPrice = 10000,
+                        buyNowPrice = 15000,
+                        owners = 1,
+                        contracts = 1,
+                        chemistryStyle = "Basic",
+                        chemistryStyleID = 1,
+                        expires = 0
+                    )
+                )
+            } else {
+                PickUpPlayerResponseDto(
+                    error = "empty",
+                    message = "Queue is empty"
+                )
+            }
+
+            respond(
+                content = Json.encodeToString(pickUpPlayerResponseDto),
+                status = pickUpPlayerHttpStatusCode,
+                headers = headersOf(
+                    name = HttpHeaders.ContentType,
+                    value = "application/json"
+                )
+            )
+        }
+
+        val testClient = HttpClient(engine = mockEngine) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                    coerceInputValues = true
+                })
+            }
+        }
+
+        val timestamp = DateHelper.getCurrentTimeInMillis()
+        val signature = getMd5Signature(partnerId, secretKey, timestamp)
+
+        val response = testClient.get(
+            urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
+                platform = PlatformDto.CONSOLE.value,
+                partnerId = partnerId,
+                timestamp = timestamp,
+                signature = signature
+            ).url
+        ) {
+            parameter(key = "min_buy", value = minPrice)
+            parameter(key = "max_buy", value = maxPrice)
+            parameter(key = "take_after", value = takeAfterDelayInSeconds)
+        }
+
+        return when (response.status.value) {
+            HttpStatusCode.OK.value -> { // Code: 200
+                val pickUpPlayerResponseDto = response.body<PickUpPlayerResponseDto>()
+                val playerDto = pickUpPlayerResponseDto.playerDto
+
+                val isPlayerPickedUpSuccessfully = playerDto != null
+                if (isPlayerPickedUpSuccessfully) {
+                    val playerEntity = playerDto!!.toPlayerEntity()
+                    Result.Success(playerEntity.toPlayer())
+                } else {
+                    val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
+                        Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock(message = pickUpPlayerResponseDto.message)
+                        Constants.ERROR_DSFUT_EMPTY -> PickUpPlayerError.Network.DsfutEmpty
+                        Constants.ERROR_DSFUT_LIMIT -> PickUpPlayerError.Network.DsfutLimit
+                        Constants.ERROR_DSFUT_MAINTENANCE -> PickUpPlayerError.Network.DsfutMaintenance
+                        Constants.ERROR_DSFUT_PARAMETERS -> PickUpPlayerError.Network.DsfutParameters
+                        Constants.ERROR_DSFUT_SIGNATURE -> PickUpPlayerError.Network.DsfutSignature
+                        Constants.ERROR_DSFUT_THROTTLE -> PickUpPlayerError.Network.DsfutThrottle
+                        Constants.ERROR_DSFUT_UNIX_TIME -> PickUpPlayerError.Network.DsfutUnitTime
+                        else -> PickUpPlayerError.Network.SomethingWentWrong
+                    }
+
+                    Result.Error(pickUpPlayerError)
+                }
+            }
+            else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
+        }
     }
 }

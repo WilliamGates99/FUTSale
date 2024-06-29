@@ -320,6 +320,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.arch.core.testing) // Test Helpers for LiveData
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.room.testing)
 
     // Instrumentation Test Libraries
