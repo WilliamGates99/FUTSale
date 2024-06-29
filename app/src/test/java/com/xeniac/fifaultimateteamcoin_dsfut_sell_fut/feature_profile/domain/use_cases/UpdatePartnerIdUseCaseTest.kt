@@ -39,19 +39,19 @@ class UpdatePartnerIdUseCaseTest {
     }
 
     @Test
+    fun updatePartnerIdWithNonDigitsCharacters_returnsInvalidPartnerIdError() = runTest {
+        val newPartnerId = "abc"
+        val updatePartnerIdResult = updatePartnerIdUseCase(newPartnerId)
+
+        assertThat(updatePartnerIdResult.partnerIdError).isInstanceOf(PartnerIdError.InvalidPartnerId::class.java)
+    }
+
+    @Test
     fun updatePartnerIdWithEmptyCharacters_returnsSuccess() = runTest {
         val newPartnerId = ""
         val updatePartnerIdResult = updatePartnerIdUseCase(newPartnerId)
 
         assertThat(updatePartnerIdResult.result).isInstanceOf(Result.Success::class.java)
-    }
-
-    @Test
-    fun updatePartnerIdWithNonDigitsCharacters_returnsError() = runTest {
-        val newPartnerId = "abc"
-        val updatePartnerIdResult = updatePartnerIdUseCase(newPartnerId)
-
-        assertThat(updatePartnerIdResult.partnerIdError).isInstanceOf(PartnerIdError.InvalidPartnerId::class.java)
     }
 
     @Test
