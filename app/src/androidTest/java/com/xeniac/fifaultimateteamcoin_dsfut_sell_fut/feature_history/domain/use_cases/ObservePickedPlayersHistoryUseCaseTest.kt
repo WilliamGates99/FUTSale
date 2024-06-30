@@ -3,8 +3,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.us
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.testing.asSnapshot
 import com.google.common.truth.Truth.assertThat
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.FutSaleDatabase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -12,11 +10,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -29,12 +25,6 @@ class ObservePickedPlayersHistoryUseCaseTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Inject
-    lateinit var database: FutSaleDatabase
-
-    @Inject
-    lateinit var dao: PlayersDao
-
     private lateinit var fakeHistoryRepositoryImpl: FakeHistoryRepositoryImpl
     private lateinit var observePickedPlayersHistoryUseCase: ObservePickedPlayersHistoryUseCase
 
@@ -46,11 +36,6 @@ class ObservePickedPlayersHistoryUseCaseTest {
         observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepositoryImpl
         )
-    }
-
-    @After
-    fun tearDown() {
-        database.close()
     }
 
     @Test
