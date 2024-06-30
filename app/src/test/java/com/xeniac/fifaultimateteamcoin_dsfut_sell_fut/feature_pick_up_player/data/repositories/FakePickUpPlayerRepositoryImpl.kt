@@ -34,6 +34,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
     private var latestPlayerEntities = mutableListOf<PlayerEntity>()
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
+    private var isPlayersQueueEmpty = false
 
     fun addDummyPlayersToLatestPlayers() {
         val playersToInsert = mutableListOf<PlayerEntity>()
@@ -77,6 +78,10 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         pickUpPlayerHttpStatusCode = httpStatusCode
     }
 
+    fun setIsPlayersQueueEmpty(isEmpty: Boolean) {
+        isPlayersQueueEmpty = isEmpty
+    }
+
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
         latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
         emit(latestPlayerEntities.map { it.toPlayer() })
@@ -110,26 +115,33 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
     ): Result<Player, PickUpPlayerError> {
         val mockEngine = MockEngine {
             val pickUpPlayerResponseDto = if (pickUpPlayerHttpStatusCode == HttpStatusCode.OK) {
-                PickUpPlayerResponseDto(
-                    error = "",
-                    message = "1 player popped",
-                    playerDto = PlayerDto(
-                        tradeID = 1,
-                        assetID = 1,
-                        resourceID = 1,
-                        transactionID = 1,
-                        name = "Test Player",
-                        rating = 88,
-                        position = "GK",
-                        startPrice = 10000,
-                        buyNowPrice = 15000,
-                        owners = 1,
-                        contracts = 1,
-                        chemistryStyle = "Basic",
-                        chemistryStyleID = 1,
-                        expires = 0
+                if (isPlayersQueueEmpty) {
+                    PickUpPlayerResponseDto(
+                        error = "empty",
+                        message = "Queue is empty"
                     )
-                )
+                } else {
+                    PickUpPlayerResponseDto(
+                        error = "",
+                        message = "1 player popped",
+                        playerDto = PlayerDto(
+                            tradeID = 1,
+                            assetID = 1,
+                            resourceID = 1,
+                            transactionID = 1,
+                            name = "Test Player",
+                            rating = 88,
+                            position = "GK",
+                            startPrice = 10000,
+                            buyNowPrice = 15000,
+                            owners = 1,
+                            contracts = 1,
+                            chemistryStyle = "Basic",
+                            chemistryStyleID = 1,
+                            expires = 0
+                        )
+                    )
+                }
             } else {
                 PickUpPlayerResponseDto(
                     error = "empty",
