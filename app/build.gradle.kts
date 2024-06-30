@@ -321,7 +321,6 @@ dependencies {
     testImplementation(libs.arch.core.testing) // Test Helpers for LiveData
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.ktor.client.mock)
-    testImplementation(libs.room.testing)
 
     // Instrumentation Test Libraries
     androidTestImplementation(libs.truth)
@@ -331,6 +330,8 @@ dependencies {
     androidTestImplementation(libs.test.runner) // Android JUnit4 Test Runner
     androidTestImplementation(libs.arch.core.testing) // Test Helpers for LiveData
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.paging.testing.android)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
 
