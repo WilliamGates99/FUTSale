@@ -33,7 +33,7 @@ android {
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -246,7 +246,7 @@ dependencies {
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // Architectural Components
     implementation(libs.lifecycle.viewmodel.ktx) // ViewModel
@@ -328,13 +328,13 @@ dependencies {
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.test.core)
     androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.test.runner) // Android JUnit4 Test Runner
     androidTestImplementation(libs.arch.core.testing) // Test Helpers for LiveData
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.hilt.android.testing)
-    kspAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.android.compiler)
 
     // UI Test Libraries
-    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
