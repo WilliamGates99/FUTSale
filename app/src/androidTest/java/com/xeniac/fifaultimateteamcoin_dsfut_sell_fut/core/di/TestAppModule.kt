@@ -121,9 +121,7 @@ internal object TestAppModule {
     ): FutSaleDatabase = Room.inMemoryDatabaseBuilder(
         context = context,
         klass = FutSaleDatabase::class.java,
-    ).apply {
-        allowMainThreadQueries()
-    }.build()
+    ).build()
 
     @Provides
     @Singleton
