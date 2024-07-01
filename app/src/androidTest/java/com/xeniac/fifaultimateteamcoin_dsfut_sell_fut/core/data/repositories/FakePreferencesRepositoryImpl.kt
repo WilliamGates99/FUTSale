@@ -19,23 +19,31 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 
 class FakePreferencesRepositoryImpl : PreferencesRepository {
 
-    private var currentAppTheme: AppTheme = AppTheme.Default
-    private var currentAppLocale: AppLocale = AppLocale.Default
-    private var isOnBoardingCompleted = false
-    private var notificationPermissionCount = 0
-    private var isNotificationSoundEnabled = true
-    private var isNotificationVibrateEnabled = true
-    private var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
-    private var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
-    private var storedPartnerId: String? = null
-    private var storedSecretKey: String? = null
-    private var selectedPlatform: Platform = Platform.CONSOLE
+    var appTheme: AppTheme = AppTheme.Default
+    var appLocale: AppLocale = AppLocale.Default
+    var isOnBoardingCompleted = false
+    var notificationPermissionCount = 0
+    var isNotificationSoundEnabled = true
+    var isNotificationVibrateEnabled = true
+    var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
+    var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
+    var storedPartnerId: String? = null
+    var storedSecretKey: String? = null
+    var selectedPlatform: Platform = Platform.CONSOLE
 
-    override fun getCurrentAppThemeSynchronously(): AppTheme = currentAppTheme
+    fun changePartnerId(newPartnerId: String?) {
+        storedPartnerId = newPartnerId
+    }
 
-    override suspend fun getCurrentAppTheme(): AppTheme = currentAppTheme
+    fun changeSecretKey(newSecretKey: String?) {
+        storedSecretKey = newSecretKey
+    }
 
-    override suspend fun getCurrentAppLocale(): AppLocale = currentAppLocale
+    override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
+
+    override suspend fun getCurrentAppTheme(): AppTheme = appTheme
+
+    override suspend fun getCurrentAppLocale(): AppLocale = appLocale
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
@@ -69,11 +77,11 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
     override suspend fun getSelectedPlatform(): Platform = selectedPlatform
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
-        currentAppTheme = appThemeDto.toAppTheme()
+        appTheme = appThemeDto.toAppTheme()
     }
 
     override suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded {
-        currentAppLocale = appLocaleDto.toAppLocale()
+        appLocale = appLocaleDto.toAppLocale()
         return false
     }
 
