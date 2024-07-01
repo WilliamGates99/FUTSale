@@ -16,8 +16,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import javax.inject.Inject
 
-class FakePreferencesRepositoryImpl : PreferencesRepository {
+class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
 
     var appTheme: AppTheme = AppTheme.Default
     var appLocale: AppLocale = AppLocale.Default

@@ -9,9 +9,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.rep
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 import kotlin.random.Random
 
-class FakeHistoryRepositoryImpl : HistoryRepository {
+class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
 
     var playerEntitiesHistory = mutableListOf<PlayerEntity>()
 
