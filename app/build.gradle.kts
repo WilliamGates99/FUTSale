@@ -318,24 +318,27 @@ dependencies {
     // Local Unit Test Libraries
     testImplementation(libs.truth)
     testImplementation(libs.junit)
-    testImplementation(libs.arch.core.testing) // Test Helpers for LiveData
+    testImplementation(libs.arch.core.testing) // Test Helpers for Architectural Components
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.ktor.client.mock)
 
     // Instrumentation Test Libraries
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.test.core)
-    androidTestImplementation(libs.test.ext.junit)
-    androidTestImplementation(libs.test.runner) // Android JUnit4 Test Runner
-    androidTestImplementation(libs.arch.core.testing) // Test Helpers for LiveData
+    androidTestImplementation(libs.test.ext.junit) // JUnit Extension for Android Test
+    androidTestImplementation(libs.arch.core.testing) // Test Helpers for Architectural Components
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.test.core)
+    androidTestImplementation(libs.test.runner) // Android JUnit4 Test Runner
+    androidTestImplementation(libs.test.rules) // Android JUnit Test Rules
+    androidTestImplementation(libs.ktor.client.mock)
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.paging.testing.android)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
 
     // UI Test Libraries
+    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
