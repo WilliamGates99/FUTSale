@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlin.math.absoluteValue
 import kotlin.math.sin
 
@@ -33,7 +35,7 @@ fun BouncingDotIndicator(
     jumpScale: Float = 1.4f
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.DOT_INDICATOR),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(

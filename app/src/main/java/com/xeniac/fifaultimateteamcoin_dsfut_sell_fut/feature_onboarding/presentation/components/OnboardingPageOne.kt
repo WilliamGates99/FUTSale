@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
 @Composable
 fun OnboardingPageOne(
@@ -126,10 +128,12 @@ fun OnboardingPageOne(
                     horizontal = 24.dp,
                     vertical = 12.dp
                 ),
-                modifier = Modifier.defaultMinSize(
-                    minWidth = 114.dp,
-                    minHeight = ButtonDefaults.MinHeight
-                )
+                modifier = Modifier
+                    .defaultMinSize(
+                        minWidth = 114.dp,
+                        minHeight = ButtonDefaults.MinHeight
+                    )
+                    .testTag(TestTags.PAGE_ONE_NEXT_BTN)
             ) {
                 Text(
                     text = stringResource(id = R.string.onboarding_first_btn_next),
