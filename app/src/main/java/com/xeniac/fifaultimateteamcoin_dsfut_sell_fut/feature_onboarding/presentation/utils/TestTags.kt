@@ -11,4 +11,7 @@ object TestTags {
 
     const val PAGE_THREE_NEXT_BTN = "pageThreeNextBtn"
     const val PAGE_THREE_BACK_BTN = "pageThreeBackBtn"
+
+    const val PAGE_FOUR_REGISTER_BTN = "pageFourRegisterBtn"
+    const val PAGE_FOUR_AGREEMENT_BTN = "pageFourAgreementBtn"
 }

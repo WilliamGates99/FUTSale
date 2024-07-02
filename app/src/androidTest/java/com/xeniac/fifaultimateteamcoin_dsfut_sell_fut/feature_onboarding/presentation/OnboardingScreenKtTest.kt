@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation
 
 import android.content.Context
+import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -16,10 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.EspressoUtils
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
@@ -29,6 +33,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -337,21 +342,50 @@ class OnboardingScreenKtTest {
     }
 
     @Test
-    fun clickOnPageFourAgreementBtn_opensPrivacyPolicyUrlInBrowser() {
+    fun clickRegisterBtnOnPageFour_opensDsfutUrlInBrowser() {
+        Intents.init()
+
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_fourth_btn_agreement)
-            ).performClick()
+            onNodeWithTag(testTag = TestTags.PAGE_FOUR_REGISTER_BTN).performClick()
 
-            val backStackEntry = testNavController.currentBackStackEntry
-            val currentRoute = backStackEntry?.destination?.route
-            assertThat(currentRoute).isEqualTo(Screen.HomeScreen::class.qualifiedName)
-
-            Intents
+            EspressoUtils.solveIdlingResourceTimeout()
         }
+
+        Intents.intended(
+            CoreMatchers.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_VIEW),
+                IntentMatchers.hasData(Constants.URL_DSFUT)
+            )
+        )
+
+        Intents.release()
+    }
+
+    @Test
+    fun clickAgreementBtnOnPageFour_opensPrivacyPolicyUrlInBrowser() {
+        Intents.init()
+
+        composeTestRule.apply {
+            onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
+
+            EspressoUtils.solveIdlingResourceTimeout()
+
+            onNodeWithTag(testTag = TestTags.PAGE_FOUR_AGREEMENT_BTN).performClick()
+
+            EspressoUtils.solveIdlingResourceTimeout()
+        }
+
+        Intents.intended(
+            CoreMatchers.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_VIEW),
+                IntentMatchers.hasData(Constants.URL_PRIVACY_POLICY)
+            )
+        )
+
+        Intents.release()
     }
 }

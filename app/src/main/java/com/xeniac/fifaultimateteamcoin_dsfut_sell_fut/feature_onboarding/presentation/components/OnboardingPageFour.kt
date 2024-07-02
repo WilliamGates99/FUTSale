@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -53,6 +54,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomO
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral70
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.states.OnboardingState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
@@ -125,6 +127,7 @@ fun OnboardingPageFour(
                     minHeight = 24.dp
                 )
                 .align(Alignment.Start)
+                .testTag(TestTags.PAGE_FOUR_REGISTER_BTN)
         ) {
             Text(
                 text = AnnotatedString.fromHtml(
@@ -197,10 +200,12 @@ fun OnboardingPageFour(
             onClick = onPrivacyPolicyBtnClick,
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(all = 8.dp),
-            modifier = Modifier.defaultMinSize(
-                minWidth = ButtonDefaults.MinWidth,
-                minHeight = 24.dp
-            )
+            modifier = Modifier
+                .defaultMinSize(
+                    minWidth = ButtonDefaults.MinWidth,
+                    minHeight = 24.dp
+                )
+                .testTag(TestTags.PAGE_FOUR_AGREEMENT_BTN)
         ) {
             Text(
                 text = AnnotatedString.fromHtml(
