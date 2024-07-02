@@ -39,15 +39,24 @@
     <string name="core_platform_pc">کامپیوتر</string>
 
 
-    <string name="onboarding_btn_skip">رد کردن</string>
-    <string name="onboarding_btn_back">قبلی</string>
-    <string name="onboarding_btn_next">بعدی</string>
     <string name="onboarding_first_title">فروش آسان سکه</string>
     <string name="onboarding_first_description">این برنامه از API سایت DSFUT برای مبادله سکه‌های آلتیمیت تیم فیفا استفاده می‌کند. اینجا می‌توانید به سرعت سکه‌های خود را بفروشید و بلافاصله پول دریافت کنید.</string>
+    <string name="onboarding_first_btn_skip">رد کردن</string>
+    <string name="onboarding_first_btn_next">بعدی</string>
+
+
     <string name="onboarding_second_title">یک بازیکن بگیرید</string>
     <string name="onboarding_second_description">پس از انتخاب پلتفرم بازی خود، روی دکمه گرفتن خودکار کلیک کنید تا شروع به جستجوی بازیکن کنید. سپس صبر کنید تا یک بازیکن ظاهر شود.</string>
+    <string name="onboarding_second_btn_next">بعدی</string>
+    <string name="onboarding_second_btn_back">قبلی</string>
+
+
     <string name="onboarding_third_title">خرید بازیکن</string>
     <string name="onboarding_third_description">به صفحه ترنسفر بازی رفته و کارت بازیکن را در مارکت پیدا کنید و در عرض 3 دقیقه آن را خریداری کنید.</string>
+    <string name="onboarding_third_btn_next">بعدی</string>
+    <string name="onboarding_third_btn_back">قبلی</string>
+
+
     <string name="onboarding_fourth_title">برای استفاده از برنامه، باید شناسه پارتنر و کلید محرمانه حساب DSFUT خود را وارد کنید.</string>
     <string name="onboarding_fourth_title_partner_id">شناسه پارتنر</string>
     <string name="onboarding_fourth_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
