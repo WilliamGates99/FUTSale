@@ -13,8 +13,6 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
@@ -26,8 +24,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActi
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.EspressoUtils
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -61,26 +59,9 @@ class OnboardingScreenKtTest {
             testNavController = rememberNavController()
 
             FutSaleTheme {
-                NavHost(
-                    navController = testNavController,
-                    startDestination = Screen.OnboardingScreen,
-                    builder = {
-                        composable<Screen.OnboardingScreen> {
-                            OnboardingScreen(
-                                onNavigateToHomeScreen = {
-                                    testNavController.navigate(Screen.HomeScreen) {
-                                        popUpTo(Screen.OnboardingScreen) {
-                                            inclusive = true
-                                        }
-                                    }
-                                }
-                            )
-                        }
-
-                        composable<Screen.HomeScreen> {
-                            HomeScreen()
-                        }
-                    }
+                SetupRootNavGraph(
+                    rootNavController = testNavController,
+                    startDestination = Screen.OnboardingScreen
                 )
             }
         }
