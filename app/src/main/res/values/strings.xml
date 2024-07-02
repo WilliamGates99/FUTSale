@@ -39,15 +39,24 @@
     <string name="core_platform_pc">PC</string>
 
 
-    <string name="onboarding_btn_skip">Skip</string>
-    <string name="onboarding_btn_back">Back</string>
-    <string name="onboarding_btn_next">Next</string>
     <string name="onboarding_first_title">Selling Coins Has Made Easy</string>
     <string name="onboarding_first_description">This application uses the DSFUT API for trading FUT coins. Here you can quickly sell your coins and immediately get paid for them.</string>
+    <string name="onboarding_first_btn_skip">Skip</string>
+    <string name="onboarding_first_btn_next">Next</string>
+
+
     <string name="onboarding_second_title">Pick Up A Player</string>
     <string name="onboarding_second_description">After choosing your game platform, click the Auto Pick Up button to start looking for a player. Then wait until a player pops.</string>
+    <string name="onboarding_second_btn_next">Next</string>
+    <string name="onboarding_second_btn_back">Back</string>
+
+
     <string name="onboarding_third_title">Buy A Player</string>
     <string name="onboarding_third_description">Go to the transfer page of the game and find the player card in the market, and then buy it within 3 minutes.</string>
+    <string name="onboarding_third_btn_next">Next</string>
+    <string name="onboarding_third_btn_back">Back</string>
+
+
     <string name="onboarding_fourth_title">You need to enter your DSFUT account\'s partner ID and secret key to use the application.</string>
     <string name="onboarding_fourth_title_partner_id">Partner ID</string>
     <string name="onboarding_fourth_hint_partner_id">Enter your partner ID</string>

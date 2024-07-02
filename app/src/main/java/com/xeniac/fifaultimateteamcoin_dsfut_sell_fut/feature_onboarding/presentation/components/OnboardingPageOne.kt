@@ -113,7 +113,7 @@ fun OnboardingPageOne(
         ) {
             TextButton(onClick = onSkipBtnClick) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_skip),
+                    text = stringResource(id = R.string.onboarding_first_btn_skip),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
@@ -132,7 +132,7 @@ fun OnboardingPageOne(
                 )
             ) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_next),
+                    text = stringResource(id = R.string.onboarding_first_btn_next),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     lineHeight = 20.sp

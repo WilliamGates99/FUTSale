@@ -112,7 +112,7 @@ fun OnboardingPageThree(
         ) {
             TextButton(onClick = onBackBtnClick) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_back),
+                    text = stringResource(id = R.string.onboarding_third_btn_back),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
@@ -131,7 +131,7 @@ fun OnboardingPageThree(
                 )
             ) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_next),
+                    text = stringResource(id = R.string.onboarding_third_btn_next),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     lineHeight = 20.sp

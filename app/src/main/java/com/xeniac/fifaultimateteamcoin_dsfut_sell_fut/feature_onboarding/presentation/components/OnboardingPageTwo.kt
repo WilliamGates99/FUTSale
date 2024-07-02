@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -114,7 +113,7 @@ fun OnboardingPageTwo(
         ) {
             TextButton(onClick = onBackBtnClick) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_back),
+                    text = stringResource(id = R.string.onboarding_second_btn_back),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
@@ -133,7 +132,7 @@ fun OnboardingPageTwo(
                 )
             ) {
                 Text(
-                    text = stringResource(id = R.string.onboarding_btn_next),
+                    text = stringResource(id = R.string.onboarding_second_btn_next),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     lineHeight = 20.sp
