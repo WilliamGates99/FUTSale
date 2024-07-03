@@ -119,6 +119,22 @@ android {
             )
         }
 
+        create("gitHub") {
+            dimension = "market"
+
+            buildConfigField(
+                type = "String",
+                name = "URL_APP_STORE",
+                value = "\"https://github.com/WilliamGates99/FUTSale\""
+            )
+
+            buildConfigField(
+                type = "String",
+                name = "PACKAGE_NAME_APP_STORE",
+                value = "\"\""
+            )
+        }
+
         create("cafeBazaar") {
             dimension = "market"
 
@@ -200,9 +216,11 @@ androidComponents {
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
@@ -213,6 +231,7 @@ androidComponents {
         if (variantBuilder.buildType == "release") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
                     else -> true
