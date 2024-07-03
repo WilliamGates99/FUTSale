@@ -9,6 +9,7 @@
 .cxx
 /app/release
 /app/prodPlayStore
+/app/prodGitHub
 /app/prodCafeBazaar
 /app/prodMyket
 /app/devPlayStore
