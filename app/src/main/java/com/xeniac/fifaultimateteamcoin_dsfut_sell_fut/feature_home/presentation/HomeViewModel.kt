@@ -72,6 +72,7 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
+        checkIsAppUpdateStalled()
         registerAppUpdateListener()
         getHomeState()
         checkForAppUpdates()
@@ -124,7 +125,7 @@ class HomeViewModel @Inject constructor(
             AppUpdateType.FLEXIBLE -> {
                 homeUseCases.checkIsFlexibleUpdateStalledUseCase.get()().collect { isUpdateDownloaded ->
                     if (isUpdateDownloaded) {
-                        _inAppUpdatesEventChannel.send(HomeUiEvent.ShowCompleteAppUpdateSnackbar)
+                        _inAppUpdatesEventChannel.send(HomeUiEvent.CompleteFlexibleAppUpdate)
                     }
                 }
             }

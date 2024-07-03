@@ -17,7 +17,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -29,9 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -59,8 +55,6 @@ fun HomeScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val activity by remember { derivedStateOf { context.findActivity() } }
-    val lifeCycleOwner = LocalLifecycleOwner.current
-    var lifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
@@ -86,27 +80,6 @@ fun HomeScreen(
             }
         }
     )
-
-    DisposableEffect(key1 = lifeCycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            lifecycleEvent = event
-        }
-
-        lifeCycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifeCycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    LaunchedEffect(key1 = lifecycleEvent) {
-        when (lifecycleEvent) {
-            Lifecycle.Event.ON_RESUME -> {
-                homeViewModel.onEvent(HomeEvent.CheckIsAppUpdateStalled)
-            }
-            else -> Unit
-        }
-    }
 
     LaunchedEffect(key1 = Unit) {
         if (isAppInstalledFromPlayStore()) {
@@ -139,6 +112,9 @@ fun HomeScreen(
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
+            }
+            HomeUiEvent.CompleteFlexibleAppUpdate -> {
+                homeViewModel.appUpdateManager.get().completeUpdate()
             }
         }
     }
