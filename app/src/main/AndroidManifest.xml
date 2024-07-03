@@ -5,8 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -21,26 +19,19 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FUTDeals"
+        android:theme="@style/Theme.FUTSale"
         tools:targetApi="tiramisu">
-
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".core.presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FUTDeals.SplashScreen"
+            android:theme="@style/Theme.FUTSale.SplashScreen"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.OnBoardingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.FUTDeals.OnBoarding"
-            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
@@ -51,14 +42,29 @@
                 android:value="true" />
         </service>
 
-        <meta-data
-            android:name="applovin.sdk.key"
-            android:value="hmVNBfwsMg8e9UdPEe6ZOWwE83xd2y2KUkDTlGBqx3DMlb0CUOK4f7AeBRRxh-QmzJneB-DPUA-cJuPFEZ7qWA"
-            tools:replace="android:value" />
+        <service
+            android:name=".core.services.FirebaseCloudMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4429657659293031~2049225136" />
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/appIconBackground" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="channel_fcm_miscellaneous" />
 
     </application>
 

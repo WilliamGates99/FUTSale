@@ -3,11 +3,25 @@
     <string name="app_name">FUTSale 24</string>
 
 
-    <string name="notification_channel_name_pick_up_player">Auto Pick Up Player</string>
-    <string name="notification_channel_description_pick_up_player">This notification will be shown after a player is picked up</string>
+    <string name="notification_fcm_channel_group_name">Other</string>
+    <string name="notification_fcm_channel_name_miscellaneous">Miscellaneous</string>
+
+
+    <string name="notification_pick_up_player_channel_group_name">Pick Up Player</string>
+    <string name="notification_pick_up_player_channel_name_default">Default</string>
+    <string name="notification_pick_up_player_channel_name_silent">Silent</string>
+    <string name="notification_pick_up_player_channel_description_pick_up_player">This notification will be shown after a player is picked up</string>
+
+
     <string name="notification_permission_rational_message">You won\'t receive a notification after a player is picked up without Notification Permission.</string>
     <string name="notification_permission_rational_btn_positive">OK</string>
     <string name="notification_permission_rational_btn_negative">Cancel</string>
+
+
+    <string name="permissions_error_notification_declined">This app requires notifications permission to receive notifications.</string>
+    <string name="permissions_error_notification_declined_permanently">It looks like you\'ve permanently denied notifications permission. You can go to the app settings to grant it.</string>
+    <string name="permissions_error_btn_open_settings">App Settings</string>
+    <string name="permissions_error_btn_confirm">Confirm</string>
 
 
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
@@ -18,98 +32,149 @@
     <string name="error_btn_confirm">Confirm</string>
 
 
-    <string name="onboarding_btn_skip">Skip</string>
-    <string name="onboarding_btn_back">Back</string>
-    <string name="onboarding_btn_next">Next</string>
+    <string name="core_content_description_back">Return</string>
+    <string name="core_textfield_content_description_password_toggle_show">Show Password</string>
+    <string name="core_textfield_content_description_password_toggle_hide">Hide Password</string>
+    <string name="core_platform_console">Console</string>
+    <string name="core_platform_pc">PC</string>
+
+
     <string name="onboarding_first_title">Selling Coins Has Made Easy</string>
     <string name="onboarding_first_description">This application uses the DSFUT API for trading FUT coins. Here you can quickly sell your coins and immediately get paid for them.</string>
+    <string name="onboarding_first_btn_skip">Skip</string>
+    <string name="onboarding_first_btn_next">Next</string>
+
+
     <string name="onboarding_second_title">Pick Up A Player</string>
     <string name="onboarding_second_description">After choosing your game platform, click the Auto Pick Up button to start looking for a player. Then wait until a player pops.</string>
+    <string name="onboarding_second_btn_next">Next</string>
+    <string name="onboarding_second_btn_back">Back</string>
+
+
     <string name="onboarding_third_title">Buy A Player</string>
     <string name="onboarding_third_description">Go to the transfer page of the game and find the player card in the market, and then buy it within 3 minutes.</string>
+    <string name="onboarding_third_btn_next">Next</string>
+    <string name="onboarding_third_btn_back">Back</string>
+
+
     <string name="onboarding_fourth_title">You need to enter your DSFUT account\'s partner ID and secret key to use the application.</string>
     <string name="onboarding_fourth_title_partner_id">Partner ID</string>
     <string name="onboarding_fourth_hint_partner_id">Enter your partner ID</string>
     <string name="onboarding_fourth_title_secret_key">Secret Key</string>
     <string name="onboarding_fourth_hint_secret_key">Enter your secret key</string>
-    <string name="onboarding_fourth_btn_register">If you don\'t have a DSFUT account, <font fgcolor="#1C53F4"><b>click here</b></font> to create one.</string>
+    <!--Placeholder is for the color value-->
+    <string name="onboarding_fourth_btn_register"><![CDATA[If you don\'t have a DSFUT account, <font color="#%s"><b>click here</b></font> to create one.]]></string>
     <string name="onboarding_fourth_btn_start">Get Started</string>
-    <string name="onboarding_fourth_btn_agreement">By logging in, you agree to our <font fgcolor="#1C53F4"><b>Privacy Policy</b></font>.</string>
+    <!--Placeholder is for the color value-->
+    <string name="onboarding_fourth_btn_agreement"><![CDATA[By logging in, you agree to our <font color="#%s"><b>Privacy Policy</b></font>.]]></string>
 
 
-    <string name="main_menu_title_pick_up">Pick Up</string>
-    <string name="main_menu_title_profile">Profile</string>
-    <string name="main_menu_title_settings">Settings</string>
+    <string name="home_nav_title_pick_up_player">Pick Up</string>
+    <string name="home_nav_title_profile">Profile</string>
+    <string name="home_nav_title_history">History</string>
+    <string name="home_nav_title_settings">Settings</string>
+    <string name="home_app_update_message">Update downloaded successfully! To complete the installation, please restart the app.</string>
+    <string name="home_app_update_action">Restart</string>
     <!--Placeholder is for the App Name-->
-    <string name="main_rate_app_dialog_title">Rate %s?</string>
-    <string name="main_rate_app_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
-    <string name="main_rate_app_dialog_positive">Rate now</string>
-    <string name="main_rate_app_dialog_negative">No, Thanks</string>
-    <string name="main_rate_app_dialog_neutral">Remind me later</string>
+    <string name="home_app_review_dialog_title">Rate %s?</string>
+    <string name="home_app_review_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support!</string>
+    <string name="home_app_review_dialog_btn_rate_now">Rate now</string>
+    <string name="home_app_review_dialog_btn_remind_later">Remind me later</string>
+    <string name="home_app_review_dialog_btn_never">No, Thanks</string>
 
 
-    <string name="pick_up_text_title">Pick Up Player</string>
-    <string name="pick_up_title_instruction">Follow the steps below to buy a player:</string>
-    <string name="pick_up_text_instruction">1. Choose your game platform.\n2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)\n3. Click the <font fgcolor="#1C53F4"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.\n4. Wait until a player pops.</string>
-    <string name="pick_up_title_platform">Platform:</string>
-    <string name="pick_up_toggle_platform_console">Console</string>
-    <string name="pick_up_toggle_platform_pc">PC</string>
-    <string name="pick_up_title_price_min">Min Price</string>
-    <string name="pick_up_title_price_max">Max Price</string>
-    <string name="pick_up_title_take_after">Take After</string>
-    <string name="pick_up_hint_take_after">4 Seconds</string>
-    <string name="pick_up_helper_optional">Optional</string>
-    <string name="pick_up_btn_pick_auto">Auto Pick Up</string>
-    <string name="pick_up_btn_pick_auto_cancel">Cancel</string>
-    <string name="pick_up_btn_pick_once">Pick Once</string>
-    <string name="pick_up_title_player_price_start">Start Price</string>
-    <string name="pick_up_title_player_price_now">Buy Now Price</string>
-    <string name="pick_up_text_player_timer_finished">Expired</string>
-    <string name="pick_up_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
-    <string name="pick_up_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_player_app_bar_title">Pick Up Player</string>
+    <string name="pick_up_player_latest_player_timer_expired">Expired</string>
+    <string name="pick_up_player_latest_player_title_chemistry_style">Chemistry Style:</string>
+    <string name="pick_up_player_latest_player_title_start_price">Start Price:</string>
+    <string name="pick_up_player_latest_player_title_buy_now_price">Buy Now Price:</string>
+    <string name="pick_up_player_title_instruction">Follow the steps below to buy a player:</string>
+    <!--Placeholder is for the color value-->
+    <string name="pick_up_player_text_instruction"><![CDATA[1. Choose your game platform.<br>2. If you want, you can enter your desired minimum or maximum price for a player. (Optional)<br>3. Click the <font color="#%s"><b>Auto Pick Up</b></font> button to start looking for a player. You can also request only once by clicking the <b>Pick Once</b> button.<br>4. Wait until a player pops.]]></string>
+    <string name="pick_up_player_title_platform">Platform:</string>
+    <string name="pick_up_player_segmented_btn_platform_console">Console</string>
+    <string name="pick_up_player_segmented_btn_platform_pc">PC</string>
+    <string name="pick_up_player_title_min_price">Min Price</string>
+    <string name="pick_up_player_title_max_price">Max Price</string>
+    <string name="pick_up_player_title_take_after">Pick up the player with delay?</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_zero">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_one">Pick the player after %d second.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_two">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_few">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_many">Pick the player after %d seconds.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_other">Pick the player after %d seconds.</string>
+    <string name="pick_up_player_helper_optional">Optional</string>
+    <string name="pick_up_player_btn_pick_auto">Auto Pick Up</string>
+    <string name="pick_up_player_btn_pick_auto_cancel">Cancel</string>
+    <string name="pick_up_player_btn_pick_once">Pick Once</string>
+    <string name="pick_up_player_error_blank_partner_id">Please enter your partner ID in the Profile page.</string>
+    <string name="pick_up_player_error_invalid_partner_id">Please enter your partner ID in the Profile page.</string>
+    <string name="pick_up_player_error_blank_secret_key">Please enter your secret key in the Profile page.</string>
+    <string name="pick_up_player_error_blank_partner_id_and_secret_key">Please enter your partner ID and secret key in the Profile page.</string>
+    <string name="pick_up_player_error_invalid_min_price">Please enter a valid price.</string>
+    <string name="pick_up_player_error_invalid_max_price">Please enter a valid price.</string>
+    <string name="pick_up_player_error_invalid_take_after">Please enter a valid time.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_zero">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_one">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minute.</string>
+    <string name="pick_up_player_error_dsfut_block_one">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minute.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_two">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_two">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_few">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_few">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_many">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_block_many">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_other">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
-    <string name="pick_up_error_dsfut_empty">There are no players available for redemption.</string>
-    <string name="pick_up_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
-    <string name="pick_up_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
-    <string name="pick_up_error_dsfut_sign">Please check the entered values for the partner ID and secret key in the Profile page.</string>
-    <string name="pick_up_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
-    <string name="pick_up_error_dsfut_canceled">Auto pick player canceled.</string>
-    <string name="pick_up_notification_title_success">%s was picked up successfully</string>
-    <string name="pick_up_notification_title_fail">Auto pick up player failed</string>
+    <string name="pick_up_player_error_dsfut_block_other">You have been temporarily blocked due to picking up a player and not redeeming it. Please try again in %d minutes.</string>
+    <string name="pick_up_player_error_dsfut_empty">There are no players available for redemption.</string>
+    <string name="pick_up_player_error_dsfut_limit">The limit of redeemed players has been exceeded. It is allowed to have a maximum of 3 active players.</string>
+    <string name="pick_up_player_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
+    <string name="pick_up_player_error_dsfut_parameters">One or all of the entered parameters are invalid.</string>
+    <string name="pick_up_player_error_dsfut_signature">Please check the entered values for the partner ID and secret key in the Profile page.</string>
+    <string name="pick_up_player_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
+    <string name="pick_up_player_error_dsfut_unit_time">Unix time error.</string>
+    <string name="pick_up_player_error_dsfut_canceled">Auto pick player canceled.</string>
+    <string name="pick_up_player_error_btn_open_profile">Open Profile</string>
+    <string name="pick_up_player_notification_successful_title">%s was picked up successfully</string>
+    <string name="pick_up_player_notification_failed_title">Auto pick up player failed</string>
 
 
-    <string name="profile_text_title">Profile</string>
-    <string name="profile_title_partner_id">Partner ID</string>
-    <string name="profile_hint_partner_id">Enter your partner ID</string>
-    <string name="profile_title_secret_key">Secret Key</string>
-    <string name="profile_hint_secret_key">Enter your secret key</string>
-    <string name="profile_title_links">Links</string>
-    <string name="profile_text_links_wallet">Wallet</string>
-    <string name="profile_text_links_players">Players</string>
-    <string name="profile_text_links_statistics">Statistics</string>
-    <string name="profile_text_links_rules">Rules</string>
-    <string name="profile_text_links_notifications_console">Console Players Notifications</string>
-    <string name="profile_text_links_notifications_pc">PC Players Notifications</string>
+    <string name="profile_app_bar_title">Profile</string>
+    <string name="profile_textfield_title_partner_id">Partner ID</string>
+    <string name="profile_textfield_hint_partner_id">Enter your partner ID</string>
+    <string name="profile_textfield_partner_id_error_invalid">Enter a valid partner ID</string>
+    <string name="profile_textfield_title_secret_key">Secret Key</string>
+    <string name="profile_textfield_hint_secret_key">Enter your secret key</string>
+    <string name="profile_textfield_secret_key_error_invalid">Enter a valid secret key</string>
+    <string name="profile_title_account_links">Account Links</string>
+    <string name="profile_text_account_links_wallet">Wallet</string>
+    <string name="profile_text_account_links_purchased_players">Purchased Players</string>
+    <string name="profile_text_account_links_rules">Rules</string>
+    <string name="profile_text_account_links_statistics">Statistics</string>
+    <string name="profile_title_other_links">Other Links</string>
+    <string name="profile_text_other_links_dsfut_news">DSFUT News</string>
+    <string name="profile_text_other_links_console_notifications">Console Players Notifications</string>
+    <string name="profile_text_other_links_pc_notifications">PC Players Notifications</string>
+    <string name="profile_text_other_links_dsfut_website">DSFUT Website</string>
 
 
-    <string name="settings_text_title">Settings</string>
+    <string name="history_app_bar_title">History</string>
+    <string name="history_empty_list_message">You haven\'t picked up any players yet.</string>
+
+
+    <string name="settings_app_bar_title">Settings</string>
     <string name="settings_title_settings">Settings</string>
     <string name="settings_text_settings_language">Language</string>
     <string name="settings_text_settings_language_default">System Default</string>
     <string name="settings_text_settings_language_english_us">English (US)</string>
     <string name="settings_text_settings_language_english_gb">English (UK)</string>
-    <string name="settings_text_settings_language_persian_ir">Persian</string>
+    <string name="settings_text_settings_language_farsi_ir">Persian</string>
     <string name="settings_text_settings_theme">Theme</string>
     <string name="settings_text_settings_theme_default">System Default</string>
     <string name="settings_text_settings_theme_light">Light</string>
@@ -125,20 +190,95 @@
     <string name="settings_dialog_item_language_default">System Default</string>
     <string name="settings_dialog_item_language_english_us">English (United States)</string>
     <string name="settings_dialog_item_language_english_gb">English (United Kingdom)</string>
-    <string name="settings_dialog_item_language_persian_ir">Persian</string>
+    <string name="settings_dialog_item_language_farsi_ir">Persian</string>
     <string name="settings_dialog_title_theme">Theme</string>
     <string name="settings_dialog_item_theme_default">System Default</string>
     <string name="settings_dialog_item_theme_light">Light</string>
     <string name="settings_dialog_item_theme_dark">Dark</string>
 
 
-    <string name="player_details_text_title">%s was picked up successfully.</string>
-    <string name="player_details_title_rating">Rating</string>
-    <string name="player_details_title_position">Position</string>
-    <string name="player_details_title_price_start">Start Price</string>
-    <string name="player_details_title_price_now">Buy Now Price</string>
-    <string name="player_details_title_instruction">What to do next?</string>
-    <string name="player_details_text_instruction">1. Go to the transfer page of the game or the Companion app.\n2. Find the player card in the market according to its details.\n3. Buy the player card within 3 minutes; Otherwise, your DSFUT account will be blocked for 30 minutes.</string>
-    <string name="player_details_text_attention">Attention: It is very important to rotate FIFA accounts. That is, if one player was purchased from account #1, then the next must be purchased from account #2. It is very important that the accounts are repeated as rarely as possible, because we do not want bans for either buyers or suppliers.</string>
+    <string name="picked_up_player_info_message">%s was picked up successfully.</string>
+    <string name="picked_up_player_info_timer_expired">Expired</string>
+    <string name="picked_up_player_info_title_rating">Rating</string>
+    <string name="picked_up_player_info_title_position">Position</string>
+    <string name="picked_up_player_info_title_start_price">Start Price</string>
+    <string name="picked_up_player_info_title_buy_now_price">Buy Now Price</string>
+    <string name="picked_up_player_info_title_owners">Number of Owners</string>
+    <string name="picked_up_player_info_title_contracts">Contracts</string>
+    <string name="picked_up_player_info_title_chemistry_style">Chemistry Style</string>
+    <string name="picked_up_player_info_title_platform">Platform</string>
+    <string name="picked_up_player_info_instruction_title">What to do next?</string>
+    <string name="picked_up_player_info_instruction"><![CDATA[1. Go to the transfer page of the game or the Companion app.<br>2. Find the player card in the market according to its details.<br>3. Buy the player card within 3 minutes; Otherwise, your DSFUT account will be blocked for 30 minutes.]]></string>
+    <string name="picked_up_player_info_attention">Attention: It is very important to rotate FIFA accounts. That is, if one player was purchased from account #1, then the next must be purchased from account #2. It is very important that the accounts are repeated as rarely as possible, because we do not want bans for either buyers or suppliers.</string>
+
+
+    <string name="history_player_info_title_rating">Rating</string>
+    <string name="history_player_info_title_position">Position</string>
+    <string name="history_player_info_title_start_price">Start Price</string>
+    <string name="history_player_info_title_buy_now_price">Buy Now Price</string>
+    <string name="history_player_info_title_owners">Number of Owners</string>
+    <string name="history_player_info_title_contracts">Contracts</string>
+    <string name="history_player_info_title_chemistry_style">Chemistry Style</string>
+    <string name="history_player_info_title_platform">Platform</string>
+    <!--
+    Placeholders:
+    • %1$s: Month Name
+    • %2$s: Day with Suffix
+    • %3$s: Year (yyyy)
+    • %4$s: Hour
+    • %5$s: Minute
+
+    • en-US: December 25th 2022 - 21:18
+    • en-GB: 25th December 2022 - 21:18
+    • fa-IR: بیست و پنجم دسامبر ۲۰۲۲ - ۲۱:۱۸
+    -->
+    <string name="history_player_info_pick_up_date_time">%1$s %2$s %3$s - %4$s:%5$s</string>
+    <string-array name="history_player_info_pick_up_date_day_with_suffix">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th</item>
+        <item>7th</item>
+        <item>8th</item>
+        <item>9th</item>
+        <item>10th</item>
+        <item>11th</item>
+        <item>12th</item>
+        <item>13th</item>
+        <item>14th</item>
+        <item>15th</item>
+        <item>16th</item>
+        <item>17th</item>
+        <item>18th</item>
+        <item>19th</item>
+        <item>20th</item>
+        <item>21st</item>
+        <item>22nd</item>
+        <item>23rd</item>
+        <item>24th</item>
+        <item>25th</item>
+        <item>26th</item>
+        <item>27th</item>
+        <item>28th</item>
+        <item>29th</item>
+        <item>30th</item>
+        <item>31st</item>
+    </string-array>
+    <string-array name="history_player_info_pick_up_date_month_name">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 
 </resources>

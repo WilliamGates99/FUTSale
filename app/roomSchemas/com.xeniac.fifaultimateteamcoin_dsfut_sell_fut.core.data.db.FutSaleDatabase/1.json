@@ -1,0 +1,124 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "d2ae4828bbeaa16384c8f1adb80f0c11",
+    "entities": [
+      {
+        "tableName": "players",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tradeID` TEXT NOT NULL, `assetID` INTEGER NOT NULL, `resourceID` INTEGER NOT NULL, `transactionID` INTEGER NOT NULL, `name` TEXT NOT NULL, `rating` INTEGER NOT NULL, `position` TEXT NOT NULL, `startPrice` INTEGER NOT NULL, `buyNowPrice` INTEGER NOT NULL, `owners` INTEGER NOT NULL, `contracts` INTEGER NOT NULL, `chemistryStyle` TEXT NOT NULL, `chemistryStyleID` INTEGER NOT NULL, `platform` TEXT NOT NULL, `pickUpTimeInMillis` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "fields": [
+          {
+            "fieldPath": "tradeID",
+            "columnName": "tradeID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assetID",
+            "columnName": "assetID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resourceID",
+            "columnName": "resourceID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionID",
+            "columnName": "transactionID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rating",
+            "columnName": "rating",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startPrice",
+            "columnName": "startPrice",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "buyNowPrice",
+            "columnName": "buyNowPrice",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "owners",
+            "columnName": "owners",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contracts",
+            "columnName": "contracts",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chemistryStyle",
+            "columnName": "chemistryStyle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chemistryStyleID",
+            "columnName": "chemistryStyleID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "platformDto",
+            "columnName": "platform",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pickUpTimeInMillis",
+            "columnName": "pickUpTimeInMillis",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd2ae4828bbeaa16384c8f1adb80f0c11')"
+    ]
+  }
+}
