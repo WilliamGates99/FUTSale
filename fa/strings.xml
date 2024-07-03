@@ -1,113 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">آلتیمیت تیم کوین</string>
-    <string name="notification_channel_name_pick_up_player">گرفتن خودکار بازیکن</string>
-    <string name="notification_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
+    <string name="app_name">فیفا آلتیمیت تیم کوین</string>
+    <string name="notification_fcm_channel_group_name">سایر</string>
+    <string name="notification_fcm_channel_name_miscellaneous">متفرقه</string>
+    <string name="notification_pick_up_player_channel_group_name">گرفتن بازیکن</string>
+    <string name="notification_pick_up_player_channel_name_default">پیش‌فرض</string>
+    <string name="notification_pick_up_player_channel_name_silent">بی‌صدا</string>
+    <string name="notification_pick_up_player_channel_description_pick_up_player">این اعلان پس از گرفتن بازیکن نشان داده می‌شود</string>
     <string name="notification_permission_rational_message">بدون مجوز اعلان، پس از گرفتن بازیکن، اعلانی دریافت نخواهید کرد.</string>
     <string name="notification_permission_rational_btn_positive">باشه</string>
     <string name="notification_permission_rational_btn_negative">لغو</string>
+    <string name="permissions_error_notification_declined">این برنامه برای دریافت اعلانات، نیاز به مجوز اعلانات دارد.</string>
+    <string name="permissions_error_notification_declined_permanently">به نظر می‌رسد مجوز اعلانات را برای همیشه رد کرده‌اید. می‌توانید برای اعطای آن به تنظیمات برنامه بروید.</string>
+    <string name="permissions_error_btn_open_settings">تنظیمات برنامه</string>
+    <string name="permissions_error_btn_confirm">تایید</string>
     <string name="error_something_went_wrong">خطایی رخ داده. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_network_connection_unavailable">اتصال به اینترنت امکان‌پذیر نیست.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
     <string name="error_btn_retry">تلاش مجدد</string>
     <string name="error_btn_confirm">تایید</string>
-    <string name="onboarding_btn_skip">رد کردن</string>
-    <string name="onboarding_btn_back">قبلی</string>
-    <string name="onboarding_btn_next">بعدی</string>
+    <string name="core_content_description_back">بازگشت</string>
+    <string name="core_textfield_content_description_password_toggle_show">نمایش کلمه عبور</string>
+    <string name="core_textfield_content_description_password_toggle_hide">پنهان کردن کلمه عبور</string>
+    <string name="core_platform_console">کنسول</string>
+    <string name="core_platform_pc">کامپیوتر</string>
     <string name="onboarding_first_title">فروش آسان سکه</string>
     <string name="onboarding_first_description">این برنامه از API سایت DSFUT برای مبادله سکه‌های آلتیمیت تیم فیفا استفاده می‌کند. اینجا می‌توانید به سرعت سکه‌های خود را بفروشید و بلافاصله پول دریافت کنید.</string>
+    <string name="onboarding_first_btn_skip">رد کردن</string>
+    <string name="onboarding_first_btn_next">بعدی</string>
     <string name="onboarding_second_title">یک بازیکن بگیرید</string>
     <string name="onboarding_second_description">پس از انتخاب پلتفرم بازی خود، روی دکمه گرفتن خودکار کلیک کنید تا شروع به جستجوی بازیکن کنید. سپس صبر کنید تا یک بازیکن ظاهر شود.</string>
+    <string name="onboarding_second_btn_next">بعدی</string>
+    <string name="onboarding_second_btn_back">قبلی</string>
     <string name="onboarding_third_title">خرید بازیکن</string>
     <string name="onboarding_third_description">به صفحه ترنسفر بازی رفته و کارت بازیکن را در مارکت پیدا کنید و در عرض 3 دقیقه آن را خریداری کنید.</string>
+    <string name="onboarding_third_btn_next">بعدی</string>
+    <string name="onboarding_third_btn_back">قبلی</string>
     <string name="onboarding_fourth_title">برای استفاده از برنامه، باید شناسه پارتنر و کلید محرمانه حساب DSFUT خود را وارد کنید.</string>
     <string name="onboarding_fourth_title_partner_id">شناسه پارتنر</string>
     <string name="onboarding_fourth_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
     <string name="onboarding_fourth_title_secret_key">کلید محرمانه</string>
     <string name="onboarding_fourth_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
-    <string name="onboarding_fourth_btn_register">اگر حساب DSFUT ندارید، <font fgcolor="#1C53F4"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.</string>
+    <!--Placeholder is for the color value-->
+    <string name="onboarding_fourth_btn_register"><![CDATA[اگر حساب DSFUT ندارید، <font color="#%s"><b>اینجا کلیک کنید</b></font> تا یک حساب ایجاد کنید.]]></string>
     <string name="onboarding_fourth_btn_start">شروع کنیم</string>
-    <string name="onboarding_fourth_btn_agreement">با ورود، شما <font fgcolor="#1C53F4"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.</string>
-    <string name="main_menu_title_pick_up">گرفتن</string>
-    <string name="main_menu_title_profile">پروفایل</string>
-    <string name="main_menu_title_settings">تنظیمات</string>
+    <!--Placeholder is for the color value-->
+    <string name="onboarding_fourth_btn_agreement"><![CDATA[با ورود، شما <font color="#%s"><b>سیاست حریم خصوصی</b></font> ما را می‌پذیرید.]]></string>
+    <string name="home_nav_title_pick_up_player">گرفتن</string>
+    <string name="home_nav_title_profile">پروفایل</string>
+    <string name="home_nav_title_history">تاریخچه</string>
+    <string name="home_nav_title_settings">تنظیمات</string>
+    <string name="home_app_update_message">به‌روز‌رسانی با موفقیت دانلود شد! برای تکمیل نصب، لطفاً برنامه را مجدداً راه‌اندازی کنید.</string>
+    <string name="home_app_update_action">راه‌اندازی مجدد</string>
     <!--Placeholder is for the App Name-->
-    <string name="main_rate_app_dialog_title">امتیاز به %s؟</string>
-    <string name="main_rate_app_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>
-    <string name="main_rate_app_dialog_positive">الان امتیاز می‌دهم</string>
-    <string name="main_rate_app_dialog_negative">نه، ممنون</string>
-    <string name="main_rate_app_dialog_neutral">بعدا بهم یادآوری کن</string>
-    <string name="pick_up_text_title">گرفتن بازیکن</string>
-    <string name="pick_up_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
-    <string name="pick_up_text_instruction">1. پلتفرم بازی خود را انتخاب کنید.\n2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)\n3. روی دکمه <font fgcolor="#1C53F4"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.\n4. صبر کنید تا یک بازیکن ظاهر شود.</string>
-    <string name="pick_up_title_platform">پلتفرم:</string>
-    <string name="pick_up_toggle_platform_console">کنسول</string>
-    <string name="pick_up_toggle_platform_pc">کامپیوتر</string>
-    <string name="pick_up_title_price_min">حداقل قیمت</string>
-    <string name="pick_up_title_price_max">حداکثر قیمت</string>
-    <string name="pick_up_title_take_after">گرفتن بعد از</string>
-    <string name="pick_up_hint_take_after">۴ ثانیه</string>
-    <string name="pick_up_helper_optional">اختیاری</string>
-    <string name="pick_up_btn_pick_auto">گرفتن خودکار</string>
-    <string name="pick_up_btn_pick_auto_cancel">لغو</string>
-    <string name="pick_up_btn_pick_once">یکبار گرفتن</string>
-    <string name="pick_up_title_player_price_start">قیمت اولیه</string>
-    <string name="pick_up_title_player_price_now">قیمت خرید در لحظه</string>
-    <!--
-    Placeholders:
-    • %1$s: Player's Rating
-    • %2$s: Player's Position
-    Sample: 88\nCDM
-    -->
+    <string name="home_app_review_dialog_title">امتیاز به %s؟</string>
+    <string name="home_app_review_dialog_message">اگر از استفاده از این برنامه لذت می‌برید، در صورت امکان به آن امتیاز دهید. بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما متشکریم!</string>
+    <string name="home_app_review_dialog_btn_rate_now">الان امتیاز می‌دهم</string>
+    <string name="home_app_review_dialog_btn_remind_later">بعدا بهم یادآوری کن</string>
+    <string name="home_app_review_dialog_btn_never">نه، ممنون</string>
+    <string name="pick_up_player_app_bar_title">گرفتن بازیکن</string>
     <!--
     Placeholders:
     • %1$s: Minute
     • %2$s: Seconds
     Sample: 02:52
     -->
-    <string name="pick_up_text_player_timer_finished">منقضی‌شده</string>
-    <string name="pick_up_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
-    <string name="pick_up_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_latest_player_timer_expired">منقضی‌شده</string>
+    <string name="pick_up_player_latest_player_title_chemistry_style">سبک کمیستری:</string>
+    <string name="pick_up_player_latest_player_title_start_price">قیمت اولیه:</string>
+    <string name="pick_up_player_latest_player_title_buy_now_price">قیمت خرید در لحظه:</string>
+    <string name="pick_up_player_title_instruction">برای خرید بازیکن مراحل زیر را دنبال کنید:</string>
+    <!--Placeholder is for the color value-->
+    <string name="pick_up_player_text_instruction"><![CDATA[1. پلتفرم بازی خود را انتخاب کنید.<br>2. در صورت تمایل می‌توانید حداقل یا حداکثر قیمت مورد نظر خود را برای یک بازیکن وارد کنید. (اختیاری)<br>3. روی دکمه <font color="#%s"><b>گرفتن خودکار</b></font> کلیک کنید تا شروع به جستجوی بازیکن کنید. همچنین می‌توانید با کلیک روی دکمه <b>یکبار گرفتن</b>، فقط یک بار درخواست دهید.<br>4. صبر کنید تا یک بازیکن ظاهر شود.]]></string>
+    <string name="pick_up_player_title_platform">پلتفرم:</string>
+    <string name="pick_up_player_segmented_btn_platform_console">کنسول</string>
+    <string name="pick_up_player_segmented_btn_platform_pc">کامپیوتر</string>
+    <string name="pick_up_player_title_min_price">حداقل قیمت</string>
+    <string name="pick_up_player_title_max_price">حداکثر قیمت</string>
+    <string name="pick_up_player_title_take_after">بازیکن با تاخیر گرفته بشه؟</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_zero">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_one">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_two">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_few">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_many">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <!--Placeholder is for the delay time-->
+    <string name="pick_up_player_title_take_after_other">بازیکن بعد از %d ثانیه گرفته میشه.</string>
+    <string name="pick_up_player_helper_optional">اختیاری</string>
+    <string name="pick_up_player_btn_pick_auto">گرفتن خودکار</string>
+    <string name="pick_up_player_btn_pick_auto_cancel">لغو</string>
+    <string name="pick_up_player_btn_pick_once">یکبار گرفتن</string>
+    <string name="pick_up_player_error_blank_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_partner_id">لطفا شناسه پارتنر خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_blank_secret_key">لطفا کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_blank_partner_id_and_secret_key">لطفا شناسه پارتنر و کلید محرمانه خود را در صفحه پروفایل وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_min_price">لطفا یک قیمت معتبر وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_max_price">لطفا یک قیمت معتبر وارد کنید.</string>
+    <string name="pick_up_player_error_invalid_take_after">لطفا یک زمان معتبر وارد کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_zero">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_one">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_two">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_few">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_block_many">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
     <!--Placeholder is for the remaining block time-->
-    <string name="pick_up_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
-    <string name="pick_up_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
-    <string name="pick_up_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
-    <string name="pick_up_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
-    <string name="pick_up_error_dsfut_sign">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
-    <string name="pick_up_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
-    <string name="pick_up_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
-    <string name="pick_up_notification_title_success">%s با موفقیت گرفته شد</string>
-    <string name="pick_up_notification_title_fail">گرفتن خودکار بازیکن ناموفق بود</string>
-    <string name="profile_text_title">پروفایل</string>
-    <string name="profile_title_partner_id">شناسه پارتنر</string>
-    <string name="profile_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
-    <string name="profile_title_secret_key">کلید محرمانه</string>
-    <string name="profile_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
-    <string name="profile_title_links">لینک‌ها</string>
-    <string name="profile_text_links_wallet">کیف پول</string>
-    <string name="profile_text_links_players">بازیکنان</string>
-    <string name="profile_text_links_statistics">آمار</string>
-    <string name="profile_text_links_rules">قوانین</string>
-    <string name="profile_text_links_notifications_console">اعلان‌های بازیکنان کنسول</string>
-    <string name="profile_text_links_notifications_pc">اعلان‌های بازیکنان کامپیوتر</string>
-    <string name="settings_text_title">تنظیمات</string>
+    <string name="pick_up_player_error_dsfut_block_other">به دلیل این که بازیکنی را که گرفته بودید نخریدید، حسابتان موقتا مسدود شده است. لطفا بعد از %d دقیقه دوباره امتحان کنید.</string>
+    <string name="pick_up_player_error_dsfut_empty">بازیکنی برای خرید وجود ندارد.</string>
+    <string name="pick_up_player_error_dsfut_limit">تعداد بازیکنان خریداری شده از حد مجاز فراتر رفته است. حداکثر داشتن 3 بازیکن فعال مجاز است.</string>
+    <string name="pick_up_player_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
+    <string name="pick_up_player_error_dsfut_parameters">یک یا همه پارامترهای ورودی نا‌معتبر هستند.</string>
+    <string name="pick_up_player_error_dsfut_signature">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
+    <string name="pick_up_player_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
+    <string name="pick_up_player_error_dsfut_unit_time">خطای ساعت یونیکس.</string>
+    <string name="pick_up_player_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
+    <string name="pick_up_player_error_btn_open_profile">برو به پروفایل</string>
+    <string name="pick_up_player_notification_successful_title">%s با موفقیت گرفته شد</string>
+    <string name="pick_up_player_notification_failed_title">گرفتن خودکار بازیکن ناموفق بود</string>
+    <string name="profile_app_bar_title">پروفایل</string>
+    <string name="profile_textfield_title_partner_id">شناسه پارتنر</string>
+    <string name="profile_textfield_hint_partner_id">شناسه پارتنر خود را وارد کنید</string>
+    <string name="profile_textfield_partner_id_error_invalid">یک شناسه پارتنر معتبر وارد کنید</string>
+    <string name="profile_textfield_title_secret_key">کلید محرمانه</string>
+    <string name="profile_textfield_hint_secret_key">کلید محرمانه خود را وارد کنید</string>
+    <string name="profile_textfield_secret_key_error_invalid">یک کلید محرمانه معتبر وارد کنید</string>
+    <string name="profile_title_account_links">لینک‌های حساب</string>
+    <string name="profile_text_account_links_wallet">کیف پول</string>
+    <string name="profile_text_account_links_purchased_players">بازیکنان خریداری شده</string>
+    <string name="profile_text_account_links_rules">قوانین</string>
+    <string name="profile_text_account_links_statistics">آمار</string>
+    <string name="profile_title_other_links">لینک‌های دیگر</string>
+    <string name="profile_text_other_links_dsfut_news">اخبار DSFUT</string>
+    <string name="profile_text_other_links_console_notifications">اعلان‌های بازیکنان کنسول</string>
+    <string name="profile_text_other_links_pc_notifications">اعلان‌های بازیکنان کامپیوتر</string>
+    <string name="profile_text_other_links_dsfut_website">سایت DSFUT</string>
+    <string name="history_app_bar_title">تاریخچه</string>
+    <string name="history_empty_list_message">هنوز هیچ بازیکنی رو نگرفتی.</string>
+    <string name="settings_app_bar_title">تنظیمات</string>
     <string name="settings_title_settings">تنظیمات</string>
     <string name="settings_text_settings_language">زبان</string>
     <string name="settings_text_settings_language_default">پیش‌فرض سیستم</string>
     <string name="settings_text_settings_language_english_us">انگلیسی (آمریکایی)</string>
     <string name="settings_text_settings_language_english_gb">انگلیسی (بریتانیایی)</string>
-    <string name="settings_text_settings_language_persian_ir">فارسی</string>
+    <string name="settings_text_settings_language_farsi_ir">فارسی</string>
     <string name="settings_text_settings_theme">تم</string>
     <string name="settings_text_settings_theme_default">پیش‌فرض سیستم</string>
     <string name="settings_text_settings_theme_light">روشن</string>
@@ -123,17 +166,96 @@
     <string name="settings_dialog_item_language_default">پیش‌فرض سیستم</string>
     <string name="settings_dialog_item_language_english_us">انگلیسی (آمریکایی)</string>
     <string name="settings_dialog_item_language_english_gb">انگلیسی (بریتانیایی)</string>
-    <string name="settings_dialog_item_language_persian_ir">فارسی</string>
+    <string name="settings_dialog_item_language_farsi_ir">فارسی</string>
     <string name="settings_dialog_title_theme">تم</string>
     <string name="settings_dialog_item_theme_default">پیش‌فرض سیستم</string>
     <string name="settings_dialog_item_theme_light">روشن</string>
     <string name="settings_dialog_item_theme_dark">تیره</string>
-    <string name="player_details_text_title">%s با موفقیت گرفته شد.</string>
-    <string name="player_details_title_rating">ریتینگ</string>
-    <string name="player_details_title_position">پست</string>
-    <string name="player_details_title_price_start">قیمت اولیه</string>
-    <string name="player_details_title_price_now">قیمت خرید در لحظه</string>
-    <string name="player_details_title_instruction">بعدش چکار کنید؟</string>
-    <string name="player_details_text_instruction">1. به صفحه ترنسفر بازی یا برنامه کمپانیون بروید.\n2. کارت بازیکن را با توجه به جزئیات آن در مارکت پیدا کنید.\n3. کارت بازیکن را در عرض 3 دقیقه بخرید. در غیر این صورت حساب DSFUT شما به مدت 30 دقیقه مسدود خواهد شد.</string>
-    <string name="player_details_text_attention">توجه: تعویض حساب‌های فیفا بسیار مهم است. یعنی اگر یک بازیکن از حساب شماره 1 خریداری شده باشد، بازیکن بعدی باید از حساب شماره 2 خریداری شود. بسیار مهم است که حساب‌ها تا حد امکان به ندرت تکرار شوند، زیرا نمی‌خواهیم خریداران و تامین‌کنندگان از بازی محروم شوند.</string>
+    <string name="picked_up_player_info_message">%s با موفقیت گرفته شد.</string>
+    <!--
+    Placeholders:
+    • %1$s: Minute
+    • %2$s: Seconds
+    Sample: 02:52
+    -->
+    <string name="picked_up_player_info_timer_expired">منقضی‌شده</string>
+    <string name="picked_up_player_info_title_rating">ریتینگ</string>
+    <string name="picked_up_player_info_title_position">پست</string>
+    <string name="picked_up_player_info_title_start_price">قیمت اولیه</string>
+    <string name="picked_up_player_info_title_buy_now_price">قیمت خرید در لحظه</string>
+    <string name="picked_up_player_info_title_owners">تعداد مالکین</string>
+    <string name="picked_up_player_info_title_contracts">قرارداد باقیمانده</string>
+    <string name="picked_up_player_info_title_chemistry_style">سبک کمیستری</string>
+    <string name="picked_up_player_info_title_platform">پلتفرم</string>
+    <string name="picked_up_player_info_instruction_title">بعدش چکار کنید؟</string>
+    <string name="picked_up_player_info_instruction"><![CDATA[1. به صفحه ترنسفر بازی یا برنامه کمپانیون بروید.<br>2. کارت بازیکن را با توجه به جزئیات آن در مارکت پیدا کنید.<br>3. کارت بازیکن را در عرض 3 دقیقه بخرید. در غیر این صورت حساب DSFUT شما به مدت 30 دقیقه مسدود خواهد شد.]]></string>
+    <string name="picked_up_player_info_attention">توجه: تعویض حساب‌های فیفا بسیار مهم است. یعنی اگر یک بازیکن از حساب شماره 1 خریداری شده باشد، بازیکن بعدی باید از حساب شماره 2 خریداری شود. بسیار مهم است که حساب‌ها تا حد امکان به ندرت تکرار شوند، زیرا نمی‌خواهیم خریداران و تامین‌کنندگان از بازی محروم شوند.</string>
+    <string name="history_player_info_title_rating">ریتینگ</string>
+    <string name="history_player_info_title_position">پست</string>
+    <string name="history_player_info_title_start_price">قیمت اولیه</string>
+    <string name="history_player_info_title_buy_now_price">قیمت خرید در لحظه</string>
+    <string name="history_player_info_title_owners">تعداد مالکین</string>
+    <string name="history_player_info_title_contracts">قرارداد باقیمانده</string>
+    <string name="history_player_info_title_chemistry_style">سبک کمیستری</string>
+    <string name="history_player_info_title_platform">پلتفرم</string>
+    <!--
+    Placeholders:
+    • %1$s: Month Name
+    • %2$s: Day with Suffix
+    • %3$s: Year (yyyy)
+    • %4$s: Hour
+    • %5$s: Minute
+
+    • en-US: December 25th 2022 - 21:18
+    • en-GB: 25th December 2022 - 21:18
+    • fa-IR: بیست و پنجم دسامبر ۲۰۲۲ - ۲۱:۱۸
+    -->
+    <string name="history_player_info_pick_up_date_time">%2$s %1$s %3$d - %4$s:%5$s</string>
+    <string-array name="history_player_info_pick_up_date_day_with_suffix">
+        <item>اول</item>
+        <item>دوم</item>
+        <item>سوم</item>
+        <item>چهارم</item>
+        <item>پنجم</item>
+        <item>ششم</item>
+        <item>هفتم</item>
+        <item>هشتم</item>
+        <item>نهم</item>
+        <item>دهم</item>
+        <item>یازدهم</item>
+        <item>دوازدهم</item>
+        <item>سیزدهم</item>
+        <item>چهاردهم</item>
+        <item>پانزدهم</item>
+        <item>شانزدهم</item>
+        <item>هفدهم</item>
+        <item>هجدهم</item>
+        <item>نوزدهم</item>
+        <item>بیستم</item>
+        <item>بیست و یکم</item>
+        <item>بیست و دوم</item>
+        <item>بیست و سوم</item>
+        <item>بیست و چهارم</item>
+        <item>بیست و پنجم</item>
+        <item>بیست و ششم</item>
+        <item>بیست و هفتم</item>
+        <item>بیست و هشتم</item>
+        <item>بیست و نهم</item>
+        <item>سی‌ام</item>
+        <item>سی و یکم</item>
+    </string-array>
+    <string-array name="history_player_info_pick_up_date_month_name">
+        <item>ژانویه</item>
+        <item>فوریه</item>
+        <item>مارس</item>
+        <item>آوریل</item>
+        <item>مه</item>
+        <item>ژوئن</item>
+        <item>جولای</item>
+        <item>اوت</item>
+        <item>سپتامبر</item>
+        <item>اکتبر</item>
+        <item>نوامبر</item>
+        <item>دسامبر</item>
+    </string-array>
 </resources>
