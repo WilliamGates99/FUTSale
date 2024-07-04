@@ -15,11 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 @Composable
@@ -60,7 +63,8 @@ fun BouncingDotIndicator(
                 .bounceDotTransition(
                     pagerState = pagerState,
                     spacing = spacing,
-                    jumpScale = jumpScale
+                    jumpScale = jumpScale,
+                    layoutDirection = LocalLayoutDirection.current
                 )
                 .size(indicatorSize)
                 .background(
@@ -74,16 +78,20 @@ fun BouncingDotIndicator(
 fun Modifier.bounceDotTransition(
     pagerState: PagerState,
     spacing: Dp,
-    jumpScale: Float
+    jumpScale: Float,
+    layoutDirection: LayoutDirection
 ) = graphicsLayer {
     val targetScale = jumpScale - 1f
     val distance = size.width + spacing.roundToPx()
     val pageOffset = pagerState.currentPageOffsetFraction
     val scrollPosition = pagerState.currentPage + pageOffset
-    val currentPosition = scrollPosition.toInt()
+    val currentPosition = scrollPosition.roundToInt()
     val settledPage = pagerState.settledPage
 
-    translationX = scrollPosition * distance
+    translationX = when (layoutDirection) {
+        LayoutDirection.Ltr -> scrollPosition * distance
+        LayoutDirection.Rtl -> -(scrollPosition * distance)
+    }
 
     val scale = if (pageOffset.absoluteValue < .5) {
         1.0f + (pageOffset.absoluteValue * 2) * targetScale;
@@ -96,6 +104,7 @@ fun Modifier.bounceDotTransition(
 
     val factor = (pageOffset.absoluteValue * Math.PI)
     val isScrollingForward = currentPosition >= settledPage
+
     val y = if (isScrollingForward) {
         -sin(factor) * distance / 2
     } else {
