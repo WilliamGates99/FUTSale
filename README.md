@@ -13,7 +13,7 @@
 <br><br>
 Do you want to play FC Ultimate Team 24 and make money at the same time?
 <br><br>
-**FUTSale** is a free and user-friendly application to sell your FC Ultimate Team coins on any platform.
+**FUTSale** is a free and user-friendly application to sell your FC Ultimate Team coins on any platform.<br>
 Whether you play on your gaming console or a PC, you can use this app to sell your coins.
 
 ## App Features
