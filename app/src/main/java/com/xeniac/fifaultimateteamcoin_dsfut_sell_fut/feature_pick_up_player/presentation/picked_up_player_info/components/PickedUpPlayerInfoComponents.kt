@@ -36,11 +36,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,6 +65,7 @@ fun PickedUpPlayerInfo(
     modifier: Modifier = Modifier,
     @RawRes lottieAnimation: Int = R.raw.anim_pick_up_player_success
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
 
     Column(
@@ -80,7 +83,10 @@ fun PickedUpPlayerInfo(
             )
 
             ExpiryTimer(
-                timerText = timerText,
+                timerText = when (layoutDirection) {
+                    LayoutDirection.Ltr -> timerText
+                    LayoutDirection.Rtl -> timerText.reversed()
+                },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = horizontalPadding)
@@ -138,13 +144,13 @@ fun ExpiryTimer(
             )
             .animateContentSize()
     ) {
-        val isTimerFinished = timerText == UiText.StringResource(
+        val isTimerFinished = timerText.reversed() == UiText.StringResource(
             R.string.picked_up_player_info_timer_expired
         ).asString()
 
         if (isTimerFinished) {
             Text(
-                text = timerText,
+                text = stringResource(id = R.string.picked_up_player_info_timer_expired),
                 fontSize = fontSize,
                 lineHeight = lineHeight,
                 fontWeight = fontWeight,

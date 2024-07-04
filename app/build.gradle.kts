@@ -27,7 +27,7 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
-        versionCode = 20
+        versionCode = 21
         versionName = "2.0.0"
 
         // Keeps language resources for only the locales specified below.
@@ -393,7 +393,7 @@ tasks.register<Copy>("copyDevPreviewApk") {
 }
 
 tasks.register<Copy>("copyReleaseApk") {
-    val gitHubApkFile = "app-prod-cafeBazaar-release.apk"
+    val gitHubApkFile = "app-prod-gitHub-release.apk"
     val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
     val myketApkFile = "app-prod-myket-release.apk"
 

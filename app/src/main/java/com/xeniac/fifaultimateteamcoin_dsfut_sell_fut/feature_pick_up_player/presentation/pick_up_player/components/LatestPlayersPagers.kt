@@ -38,11 +38,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
@@ -130,6 +132,8 @@ fun PlayerCard(
     ),
     onClick: () -> Unit
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+
     ElevatedCard(
         onClick = onClick,
         shape = shape,
@@ -154,7 +158,12 @@ fun PlayerCard(
 
                 PlayerName(name = player.name)
 
-                ExpiryTimer(timerText = timerText)
+                ExpiryTimer(
+                    timerText = when (layoutDirection) {
+                        LayoutDirection.Ltr -> timerText
+                        LayoutDirection.Rtl -> timerText.reversed()
+                    }
+                )
             }
 
             Column(
@@ -289,13 +298,13 @@ fun ExpiryTimer(
             )
             .animateContentSize()
     ) {
-        val isTimerFinished = timerText == UiText.StringResource(
+        val isTimerFinished = timerText.reversed() == UiText.StringResource(
             R.string.pick_up_player_latest_player_timer_expired
         ).asString()
 
         if (isTimerFinished) {
             Text(
-                text = timerText,
+                text = stringResource(id = R.string.pick_up_player_latest_player_timer_expired),
                 fontSize = fontSize,
                 lineHeight = lineHeight,
                 fontWeight = fontWeight,
