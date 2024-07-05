@@ -67,7 +67,7 @@ class HomeRepositoryImpl @Inject constructor(
                     else -> false
                 }
 
-                val stalenessDays = updateInfo.clientVersionStalenessDays ?: -1
+                val stalenessDays = updateInfo.clientVersionStalenessDays ?: -0
                 val hasUpdateStalenessDaysReached = stalenessDays >=
                         Constants.IN_APP_UPDATES_DAYS_FOR_FLEXIBLE_UPDATE
 
