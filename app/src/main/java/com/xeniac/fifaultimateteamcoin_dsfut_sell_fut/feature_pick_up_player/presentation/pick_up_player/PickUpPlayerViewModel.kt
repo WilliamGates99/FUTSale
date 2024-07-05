@@ -163,8 +163,13 @@ class PickUpPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun cancelAutoPickUpPlayer() {
+    private fun cancelAutoPickUpPlayer() = viewModelScope.launch {
         autoPickUpPlayerJob?.cancel()
+        mutex.withLock {
+            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                isAutoPickUpLoading = false
+            )
+        }
     }
 
     private fun autoPickUpPlayer() {

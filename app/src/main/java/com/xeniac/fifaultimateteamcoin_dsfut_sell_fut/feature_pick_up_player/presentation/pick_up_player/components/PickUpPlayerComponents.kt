@@ -28,7 +28,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 fun AutoPickUpButton(
     pickUpPlayerState: PickUpPlayerState,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = !pickUpPlayerState.isPickUpOnceLoading,
+    isEnabled: Boolean = !pickUpPlayerState.isAutoPickUpLoading,
     contentPadding: PaddingValues = PaddingValues(vertical = 14.dp),
     textFontSize: TextUnit = 16.sp,
     textLineHeight: TextUnit = 20.sp,
@@ -39,7 +39,6 @@ fun AutoPickUpButton(
     if (pickUpPlayerState.isAutoPickUpLoading) {
         GradientButton(
             onClick = onCancelClick,
-            isEnabled = isEnabled,
             gradientColors = listOf(
                 MaterialTheme.colorScheme.secondaryContainer,
                 MaterialTheme.colorScheme.secondaryContainer,
