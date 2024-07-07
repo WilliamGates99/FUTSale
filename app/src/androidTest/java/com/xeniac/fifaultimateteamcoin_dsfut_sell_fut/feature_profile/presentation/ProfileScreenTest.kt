@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.rule.IntentsRule
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
@@ -49,6 +50,9 @@ class ProfileScreenTest {
 
     @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule(order = 3)
+    val intentsTestRule = IntentsRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
@@ -123,8 +127,6 @@ class ProfileScreenTest {
 
     @Test
     fun clickOnWalletButton_opensWalletUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_wallet)).apply {
                 assertExists()
@@ -140,14 +142,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_ACCOUNT_WALLET)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnPurchasedPlayersButton_opensPurchasedPlayersUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_purchased_players)).apply {
                 assertExists()
@@ -163,14 +161,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_ACCOUNT_PURCHASED_PLAYERS)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnRulesButton_opensRulesUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_rules)).apply {
                 assertExists()
@@ -186,14 +180,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_ACCOUNT_RULES)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnStatisticsButton_opensStatisticsUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_statistics)).apply {
                 assertExists()
@@ -209,14 +199,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_ACCOUNT_STATISTICS)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnDsfutNewsButton_opensDsfutNewsUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_dsfut_news)).apply {
                 assertExists()
@@ -232,14 +218,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_DSFUT_DSFUT_NEWS)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnConsoleNotificationsButton_opensConsoleNotificationsUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_console_notifications)).apply {
                 assertExists()
@@ -255,14 +237,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_DSFUT_CONSOLE_NOTIFICATIONS)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnPcNotificationsButton_opensPcNotificationsUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_pc_notifications)).apply {
                 assertExists()
@@ -278,14 +256,10 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_DSFUT_PC_NOTIFICATIONS)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnDsfutWebsiteBtn_opensDsfutUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_dsfut_website)).apply {
                 assertExists()
@@ -301,7 +275,5 @@ class ProfileScreenTest {
                 IntentMatchers.hasData(Constants.URL_DSFUT_DSFUT_WEBSITE)
             )
         )
-
-        Intents.release()
     }
 }
