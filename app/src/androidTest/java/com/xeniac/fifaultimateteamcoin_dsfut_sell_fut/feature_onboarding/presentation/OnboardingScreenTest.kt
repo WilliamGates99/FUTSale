@@ -323,7 +323,7 @@ class OnboardingScreenTest {
     }
 
     @Test
-    fun clickRegisterBtnOnPageFour_opensDsfutUrlInBrowser() {
+    fun clickOnRegisterBtnOnPageFour_opensDsfutUrlInBrowser() {
         Intents.init()
 
         composeTestRule.apply {
@@ -347,7 +347,7 @@ class OnboardingScreenTest {
     }
 
     @Test
-    fun clickAgreementBtnOnPageFour_opensPrivacyPolicyUrlInBrowser() {
+    fun clickOnAgreementBtnOnPageFour_opensPrivacyPolicyUrlInBrowser() {
         Intents.init()
 
         composeTestRule.apply {
