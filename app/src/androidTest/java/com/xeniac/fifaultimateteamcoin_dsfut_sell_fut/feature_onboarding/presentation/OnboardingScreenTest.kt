@@ -39,7 +39,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @UninstallModules(AppModule::class)
-class OnboardingScreenKtTest {
+class OnboardingScreenTest {
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(/* testInstance = */ this)
