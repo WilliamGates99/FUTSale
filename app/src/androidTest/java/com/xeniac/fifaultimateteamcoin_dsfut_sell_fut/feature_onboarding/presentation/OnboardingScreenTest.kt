@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.rule.IntentsRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
@@ -46,6 +47,9 @@ class OnboardingScreenTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule(order = 2)
+    val intentsTestRule = IntentsRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
@@ -324,8 +328,6 @@ class OnboardingScreenTest {
 
     @Test
     fun clickOnRegisterBtnOnPageFour_opensDsfutUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
 
@@ -342,14 +344,10 @@ class OnboardingScreenTest {
                 IntentMatchers.hasData(Constants.URL_DSFUT)
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun clickOnAgreementBtnOnPageFour_opensPrivacyPolicyUrlInBrowser() {
-        Intents.init()
-
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
 
@@ -366,7 +364,5 @@ class OnboardingScreenTest {
                 IntentMatchers.hasData(Constants.URL_PRIVACY_POLICY)
             )
         )
-
-        Intents.release()
     }
 }
