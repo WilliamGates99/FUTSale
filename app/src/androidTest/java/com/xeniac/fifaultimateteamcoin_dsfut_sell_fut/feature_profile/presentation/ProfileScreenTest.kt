@@ -126,7 +126,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnWalletButton_opensWalletUrlInBrowser() {
+    fun clickOnWalletBtn_opensWalletUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_wallet)).apply {
                 assertExists()
@@ -145,7 +145,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnPurchasedPlayersButton_opensPurchasedPlayersUrlInBrowser() {
+    fun clickOnPurchasedPlayersBtn_opensPurchasedPlayersUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_purchased_players)).apply {
                 assertExists()
@@ -164,7 +164,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnRulesButton_opensRulesUrlInBrowser() {
+    fun clickOnRulesBtn_opensRulesUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_rules)).apply {
                 assertExists()
@@ -183,7 +183,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnStatisticsButton_opensStatisticsUrlInBrowser() {
+    fun clickOnStatisticsBtn_opensStatisticsUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_account_links_statistics)).apply {
                 assertExists()
@@ -202,7 +202,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnDsfutNewsButton_opensDsfutNewsUrlInBrowser() {
+    fun clickOnDsfutNewsBtn_opensDsfutNewsUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_dsfut_news)).apply {
                 assertExists()
@@ -221,7 +221,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnConsoleNotificationsButton_opensConsoleNotificationsUrlInBrowser() {
+    fun clickOnConsoleNotificationsBtn_opensConsoleNotificationsUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_console_notifications)).apply {
                 assertExists()
@@ -240,7 +240,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun clickOnPcNotificationsButton_opensPcNotificationsUrlInBrowser() {
+    fun clickOnPcNotificationsBtn_opensPcNotificationsUrlInBrowser() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.profile_text_other_links_pc_notifications)).apply {
                 assertExists()
