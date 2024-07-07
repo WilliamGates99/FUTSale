@@ -56,9 +56,9 @@ class OnboardingScreenTest {
         hiltRule.inject()
 
         composeTestRule.activity.setContent {
-            testNavController = rememberNavController()
-
             FutSaleTheme {
+                testNavController = rememberNavController()
+
                 SetupRootNavGraph(
                     rootNavController = testNavController,
                     startDestination = Screen.OnboardingScreen
