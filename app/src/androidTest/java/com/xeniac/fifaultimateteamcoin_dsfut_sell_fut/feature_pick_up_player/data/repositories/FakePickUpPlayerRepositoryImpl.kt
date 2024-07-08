@@ -1,5 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
@@ -33,9 +36,15 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerRepository {
 
-    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
+    private var isNetworkAvailable = false
+
+    private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
+
+    fun isNetworkAvailable(isAvailable: Boolean) {
+        isNetworkAvailable = isAvailable
+    }
 
     fun addDummyPlayersToLatestPlayers() {
         val playersToInsert = mutableListOf<PlayerEntity>()
@@ -83,9 +92,9 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         isPlayersQueueEmpty = isEmpty
     }
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
-        latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
-        emit(latestPlayerEntities.map { it.toPlayer() })
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = snapshotFlow {
+        latestPlayerEntities.toMutableStateList().sortByDescending { it.pickUpTimeInMillis }
+        latestPlayerEntities.map { it.toPlayer() }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
@@ -114,6 +123,10 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> {
+        if (!isNetworkAvailable) {
+            return Result.Error(PickUpPlayerError.Network.Offline)
+        }
+
         val mockEngine = MockEngine {
             val pickUpPlayerResponseDto = if (pickUpPlayerHttpStatusCode == HttpStatusCode.OK) {
                 if (isPlayersQueueEmpty) {
