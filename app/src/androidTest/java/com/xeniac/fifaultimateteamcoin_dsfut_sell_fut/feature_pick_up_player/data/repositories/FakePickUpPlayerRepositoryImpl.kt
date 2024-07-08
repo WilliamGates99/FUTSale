@@ -194,6 +194,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
                     val playerEntity = playerDto!!.toPlayerEntity()
+                    latestPlayerEntities.add(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {
                     val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
