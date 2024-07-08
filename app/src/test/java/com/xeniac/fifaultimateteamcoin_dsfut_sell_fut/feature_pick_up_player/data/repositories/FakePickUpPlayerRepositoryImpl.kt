@@ -1,8 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
@@ -35,7 +32,7 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
-    private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
+    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
@@ -85,9 +82,9 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         isPlayersQueueEmpty = isEmpty
     }
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> = snapshotFlow {
-        latestPlayerEntities.toMutableStateList().sortByDescending { it.pickUpTimeInMillis }
-        latestPlayerEntities.map { it.toPlayer() }
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
+        latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
+        emit(latestPlayerEntities.map { it.toPlayer() })
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
