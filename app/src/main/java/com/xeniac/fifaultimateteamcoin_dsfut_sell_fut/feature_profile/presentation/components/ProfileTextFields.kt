@@ -24,6 +24,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.states.ProfileState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 
 @Composable
 fun ProfileTextFields(
@@ -114,7 +115,6 @@ fun PartnerIdTextField(
     onPartnerIdChange: (newPartnerId: String) -> Unit
 ) {
     CustomOutlinedTextField(
-        modifier = modifier,
         isLoading = false,
         value = profileState.partnerId,
         errorText = profileState.partnerIdErrorText?.asString(),
@@ -136,7 +136,9 @@ fun PartnerIdTextField(
             }
         },
         keyboardType = keyboardType,
-        imeAction = imeAction
+        imeAction = imeAction,
+        testTag = TestTags.PARTNER_ID_TEXT_FIELD,
+        modifier = modifier
     )
 }
 
@@ -176,7 +178,6 @@ fun SecretKeyTextField(
     onSecretKeyChange: (newSecretKey: String) -> Unit
 ) {
     CustomOutlinedTextField(
-        modifier = modifier,
         isLoading = false,
         value = profileState.secretKey,
         errorText = profileState.secretKeyErrorText?.asString(),
@@ -198,6 +199,8 @@ fun SecretKeyTextField(
             }
         },
         keyboardType = keyboardType,
-        imeAction = imeAction
+        imeAction = imeAction,
+        testTag = TestTags.SECRET_KEY_TEXT_FIELD,
+        modifier = modifier
     )
 }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -26,6 +26,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_gra
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR_ITEM_PROFILE
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -81,12 +82,12 @@ class ProfileScreenTest {
     @Test
     fun launchingProfileScreen_showsPartnerIdAndSecretKeyTextFields() {
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.profile_textfield_hint_partner_id)).apply {
+            onNodeWithTag(testTag = TestTags.PARTNER_ID_TEXT_FIELD).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithText(context.getString(R.string.profile_textfield_hint_secret_key)).apply {
+            onNodeWithTag(testTag = TestTags.SECRET_KEY_TEXT_FIELD).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -96,15 +97,10 @@ class ProfileScreenTest {
     @Test
     fun editPartnerId_showsTheUpdatedPartnerId() {
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.profile_textfield_hint_partner_id)).apply {
+            onNodeWithTag(testTag = TestTags.PARTNER_ID_TEXT_FIELD).apply {
                 assertExists()
                 performTextInput(text = "123")
-                assertIsNotDisplayed()
-            }
-
-            onNodeWithText(text = "123").apply {
-                assertExists()
-                assertIsDisplayed()
+                assertTextEquals("123")
             }
         }
     }
@@ -112,15 +108,10 @@ class ProfileScreenTest {
     @Test
     fun editSecretKey_showsTheUpdatedSecretKey() {
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.profile_textfield_hint_secret_key)).apply {
+            onNodeWithTag(testTag = TestTags.SECRET_KEY_TEXT_FIELD).apply {
                 assertExists()
                 performTextInput(text = "abc123")
-                assertIsNotDisplayed()
-            }
-
-            onNodeWithText(text = "abc123").apply {
-                assertExists()
-                assertIsDisplayed()
+                assertTextEquals("abc123")
             }
         }
     }

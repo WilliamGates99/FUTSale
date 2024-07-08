@@ -56,6 +56,7 @@ fun CustomOutlinedTextField(
     keyboardType: KeyboardType,
     imeAction: ImeAction,
     modifier: Modifier = Modifier,
+    testTag: String? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = errorText != null,
@@ -137,7 +138,9 @@ fun CustomOutlinedTextField(
         }
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .addTestTag(tag = testTag),
             value = value,
             onValueChange = onValueChange,
             enabled = enabled && !isLoading,
