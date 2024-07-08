@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
@@ -323,6 +325,36 @@ class OnboardingScreenTest {
             val backStackEntry = testNavController.currentBackStackEntry
             val currentRoute = backStackEntry?.destination?.route
             assertThat(currentRoute).isEqualTo(Screen.HomeScreen::class.qualifiedName)
+        }
+    }
+
+    @Test
+    fun editPartnerIdOnPageFour_showsTheUpdatedPartnerId() {
+        composeTestRule.apply {
+            onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
+
+            EspressoUtils.solveIdlingResourceTimeout()
+
+            onNodeWithTag(testTag = TestTags.PARTNER_ID_TEXT_FIELD).apply {
+                assertExists()
+                performTextInput(text = "123")
+                assertTextEquals("123")
+            }
+        }
+    }
+
+    @Test
+    fun editSecretKeyOnPageFour_showsTheUpdatedSecretKey() {
+        composeTestRule.apply {
+            onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
+
+            EspressoUtils.solveIdlingResourceTimeout()
+
+            onNodeWithTag(testTag = TestTags.SECRET_KEY_TEXT_FIELD).apply {
+                assertExists()
+                performTextInput(text = "abc123")
+                assertTextEquals("abc123")
+            }
         }
     }
 
