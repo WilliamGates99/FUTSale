@@ -36,9 +36,11 @@ import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.addTestTag
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 
 @Composable
 fun SettingsCard(
@@ -106,6 +108,7 @@ fun SettingsCard(
                 icon = painterResource(id = R.drawable.ic_settings_notification_sound),
                 title = stringResource(id = R.string.settings_text_settings_notification_sound),
                 isChecked = settingsState.isNotificationSoundEnabled,
+                testTag = TestTags.NOTIFICATION_SOUND_SWITCH,
                 onCheckedChange = onNotificationSoundChange
             )
 
@@ -115,6 +118,7 @@ fun SettingsCard(
                 icon = painterResource(id = R.drawable.ic_settings_notification_vibrate),
                 title = stringResource(id = R.string.settings_text_settings_notification_vibrate),
                 isChecked = settingsState.isNotificationVibrateEnabled,
+                testTag = TestTags.NOTIFICATION_VIBRATE_SWITCH,
                 onCheckedChange = onNotificationVibrateChange
             )
         }
@@ -201,6 +205,7 @@ fun CardSwitchRowItem(
     titleFontSize: TextUnit = 16.sp,
     titleFontWeight: FontWeight = FontWeight.SemiBold,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
+    testTag: String? = null,
     onCheckedChange: (isChecked: Boolean) -> Unit
 ) {
     Row(
@@ -237,7 +242,9 @@ fun CardSwitchRowItem(
             enabled = isChecked != null,
             checked = isChecked ?: false,
             onCheckedChange = onCheckedChange,
-            modifier = Modifier.height(32.dp)
+            modifier = Modifier
+                .height(32.dp)
+                .addTestTag(tag = testTag)
         )
     }
 }

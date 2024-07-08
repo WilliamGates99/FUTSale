@@ -89,6 +89,7 @@ fun LocaleDialog(
         securePolicy = securePolicy
     ),
     icon: Painter = painterResource(id = R.drawable.ic_settings_language),
+    title: String = stringResource(id = R.string.settings_dialog_title_language),
     containerColor: Color = MaterialTheme.colorScheme.surface,
     iconColor: Color = MaterialTheme.colorScheme.secondary,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -118,7 +119,7 @@ fun LocaleDialog(
                     ) {
                         Icon(
                             painter = icon,
-                            contentDescription = null,
+                            contentDescription = title,
                             tint = iconColor,
                             modifier = Modifier.size(24.dp)
                         )
