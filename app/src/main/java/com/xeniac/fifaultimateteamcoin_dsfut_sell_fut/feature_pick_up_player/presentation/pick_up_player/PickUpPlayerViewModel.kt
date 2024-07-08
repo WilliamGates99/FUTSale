@@ -44,7 +44,7 @@ class PickUpPlayerViewModel @Inject constructor(
     private val mutex: Mutex = Mutex()
 
     val latestPickedPlayers = pickUpPlayerUseCases
-        .observeLatestPickedPlayersUseCaseUseCase.get()().stateIn(
+        .observeLatestPickedPlayersUseCase.get()().stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = emptyList()
