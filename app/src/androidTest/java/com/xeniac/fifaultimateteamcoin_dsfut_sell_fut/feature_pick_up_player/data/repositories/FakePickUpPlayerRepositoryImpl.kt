@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
@@ -93,7 +92,6 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
     }
 
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = snapshotFlow {
-        latestPlayerEntities.toMutableStateList().sortByDescending { it.pickUpTimeInMillis }
         latestPlayerEntities.map { it.toPlayer() }
     }
 

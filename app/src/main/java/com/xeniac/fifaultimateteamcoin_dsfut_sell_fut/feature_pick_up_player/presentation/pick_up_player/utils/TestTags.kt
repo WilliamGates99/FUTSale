@@ -9,4 +9,6 @@ object TestTags {
 
     const val TAKE_AFTER_CHECK_BOX = "take_after_check_box"
     const val TAKE_AFTER_SLIDER = "take_after_slider"
+
+    const val LATEST_PICKED_UP_PLAYER_CARD = "latest_picked_up_player_card"
 }
