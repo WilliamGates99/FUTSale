@@ -14,6 +14,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 @Composable
 fun PriceTextFields(
@@ -43,6 +44,7 @@ fun PriceTextFields(
             errorText = pickUpPlayerState.minPriceErrorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
+            testTag = TestTags.MIN_PRICE_TEXT_FIELD,
             modifier = Modifier.weight(1f)
         )
 
@@ -57,6 +59,7 @@ fun PriceTextFields(
             errorText = pickUpPlayerState.maxPriceErrorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
+            testTag = TestTags.MAX_PRICE_TEXT_FIELD,
             modifier = Modifier.weight(1f)
         )
     }

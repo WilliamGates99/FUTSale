@@ -32,6 +32,7 @@ fun CustomCheckbox(
     isChecked: Boolean,
     text: String?,
     modifier: Modifier = Modifier,
+    testTag: String? = null,
     textColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     textFontSize: TextUnit = 14.sp,
     textLineHeight: TextUnit = 14.sp,
@@ -70,6 +71,7 @@ fun CustomCheckbox(
                 horizontal = 4.dp,
                 vertical = 4.dp
             )
+            .addTestTag(tag = testTag)
     ) {
         Checkbox(
             checked = isChecked,
