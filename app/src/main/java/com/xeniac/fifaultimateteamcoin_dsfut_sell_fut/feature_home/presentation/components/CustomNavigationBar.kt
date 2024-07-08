@@ -22,8 +22,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR
 
 enum class NavigationBarItems(
     val screen: Screen,
@@ -70,7 +71,7 @@ fun CustomNavigationBar(
     iconSize: Dp = 24.dp,
     onItemClick: (screen: Screen) -> Unit
 ) {
-    NavigationBar(modifier = modifier.testTag(TestTags.NAVIGATION_BAR)) {
+    NavigationBar(modifier = modifier.testTag(NAVIGATION_BAR)) {
         NavigationBarItems.entries.forEach { navigationBarItem ->
             val isSelected = currentRoute.contains(navigationBarItem.screen.toString())
 

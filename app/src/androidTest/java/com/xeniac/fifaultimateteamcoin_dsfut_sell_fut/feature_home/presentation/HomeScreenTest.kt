@@ -17,14 +17,11 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_HISTORY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_PROFILE
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_SETTINGS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -72,7 +69,7 @@ class HomeScreenTest {
     @Test
     fun launchingHomeScreen_showsNavigationBarAndPickUpPlayerScreen() {
         composeTestRule.apply {
-            onNodeWithTag(testTag = TestTags.NAVIGATION_BAR).assertExists()
+            onNodeWithTag(testTag = NAVIGATION_BAR).assertExists()
 
             onNodeWithText(
                 text = context.getString(R.string.pick_up_player_app_bar_title)
@@ -88,7 +85,7 @@ class HomeScreenTest {
                 performClick()
             }
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
         }
     }
 
@@ -100,7 +97,7 @@ class HomeScreenTest {
                 performClick()
             }
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_PROFILE).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_PROFILE).assertIsDisplayed()
         }
     }
 
@@ -112,7 +109,7 @@ class HomeScreenTest {
                 performClick()
             }
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
         }
     }
 
@@ -124,7 +121,7 @@ class HomeScreenTest {
                 performClick()
             }
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_SETTINGS).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_SETTINGS).assertIsDisplayed()
         }
     }
 
@@ -144,7 +141,7 @@ class HomeScreenTest {
 
             Espresso.pressBackUnconditionally()
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
         }
     }
 
@@ -158,7 +155,7 @@ class HomeScreenTest {
 
             Espresso.pressBackUnconditionally()
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
         }
     }
 
@@ -172,7 +169,7 @@ class HomeScreenTest {
 
             Espresso.pressBackUnconditionally()
 
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER).assertIsDisplayed()
         }
     }
 
