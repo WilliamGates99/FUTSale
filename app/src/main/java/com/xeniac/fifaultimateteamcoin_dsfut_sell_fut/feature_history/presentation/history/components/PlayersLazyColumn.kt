@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +44,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platfor
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.dashedBorder
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant20
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 
 @Composable
 fun PlayersLazyColumn(
@@ -54,7 +56,7 @@ fun PlayersLazyColumn(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding,
-        modifier = modifier
+        modifier = modifier.testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
     ) {
         items(
             count = pickedPlayersHistory.itemCount,
