@@ -86,38 +86,28 @@ class PickUpPlayerScreenTest {
     private val fakePreferencesRepository = FakePreferencesRepositoryImpl()
     private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
 
-    private lateinit var observeLatestPickedPlayersUseCaseUseCase: ObserveLatestPickedPlayersUseCase
-    private lateinit var getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase
-    private lateinit var getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase
-    private lateinit var getSelectedPlatformUseCase: GetSelectedPlatformUseCase
-    private lateinit var setSelectedPlatformUseCase: SetSelectedPlatformUseCase
-    private lateinit var pickUpPlayerUseCase: PickUpPlayerUseCase
-    private lateinit var startCountDownTimerUseCase: StartCountDownTimerUseCase
-
-    private lateinit var pickUpPlayerUseCases: PickUpPlayerUseCases
-
     private lateinit var testNavController: NavHostController
 
     @Before
     fun setUp() {
         hiltRule.inject()
 
-        observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
+        val observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
-        getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
+        val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
+        val getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
+        val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        setSelectedPlatformUseCase = SetSelectedPlatformUseCase(
+        val setSelectedPlatformUseCase = SetSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        pickUpPlayerUseCase = PickUpPlayerUseCase(
+        val pickUpPlayerUseCase = PickUpPlayerUseCase(
             preferencesRepository = fakePreferencesRepository,
             pickUpPlayerRepository = fakePickUpPlayerRepository,
             validatePartnerId = ValidatePartnerId(),
@@ -126,11 +116,11 @@ class PickUpPlayerScreenTest {
             validateMaxPrice = ValidateMaxPrice(),
             validateTakeAfter = ValidateTakeAfter()
         )
-        startCountDownTimerUseCase = StartCountDownTimerUseCase(
+        val startCountDownTimerUseCase = StartCountDownTimerUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
 
-        pickUpPlayerUseCases = PickUpPlayerUseCases(
+        val pickUpPlayerUseCases = PickUpPlayerUseCases(
             { observeLatestPickedPlayersUseCaseUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
