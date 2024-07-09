@@ -27,6 +27,7 @@
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_connection_unavailable">Unable to connect to the internet.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
+    <string name="error_network_serialization">Something went wrong while trying to process the data.</string>
     <string name="error_intent_app_not_found">There is no app on the phone to handle this action.</string>
     <string name="error_btn_retry">Retry</string>
     <string name="error_btn_confirm">Confirm</string>

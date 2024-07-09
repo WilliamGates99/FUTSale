@@ -20,6 +20,7 @@ sealed class PickUpPlayerError : Error() {
         data object RedirectResponseException : Network()
         data object ClientRequestException : Network()
         data object ServerResponseException : Network()
+        data object SerializationException : Network()
 
         data class DsfutBlock(val message: String) : Network()
         data object DsfutEmpty : Network()

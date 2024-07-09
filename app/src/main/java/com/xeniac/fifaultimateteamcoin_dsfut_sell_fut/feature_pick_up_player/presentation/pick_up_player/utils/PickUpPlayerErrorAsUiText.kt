@@ -21,6 +21,7 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.Network.RedirectResponseException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.ClientRequestException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.ServerResponseException -> UiText.StringResource(R.string.error_network_failure)
+    PickUpPlayerError.Network.SerializationException -> UiText.StringResource(R.string.error_network_serialization)
     is PickUpPlayerError.Network.DsfutBlock -> UiText.PluralStringResource(
         R.plurals.pick_up_player_error_dsfut_block,
         message.filter { char -> char.isDigit() }.toInt(),
