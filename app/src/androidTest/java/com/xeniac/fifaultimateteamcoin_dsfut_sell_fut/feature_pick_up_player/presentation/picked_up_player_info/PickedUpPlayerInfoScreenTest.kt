@@ -74,21 +74,19 @@ class PickedUpPlayerInfoScreenTest {
     fun setUp() {
         hiltRule.inject()
 
-        composeTestRule.apply {
-            activity.setContent {
-                FutSaleTheme {
-                    val testNavController = rememberNavController()
+        composeTestRule.activity.setContent {
+            FutSaleTheme {
+                val testNavController = rememberNavController()
 
-                    SetupHomeNavGraph(
-                        homeNavController = testNavController,
-                        bottomPadding = 0.dp
+                SetupHomeNavGraph(
+                    homeNavController = testNavController,
+                    bottomPadding = 0.dp
+                )
+
+                LaunchedEffect(key1 = Unit) {
+                    testNavController.navigate(
+                        Screen.PickedUpPlayerInfoScreen(player = testPlayer)
                     )
-
-                    LaunchedEffect(key1 = Unit) {
-                        testNavController.navigate(
-                            Screen.PickedUpPlayerInfoScreen(player = testPlayer)
-                        )
-                    }
                 }
             }
         }
