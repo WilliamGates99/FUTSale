@@ -11,7 +11,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
@@ -57,8 +56,6 @@ class ProfileScreenTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private lateinit var testNavController: NavHostController
-
     @Before
     fun setUp() {
         hiltRule.inject()
@@ -66,7 +63,7 @@ class ProfileScreenTest {
         composeTestRule.apply {
             activity.setContent {
                 FutSaleTheme {
-                    testNavController = rememberNavController()
+                    val testNavController = rememberNavController()
 
                     SetupRootNavGraph(
                         rootNavController = testNavController,
