@@ -96,8 +96,6 @@ class PickUpPlayerScreenTest {
 
     private lateinit var pickUpPlayerUseCases: PickUpPlayerUseCases
 
-    private lateinit var fakePickUpViewModel: PickUpPlayerViewModel
-
     private lateinit var testNavController: NavHostController
 
     @Before
@@ -142,7 +140,7 @@ class PickUpPlayerScreenTest {
             { startCountDownTimerUseCase }
         )
 
-        fakePickUpViewModel = PickUpPlayerViewModel(
+        val fakePickUpViewModel = PickUpPlayerViewModel(
             pickUpPlayerUseCases = pickUpPlayerUseCases,
             decimalFormat = decimalFormat,
             savedStateHandle = SavedStateHandle()
