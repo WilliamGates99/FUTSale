@@ -136,45 +136,41 @@ class PickUpPlayerScreenTest {
             savedStateHandle = SavedStateHandle()
         )
 
-        composeTestRule.apply {
-            activity.setContent {
-                FutSaleTheme {
-                    testNavController = rememberNavController()
+        composeTestRule.activity.setContent {
+            FutSaleTheme {
+                testNavController = rememberNavController()
 
-                    NavHost(
-                        navController = testNavController,
-                        startDestination = Screen.PickUpPlayerScreen
-                    ) {
-                        composable<Screen.PickUpPlayerScreen> {
-                            PickUpPlayerScreen(
-                                viewModel = fakePickUpViewModel,
-                                bottomPadding = 0.dp,
-                                onNavigateToProfileScreen = {
-                                    testNavController.navigate(Screen.ProfileScreen) {
-                                        launchSingleTop = true
-                                        popUpTo(Screen.PickUpPlayerScreen)
-                                    }
-                                },
-                                onNavigateToPickedUpPlayerInfoScreen = { player ->
-                                    testNavController.navigate(
-                                        Screen.PickedUpPlayerInfoScreen(
-                                            player = player
-                                        )
-                                    )
+                NavHost(
+                    navController = testNavController,
+                    startDestination = Screen.PickUpPlayerScreen
+                ) {
+                    composable<Screen.PickUpPlayerScreen> {
+                        PickUpPlayerScreen(
+                            viewModel = fakePickUpViewModel,
+                            bottomPadding = 0.dp,
+                            onNavigateToProfileScreen = {
+                                testNavController.navigate(Screen.ProfileScreen) {
+                                    launchSingleTop = true
+                                    popUpTo(Screen.PickUpPlayerScreen)
                                 }
-                            )
-                        }
+                            },
+                            onNavigateToPickedUpPlayerInfoScreen = { player ->
+                                testNavController.navigate(
+                                    Screen.PickedUpPlayerInfoScreen(player = player)
+                                )
+                            }
+                        )
+                    }
 
-                        composable<Screen.PickedUpPlayerInfoScreen>(
-                            typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-                        ) { backStackEntry ->
-                            val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
+                    composable<Screen.PickedUpPlayerInfoScreen>(
+                        typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
+                    ) { backStackEntry ->
+                        val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
 
-                            PickedUpPlayerInfoScreen(
-                                player = args.player,
-                                onNavigateUp = testNavController::navigateUp
-                            )
-                        }
+                        PickedUpPlayerInfoScreen(
+                            player = args.player,
+                            onNavigateUp = testNavController::navigateUp
+                        )
                     }
                 }
             }
