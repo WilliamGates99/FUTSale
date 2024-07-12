@@ -62,10 +62,6 @@ class HistoryScreenTest {
             historyRepository = fakeHistoryRepository
         )
 
-        val fakeHistoryViewModel = HistoryViewModel(
-            observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
-        )
-
         composeTestRule.activity.setContent {
             FutSaleTheme {
                 testNavController = rememberNavController()
@@ -76,7 +72,9 @@ class HistoryScreenTest {
                 ) {
                     composable<Screen.HistoryScreen> {
                         HistoryScreen(
-                            viewModel = fakeHistoryViewModel,
+                            viewModel = HistoryViewModel(
+                                observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
+                            ),
                             bottomPadding = 0.dp,
                             onNavigateToPlayerInfoScreen = { player ->
                                 testNavController.navigate(

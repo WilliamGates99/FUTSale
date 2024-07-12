@@ -127,12 +127,6 @@ class PickUpPlayerScreenTest {
             { startCountDownTimerUseCase }
         )
 
-        val fakePickUpViewModel = PickUpPlayerViewModel(
-            pickUpPlayerUseCases = pickUpPlayerUseCases,
-            decimalFormat = decimalFormat,
-            savedStateHandle = SavedStateHandle()
-        )
-
         composeTestRule.activity.setContent {
             FutSaleTheme {
                 testNavController = rememberNavController()
@@ -143,7 +137,11 @@ class PickUpPlayerScreenTest {
                 ) {
                     composable<Screen.PickUpPlayerScreen> {
                         PickUpPlayerScreen(
-                            viewModel = fakePickUpViewModel,
+                            viewModel = PickUpPlayerViewModel(
+                                pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                decimalFormat = decimalFormat,
+                                savedStateHandle = SavedStateHandle()
+                            ),
                             bottomPadding = 0.dp,
                             onNavigateToProfileScreen = {
                                 testNavController.navigate(Screen.ProfileScreen) {
