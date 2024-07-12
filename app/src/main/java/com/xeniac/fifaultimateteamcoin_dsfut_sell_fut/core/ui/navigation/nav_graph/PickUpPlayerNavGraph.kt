@@ -22,7 +22,7 @@ fun NavGraphBuilder.pickUpPlayerNavGraph(
             onNavigateToProfileScreen = {
                 homeNavController.navigate(Screen.ProfileScreen) {
                     launchSingleTop = true
-                    popUpTo(Screen.PickUpPlayerScreen)
+                    popUpTo(homeNavController.graph.startDestinationId)
                 }
             },
             onNavigateToPickedUpPlayerInfoScreen = { player ->

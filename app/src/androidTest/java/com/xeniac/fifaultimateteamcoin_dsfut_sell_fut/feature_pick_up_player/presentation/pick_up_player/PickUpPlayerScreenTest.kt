@@ -151,7 +151,7 @@ class PickUpPlayerScreenTest {
                             onNavigateToProfileScreen = {
                                 testNavController.navigate(Screen.ProfileScreen) {
                                     launchSingleTop = true
-                                    popUpTo(Screen.PickUpPlayerScreen)
+                                    popUpTo(testNavController.graph.startDestinationId)
                                 }
                             },
                             onNavigateToPickedUpPlayerInfoScreen = { player ->
