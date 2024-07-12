@@ -10,7 +10,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
@@ -93,22 +93,34 @@ class ProfileScreenTest {
 
     @Test
     fun editPartnerId_showsTheUpdatedPartnerId() {
+        val testPartnerId = "123"
+
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.PARTNER_ID_TEXT_FIELD).apply {
                 assertExists()
-                performTextInput(text = "123")
-                assertTextEquals("123")
+                assertIsDisplayed()
+                performTextReplacement(text = testPartnerId)
+
+                mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to typing delay
+
+                assertTextEquals(testPartnerId)
             }
         }
     }
 
     @Test
     fun editSecretKey_showsTheUpdatedSecretKey() {
+        val testSecretKey = "abc123"
+
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.SECRET_KEY_TEXT_FIELD).apply {
                 assertExists()
-                performTextInput(text = "abc123")
-                assertTextEquals("abc123")
+                assertIsDisplayed()
+                performTextReplacement(text = testSecretKey)
+
+                mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to typing delay
+
+                assertTextEquals(testSecretKey)
             }
         }
     }
