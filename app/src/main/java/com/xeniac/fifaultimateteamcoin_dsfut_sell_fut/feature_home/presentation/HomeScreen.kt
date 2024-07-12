@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -211,7 +212,7 @@ fun HomeScreen(
                             avoid building up a large stack of destinations
                             on the back stack as user selects items
                              */
-                            popUpTo(Screen.PickUpPlayerScreen)
+                            popUpTo(id = homeNavController.graph.findStartDestination().id)
                         }
                     }
                 )
