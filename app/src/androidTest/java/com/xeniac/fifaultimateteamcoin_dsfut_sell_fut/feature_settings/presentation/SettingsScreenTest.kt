@@ -145,7 +145,7 @@ class SettingsScreenTest {
     }
 
     @Test
-    fun clickOnNotificationSoundSwitch_NegatesTheNotificationSound() {
+    fun clickOnNotificationSoundSwitch_negatesTheNotificationSound() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.NOTIFICATION_SOUND_SWITCH).apply {
                 assertExists()
@@ -160,7 +160,7 @@ class SettingsScreenTest {
     }
 
     @Test
-    fun clickOnNotificationVibrateSwitch_NegatesTheNotificationVibrate() {
+    fun clickOnNotificationVibrateSwitch_negatesTheNotificationVibrate() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.NOTIFICATION_VIBRATE_SWITCH).apply {
                 assertExists()

@@ -307,7 +307,7 @@ class PickUpPlayerScreenTest {
     }
 
     @Test
-    fun clickOnPickOnceBtnWithUnAvailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
+    fun clickOnPickOnceBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
         fakePreferencesRepository.setPartnerId("123")
@@ -379,7 +379,7 @@ class PickUpPlayerScreenTest {
     }
 
     @Test
-    fun clickOnAutoPickUpBtnWithUnAvailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
+    fun clickOnAutoPickUpBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
         fakePreferencesRepository.setPartnerId("123")
