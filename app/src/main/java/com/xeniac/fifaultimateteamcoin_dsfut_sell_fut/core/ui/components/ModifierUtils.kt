@@ -5,4 +5,4 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 
 @Composable
-fun Modifier.addTestTag(tag: String?): Modifier = tag?.let { this.testTag(it) } ?: this
+fun Modifier.addTestTag(tag: String?): Modifier = tag?.let { this.testTag(tag = it) } ?: this
