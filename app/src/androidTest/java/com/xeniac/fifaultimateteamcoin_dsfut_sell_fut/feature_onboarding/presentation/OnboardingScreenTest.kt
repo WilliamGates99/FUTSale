@@ -9,8 +9,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
-import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
@@ -76,12 +77,20 @@ class OnboardingScreenTest {
     @Test
     fun launchingOnboardingScreen_showsOnboardingDotIndicatorAndPagerAndPageOne() {
         composeTestRule.apply {
-            onNodeWithTag(testTag = TestTags.DOT_INDICATOR).assertExists()
-            onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).assertExists()
+            onNodeWithTag(testTag = TestTags.DOT_INDICATOR).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_first_title)
-            ).assertIsDisplayed()
+            onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
+
+            onNodeWithText(text = context.getString(R.string.onboarding_first_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -94,14 +103,15 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_second_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_second_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun swipeLeftTwiceWhileOnPageOne_showsPageTwo() {
+    fun swipeLeftTwiceWhileOnPageOne_showsPageThree() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performTouchInput {
                 swipeLeft()
@@ -110,14 +120,15 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_third_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_third_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun swipeLeftThreeTimesWhileOnPageOne_showsPageThree() {
+    fun swipeLeftThreeTimesWhileOnPageOne_showsPageFour() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performTouchInput {
                 swipeLeft()
@@ -127,14 +138,15 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_fourth_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_fourth_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun swipeRightOnceWhileOnPageFour_showsPageOne() {
+    fun swipeRightOnceWhileOnPageFour_showsPageThree() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).apply {
                 performScrollToIndex(index = 3)
@@ -148,14 +160,15 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_first_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_third_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun swipeRightTwiceWhileOnPageFour_showsPageOne() {
+    fun swipeRightTwiceWhileOnPageFour_showsPageTwo() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).apply {
                 performScrollToIndex(index = 3)
@@ -170,9 +183,10 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_second_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_second_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -193,9 +207,10 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_first_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_first_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -204,14 +219,17 @@ class OnboardingScreenTest {
         composeTestRule.apply {
             onNodeWithText(text = context.getString(R.string.onboarding_first_btn_skip)).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_fourth_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_fourth_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -220,14 +238,17 @@ class OnboardingScreenTest {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.PAGE_ONE_NEXT_BTN).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_second_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_second_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -240,14 +261,17 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.PAGE_TWO_BACK_BTN).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_first_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_first_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -260,14 +284,17 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.PAGE_TWO_NEXT_BTN).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_third_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_third_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -280,19 +307,22 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.PAGE_THREE_BACK_BTN).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_second_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_second_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun clickOnPageThreeNextBtn_showsPageTwo() {
+    fun clickOnPageThreeNextBtn_showsPageFour() {
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 2)
 
@@ -300,14 +330,17 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.PAGE_THREE_NEXT_BTN).apply {
                 assertExists()
+                assertIsDisplayed()
                 performClick()
             }
 
             EspressoUtils.solveIdlingResourceTimeout()
+            mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to animation delay
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_fourth_title)
-            ).assertIsDisplayed()
+            onNodeWithText(text = context.getString(R.string.onboarding_fourth_title)).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
         }
     }
 
@@ -318,18 +351,23 @@ class OnboardingScreenTest {
 
             EspressoUtils.solveIdlingResourceTimeout()
 
-            onNodeWithText(
-                text = context.getString(R.string.onboarding_fourth_btn_start)
-            ).performClick()
-
-            val backStackEntry = testNavController.currentBackStackEntry
-            val currentRoute = backStackEntry?.destination?.route
-            assertThat(currentRoute).isEqualTo(Screen.HomeScreen::class.qualifiedName)
+            onNodeWithText(text = context.getString(R.string.onboarding_fourth_btn_start)).apply {
+                assertExists()
+                performScrollTo()
+                assertIsDisplayed()
+                performClick()
+            }
         }
+
+        val backStackEntry = testNavController.currentBackStackEntry
+        val currentRoute = backStackEntry?.destination?.route
+        assertThat(currentRoute).isEqualTo(Screen.HomeScreen::class.qualifiedName)
     }
 
     @Test
     fun editPartnerIdOnPageFour_showsTheUpdatedPartnerId() {
+        val testPartnerId = "123"
+
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
 
@@ -337,14 +375,20 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.PARTNER_ID_TEXT_FIELD).apply {
                 assertExists()
-                performTextInput(text = "123")
-                assertTextEquals("123")
+                assertIsDisplayed()
+                performTextReplacement(text = testPartnerId)
+
+                mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to typing delay
+
+                assertTextEquals(testPartnerId)
             }
         }
     }
 
     @Test
     fun editSecretKeyOnPageFour_showsTheUpdatedSecretKey() {
+        val testSecretKey = "abc123"
+
         composeTestRule.apply {
             onNodeWithTag(testTag = TestTags.HORIZONTAL_PAGER).performScrollToIndex(index = 3)
 
@@ -352,8 +396,12 @@ class OnboardingScreenTest {
 
             onNodeWithTag(testTag = TestTags.SECRET_KEY_TEXT_FIELD).apply {
                 assertExists()
-                performTextInput(text = "abc123")
-                assertTextEquals("abc123")
+                assertIsDisplayed()
+                performTextReplacement(text = testSecretKey)
+
+                mainClock.advanceTimeBy(milliseconds = 500) // Advance clock due to typing delay
+
+                assertTextEquals(testSecretKey)
             }
         }
     }
@@ -366,8 +414,6 @@ class OnboardingScreenTest {
             EspressoUtils.solveIdlingResourceTimeout()
 
             onNodeWithTag(testTag = TestTags.PAGE_FOUR_REGISTER_BTN).performClick()
-
-            EspressoUtils.solveIdlingResourceTimeout()
         }
 
         Intents.intended(
@@ -386,8 +432,6 @@ class OnboardingScreenTest {
             EspressoUtils.solveIdlingResourceTimeout()
 
             onNodeWithTag(testTag = TestTags.PAGE_FOUR_AGREEMENT_BTN).performClick()
-
-            EspressoUtils.solveIdlingResourceTimeout()
         }
 
         Intents.intended(
