@@ -11,4 +11,5 @@ plugins {
     alias(libs.plugins.google.services) apply false // Google Services plugin
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.firebase.perf) apply false
+    alias(libs.plugins.android.test) apply false // Needed for Baseline Profiles
 }

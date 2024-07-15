@@ -75,7 +75,13 @@ android {
                 "proguard-rules.pro"
             )
 
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
 
@@ -213,6 +219,21 @@ hilt {
 androidComponents {
     beforeVariants { variantBuilder ->
         // Gradle ignores any variants that satisfy the conditions below.
+        if (variantBuilder.buildType == "benchmark") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
+        }
+
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
@@ -333,6 +354,9 @@ dependencies {
 
     // Google Play In-App Updates API
     implementation(libs.play.app.update.ktx)
+
+    // Baseline Profiles
+    implementation(libs.profileinstaller)
 
     // Local Unit Test Libraries
     testImplementation(libs.truth)

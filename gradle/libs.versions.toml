@@ -24,6 +24,7 @@ lottieCompose = "6.4.1"
 coil-bom = "2.6.0"
 playReview = "2.0.1"
 playAppUpdate = "2.1.0"
+profileinstaller = "1.3.1"
 truth = "1.4.4"
 junit = "4.13.2"
 archCoreTesting = "2.2.0"
@@ -32,6 +33,8 @@ testExtJunit = "1.2.1"
 testRunner = "1.6.1"
 testRules = "1.6.1"
 espresso = "3.6.1"
+uiautomator = "2.3.0"
+benchmarkMacroJunit4 = "1.2.4"
 
 # Plugins
 agp = "8.5.1"
@@ -125,6 +128,9 @@ play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref =
 # Google Play In-App Updates API
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "playAppUpdate" }
 
+# Baseline Profiles
+profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
+
 # Test Libraries
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -145,6 +151,10 @@ espresso-intents = { module = "androidx.test.espresso:espresso-intents", version
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
+# Baseline Profiles Libraries
+uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
+benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -157,3 +167,4 @@ room = { id = "androidx.room", version.ref = "room" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerf" }
+android-test = { id = "com.android.test", version.ref = "agp" }
