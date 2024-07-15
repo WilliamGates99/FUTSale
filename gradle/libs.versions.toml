@@ -43,6 +43,7 @@ ksp = "2.0.0-1.0.22"
 googleServices = "4.4.2"
 firebaseCrashlytics = "3.0.2"
 firebasePerf = "1.4.2"
+baselineprofile = "1.2.4"
 
 [libraries]
 # Java 8+ API Desugaring Support
@@ -157,7 +158,6 @@ benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4",
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
@@ -168,3 +168,5 @@ room = { id = "androidx.room", version.ref = "room" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerf" }
+android-test = { id = "com.android.test", version.ref = "agp" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }

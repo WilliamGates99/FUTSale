@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 
 plugins {
     alias(libs.plugins.android.application)
@@ -14,6 +15,7 @@ plugins {
     alias(libs.plugins.google.services) // Google Services plugin
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.perf)
+    alias(libs.plugins.baselineprofile)
 }
 
 val properties = gradleLocalProperties(rootDir, providers)
@@ -75,13 +77,7 @@ android {
                 "proguard-rules.pro"
             )
 
-            signingConfig = signingConfigs.getByName("debug")
-        }
-
-        create("benchmark") {
-            initWith(buildTypes.getByName("release"))
-            matchingFallbacks += listOf("release")
-            isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -219,7 +215,7 @@ hilt {
 androidComponents {
     beforeVariants { variantBuilder ->
         // Gradle ignores any variants that satisfy the conditions below.
-        if (variantBuilder.buildType == "benchmark") {
+        if (variantBuilder.buildType == "nonMinifiedRelease") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
@@ -229,6 +225,21 @@ androidComponents {
                     it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
+        }
+
+        if (variantBuilder.buildType == "benchmarkRelease") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+//                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
+//                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
+//                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
+//                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
                 }
             }
@@ -263,6 +274,8 @@ androidComponents {
 }
 
 dependencies {
+    "baselineProfile"(project(":baselineprofile"))
+
     // Java 8+ API Desugaring Support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 

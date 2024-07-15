@@ -1,32 +1,20 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
-    namespace = "com.xeniac.benchmark"
+    namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.baselineprofile"
     compileSdk = 35
 
+    targetProjectPath = ":app"
+
     defaultConfig {
-        minSdk = 23
+        minSdk = 28
         targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        /*
-        This benchmark buildType is used for benchmarking, and should function like your release build.
-        It"s signed with a debug key for easy local/CI testing.
-         */
-        create("benchmark") {
-            isDebuggable = true
-            signingConfig = getByName("debug").signingConfig
-            matchingFallbacks += listOf("release")
-            proguardFiles("benchmark-rules.pro")
-        }
     }
 
     flavorDimensions += listOf("build", "market")
@@ -47,15 +35,18 @@ android {
     kotlinOptions {
         jvmTarget = "22"
     }
+}
 
-    targetProjectPath = ":app"
-    experimentalProperties["android.experimental.self-instrumenting"] = true
+// This is the configuration block for the Baseline Profile plugin.
+// You can specify to run the generators on a managed devices or connected devices.
+baselineProfile {
+    useConnectedDevices = true
 }
 
 androidComponents {
-    beforeVariants(selector = selector().all()) { variantBuilder ->
+    beforeVariants { variantBuilder ->
         // Gradle ignores any variants that satisfy the conditions below.
-        if (variantBuilder.buildType == "benchmark") {
+        if (variantBuilder.buildType == "nonMinifiedRelease") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
@@ -70,13 +61,28 @@ androidComponents {
             }
         }
 
-        if (variantBuilder.buildType == "debug") {
-            variantBuilder.enable = false
+        if (variantBuilder.buildType == "benchmarkRelease") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
         }
+    }
 
-        if (variantBuilder.buildType == "release") {
-            variantBuilder.enable = false
-        }
+    onVariants { variant ->
+        val artifactsLoader = variant.artifacts.getBuiltArtifactsLoader()
+        variant.instrumentationRunnerArguments.put(
+            "targetAppId",
+            variant.testedApks.map { artifactsLoader.load(it)?.applicationId }
+        )
     }
 }
 
