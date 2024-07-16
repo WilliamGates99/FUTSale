@@ -239,10 +239,7 @@ androidComponents {
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    it.containsAll(listOf("build" to "prod")) -> false
                     else -> true
                 }
             }
