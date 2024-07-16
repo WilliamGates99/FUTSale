@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 
 plugins {
     alias(libs.plugins.android.application)
@@ -218,10 +217,10 @@ androidComponents {
         if (variantBuilder.buildType == "nonMinifiedRelease") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "playStore")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
@@ -233,10 +232,10 @@ androidComponents {
         if (variantBuilder.buildType == "benchmarkRelease") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
+//                    it.containsAll(listOf("build" to "dev", "market" to "playStore")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-//                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
 //                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
 //                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
 //                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
