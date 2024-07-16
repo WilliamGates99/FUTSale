@@ -39,12 +39,23 @@ class BaselineProfileGenerator {
     val baselineProfileRule = BaselineProfileRule()
 
     @Test
-    fun generate() = baselineProfileRule.collect(
+    fun generateStartupBaselineProfile() = baselineProfileRule.collect(
         packageName = InstrumentationRegistry.getArguments().getString("targetAppId")
             ?: throw Exception("targetAppId not passed as instrumentation runner arg"),
         includeInStartupProfile = true
     ) {
         pressHome()
         startActivityAndWait()
+    }
+
+    @Test
+    fun generateCompleteOnboardingBaselineProfile() = baselineProfileRule.collect(
+        packageName = InstrumentationRegistry.getArguments().getString("targetAppId")
+            ?: throw Exception("targetAppId not passed as instrumentation runner arg"),
+        includeInStartupProfile = false
+    ) {
+        pressHome()
+        startActivityAndWait()
+        completeOnboarding()
     }
 }

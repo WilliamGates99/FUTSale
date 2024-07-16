@@ -8,14 +8,18 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.Dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.BouncingDotIndicator
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OnboardingPager(
     bottomPadding: Dp,
@@ -51,6 +55,9 @@ fun OnboardingPager(
                 .fillMaxWidth()
                 .weight(1f)
                 .testTag(TestTags.HORIZONTAL_PAGER)
+                .semantics {
+                    testTagsAsResourceId = true
+                }
         ) { scrollPosition ->
             when (scrollPosition) {
                 0 -> OnboardingPageOne(

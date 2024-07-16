@@ -12,10 +12,13 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -63,6 +66,7 @@ enum class NavigationBarItems(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomNavigationBar(
     currentRoute: String,
@@ -71,7 +75,11 @@ fun CustomNavigationBar(
     iconSize: Dp = 24.dp,
     onItemClick: (screen: Screen) -> Unit
 ) {
-    NavigationBar(modifier = modifier.testTag(NAVIGATION_BAR)) {
+    NavigationBar(modifier = modifier
+        .testTag(NAVIGATION_BAR)
+        .semantics {
+            testTagsAsResourceId = true
+        }) {
         NavigationBarItems.entries.forEach { navigationBarItem ->
             val isSelected = currentRoute.contains(navigationBarItem.screen.toString())
 
