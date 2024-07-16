@@ -78,6 +78,7 @@ androidComponents {
     }
 
     onVariants { variant ->
+        // Adding application id to the instrumentation runner arguments
         val artifactsLoader = variant.artifacts.getBuiltArtifactsLoader()
         variant.instrumentationRunnerArguments.put(
             "targetAppId",
