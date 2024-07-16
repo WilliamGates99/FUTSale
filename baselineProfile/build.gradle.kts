@@ -50,9 +50,6 @@ androidComponents {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
                     it.containsAll(listOf("build" to "dev")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
                 }
             }

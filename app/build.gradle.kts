@@ -215,19 +215,20 @@ androidComponents {
     beforeVariants { variantBuilder ->
         // Gradle ignores any variants that satisfy the conditions below.
         if (variantBuilder.buildType == "nonMinifiedRelease") {
-            variantBuilder.enable = false
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev")) -> false
+                    else -> true
+                }
+            }
         }
 
         if (variantBuilder.buildType == "benchmarkRelease") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
-//                    it.containsAll(listOf("build" to "dev", "market" to "playStore")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-//                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-//                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-//                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
                     else -> true
                 }
             }
