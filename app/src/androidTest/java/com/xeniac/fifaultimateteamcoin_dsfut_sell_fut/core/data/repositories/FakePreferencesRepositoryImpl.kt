@@ -16,6 +16,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
@@ -42,7 +44,7 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
 
-    override suspend fun getCurrentAppTheme(): AppTheme = appTheme
+    override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(appTheme) }
 
     override suspend fun getCurrentAppLocale(): AppLocale = appLocale
 
@@ -54,13 +56,17 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun getNotificationPermissionCount(): Int = notificationPermissionCount
 
-    override suspend fun isNotificationSoundEnabled(): Boolean = isNotificationSoundEnabled
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = flow {
+        emit(isNotificationSoundEnabled)
+    }
 
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
         isNotificationSoundEnabled = isEnabled
     }
 
-    override suspend fun isNotificationVibrateEnabled(): Boolean = isNotificationVibrateEnabled
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = flow {
+        emit(isNotificationVibrateEnabled)
+    }
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
         isNotificationVibrateEnabled = isEnabled

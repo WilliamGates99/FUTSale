@@ -21,6 +21,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.TestDispatcher
@@ -90,12 +91,13 @@ class PreferencesRepositoryImplTest {
     @Test
     fun fetchInitialPreferences() = testScope.runBlockingTest {
         val initialAppThemeSynchronously = testRepository.getCurrentAppThemeSynchronously()
-        val initialAppTheme = testRepository.getCurrentAppTheme()
+        val initialAppTheme = testRepository.getCurrentAppTheme().first()
         val initialAppLocale = testRepository.getCurrentAppLocale()
         val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
         val initialNotificationPermissionCount = testRepository.getNotificationPermissionCount()
-        val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled()
-        val initialIsNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled()
+        val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
+        val initialIsNotificationVibrateEnabled =
+            testRepository.isNotificationVibrateEnabled().first()
         val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption()
         val initialPreviousRateAppRequestTime =
             testRepository.getPreviousRateAppRequestTimeInMs()
@@ -122,7 +124,7 @@ class PreferencesRepositoryImplTest {
         val testValue = AppTheme.Dark
         testRepository.setCurrentAppTheme(testValue.toAppThemeDto())
 
-        val currentAppTheme = testRepository.getCurrentAppTheme()
+        val currentAppTheme = testRepository.getCurrentAppTheme().first()
         assertThat(currentAppTheme).isEqualTo(testValue)
     }
 
@@ -147,7 +149,7 @@ class PreferencesRepositoryImplTest {
     fun writeIsNotificationSoundEnabled() = testScope.runBlockingTest {
         testRepository.isNotificationSoundEnabled(false)
 
-        val isNotificationSoundEnabled = testRepository.isNotificationSoundEnabled()
+        val isNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
         assertThat(isNotificationSoundEnabled).isFalse()
     }
 
@@ -155,7 +157,7 @@ class PreferencesRepositoryImplTest {
     fun writeIsNotificationVibrateEnabled() = testScope.runBlockingTest {
         testRepository.isNotificationVibrateEnabled(false)
 
-        val isNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled()
+        val isNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled().first()
         assertThat(isNotificationVibrateEnabled).isFalse()
     }
 
