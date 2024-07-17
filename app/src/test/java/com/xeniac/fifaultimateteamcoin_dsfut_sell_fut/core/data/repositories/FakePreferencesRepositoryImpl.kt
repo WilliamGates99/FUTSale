@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
@@ -26,8 +28,12 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     var appLocale: AppLocale = AppLocale.Default
     var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
-    var isNotificationSoundEnabled = true
-    var isNotificationVibrateEnabled = true
+    var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply {
+        add(true)
+    }
+    var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply {
+        add(true)
+    }
     var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
@@ -56,20 +62,26 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun getNotificationPermissionCount(): Int = notificationPermissionCount
 
-    override fun isNotificationSoundEnabled(): Flow<Boolean> = flow {
-        emit(isNotificationSoundEnabled)
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationSoundEnabled.first()
     }
 
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
-        isNotificationSoundEnabled = isEnabled
+        isNotificationSoundEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
     }
 
-    override fun isNotificationVibrateEnabled(): Flow<Boolean> = flow {
-        emit(isNotificationVibrateEnabled)
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationVibrateEnabled.first()
     }
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
-        isNotificationVibrateEnabled = isEnabled
+        isNotificationVibrateEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
     }
 
     override suspend fun getSelectedRateAppOption(): RateAppOption = selectedRateAppOption

@@ -37,6 +37,8 @@ class GetIsNotificationVibrateEnabledUseCaseTest {
     @Test
     fun getCurrentAppTheme_returnsCurrentAppTheme() = runTest {
         val isNotificationVibrateEnabled = getIsNotificationVibrateEnabledUseCase().first()
-        assertThat(isNotificationVibrateEnabled).isEqualTo(fakePreferencesRepository.isNotificationVibrateEnabled)
+        assertThat(isNotificationVibrateEnabled).isEqualTo(
+            fakePreferencesRepository.isNotificationVibrateEnabled.first()
+        )
     }
 }
