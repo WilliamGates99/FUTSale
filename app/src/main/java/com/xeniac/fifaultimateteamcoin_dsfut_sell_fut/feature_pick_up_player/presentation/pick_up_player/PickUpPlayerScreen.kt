@@ -70,6 +70,12 @@ fun PickUpPlayerScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
+    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle(
+        initialValue = true
+    )
+    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle(
+        initialValue = true
+    )
     val latestPickedPlayers by viewModel.latestPickedPlayers.collectAsStateWithLifecycle()
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
@@ -162,15 +168,15 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.ShowErrorNotification -> {
                 notificationService.showFailedPickUpPlayerNotification(
                     message = event.message.asString(context),
-                    isNotificationSoundEnabled = pickUpPlayerState.isNotificationSoundEnabled,
-                    isNotificationVibrateEnabled = pickUpPlayerState.isNotificationVibrateEnabled
+                    isNotificationSoundEnabled = isNotificationSoundEnabled,
+                    isNotificationVibrateEnabled = isNotificationVibrateEnabled
                 )
             }
             is PickUpPlayerUiEvent.ShowSuccessNotification -> {
                 notificationService.showSuccessfulPickUpPlayerNotification(
                     playerName = event.playerName,
-                    isNotificationSoundEnabled = pickUpPlayerState.isNotificationSoundEnabled,
-                    isNotificationVibrateEnabled = pickUpPlayerState.isNotificationVibrateEnabled
+                    isNotificationSoundEnabled = isNotificationSoundEnabled,
+                    isNotificationVibrateEnabled = isNotificationVibrateEnabled
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {

@@ -7,8 +7,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PickUpPlayerState(
-    val isNotificationSoundEnabled: Boolean = true,
-    val isNotificationVibrateEnabled: Boolean = true,
     val selectedPlatform: Platform? = null,
     val minPrice: String = "",
     val maxPrice: String = "",

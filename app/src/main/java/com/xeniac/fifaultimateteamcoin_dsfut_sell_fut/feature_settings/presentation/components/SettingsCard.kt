@@ -39,12 +39,14 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppThem
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.addTestTag
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 
 @Composable
 fun SettingsCard(
-    settingsState: SettingsState,
+    appTheme: AppTheme?,
+    appLocale: AppLocale?,
+    isNotificationSoundEnabled: Boolean?,
+    isNotificationVibrateEnabled: Boolean?,
     modifier: Modifier = Modifier,
     titlePadding: PaddingValues = PaddingValues(horizontal = 8.dp),
     title: String = stringResource(id = R.string.settings_title_settings),
@@ -78,7 +80,7 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_language),
                 title = stringResource(id = R.string.settings_text_settings_language),
-                currentValue = when (settingsState.appLocale) {
+                currentValue = when (appLocale) {
                     AppLocale.Default -> stringResource(id = R.string.settings_text_settings_language_default)
                     AppLocale.EnglishUS -> stringResource(id = R.string.settings_text_settings_language_english_us)
                     AppLocale.EnglishGB -> stringResource(id = R.string.settings_text_settings_language_english_gb)
@@ -93,7 +95,7 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_theme),
                 title = stringResource(id = R.string.settings_text_settings_theme),
-                currentValue = when (settingsState.appTheme) {
+                currentValue = when (appTheme) {
                     AppTheme.Default -> stringResource(id = R.string.settings_text_settings_theme_default)
                     AppTheme.Light -> stringResource(id = R.string.settings_text_settings_theme_light)
                     AppTheme.Dark -> stringResource(id = R.string.settings_text_settings_theme_dark)
@@ -107,7 +109,7 @@ fun SettingsCard(
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_sound),
                 title = stringResource(id = R.string.settings_text_settings_notification_sound),
-                isChecked = settingsState.isNotificationSoundEnabled,
+                isChecked = isNotificationSoundEnabled,
                 testTag = TestTags.NOTIFICATION_SOUND_SWITCH,
                 onCheckedChange = onNotificationSoundChange
             )
@@ -117,7 +119,7 @@ fun SettingsCard(
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_vibrate),
                 title = stringResource(id = R.string.settings_text_settings_notification_vibrate),
-                isChecked = settingsState.isNotificationVibrateEnabled,
+                isChecked = isNotificationVibrateEnabled,
                 testTag = TestTags.NOTIFICATION_VIBRATE_SWITCH,
                 onCheckedChange = onNotificationVibrateChange
             )
