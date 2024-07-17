@@ -6,6 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,7 +26,7 @@ class SetIsNotificationSoundEnabledUseCaseTest {
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
     private lateinit var setIsNotificationSoundEnabledUseCase: SetIsNotificationSoundEnabledUseCase
-    private lateinit var getCurrentSettingsUseCase: GetCurrentSettingsUseCase
+    private lateinit var getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase
 
     @Before
     fun setUp() {
@@ -33,7 +34,7 @@ class SetIsNotificationSoundEnabledUseCaseTest {
         setIsNotificationSoundEnabledUseCase = SetIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getCurrentSettingsUseCase = GetCurrentSettingsUseCase(
+        getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
@@ -50,7 +51,7 @@ class SetIsNotificationSoundEnabledUseCaseTest {
         val testValue = false
         setIsNotificationSoundEnabledUseCase(testValue)
 
-        val isNotificationSoundEnabled = getCurrentSettingsUseCase().isNotificationSoundEnabled
+        val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
         assertThat(isNotificationSoundEnabled).isEqualTo(testValue)
     }
 }

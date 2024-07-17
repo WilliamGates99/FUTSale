@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -14,7 +15,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class GetCurrentSettingsUseCaseTest {
+class GetIsNotificationSoundEnabledUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -23,27 +24,19 @@ class GetCurrentSettingsUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var getCurrentSettingsUseCase: GetCurrentSettingsUseCase
+    private lateinit var getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        getCurrentSettingsUseCase = GetCurrentSettingsUseCase(
+        getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
 
     @Test
-    fun getCurrentSettings_returnsCurrentSettingsState() = runTest {
-        val currentSettingsState = getCurrentSettingsUseCase()
-
-        assertThat(currentSettingsState.appTheme).isEqualTo(fakePreferencesRepository.appTheme)
-        assertThat(currentSettingsState.appLocale).isEqualTo(fakePreferencesRepository.appLocale)
-        assertThat(currentSettingsState.isNotificationSoundEnabled).isEqualTo(
-            fakePreferencesRepository.isNotificationSoundEnabled
-        )
-        assertThat(currentSettingsState.isNotificationVibrateEnabled).isEqualTo(
-            fakePreferencesRepository.isNotificationVibrateEnabled
-        )
+    fun getCurrentAppTheme_returnsCurrentAppTheme() = runTest {
+        val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
+        assertThat(isNotificationSoundEnabled).isEqualTo(fakePreferencesRepository.isNotificationSoundEnabled)
     }
 }
