@@ -55,15 +55,17 @@ class OnboardingBenchmarks {
 fun MacrobenchmarkScope.completeOnboarding() {
     val horizontalPager = device.findObject(By.res("horizontal_pager"))
 
-    // Reduce the size of the gesture location to prevent accidental triggering of back navigation
-    horizontalPager.setGestureMargin(device.displayWidth / 5)
-    repeat(times = 3) {
-        horizontalPager.fling(Direction.RIGHT)
-        device.waitForIdle()
-    }
+    horizontalPager?.let {
+        // Reduce the size of the gesture location to prevent accidental triggering of back navigation
+        horizontalPager.setGestureMargin(device.displayWidth / 5)
+        repeat(times = 3) {
+            horizontalPager.fling(Direction.RIGHT)
+            device.waitForIdle()
+        }
 
-    val startBtn = device.findObject(UiSelector().text("Get Started"))
-    startBtn.click()
+        val startBtn = device.findObject(UiSelector().text("Get Started"))
+        startBtn.click()
+    }
 
     device.wait(
         /* condition = */ Until.hasObject(By.res("navigationBar")),
