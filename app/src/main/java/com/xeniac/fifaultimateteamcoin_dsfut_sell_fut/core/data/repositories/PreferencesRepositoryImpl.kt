@@ -26,6 +26,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.isOnBoardingCompleted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -117,7 +118,7 @@ class PreferencesRepositoryImpl @Inject constructor(
         AppLocaleDto.Default.toAppLocale()
     }
 
-    override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
+    override suspend fun isOnBoardingCompleted(): isOnBoardingCompleted = runBlocking {
         try {
             settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
         } catch (e: Exception) {

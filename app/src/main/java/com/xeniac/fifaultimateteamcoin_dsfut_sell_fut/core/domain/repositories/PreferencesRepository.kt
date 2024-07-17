@@ -8,7 +8,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import kotlinx.coroutines.flow.Flow
 
+typealias isOnBoardingCompleted = Boolean
 typealias IsActivityRestartNeeded = Boolean
 typealias PreviousRateAppRequestTimeInMs = Long
 
@@ -20,7 +22,7 @@ interface PreferencesRepository {
 
     suspend fun getCurrentAppLocale(): AppLocale
 
-    suspend fun isOnBoardingCompleted(): Boolean
+    suspend fun isOnBoardingCompleted(): isOnBoardingCompleted
 
     suspend fun getNotificationPermissionCount(): Int
 
