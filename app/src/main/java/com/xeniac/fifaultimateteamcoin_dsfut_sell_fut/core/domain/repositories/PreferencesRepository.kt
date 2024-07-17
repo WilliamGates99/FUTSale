@@ -10,7 +10,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platfor
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import kotlinx.coroutines.flow.Flow
 
-typealias isOnBoardingCompleted = Boolean
 typealias IsActivityRestartNeeded = Boolean
 typealias PreviousRateAppRequestTimeInMs = Long
 
@@ -18,17 +17,17 @@ interface PreferencesRepository {
 
     fun getCurrentAppThemeSynchronously(): AppTheme
 
-    suspend fun getCurrentAppTheme(): AppTheme
+    fun getCurrentAppTheme(): Flow<AppTheme>
 
     suspend fun getCurrentAppLocale(): AppLocale
 
-    suspend fun isOnBoardingCompleted(): isOnBoardingCompleted
+    suspend fun isOnBoardingCompleted(): Boolean
 
     suspend fun getNotificationPermissionCount(): Int
 
-    suspend fun isNotificationSoundEnabled(): Boolean
+    fun isNotificationSoundEnabled(): Flow<Boolean>
 
-    suspend fun isNotificationVibrateEnabled(): Boolean
+    fun isNotificationVibrateEnabled(): Flow<Boolean>
 
     suspend fun getSelectedRateAppOption(): RateAppOption
 
