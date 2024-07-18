@@ -71,4 +71,8 @@ fun MacrobenchmarkScope.completeOnboarding() {
         /* condition = */ Until.hasObject(By.res("navigationBar")),
         /* timeout = */ 5000
     )
+
+    // Allow POST_NOTIFICATION Permission
+    val allowPermissionBtn = device.findObject(By.text("Allow"))
+    allowPermissionBtn?.click()
 }
