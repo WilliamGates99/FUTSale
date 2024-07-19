@@ -42,7 +42,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeDialog
@@ -72,7 +72,7 @@ fun SettingsScreen(
     )
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
-    var isLocaleDialogVisible by remember { mutableStateOf(false) }
+    var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
     var isThemeDialogVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
@@ -179,7 +179,7 @@ fun SettingsScreen(
                 isNotificationSoundEnabled = isNotificationSoundEnabled,
                 isNotificationVibrateEnabled = isNotificationVibrateEnabled,
                 onLanguageClick = {
-                    isLocaleDialogVisible = true
+                    isLocaleBottomSheetVisible = true
                 },
                 onThemeClick = {
                     isThemeDialogVisible = true
@@ -218,11 +218,11 @@ fun SettingsScreen(
         }
     }
 
-    LocaleDialog(
+    LocaleBottomSheet(
+        isVisible = isLocaleBottomSheetVisible,
         currentAppLocale = appLocale ?: AppLocale.Default,
-        isVisible = isLocaleDialogVisible,
         onDismiss = {
-            isLocaleDialogVisible = false
+            isLocaleBottomSheetVisible = false
         },
         onLocaleSelected = { newAppLocale ->
             viewModel.onEvent(SettingsEvent.SetCurrentAppLocale(newAppLocale))

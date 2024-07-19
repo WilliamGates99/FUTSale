@@ -105,7 +105,7 @@ class SettingsScreenTest {
     }
 
     @Test
-    fun clickOnLanguageBtn_showsSelectLanguageDialog() {
+    fun clickOnLanguageBtn_showsSelectLanguageBottomSheet() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.settings_text_settings_language)).apply {
                 assertExists()
@@ -113,13 +113,9 @@ class SettingsScreenTest {
                 performClick()
             }
 
-            onAllNodes(isDialog()).onFirst().assertIsDisplayed()
-
-            onAllNodesWithContentDescription(context.getString(R.string.settings_dialog_title_language)).apply {
-                onLast().apply {
-                    assertExists()
-                    assertIsDisplayed()
-                }
+            onNodeWithText(context.getString(R.string.settings_bottom_sheet_title_language)).apply {
+                assertExists()
+                assertIsDisplayed()
             }
         }
     }
