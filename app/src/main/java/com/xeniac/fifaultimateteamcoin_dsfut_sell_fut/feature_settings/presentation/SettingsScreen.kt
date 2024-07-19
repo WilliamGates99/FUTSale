@@ -45,7 +45,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.Swipeab
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import kotlinx.coroutines.launch
 
@@ -229,9 +229,9 @@ fun SettingsScreen(
         }
     )
 
-    ThemeDialog(
-        currentAppTheme = appTheme ?: AppTheme.Default,
+    ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
+        currentAppTheme = appTheme ?: AppTheme.Default,
         onDismiss = {
             isThemeDialogVisible = false
         },

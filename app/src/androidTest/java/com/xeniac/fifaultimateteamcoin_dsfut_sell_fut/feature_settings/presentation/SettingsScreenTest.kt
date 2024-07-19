@@ -6,11 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
-import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onFirst
-import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -121,7 +117,7 @@ class SettingsScreenTest {
     }
 
     @Test
-    fun clickOnThemeBtn_showsSelectThemeDialog() {
+    fun clickOnThemeBtn_showsSelectThemeBottomSheet() {
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.settings_text_settings_theme)).apply {
                 assertExists()
@@ -129,13 +125,9 @@ class SettingsScreenTest {
                 performClick()
             }
 
-            onAllNodes(isDialog()).onFirst().assertIsDisplayed()
-
-            onAllNodesWithContentDescription(context.getString(R.string.settings_dialog_title_theme)).apply {
-                onLast().apply {
-                    assertExists()
-                    assertIsDisplayed()
-                }
+            onNodeWithText(context.getString(R.string.settings_bottom_sheet_title_theme)).apply {
+                assertExists()
+                assertIsDisplayed()
             }
         }
     }
