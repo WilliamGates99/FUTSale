@@ -284,6 +284,7 @@ fun ExpiryTimer(
     maxLines: Int = 1,
     color: Color = MaterialTheme.colorScheme.onErrorContainer
 ) {
+    val direction = LocalLayoutDirection.current
     var oldTimerText by remember { mutableStateOf(timerText) }
 
     SideEffect {
@@ -299,7 +300,12 @@ fun ExpiryTimer(
                 horizontal = 8.dp,
                 vertical = 4.dp
             )
-            .animateContentSize()
+            .animateContentSize(
+                alignment = when (direction) {
+                    LayoutDirection.Ltr -> Alignment.CenterEnd
+                    LayoutDirection.Rtl -> Alignment.CenterStart
+                }
+            )
     ) {
         val isTimerFinished = timerText.reversed() == UiText.StringResource(
             R.string.pick_up_player_latest_player_timer_expired
