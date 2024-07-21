@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -36,14 +37,15 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import kotlinx.coroutines.launch
 
@@ -60,10 +62,17 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+    val appTheme by viewModel.appTheme.collectAsStateWithLifecycle(initialValue = null)
+    val appLocale by viewModel.appLocale.collectAsStateWithLifecycle()
+    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle(
+        initialValue = null
+    )
+    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle(
+        initialValue = null
+    )
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
-    var isLocaleDialogVisible by remember { mutableStateOf(false) }
+    var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
     var isThemeDialogVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
@@ -150,6 +159,7 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .testTag(TestTags.TEST_TAG_SCREEN_SETTINGS)
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
@@ -164,9 +174,12 @@ fun SettingsScreen(
                 )
         ) {
             SettingsCard(
-                settingsState = settingsState,
+                appTheme = appTheme,
+                appLocale = appLocale,
+                isNotificationSoundEnabled = isNotificationSoundEnabled,
+                isNotificationVibrateEnabled = isNotificationVibrateEnabled,
                 onLanguageClick = {
-                    isLocaleDialogVisible = true
+                    isLocaleBottomSheetVisible = true
                 },
                 onThemeClick = {
                     isThemeDialogVisible = true
@@ -205,20 +218,20 @@ fun SettingsScreen(
         }
     }
 
-    LocaleDialog(
-        currentAppLocale = settingsState.appLocale ?: AppLocale.Default,
-        isVisible = isLocaleDialogVisible,
+    LocaleBottomSheet(
+        isVisible = isLocaleBottomSheetVisible,
+        currentAppLocale = appLocale ?: AppLocale.Default,
         onDismiss = {
-            isLocaleDialogVisible = false
+            isLocaleBottomSheetVisible = false
         },
         onLocaleSelected = { newAppLocale ->
             viewModel.onEvent(SettingsEvent.SetCurrentAppLocale(newAppLocale))
         }
     )
 
-    ThemeDialog(
-        currentAppTheme = settingsState.appTheme ?: AppTheme.Default,
+    ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
+        currentAppTheme = appTheme ?: AppTheme.Default,
         onDismiss = {
             isThemeDialogVisible = false
         },

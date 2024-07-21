@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
@@ -16,6 +18,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
@@ -24,8 +28,12 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     var appLocale: AppLocale = AppLocale.Default
     var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
-    var isNotificationSoundEnabled = true
-    var isNotificationVibrateEnabled = true
+    var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply {
+        add(true)
+    }
+    var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply {
+        add(true)
+    }
     var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
@@ -42,7 +50,7 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
 
-    override suspend fun getCurrentAppTheme(): AppTheme = appTheme
+    override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(appTheme) }
 
     override suspend fun getCurrentAppLocale(): AppLocale = appLocale
 
@@ -54,16 +62,26 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun getNotificationPermissionCount(): Int = notificationPermissionCount
 
-    override suspend fun isNotificationSoundEnabled(): Boolean = isNotificationSoundEnabled
-
-    override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
-        isNotificationSoundEnabled = isEnabled
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationSoundEnabled.first()
     }
 
-    override suspend fun isNotificationVibrateEnabled(): Boolean = isNotificationVibrateEnabled
+    override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
+        isNotificationSoundEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
+    }
+
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationVibrateEnabled.first()
+    }
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
-        isNotificationVibrateEnabled = isEnabled
+        isNotificationVibrateEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
     }
 
     override suspend fun getSelectedRateAppOption(): RateAppOption = selectedRateAppOption

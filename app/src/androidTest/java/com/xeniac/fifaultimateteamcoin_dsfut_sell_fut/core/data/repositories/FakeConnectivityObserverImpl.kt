@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class FakeConnectivityObserverImpl @Inject constructor() : ConnectivityObserver {
 
-    private var isNetworkAvailable = false
+    private var isNetworkAvailable = true
 
     fun isNetworkAvailable(isAvailable: Boolean) {
         isNetworkAvailable = isAvailable

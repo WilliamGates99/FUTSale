@@ -211,7 +211,7 @@ fun HomeScreen(
                             avoid building up a large stack of destinations
                             on the back stack as user selects items
                              */
-                            popUpTo(Screen.PickUpPlayerScreen)
+                            popUpTo(id = homeNavController.graph.startDestinationId)
                         }
                     }
                 )

@@ -8,6 +8,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import kotlinx.coroutines.flow.Flow
 
 typealias IsActivityRestartNeeded = Boolean
 typealias PreviousRateAppRequestTimeInMs = Long
@@ -16,7 +17,7 @@ interface PreferencesRepository {
 
     fun getCurrentAppThemeSynchronously(): AppTheme
 
-    suspend fun getCurrentAppTheme(): AppTheme
+    fun getCurrentAppTheme(): Flow<AppTheme>
 
     suspend fun getCurrentAppLocale(): AppLocale
 
@@ -24,9 +25,9 @@ interface PreferencesRepository {
 
     suspend fun getNotificationPermissionCount(): Int
 
-    suspend fun isNotificationSoundEnabled(): Boolean
+    fun isNotificationSoundEnabled(): Flow<Boolean>
 
-    suspend fun isNotificationVibrateEnabled(): Boolean
+    fun isNotificationVibrateEnabled(): Flow<Boolean>
 
     suspend fun getSelectedRateAppOption(): RateAppOption
 

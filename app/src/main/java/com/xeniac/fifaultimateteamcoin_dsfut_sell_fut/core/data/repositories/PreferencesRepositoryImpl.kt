@@ -26,7 +26,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
@@ -74,8 +77,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentAppTheme(): AppTheme = try {
-        val appThemeIndex = settingsDataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
+    override fun getCurrentAppTheme(): Flow<AppTheme> = settingsDataStore.data.map {
+        val appThemeIndex = it[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
         val appThemeDto = when (appThemeIndex) {
             AppThemeDto.Default.index -> AppThemeDto.Default
@@ -85,10 +88,9 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
 
         appThemeDto.toAppTheme()
-    } catch (e: Exception) {
+    }.catch { e ->
         Timber.e("getCurrentAppTheme failed:")
         e.printStackTrace()
-        AppThemeDto.Default.toAppTheme()
     }
 
     override suspend fun getCurrentAppLocale(): AppLocale = try {
@@ -117,40 +119,34 @@ class PreferencesRepositoryImpl @Inject constructor(
         AppLocaleDto.Default.toAppLocale()
     }
 
-    override suspend fun isOnBoardingCompleted(): Boolean = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
-        } catch (e: Exception) {
-            Timber.e("isOnBoardingCompleted failed:")
-            e.printStackTrace()
-            false
-        }
-    }
-
-    override suspend fun getNotificationPermissionCount(): Int = runBlocking {
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
-        } catch (e: Exception) {
-            Timber.e("getNotificationPermissionCount failed:")
-            e.printStackTrace()
-            0
-        }
-    }
-
-    override suspend fun isNotificationSoundEnabled(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
+    override suspend fun isOnBoardingCompleted(): Boolean = try {
+        settingsDataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
     } catch (e: Exception) {
+        Timber.e("isOnBoardingCompleted failed:")
+        e.printStackTrace()
+        false
+    }
+
+    override suspend fun getNotificationPermissionCount(): Int = try {
+        settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+    } catch (e: Exception) {
+        Timber.e("getNotificationPermissionCount failed:")
+        e.printStackTrace()
+        0
+    }
+
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = settingsDataStore.data.map {
+        it[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
+    }.catch { e ->
         Timber.e("isNotificationSoundEnabled failed:")
         e.printStackTrace()
-        true
     }
 
-    override suspend fun isNotificationVibrateEnabled(): Boolean = try {
-        settingsDataStore.data.first()[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
-    } catch (e: Exception) {
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = settingsDataStore.data.map {
+        it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
+    }.catch { e ->
         Timber.e("isNotificationVibrateEnabled failed:")
         e.printStackTrace()
-        true
     }
 
     override suspend fun getSelectedRateAppOption(): RateAppOption = try {

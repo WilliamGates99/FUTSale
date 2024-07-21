@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -53,6 +54,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.calculateCurrentPageOffset
 
 @Composable
@@ -115,6 +117,7 @@ fun LatestPlayersPagers(
                             }
                         }
                         .fillMaxWidth()
+                        .testTag(tag = TestTags.LATEST_PICKED_UP_PLAYER_CARD)
                 )
             }
         }
@@ -281,6 +284,7 @@ fun ExpiryTimer(
     maxLines: Int = 1,
     color: Color = MaterialTheme.colorScheme.onErrorContainer
 ) {
+    val direction = LocalLayoutDirection.current
     var oldTimerText by remember { mutableStateOf(timerText) }
 
     SideEffect {
@@ -296,7 +300,12 @@ fun ExpiryTimer(
                 horizontal = 8.dp,
                 vertical = 4.dp
             )
-            .animateContentSize()
+            .animateContentSize(
+                alignment = when (direction) {
+                    LayoutDirection.Ltr -> Alignment.CenterEnd
+                    LayoutDirection.Rtl -> Alignment.CenterStart
+                }
+            )
     ) {
         val isTimerFinished = timerText.reversed() == UiText.StringResource(
             R.string.pick_up_player_latest_player_timer_expired

@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
 sealed class HomeEvent {
     data object CheckIsAppUpdateStalled : HomeEvent()
+    data object CheckFlexibleUpdateDownloadState : HomeEvent()
     data object GetHomeState : HomeEvent()
     data object CheckForAppUpdates : HomeEvent()
     data object RequestInAppReviews : HomeEvent()

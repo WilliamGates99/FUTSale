@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -167,12 +166,10 @@ fun DialogTitle(
     Box(modifier = modifier) {
         Text(
             text = title,
-            style = TextStyle(
-                fontSize = 24.sp,
-                lineHeight = 32.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = color
-            )
+            fontSize = 24.sp,
+            lineHeight = 32.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = color
         )
     }
 }
@@ -186,12 +183,10 @@ fun DialogMessage(
     Box(modifier = modifier) {
         Text(
             text = message,
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontWeight = FontWeight.Medium,
-                color = color
-            )
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.Medium,
+            color = color
         )
     }
 }

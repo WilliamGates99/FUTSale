@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.google.services) // Google Services plugin
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.perf)
+    alias(libs.plugins.baselineprofile)
 }
 
 val properties = gradleLocalProperties(rootDir, providers)
@@ -27,8 +28,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
-        versionCode = 22
-        versionName = "2.0.1"
+        versionCode = 23
+        versionName = "2.0.2"
 
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
@@ -213,16 +214,33 @@ hilt {
 androidComponents {
     beforeVariants { variantBuilder ->
         // Gradle ignores any variants that satisfy the conditions below.
+        if (variantBuilder.buildType == "nonMinifiedRelease") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev")) -> false
+                    else -> true
+                }
+            }
+        }
+
+        if (variantBuilder.buildType == "benchmarkRelease") {
+            variantBuilder.productFlavors.let {
+                variantBuilder.enable = when {
+                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
+                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
+                    else -> true
+                }
+            }
+        }
+
         if (variantBuilder.buildType == "debug") {
             variantBuilder.productFlavors.let {
                 variantBuilder.enable = when {
                     it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
                     it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "playStore")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
+                    it.containsAll(listOf("build" to "prod")) -> false
                     else -> true
                 }
             }
@@ -242,6 +260,8 @@ androidComponents {
 }
 
 dependencies {
+    "baselineProfile"(project(":baselineprofile"))
+
     // Java 8+ API Desugaring Support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
@@ -333,6 +353,9 @@ dependencies {
 
     // Google Play In-App Updates API
     implementation(libs.play.app.update.ktx)
+
+    // Baseline Profiles
+    implementation(libs.profileinstaller)
 
     // Local Unit Test Libraries
     testImplementation(libs.truth)

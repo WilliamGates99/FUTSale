@@ -27,6 +27,7 @@
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_connection_unavailable">Unable to connect to the internet.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
+    <string name="error_network_serialization">Something went wrong while trying to process the data.</string>
     <string name="error_intent_app_not_found">There is no app on the phone to handle this action.</string>
     <string name="error_btn_retry">Retry</string>
     <string name="error_btn_confirm">Confirm</string>
@@ -195,15 +196,15 @@
     <string name="settings_text_miscellaneous_improve_translations">Improve Translations</string>
     <string name="settings_text_miscellaneous_rate_us">Rate Us</string>
     <string name="settings_text_miscellaneous_privacy_policy">Privacy Policy</string>
-    <string name="settings_dialog_title_language">Language</string>
-    <string name="settings_dialog_item_language_default">System Default</string>
-    <string name="settings_dialog_item_language_english_us">English (United States)</string>
-    <string name="settings_dialog_item_language_english_gb">English (United Kingdom)</string>
-    <string name="settings_dialog_item_language_farsi_ir">Persian</string>
-    <string name="settings_dialog_title_theme">Theme</string>
-    <string name="settings_dialog_item_theme_default">System Default</string>
-    <string name="settings_dialog_item_theme_light">Light</string>
-    <string name="settings_dialog_item_theme_dark">Dark</string>
+    <string name="settings_bottom_sheet_title_language">Language</string>
+    <string name="settings_bottom_sheet_item_language_default">System Default</string>
+    <string name="settings_bottom_sheet_item_language_english_us">English (United States)</string>
+    <string name="settings_bottom_sheet_item_language_english_gb">English (United Kingdom)</string>
+    <string name="settings_bottom_sheet_item_language_farsi_ir">Persian</string>
+    <string name="settings_bottom_sheet_title_theme">Theme</string>
+    <string name="settings_bottom_sheet_item_theme_default">System Default</string>
+    <string name="settings_bottom_sheet_item_theme_light">Light</string>
+    <string name="settings_bottom_sheet_item_theme_dark">Dark</string>
 
 
     <string name="picked_up_player_info_message">%s was picked up successfully.</string>

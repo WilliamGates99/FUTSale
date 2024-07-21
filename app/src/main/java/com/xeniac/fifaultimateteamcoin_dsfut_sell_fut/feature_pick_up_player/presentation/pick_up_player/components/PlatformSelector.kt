@@ -15,6 +15,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,18 +26,23 @@ import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 enum class PlatformItems(
     @StringRes val title: Int,
-    val platform: Platform
+    val platform: Platform,
+    val testTag: String
 ) {
     PC(
         title = R.string.pick_up_player_segmented_btn_platform_pc,
-        platform = Platform.PC
+        platform = Platform.PC,
+        testTag = TestTags.PC_SEGMENTED_BTN
+
     ),
     CONSOLE(
         title = R.string.pick_up_player_segmented_btn_platform_console,
-        platform = Platform.CONSOLE
+        platform = Platform.CONSOLE,
+        testTag = TestTags.CONSOLE_SEGMENTED_BTN
     )
 }
 
@@ -116,7 +122,8 @@ fun PlatformSelector(
                         )
                     },
                     icon = {},
-                    onClick = { onPlatformClick(platformItem.platform) }
+                    onClick = { onPlatformClick(platformItem.platform) },
+                    modifier = Modifier.testTag(platformItem.testTag)
                 )
             }
         }

@@ -12,6 +12,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckFlexibleUpdateDownloadStateUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckForAppUpdatesUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsFlexibleUpdateStalledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsImmediateUpdateStalledUseCase
@@ -71,10 +72,17 @@ internal object HomeModule {
         ).firstInstallTime
     } else {
         context.packageManager.getPackageInfo(
-            /* p0 = */ context.packageName,
-            /* p1 = */ 0
+            /* packageName = */ context.packageName,
+            /* flags = */ 0
         ).firstInstallTime
     }
+
+    @Provides
+    @ViewModelScoped
+    fun provideCheckFlexibleUpdateDownloadStateUseCase(
+        homeRepository: HomeRepository
+    ): CheckFlexibleUpdateDownloadStateUseCase =
+        CheckFlexibleUpdateDownloadStateUseCase(homeRepository)
 
     @Provides
     @ViewModelScoped
@@ -145,6 +153,7 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideHomeUseCases(
+        checkFlexibleUpdateDownloadStateUseCase: CheckFlexibleUpdateDownloadStateUseCase,
         checkIsFlexibleUpdateStalledUseCase: CheckIsFlexibleUpdateStalledUseCase,
         checkIsImmediateUpdateStalledUseCase: CheckIsImmediateUpdateStalledUseCase,
         checkForAppUpdatesUseCase: CheckForAppUpdatesUseCase,
@@ -156,6 +165,7 @@ internal object HomeModule {
         getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
         setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
     ): HomeUseCases = HomeUseCases(
+        { checkFlexibleUpdateDownloadStateUseCase },
         { checkIsFlexibleUpdateStalledUseCase },
         { checkIsImmediateUpdateStalledUseCase },
         { checkForAppUpdatesUseCase },

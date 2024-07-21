@@ -8,8 +8,11 @@ import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,17 +28,24 @@ fun SwipeableSnackbar(
         }
     )
 ) {
-    LaunchedEffect(dismissSnackbarState.currentValue) {
-        if (dismissSnackbarState.currentValue != SwipeToDismissBoxValue.Settled) {
-            dismissSnackbarState.reset()
-        }
-    }
+    val layoutDirection = LocalLayoutDirection.current
 
-    SwipeToDismissBox(
-        state = dismissSnackbarState,
-        backgroundContent = {},
-        modifier = modifier
-    ) {
-        SnackbarHost(hostState = hostState)
+    // Set the layout direction to LTR to solve the opposite swipe direction in RTL layouts
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        LaunchedEffect(dismissSnackbarState.currentValue) {
+            if (dismissSnackbarState.currentValue != SwipeToDismissBoxValue.Settled) {
+                dismissSnackbarState.reset()
+            }
+        }
+
+        SwipeToDismissBox(
+            state = dismissSnackbarState,
+            backgroundContent = {},
+            modifier = modifier
+        ) {
+            CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                SnackbarHost(hostState = hostState)
+            }
+        }
     }
 }

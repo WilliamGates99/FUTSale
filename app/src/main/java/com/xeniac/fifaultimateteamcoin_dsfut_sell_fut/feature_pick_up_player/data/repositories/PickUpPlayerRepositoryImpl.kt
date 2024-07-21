@@ -31,6 +31,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.SerializationException
 import okhttp3.internal.toLongOrDefault
 import timber.log.Timber
 import java.util.Locale
@@ -168,6 +169,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         Timber.e("Pick up player ServerResponseException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.ServerResponseException)
+    } catch (e: SerializationException) {
+        Timber.e("Pick up player SerializationException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.SerializationException)
     } catch (e: Exception) {
         Timber.e("Pick up player Exception:")
         e.printStackTrace()

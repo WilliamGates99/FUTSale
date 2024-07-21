@@ -2,19 +2,22 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.bytesDownloaded
 import com.google.android.play.core.ktx.clientVersionStalenessDays
 import com.google.android.play.core.ktx.installStatus
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
+import com.google.android.play.core.ktx.totalBytesToDownload
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.isUpdateDownloaded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import dagger.Lazy
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +31,33 @@ class HomeRepositoryImpl @Inject constructor(
     private val reviewManager: Lazy<ReviewManager>
 ) : HomeRepository {
 
-    override fun checkIsFlexibleUpdateStalled(): Flow<isUpdateDownloaded> = callbackFlow {
+    override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = callbackFlow {
+        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
+            val installStateUpdatedListener = InstallStateUpdatedListener { state ->
+                val isUpdateDownloading = state.installStatus == InstallStatus.DOWNLOADING
+                val isUpdateDownloaded = state.installStatus == InstallStatus.DOWNLOADED
+
+                when {
+                    isUpdateDownloading -> {
+                        val bytesDownloaded = state.bytesDownloaded
+                        val totalBytesToDownload = state.totalBytesToDownload
+                        Timber.i("$bytesDownloaded/$totalBytesToDownload downloaded.")
+                    }
+                    isUpdateDownloaded -> trySend(true)
+                }
+            }
+
+            appUpdateManager.get().registerListener(installStateUpdatedListener)
+
+            awaitClose {
+                appUpdateManager.get().unregisterListener(installStateUpdatedListener)
+            }
+        } else {
+            awaitClose { }
+        }
+    }
+
+    override fun checkIsFlexibleUpdateStalled(): Flow<IsUpdateDownloaded> = callbackFlow {
         appUpdateManager.get().appUpdateInfo.addOnSuccessListener { updateInfo ->
             val isUpdateDownloadedButNotInstalled =
                 updateInfo.installStatus == InstallStatus.DOWNLOADED

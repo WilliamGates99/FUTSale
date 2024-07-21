@@ -10,7 +10,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SettingsUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.AppThemeError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.NotificationSoundError
@@ -18,6 +17,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.ut
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -32,9 +32,14 @@ class SettingsViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
-    val settingsState = savedStateHandle.getStateFlow(
-        key = "settingsState",
-        initialValue = SettingsState()
+    val appTheme = settingsUseCases.getCurrentAppThemeUseCase.get()()
+    val isNotificationSoundEnabled = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()()
+    val isNotificationVibrateEnabled = settingsUseCases
+        .getIsNotificationVibrateEnabledUseCase.get()()
+
+    val appLocale = savedStateHandle.getStateFlow<AppLocale?>(
+        key = "appLocale",
+        initialValue = null
     )
 
     private val _setAppLocaleEventChannel = Channel<Event>()
@@ -50,12 +55,12 @@ class SettingsViewModel @Inject constructor(
     val setNotificationVibrateEventChannel = _setNotificationVibrateEventChannel.receiveAsFlow()
 
     init {
-        getCurrentSettings()
+        getCurrentAppLocale()
     }
 
     fun onEvent(event: SettingsEvent) {
         when (event) {
-            SettingsEvent.GetCurrentSettings -> getCurrentSettings()
+            SettingsEvent.GetCurrentAppLocale -> getCurrentAppLocale()
             is SettingsEvent.SetCurrentAppLocale -> setCurrentAppLocale(event.newAppLocale)
             is SettingsEvent.SetCurrentAppTheme -> setCurrentAppTheme(event.newAppTheme)
             is SettingsEvent.SetNotificationSoundSwitch -> setNotificationSoundSwitch(event.isEnabled)
@@ -63,15 +68,15 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentSettings() = viewModelScope.launch {
+    private fun getCurrentAppLocale() = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["settingsState"] = settingsUseCases.getCurrentSettingsUseCase.get()()
+            savedStateHandle["appLocale"] = settingsUseCases.getCurrentAppLocaleUseCase.get()()
         }
     }
 
     private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
         mutex.withLock {
-            if (newAppLocale != settingsState.value.appLocale) {
+            if (newAppLocale != appLocale.value) {
                 val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
                     newAppLocale = newAppLocale
                 )
@@ -85,22 +90,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setCurrentAppTheme(newAppTheme: AppTheme) = viewModelScope.launch {
-        mutex.withLock {
-            if (newAppTheme != settingsState.value.appTheme) {
-                when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
-                    is Result.Success -> {
-                        _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
-                        savedStateHandle["settingsState"] = settingsState.value.copy(
-                            appTheme = newAppTheme
-                        )
-                    }
-                    is Result.Error -> {
-                        when (result.error) {
-                            is AppThemeError.SomethingWentWrong -> {
-                                _setAppThemeEventChannel.send(
-                                    UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                                )
-                            }
+        if (newAppTheme != appTheme.first()) {
+            when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
+                is Result.Success -> {
+                    _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
+                }
+                is Result.Error -> {
+                    when (result.error) {
+                        is AppThemeError.SomethingWentWrong -> {
+                            _setAppThemeEventChannel.send(
+                                UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                            )
                         }
                     }
                 }
@@ -109,21 +109,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setNotificationSoundSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        mutex.withLock {
-            when (val result =
-                settingsUseCases.setIsNotificationSoundEnabledUseCase.get()(isEnabled)) {
-                is Result.Success -> {
-                    savedStateHandle["settingsState"] = settingsState.value.copy(
-                        isNotificationSoundEnabled = isEnabled
-                    )
-                }
-                is Result.Error -> {
-                    when (result.error) {
-                        NotificationSoundError.SomethingWentWrong -> {
-                            _setNotificationSoundEventChannel.send(
-                                UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                            )
-                        }
+        when (val result = settingsUseCases.setIsNotificationSoundEnabledUseCase.get()(isEnabled)) {
+            is Result.Success -> Unit
+            is Result.Error -> {
+                when (result.error) {
+                    NotificationSoundError.SomethingWentWrong -> {
+                        _setNotificationSoundEventChannel.send(
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                        )
                     }
                 }
             }
@@ -131,21 +124,15 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setNotificationVibrateSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        mutex.withLock {
-            when (val result = settingsUseCases
-                .setIsNotificationVibrateEnabledUseCase.get()(isEnabled)) {
-                is Result.Success -> {
-                    savedStateHandle["settingsState"] = settingsState.value.copy(
-                        isNotificationVibrateEnabled = isEnabled
-                    )
-                }
-                is Result.Error -> {
-                    when (result.error) {
-                        NotificationVibrateError.SomethingWentWrong -> {
-                            _setNotificationVibrateEventChannel.send(
-                                UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                            )
-                        }
+        when (val result = settingsUseCases
+            .setIsNotificationVibrateEnabledUseCase.get()(isEnabled)) {
+            is Result.Success -> Unit
+            is Result.Error -> {
+                when (result.error) {
+                    NotificationVibrateError.SomethingWentWrong -> {
+                        _setNotificationVibrateEventChannel.send(
+                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                        )
                     }
                 }
             }

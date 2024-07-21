@@ -154,6 +154,7 @@ fun OnboardingPageFour(
             errorText = onboardingState.partnerIdErrorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
+            testTag = TestTags.PARTNER_ID_TEXT_FIELD,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -172,6 +173,7 @@ fun OnboardingPageFour(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = onStartBtnClick,
+            testTag = TestTags.SECRET_KEY_TEXT_FIELD,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)

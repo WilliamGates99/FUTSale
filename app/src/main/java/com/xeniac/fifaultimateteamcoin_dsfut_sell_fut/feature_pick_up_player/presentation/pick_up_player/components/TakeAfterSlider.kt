@@ -28,16 +28,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomCheckbox
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +87,8 @@ fun TakeAfterSlider(
                 id = R.plurals.pick_up_player_title_take_after,
                 sliderPosition.roundToInt(),
                 sliderPosition.roundToInt()
-            )
+            ),
+            testTag = TestTags.TAKE_AFTER_CHECK_BOX
         )
 
         Slider(
@@ -97,13 +102,20 @@ fun TakeAfterSlider(
                 Label(
                     interactionSource = interactionSource,
                     label = {
+                        val direction = LocalLayoutDirection.current
+
                         RichTooltip(
                             colors = TooltipDefaults.richTooltipColors().copy(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             shape = CircleShape,
-                            modifier = Modifier.animateContentSize()
+                            modifier = Modifier.animateContentSize(
+                                alignment = when (direction) {
+                                    LayoutDirection.Ltr -> Alignment.CenterStart
+                                    LayoutDirection.Rtl -> Alignment.CenterEnd
+                                }
+                            )
                         ) {
                             Text(
                                 text = sliderPosition.roundToInt().toString(),
@@ -130,7 +142,9 @@ fun TakeAfterSlider(
                 sliderPosition = it
             },
             onValueChangeFinished = { onSliderValueChangeFinished(sliderPosition.roundToInt()) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TestTags.TAKE_AFTER_SLIDER)
         )
 
         AnimatedVisibility(

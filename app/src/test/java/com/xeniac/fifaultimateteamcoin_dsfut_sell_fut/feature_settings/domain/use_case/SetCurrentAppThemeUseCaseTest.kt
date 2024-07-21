@@ -7,6 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Fak
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -26,7 +27,7 @@ class SetCurrentAppThemeUseCaseTest {
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
     private lateinit var setCurrentAppThemeUseCase: SetCurrentAppThemeUseCase
-    private lateinit var getCurrentSettingsUseCase: GetCurrentSettingsUseCase
+    private lateinit var getCurrentAppThemeUseCase: GetCurrentAppThemeUseCase
 
     @Before
     fun setUp() {
@@ -34,7 +35,7 @@ class SetCurrentAppThemeUseCaseTest {
         setCurrentAppThemeUseCase = SetCurrentAppThemeUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getCurrentSettingsUseCase = GetCurrentSettingsUseCase(
+        getCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
@@ -51,7 +52,7 @@ class SetCurrentAppThemeUseCaseTest {
         val testValue = AppTheme.Dark
         setCurrentAppThemeUseCase(testValue)
 
-        val appTheme = getCurrentSettingsUseCase().appTheme
+        val appTheme = getCurrentAppThemeUseCase().first()
         assertThat(appTheme).isEqualTo(testValue)
     }
 }

@@ -43,8 +43,14 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
+    val isNotificationSoundEnabled = pickUpPlayerUseCases
+        .getIsNotificationSoundEnabledUseCase.get()()
+
+    val isNotificationVibrateEnabled = pickUpPlayerUseCases
+        .getIsNotificationVibrateEnabledUseCase.get()()
+
     val latestPickedPlayers = pickUpPlayerUseCases
-        .observeLatestPickedPlayersUseCaseUseCase.get()().stateIn(
+        .observeLatestPickedPlayersUseCase.get()().stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = emptyList()
@@ -98,8 +104,6 @@ class PickUpPlayerViewModel @Inject constructor(
     private fun getPersistedData() = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                isNotificationSoundEnabled = pickUpPlayerUseCases.getIsNotificationSoundEnabledUseCase.get()(),
-                isNotificationVibrateEnabled = pickUpPlayerUseCases.getIsNotificationVibrateEnabledUseCase.get()(),
                 selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()()
             )
         }

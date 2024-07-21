@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FUTSale"
 include(":app")
+include(":baselineprofile")

@@ -3,17 +3,22 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.review.ReviewInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.isUpdateDownloaded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakeHomeRepositoryImpl @Inject constructor() : HomeRepository {
 
+    private var isFlexibleUpdateDownloaded = false
     private var isFlexibleUpdateStalled = false
     private var isImmediateUpdateStalled = false
     private var isAppUpdateAvailable = false
     private var isInAppReviewsAvailable = false
+
+    fun isFlexibleUpdateDownloaded(isDownloaded: Boolean) {
+        isFlexibleUpdateDownloaded = isDownloaded
+    }
 
     fun isFlexibleUpdateStalled(isStalled: Boolean) {
         isFlexibleUpdateStalled = isStalled
@@ -31,7 +36,13 @@ class FakeHomeRepositoryImpl @Inject constructor() : HomeRepository {
         isInAppReviewsAvailable = isAvailable
     }
 
-    override fun checkIsFlexibleUpdateStalled(): Flow<isUpdateDownloaded> = flow {
+    override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = flow {
+        if (isFlexibleUpdateDownloaded) {
+            emit(true)
+        }
+    }
+
+    override fun checkIsFlexibleUpdateStalled(): Flow<IsUpdateDownloaded> = flow {
         emit(isFlexibleUpdateStalled)
     }
 

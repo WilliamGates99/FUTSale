@@ -5,12 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
-import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
-import com.google.android.play.core.ktx.bytesDownloaded
-import com.google.android.play.core.ktx.installStatus
-import com.google.android.play.core.ktx.totalBytesToDownload
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
@@ -28,7 +23,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,37 +49,17 @@ class HomeViewModel @Inject constructor(
     private val _inAppReviewsEventChannel = Channel<Event>()
     val inAppReviewEventChannel = _inAppReviewsEventChannel.receiveAsFlow()
 
-    private val installStateUpdatedListener = InstallStateUpdatedListener { state ->
-        val isUpdateDownloading = state.installStatus == InstallStatus.DOWNLOADING
-        val isUpdateDownloaded = state.installStatus == InstallStatus.DOWNLOADED
-
-        when {
-            isUpdateDownloading -> {
-                val bytesDownloaded = state.bytesDownloaded
-                val totalBytesToDownload = state.totalBytesToDownload
-                Timber.i("$bytesDownloaded/$totalBytesToDownload downloaded.")
-            }
-            isUpdateDownloaded -> viewModelScope.launch {
-                _inAppUpdatesEventChannel.send(HomeUiEvent.ShowCompleteAppUpdateSnackbar)
-            }
-        }
-    }
-
     init {
         checkIsAppUpdateStalled()
-        registerAppUpdateListener()
+        checkFlexibleUpdateDownloadState()
         getHomeState()
         checkForAppUpdates()
-    }
-
-    override fun onCleared() {
-        unregisterAppUpdateListener()
-        super.onCleared()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
+            HomeEvent.CheckFlexibleUpdateDownloadState -> checkFlexibleUpdateDownloadState()
             HomeEvent.GetHomeState -> getHomeState()
             HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
             HomeEvent.RequestInAppReviews -> requestInAppReviews()
@@ -98,18 +72,6 @@ class HomeViewModel @Inject constructor(
                 isGranted = event.isGranted
             )
             is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog(permission = event.permission)
-        }
-    }
-
-    private fun registerAppUpdateListener() = viewModelScope.launch {
-        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
-            appUpdateManager.get().registerListener(installStateUpdatedListener)
-        }
-    }
-
-    private fun unregisterAppUpdateListener() = viewModelScope.launch {
-        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
-            appUpdateManager.get().unregisterListener(installStateUpdatedListener)
         }
     }
 
@@ -130,6 +92,14 @@ class HomeViewModel @Inject constructor(
                 }
             }
             else -> Unit
+        }
+    }
+
+    private fun checkFlexibleUpdateDownloadState() = viewModelScope.launch {
+        homeUseCases.checkFlexibleUpdateDownloadStateUseCase.get()().collect { isUpdateDownloaded ->
+            if (isUpdateDownloaded) {
+                _inAppUpdatesEventChannel.send(HomeUiEvent.ShowCompleteAppUpdateSnackbar)
+            }
         }
     }
 
