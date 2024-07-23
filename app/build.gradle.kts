@@ -77,6 +77,8 @@ android {
             )
 
             signingConfig = signingConfigs.getByName("release")
+
+            ndk.debugSymbolLevel = "FULL" // Include native debug symbols file in app bundle
         }
     }
 
