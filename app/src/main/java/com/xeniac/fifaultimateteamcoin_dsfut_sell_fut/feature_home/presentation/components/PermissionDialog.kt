@@ -5,6 +5,8 @@ import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
@@ -22,8 +24,8 @@ fun NotificationPermissionDialog(
     activity: Activity,
     permissionQueue: List<String>,
     modifier: Modifier = Modifier,
-    enterAnimation: EnterTransition = scaleIn(),
-    exitAnimation: ExitTransition = scaleOut(),
+    enterAnimation: EnterTransition = scaleIn() + fadeIn(),
+    exitAnimation: ExitTransition = scaleOut() + fadeOut(),
     onConfirmClick: () -> Unit,
     onDismiss: (permission: String) -> Unit
 ) {

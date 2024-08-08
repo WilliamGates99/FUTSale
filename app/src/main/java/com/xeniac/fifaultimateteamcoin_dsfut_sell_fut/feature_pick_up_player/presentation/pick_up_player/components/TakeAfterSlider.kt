@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -149,8 +151,8 @@ fun TakeAfterSlider(
 
         AnimatedVisibility(
             visible = pickUpPlayerState.takeAfterErrorText != null,
-            enter = slideInVertically(),
-            exit = slideOutVertically()
+            enter = slideInVertically() + fadeIn(),
+            exit = slideOutVertically() + fadeOut()
         ) {
             Text(
                 text = pickUpPlayerState.takeAfterErrorText?.asString() ?: "",
