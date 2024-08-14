@@ -35,7 +35,7 @@ class GetIsNotificationSoundEnabledUseCaseTest {
     }
 
     @Test
-    fun getCurrentAppTheme_returnsCurrentAppTheme() = runTest {
+    fun getIsNotificationSoundEnabled_returnsIsNotificationSoundEnabled() = runTest {
         val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
         assertThat(isNotificationSoundEnabled).isEqualTo(
             fakePreferencesRepository.isNotificationSoundEnabled.first()

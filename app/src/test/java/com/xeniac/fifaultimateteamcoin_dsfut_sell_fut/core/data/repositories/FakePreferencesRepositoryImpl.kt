@@ -100,8 +100,13 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     }
 
     override suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded {
+        val isActivityRestartNeeded = isActivityRestartNeeded(
+            newLayoutDirection = appLocaleDto.layoutDirection
+        )
+
         appLocale = appLocaleDto.toAppLocale()
-        return false
+
+        return isActivityRestartNeeded
     }
 
     override suspend fun setNotificationPermissionCount(count: Int) {
@@ -127,4 +132,8 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
         selectedPlatform = platformDto.toPlatform()
     }
+
+    fun isActivityRestartNeeded(
+        newLayoutDirection: Int
+    ): Boolean = appLocale.layoutDirection != newLayoutDirection
 }
