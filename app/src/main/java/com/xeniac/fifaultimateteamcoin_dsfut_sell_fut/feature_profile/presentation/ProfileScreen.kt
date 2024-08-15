@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -93,10 +94,17 @@ fun ProfileScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.showSnackbar(
+            val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
             )
+
+            when (result) {
+                SnackbarResult.ActionPerformed -> Unit
+                SnackbarResult.Dismissed -> {
+                    isIntentAppNotFoundErrorVisible = false
+                }
+            }
         }
     }
 

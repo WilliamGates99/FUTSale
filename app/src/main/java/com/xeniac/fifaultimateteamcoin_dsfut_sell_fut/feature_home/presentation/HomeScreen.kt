@@ -152,10 +152,17 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.showSnackbar(
+            val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
             )
+
+            when (result) {
+                SnackbarResult.ActionPerformed -> Unit
+                SnackbarResult.Dismissed -> {
+                    isIntentAppNotFoundErrorVisible = false
+                }
+            }
         }
     }
 

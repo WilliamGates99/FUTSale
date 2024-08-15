@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,10 +59,17 @@ fun OnboardingScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.showSnackbar(
+            val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
             )
+
+            when (result) {
+                SnackbarResult.ActionPerformed -> Unit
+                SnackbarResult.Dismissed -> {
+                    isIntentAppNotFoundErrorVisible = false
+                }
+            }
         }
     }
 
