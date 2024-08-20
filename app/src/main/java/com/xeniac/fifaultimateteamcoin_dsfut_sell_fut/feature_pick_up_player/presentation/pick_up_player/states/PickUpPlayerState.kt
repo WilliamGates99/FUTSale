@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states
 
 import android.os.Parcelable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform

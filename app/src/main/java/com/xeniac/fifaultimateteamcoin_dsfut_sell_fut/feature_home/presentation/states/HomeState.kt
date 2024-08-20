@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.states
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.states
 
 import android.os.Parcelable
 import com.google.android.play.core.review.ReviewInfo
