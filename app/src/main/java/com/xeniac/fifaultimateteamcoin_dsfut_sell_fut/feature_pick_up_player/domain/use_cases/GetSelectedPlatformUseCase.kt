@@ -2,9 +2,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import kotlinx.coroutines.flow.Flow
 
 class GetSelectedPlatformUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(): Platform = preferencesRepository.getSelectedPlatform()
+    operator fun invoke(): Flow<Platform> = preferencesRepository.getSelectedPlatform()
 }

@@ -37,7 +37,7 @@ interface PreferencesRepository {
 
     suspend fun getSecretKey(): String?
 
-    suspend fun getSelectedPlatform(): Platform
+    fun getSelectedPlatform(): Flow<Platform>
 
     suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 

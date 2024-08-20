@@ -70,19 +70,8 @@ fun PickUpPlayerScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle(
-        initialValue = true
-    )
-    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle(
-        initialValue = true
-    )
-    val latestPickedPlayers by viewModel.latestPickedPlayers.collectAsStateWithLifecycle()
     val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onEvent(PickUpPlayerEvent.GetPersistedData)
-    }
 
     LaunchedEffect(key1 = pickUpPlayerState.isAutoPickUpLoading) {
         val window = context.findActivity().window
@@ -168,15 +157,19 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.ShowErrorNotification -> {
                 notificationService.showFailedPickUpPlayerNotification(
                     message = event.message.asString(context),
-                    isNotificationSoundEnabled = isNotificationSoundEnabled,
-                    isNotificationVibrateEnabled = isNotificationVibrateEnabled
+                    isNotificationSoundEnabled = pickUpPlayerState
+                        .isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = pickUpPlayerState
+                        .isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.ShowSuccessNotification -> {
                 notificationService.showSuccessfulPickUpPlayerNotification(
                     playerName = event.playerName,
-                    isNotificationSoundEnabled = isNotificationSoundEnabled,
-                    isNotificationVibrateEnabled = isNotificationVibrateEnabled
+                    isNotificationSoundEnabled = pickUpPlayerState
+                        .isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = pickUpPlayerState
+                        .isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
@@ -324,7 +317,7 @@ fun PickUpPlayerScreen(
                 )
         ) {
             LatestPlayersPagers(
-                latestPickedPlayers = latestPickedPlayers,
+                latestPickedPlayers = pickUpPlayerState.latestPickedPlayers,
                 timerText = timerText.asString(),
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
                 onCountDownStart = { expiryTimeInMillis ->
