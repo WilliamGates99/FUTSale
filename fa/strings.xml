@@ -120,8 +120,9 @@
     <string name="pick_up_player_error_dsfut_maintenance">به دلیل مسائل فنی، این سرویس موقتاً در دسترس نمی‌باشد.</string>
     <string name="pick_up_player_error_dsfut_parameters">یک یا همه پارامترهای ورودی نا‌معتبر هستند.</string>
     <string name="pick_up_player_error_dsfut_signature">لطفا مقادیر وارد شده برای شناسه پارتنر و کلید محرمانه را در صفحه پروفایل بررسی کنید.</string>
+    <string name="pick_up_player_error_dsfut_authorization">احراز ناموفق بود.</string>
     <string name="pick_up_player_error_dsfut_throttle">تعداد درخواست‌ها از حد مجاز بیشتر شده است. حداکثر 10 درخواست در هر 10 ثانیه مجاز است.</string>
-    <string name="pick_up_player_error_dsfut_unit_time">خطای ساعت یونیکس.</string>
+    <string name="pick_up_player_error_dsfut_unix_time">خطای ساعت یونیکس.</string>
     <string name="pick_up_player_error_dsfut_canceled">سیستم گرفتن خودکار بازیکن متوقف شد.</string>
     <string name="pick_up_player_error_btn_open_profile">برو به پروفایل</string>
     <string name="pick_up_player_notification_successful_title">%s با موفقیت گرفته شد</string>
