@@ -40,6 +40,7 @@ enum class MiscellaneousRowItems(
     @StringRes val title: Int,
     val url: String?
 ) {
+    // TODO: COMMENT DONATE FOR MYKET RELEASE
     Donate(
         icon = R.drawable.ic_settings_donate,
         title = R.string.settings_text_miscellaneous_donate,

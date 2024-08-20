@@ -19,7 +19,7 @@ interface PreferencesRepository {
 
     fun getCurrentAppTheme(): Flow<AppTheme>
 
-    suspend fun getCurrentAppLocale(): AppLocale
+    fun getCurrentAppLocale(): AppLocale
 
     suspend fun isOnBoardingCompleted(): Boolean
 
@@ -37,7 +37,7 @@ interface PreferencesRepository {
 
     suspend fun getSecretKey(): String?
 
-    suspend fun getSelectedPlatform(): Platform
+    fun getSelectedPlatform(): Flow<Platform>
 
     suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 

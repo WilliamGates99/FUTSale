@@ -6,5 +6,5 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 class GetCurrentAppLocaleUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(): AppLocale = preferencesRepository.getCurrentAppLocale()
+    operator fun invoke(): AppLocale = preferencesRepository.getCurrentAppLocale()
 }

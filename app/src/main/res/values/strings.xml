@@ -147,8 +147,9 @@
     <string name="pick_up_player_error_dsfut_maintenance">The service is temporarily unavailable due to technical work.</string>
     <string name="pick_up_player_error_dsfut_parameters">One or all of the entered parameters are invalid.</string>
     <string name="pick_up_player_error_dsfut_signature">Please check the entered values for the partner ID and secret key in the Profile page.</string>
+    <string name="pick_up_player_error_dsfut_authorization">Authorization failed.</string>
     <string name="pick_up_player_error_dsfut_throttle">The number of requests has been exceeded. It is allowed to make 10 requests per 10 seconds.</string>
-    <string name="pick_up_player_error_dsfut_unit_time">Unix time error.</string>
+    <string name="pick_up_player_error_dsfut_unix_time">Unix time error.</string>
     <string name="pick_up_player_error_dsfut_canceled">Auto pick player canceled.</string>
     <string name="pick_up_player_error_btn_open_profile">Open Profile</string>
     <string name="pick_up_player_notification_successful_title">%s was picked up successfully</string>

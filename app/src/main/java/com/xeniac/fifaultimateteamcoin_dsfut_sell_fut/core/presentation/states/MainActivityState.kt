@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.states
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states
 
 import android.os.Parcelable
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale

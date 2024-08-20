@@ -93,7 +93,7 @@ class PreferencesRepositoryImpl @Inject constructor(
         e.printStackTrace()
     }
 
-    override suspend fun getCurrentAppLocale(): AppLocale = try {
+    override fun getCurrentAppLocale(): AppLocale = try {
         val appLocaleList = AppCompatDelegate.getApplicationLocales()
 
         if (appLocaleList.isEmpty) {
@@ -189,18 +189,17 @@ class PreferencesRepositoryImpl @Inject constructor(
         null
     }
 
-    override suspend fun getSelectedPlatform(): Platform = try {
-        val selectedPlatform = settingsDataStore.data.first()[PreferencesKeys.SELECTED_PLATFORM]
+    override fun getSelectedPlatform(): Flow<Platform> = settingsDataStore.data.map {
+        val selectedPlatform = it[PreferencesKeys.SELECTED_PLATFORM]
 
-        val platformDto = PlatformDto.entries.find {
-            it.value == selectedPlatform
+        val platformDto = PlatformDto.entries.find { platformDto ->
+            platformDto.value == selectedPlatform
         } ?: PlatformDto.CONSOLE
 
         platformDto.toPlatform()
-    } catch (e: Exception) {
+    }.catch { e ->
         Timber.e("getSelectedPlatform failed:")
         e.printStackTrace()
-        PlatformDto.CONSOLE.toPlatform()
     }
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {

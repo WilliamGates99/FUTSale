@@ -28,8 +28,9 @@ sealed class PickUpPlayerError : Error() {
         data object DsfutMaintenance : Network()
         data object DsfutParameters : Network()
         data object DsfutSignature : Network()
+        data object DsfutAuthorization : Network()
         data object DsfutThrottle : Network()
-        data object DsfutUnitTime : Network()
+        data object DsfutUnixTime : Network()
         data object SomethingWentWrong : Network()
     }
 

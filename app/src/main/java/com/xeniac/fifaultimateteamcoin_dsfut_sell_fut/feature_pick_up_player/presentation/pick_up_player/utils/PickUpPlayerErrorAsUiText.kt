@@ -32,8 +32,9 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.Network.DsfutMaintenance -> UiText.StringResource(R.string.pick_up_player_error_dsfut_maintenance)
     PickUpPlayerError.Network.DsfutParameters -> UiText.StringResource(R.string.pick_up_player_error_dsfut_parameters)
     PickUpPlayerError.Network.DsfutSignature -> UiText.StringResource(R.string.pick_up_player_error_dsfut_signature)
+    PickUpPlayerError.Network.DsfutAuthorization -> UiText.StringResource(R.string.pick_up_player_error_dsfut_authorization)
     PickUpPlayerError.Network.DsfutThrottle -> UiText.StringResource(R.string.pick_up_player_error_dsfut_throttle)
-    PickUpPlayerError.Network.DsfutUnitTime -> UiText.StringResource(R.string.pick_up_player_error_dsfut_unit_time)
+    PickUpPlayerError.Network.DsfutUnixTime -> UiText.StringResource(R.string.pick_up_player_error_dsfut_unix_time)
     PickUpPlayerError.Network.SomethingWentWrong -> UiText.StringResource(R.string.error_something_went_wrong)
 
     PickUpPlayerError.Local.SomethingWentWrong -> UiText.StringResource(R.string.error_something_went_wrong)

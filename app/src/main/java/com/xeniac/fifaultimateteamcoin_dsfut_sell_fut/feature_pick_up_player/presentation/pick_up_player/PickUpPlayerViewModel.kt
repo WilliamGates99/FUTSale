@@ -11,10 +11,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ev
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PlatformError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.asUiText
@@ -24,7 +24,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -33,6 +35,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.text.DecimalFormat
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PickUpPlayerViewModel @Inject constructor(
@@ -43,21 +46,53 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
-    val isNotificationSoundEnabled = pickUpPlayerUseCases
-        .getIsNotificationSoundEnabledUseCase.get()()
+    private val _isNotificationSoundEnabled = pickUpPlayerUseCases
+        .getIsNotificationSoundEnabledUseCase.get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
 
-    val isNotificationVibrateEnabled = pickUpPlayerUseCases
-        .getIsNotificationVibrateEnabledUseCase.get()()
+    private val _isNotificationVibrateEnabled = pickUpPlayerUseCases
+        .getIsNotificationVibrateEnabledUseCase.get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
 
-    val latestPickedPlayers = pickUpPlayerUseCases
+    private val _latestPickedPlayers = pickUpPlayerUseCases
         .observeLatestPickedPlayersUseCase.get()().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Lazily,
+        started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList()
     )
 
-    val pickUpPlayerState = savedStateHandle.getStateFlow(
+    private val _selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
+
+    private val _pickUpPlayerState = savedStateHandle.getStateFlow(
         key = "pickUpPlayerState",
+        initialValue = PickUpPlayerState()
+    )
+    val pickUpPlayerState = combine(
+        flow = _pickUpPlayerState,
+        flow2 = _isNotificationSoundEnabled,
+        flow3 = _isNotificationVibrateEnabled,
+        flow4 = _latestPickedPlayers,
+        flow5 = _selectedPlatform
+    ) { pickUpPlayerState, isNotificationSoundEnabled, isNotificationVibrateEnabled, latestPickedPlayers, selectedPlatform ->
+        pickUpPlayerState.copy(
+            isNotificationSoundEnabled = isNotificationSoundEnabled,
+            isNotificationVibrateEnabled = isNotificationVibrateEnabled,
+            latestPickedPlayers = latestPickedPlayers,
+            selectedPlatform = selectedPlatform
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
         initialValue = PickUpPlayerState()
     )
 
@@ -82,13 +117,8 @@ class PickUpPlayerViewModel @Inject constructor(
     private var autoPickUpPlayerJob: Job? = null
     private var countDownTimerJob: Job? = null
 
-    init {
-        getPersistedData()
-    }
-
     fun onEvent(event: PickUpPlayerEvent) {
         when (event) {
-            PickUpPlayerEvent.GetPersistedData -> getPersistedData()
             is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
             is PickUpPlayerEvent.MinPriceChanged -> minPriceChanged(event.minPrice)
             is PickUpPlayerEvent.MaxPriceChanged -> maxPriceChanged(event.maxPrice)
@@ -101,22 +131,10 @@ class PickUpPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun getPersistedData() = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()()
-            )
-        }
-    }
-
     private fun setSelectedPlatform(platform: Platform) = viewModelScope.launch {
         mutex.withLock {
             when (val result = pickUpPlayerUseCases.setSelectedPlatformUseCase.get()(platform)) {
-                is Result.Success -> {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                        selectedPlatform = platform
-                    )
-                }
+                is Result.Success -> Unit
                 is Result.Error -> {
                     when (result.error) {
                         PlatformError.SomethingWentWrong -> {
@@ -180,7 +198,7 @@ class PickUpPlayerViewModel @Inject constructor(
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             mutex.withLock {
-                if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
+                if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
                     savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
                         isAutoPickUpLoading = true
                     )
@@ -324,7 +342,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun pickUpPlayerOnce() = viewModelScope.launch {
         mutex.withLock {
-            if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
+            if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
                     isPickUpOnceLoading = true
                 )

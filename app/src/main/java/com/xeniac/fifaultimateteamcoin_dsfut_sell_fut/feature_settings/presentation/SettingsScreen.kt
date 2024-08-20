@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -62,14 +63,7 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val appTheme by viewModel.appTheme.collectAsStateWithLifecycle(initialValue = null)
-    val appLocale by viewModel.appLocale.collectAsStateWithLifecycle()
-    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle(
-        initialValue = null
-    )
-    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle(
-        initialValue = null
-    )
+    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
     var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
@@ -134,10 +128,17 @@ fun SettingsScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.showSnackbar(
+            val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
             )
+
+            when (result) {
+                SnackbarResult.ActionPerformed -> Unit
+                SnackbarResult.Dismissed -> {
+                    isIntentAppNotFoundErrorVisible = false
+                }
+            }
         }
     }
 
@@ -174,10 +175,7 @@ fun SettingsScreen(
                 )
         ) {
             SettingsCard(
-                appTheme = appTheme,
-                appLocale = appLocale,
-                isNotificationSoundEnabled = isNotificationSoundEnabled,
-                isNotificationVibrateEnabled = isNotificationVibrateEnabled,
+                settingsState = settingsState,
                 onLanguageClick = {
                     isLocaleBottomSheetVisible = true
                 },
@@ -220,7 +218,7 @@ fun SettingsScreen(
 
     LocaleBottomSheet(
         isVisible = isLocaleBottomSheetVisible,
-        currentAppLocale = appLocale ?: AppLocale.Default,
+        currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
         onDismiss = {
             isLocaleBottomSheetVisible = false
         },
@@ -231,7 +229,7 @@ fun SettingsScreen(
 
     ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
-        currentAppTheme = appTheme ?: AppTheme.Default,
+        currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
         onDismiss = {
             isThemeDialogVisible = false
         },

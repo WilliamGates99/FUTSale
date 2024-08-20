@@ -38,7 +38,9 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
     var storedSecretKey: String? = null
-    var selectedPlatform: Platform = Platform.CONSOLE
+    var selectedPlatform = SnapshotStateList<Platform>().apply {
+        add(Platform.CONSOLE)
+    }
 
     fun changePartnerId(newPartnerId: String?) {
         storedPartnerId = newPartnerId
@@ -52,7 +54,7 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(appTheme) }
 
-    override suspend fun getCurrentAppLocale(): AppLocale = appLocale
+    override fun getCurrentAppLocale(): AppLocale = appLocale
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
@@ -93,15 +95,20 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun getSecretKey(): String? = storedSecretKey
 
-    override suspend fun getSelectedPlatform(): Platform = selectedPlatform
+    override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
         appTheme = appThemeDto.toAppTheme()
     }
 
     override suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded {
+        val isActivityRestartNeeded = isActivityRestartNeeded(
+            newLayoutDirection = appLocaleDto.layoutDirection
+        )
+
         appLocale = appLocaleDto.toAppLocale()
-        return false
+
+        return isActivityRestartNeeded
     }
 
     override suspend fun setNotificationPermissionCount(count: Int) {
@@ -125,6 +132,13 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     }
 
     override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
-        selectedPlatform = platformDto.toPlatform()
+        selectedPlatform.apply {
+            clear()
+            add(platformDto.toPlatform())
+        }
     }
+
+    fun isActivityRestartNeeded(
+        newLayoutDirection: Int
+    ): Boolean = appLocale.layoutDirection != newLayoutDirection
 }

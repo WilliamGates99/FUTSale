@@ -12,6 +12,7 @@ object Constants {
     const val ERROR_DSFUT_MAINTENANCE = "maintenance"
     const val ERROR_DSFUT_PARAMETERS = "parameters"
     const val ERROR_DSFUT_SIGNATURE = "sign"
+    const val ERROR_DSFUT_AUTHORIZATION = "auth"
     const val ERROR_DSFUT_THROTTLE = "throttle"
     const val ERROR_DSFUT_UNIX_TIME = "ts"
 }

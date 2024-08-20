@@ -3,6 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
@@ -30,6 +32,7 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import okhttp3.internal.toLongOrDefault
@@ -61,7 +64,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             if (isPlayerExpired) {
                 send(0)
             } else {
-                val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
+                val timerStartTimeInMs = expiryTimeInMs - getCurrentTimeInMillis()
 
                 countDownTimer = object : CountDownTimer(
                     /* millisInFuture = */ timerStartTimeInMs,
@@ -88,15 +91,19 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
-        val platform = preferencesRepository.get().getSelectedPlatform()
-        val timestamp = DateHelper.getCurrentTimeInMillis()
-        val signature = getMd5Signature(partnerId, secretKey, timestamp)
+        val platform = preferencesRepository.get().getSelectedPlatform().first()
+        val timestampInSeconds = getCurrentTimeInSeconds()
+        val signature = getMd5Signature(
+            partnerId = partnerId,
+            secretKey = secretKey,
+            timestamp = timestampInSeconds
+        )
 
         val response = httpClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = platform.value,
                 partnerId = partnerId,
-                timestamp = timestamp,
+                timestamp = timestampInSeconds,
                 signature = signature
             ).url
         ) {
@@ -127,8 +134,9 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                         Constants.ERROR_DSFUT_MAINTENANCE -> PickUpPlayerError.Network.DsfutMaintenance
                         Constants.ERROR_DSFUT_PARAMETERS -> PickUpPlayerError.Network.DsfutParameters
                         Constants.ERROR_DSFUT_SIGNATURE -> PickUpPlayerError.Network.DsfutSignature
+                        Constants.ERROR_DSFUT_AUTHORIZATION -> PickUpPlayerError.Network.DsfutAuthorization
                         Constants.ERROR_DSFUT_THROTTLE -> PickUpPlayerError.Network.DsfutThrottle
-                        Constants.ERROR_DSFUT_UNIX_TIME -> PickUpPlayerError.Network.DsfutUnitTime
+                        Constants.ERROR_DSFUT_UNIX_TIME -> PickUpPlayerError.Network.DsfutUnixTime
                         else -> PickUpPlayerError.Network.SomethingWentWrong
                     }
 
