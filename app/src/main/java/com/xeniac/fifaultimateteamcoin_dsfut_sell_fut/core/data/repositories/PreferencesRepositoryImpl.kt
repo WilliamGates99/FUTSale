@@ -93,7 +93,7 @@ class PreferencesRepositoryImpl @Inject constructor(
         e.printStackTrace()
     }
 
-    override suspend fun getCurrentAppLocale(): AppLocale = try {
+    override fun getCurrentAppLocale(): AppLocale = try {
         val appLocaleList = AppCompatDelegate.getApplicationLocales()
 
         if (appLocaleList.isEmpty) {

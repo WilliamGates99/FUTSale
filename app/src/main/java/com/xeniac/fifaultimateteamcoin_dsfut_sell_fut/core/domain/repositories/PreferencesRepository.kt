@@ -19,7 +19,7 @@ interface PreferencesRepository {
 
     fun getCurrentAppTheme(): Flow<AppTheme>
 
-    suspend fun getCurrentAppLocale(): AppLocale
+    fun getCurrentAppLocale(): AppLocale
 
     suspend fun isOnBoardingCompleted(): Boolean
 
