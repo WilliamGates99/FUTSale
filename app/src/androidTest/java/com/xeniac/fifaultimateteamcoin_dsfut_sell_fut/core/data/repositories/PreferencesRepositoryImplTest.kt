@@ -103,7 +103,7 @@ class PreferencesRepositoryImplTest {
             testRepository.getPreviousRateAppRequestTimeInMs()
         val initialPartnerId = testRepository.getPartnerId()
         val initialSecretKey = testRepository.getSecretKey()
-        val initialSelectedPlatform = testRepository.getSelectedPlatform()
+        val initialSelectedPlatform = testRepository.getSelectedPlatform().first()
 
         assertThat(initialAppThemeSynchronously).isEqualTo(AppTheme.Default)
         assertThat(initialAppTheme).isEqualTo(AppTheme.Default)
@@ -201,7 +201,7 @@ class PreferencesRepositoryImplTest {
         val testValue = Platform.PC
         testRepository.setSelectedPlatform(testValue.toPlatformDto())
 
-        val selectedPlatform = testRepository.getSelectedPlatform()
+        val selectedPlatform = testRepository.getSelectedPlatform().first()
         assertThat(selectedPlatform).isEqualTo(testValue)
     }
 }
