@@ -3,6 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
@@ -61,7 +63,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             if (isPlayerExpired) {
                 send(0)
             } else {
-                val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
+                val timerStartTimeInMs = expiryTimeInMs - getCurrentTimeInMillis()
 
                 countDownTimer = object : CountDownTimer(
                     /* millisInFuture = */ timerStartTimeInMs,
@@ -89,14 +91,18 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
         val platform = preferencesRepository.get().getSelectedPlatform()
-        val timestamp = DateHelper.getCurrentTimeInMillis()
-        val signature = getMd5Signature(partnerId, secretKey, timestamp)
+        val timestampInSeconds = getCurrentTimeInSeconds()
+        val signature = getMd5Signature(
+            partnerId = partnerId,
+            secretKey = secretKey,
+            timestamp = timestampInSeconds
+        )
 
         val response = httpClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = platform.value,
                 partnerId = partnerId,
-                timestamp = timestamp,
+                timestamp = timestampInSeconds,
                 signature = signature
             ).url
         ) {

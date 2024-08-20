@@ -4,6 +4,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
@@ -68,7 +70,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                         true -> PlatformDto.CONSOLE
                         false -> PlatformDto.PC
                     },
-                    pickUpTimeInMillis = DateHelper.getCurrentTimeInMillis().plus(
+                    pickUpTimeInMillis = getCurrentTimeInMillis().plus(
                         Random.nextLong(
                             from = -600000, // 10 minutes ago
                             until = 0 // Now
@@ -96,7 +98,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
-        val currentTime = DateHelper.getCurrentTimeInMillis()
+        val currentTime = getCurrentTimeInMillis()
         val expiryTime = currentTime + expiryTimeInMs
         val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTime)
 
@@ -181,14 +183,18 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
             }
         }
 
-        val timestamp = DateHelper.getCurrentTimeInMillis()
-        val signature = getMd5Signature(partnerId, secretKey, timestamp)
+        val timestampInSeconds = getCurrentTimeInSeconds()
+        val signature = getMd5Signature(
+            partnerId = partnerId,
+            secretKey = secretKey,
+            timestamp = timestampInSeconds
+        )
 
         val response = testClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = PlatformDto.CONSOLE.value,
                 partnerId = partnerId,
-                timestamp = timestamp,
+                timestamp = timestampInSeconds,
                 signature = signature
             ).url
         ) {
