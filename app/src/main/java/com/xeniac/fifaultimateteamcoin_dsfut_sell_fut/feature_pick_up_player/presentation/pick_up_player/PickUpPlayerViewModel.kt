@@ -198,7 +198,7 @@ class PickUpPlayerViewModel @Inject constructor(
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             mutex.withLock {
-                if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
+                if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
                     savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
                         isAutoPickUpLoading = true
                     )
@@ -342,7 +342,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun pickUpPlayerOnce() = viewModelScope.launch {
         mutex.withLock {
-            if (NetworkObserverHelper.networkStatus == ConnectivityObserver.Status.AVAILABLE) {
+            if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
                     isPickUpOnceLoading = true
                 )

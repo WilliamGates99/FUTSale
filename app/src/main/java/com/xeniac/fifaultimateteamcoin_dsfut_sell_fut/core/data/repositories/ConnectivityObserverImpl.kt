@@ -39,10 +39,14 @@ class ConnectivityObserverImpl @Inject constructor(
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            connectivityManager.registerDefaultNetworkCallback(callback)
+            connectivityManager.registerDefaultNetworkCallback(
+                /* networkCallback = */ callback
+            )
         }
         awaitClose {
-            connectivityManager.unregisterNetworkCallback(callback)
+            connectivityManager.unregisterNetworkCallback(
+                /* networkCallback = */ callback
+            )
         }
     }.distinctUntilChanged()
 }
