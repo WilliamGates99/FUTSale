@@ -63,14 +63,7 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val appTheme by viewModel.appTheme.collectAsStateWithLifecycle(initialValue = null)
-    val appLocale by viewModel.appLocale.collectAsStateWithLifecycle()
-    val isNotificationSoundEnabled by viewModel.isNotificationSoundEnabled.collectAsStateWithLifecycle(
-        initialValue = null
-    )
-    val isNotificationVibrateEnabled by viewModel.isNotificationVibrateEnabled.collectAsStateWithLifecycle(
-        initialValue = null
-    )
+    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
     var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
@@ -182,10 +175,7 @@ fun SettingsScreen(
                 )
         ) {
             SettingsCard(
-                appTheme = appTheme,
-                appLocale = appLocale,
-                isNotificationSoundEnabled = isNotificationSoundEnabled,
-                isNotificationVibrateEnabled = isNotificationVibrateEnabled,
+                settingsState = settingsState,
                 onLanguageClick = {
                     isLocaleBottomSheetVisible = true
                 },
@@ -228,7 +218,7 @@ fun SettingsScreen(
 
     LocaleBottomSheet(
         isVisible = isLocaleBottomSheetVisible,
-        currentAppLocale = appLocale ?: AppLocale.Default,
+        currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
         onDismiss = {
             isLocaleBottomSheetVisible = false
         },
@@ -239,7 +229,7 @@ fun SettingsScreen(
 
     ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
-        currentAppTheme = appTheme ?: AppTheme.Default,
+        currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
         onDismiss = {
             isThemeDialogVisible = false
         },

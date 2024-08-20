@@ -14,15 +14,21 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.us
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.AppThemeError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.NotificationSoundError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.NotificationVibrateError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -32,14 +38,47 @@ class SettingsViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
-    val appTheme = settingsUseCases.getCurrentAppThemeUseCase.get()()
-    val isNotificationSoundEnabled = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()()
-    val isNotificationVibrateEnabled = settingsUseCases
-        .getIsNotificationVibrateEnabledUseCase.get()()
-
-    val appLocale = savedStateHandle.getStateFlow<AppLocale?>(
-        key = "appLocale",
+    private val _appTheme = settingsUseCases.getCurrentAppThemeUseCase.get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
         initialValue = null
+    )
+    private val _isNotificationSoundEnabled = settingsUseCases.getIsNotificationSoundEnabledUseCase
+        .get()().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
+    private val _isNotificationVibrateEnabled =
+        settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null
+        )
+
+    private val _appLocale = savedStateHandle.getStateFlow<AppLocale?>(
+        key = "appLocale",
+        initialValue = settingsUseCases.getCurrentAppLocaleUseCase.get()()
+    )
+
+    private val _settingsState = MutableStateFlow(SettingsState())
+    val settingsState = combine(
+        flow = _settingsState,
+        flow2 = _appTheme,
+        flow3 = _appLocale,
+        flow4 = _isNotificationSoundEnabled,
+        flow5 = _isNotificationVibrateEnabled
+    ) { settingsState, appTheme, appLocale, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
+        settingsState.copy(
+            currentAppTheme = appTheme,
+            currentAppLocale = appLocale,
+            isNotificationSoundEnabled = isNotificationSoundEnabled,
+            isNotificationVibrateEnabled = isNotificationVibrateEnabled
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
+        initialValue = SettingsState()
     )
 
     private val _setAppLocaleEventChannel = Channel<Event>()
@@ -54,13 +93,8 @@ class SettingsViewModel @Inject constructor(
     private val _setNotificationVibrateEventChannel = Channel<UiEvent>()
     val setNotificationVibrateEventChannel = _setNotificationVibrateEventChannel.receiveAsFlow()
 
-    init {
-        getCurrentAppLocale()
-    }
-
     fun onEvent(event: SettingsEvent) {
         when (event) {
-            SettingsEvent.GetCurrentAppLocale -> getCurrentAppLocale()
             is SettingsEvent.SetCurrentAppLocale -> setCurrentAppLocale(event.newAppLocale)
             is SettingsEvent.SetCurrentAppTheme -> setCurrentAppTheme(event.newAppTheme)
             is SettingsEvent.SetNotificationSoundSwitch -> setNotificationSoundSwitch(event.isEnabled)
@@ -68,18 +102,15 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentAppLocale() = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["appLocale"] = settingsUseCases.getCurrentAppLocaleUseCase.get()()
-        }
-    }
-
     private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
         mutex.withLock {
-            if (newAppLocale != appLocale.value) {
+            val shouldUpdateAppLocale = newAppLocale != settingsState.value.currentAppLocale
+            if (shouldUpdateAppLocale) {
                 val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
                     newAppLocale = newAppLocale
                 )
+
+                savedStateHandle["appLocale"] = newAppLocale
 
                 when (isActivityRestartNeeded) {
                     true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
@@ -90,7 +121,8 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setCurrentAppTheme(newAppTheme: AppTheme) = viewModelScope.launch {
-        if (newAppTheme != appTheme.first()) {
+        val shouldUpdateAppTheme = newAppTheme != settingsState.value.currentAppTheme
+        if (shouldUpdateAppTheme) {
             when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
                 is Result.Success -> {
                     _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
