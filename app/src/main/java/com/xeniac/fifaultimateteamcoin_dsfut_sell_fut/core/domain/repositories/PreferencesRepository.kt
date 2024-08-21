@@ -41,7 +41,7 @@ interface PreferencesRepository {
 
     suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
 
-    suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded
+    suspend fun setCurrentAppLocale(newAppLocaleDto: AppLocaleDto): IsActivityRestartNeeded
 
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 

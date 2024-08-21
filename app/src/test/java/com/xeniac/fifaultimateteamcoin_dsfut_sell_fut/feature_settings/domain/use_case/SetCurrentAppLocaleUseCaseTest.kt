@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.u
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocaleDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +44,7 @@ class SetCurrentAppLocaleUseCaseTest {
         val testValue = AppLocale.FarsiIR
 
         val isActivityRestartNeeded = fakePreferencesRepository.isActivityRestartNeeded(
-            newLayoutDirection = testValue.layoutDirection
+            newLocale = testValue.toAppLocaleDto()
         )
 
         val result = setCurrentAppLocaleUseCase(testValue)

@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import androidx.core.text.layoutDirection
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -215,14 +214,14 @@ class PreferencesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setCurrentAppLocale(
-        appLocaleDto: AppLocaleDto
+        newAppLocaleDto: AppLocaleDto
     ): IsActivityRestartNeeded = try {
-        val isActivityRestartNeeded = isActivityRestartNeeded(
-            newLayoutDirection = appLocaleDto.layoutDirection
-        )
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
+
         AppCompatDelegate.setApplicationLocales(
-            /* locales = */ LocaleListCompat.forLanguageTags(appLocaleDto.languageTag)
+            /* locales = */ LocaleListCompat.forLanguageTags(newAppLocaleDto.languageTag)
         )
+
         isActivityRestartNeeded
     } catch (e: Exception) {
         Timber.e("setCurrentAppLocale failed:")
@@ -349,9 +348,7 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun isActivityRestartNeeded(newLayoutDirection: Int): Boolean {
-        val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
-        val currentLayoutDirection = currentLocale?.layoutDirection
-        return currentLayoutDirection != newLayoutDirection
-    }
+    private fun isActivityRestartNeeded(
+        newLocale: AppLocaleDto
+    ): Boolean = getCurrentAppLocale().layoutDirectionCompose != newLocale.layoutDirectionCompose
 }

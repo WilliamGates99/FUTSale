@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
 
-    var appTheme: AppTheme = AppTheme.Default
-    var appLocale: AppLocale = AppLocale.Default
+    var currentAppTheme: AppTheme = AppTheme.Default
+    var currentLocale: AppLocale = AppLocale.Default
     var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
     var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply {
@@ -50,11 +50,11 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
         storedSecretKey = newSecretKey
     }
 
-    override fun getCurrentAppThemeSynchronously(): AppTheme = appTheme
+    override fun getCurrentAppThemeSynchronously(): AppTheme = currentAppTheme
 
-    override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(appTheme) }
+    override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(currentAppTheme) }
 
-    override fun getCurrentAppLocale(): AppLocale = appLocale
+    override fun getCurrentAppLocale(): AppLocale = currentLocale
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
@@ -98,15 +98,15 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
 
     override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
-        appTheme = appThemeDto.toAppTheme()
+        currentAppTheme = appThemeDto.toAppTheme()
     }
 
-    override suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded {
-        val isActivityRestartNeeded = isActivityRestartNeeded(
-            newLayoutDirection = appLocaleDto.layoutDirection
-        )
+    override suspend fun setCurrentAppLocale(
+        newAppLocaleDto: AppLocaleDto
+    ): IsActivityRestartNeeded {
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
 
-        appLocale = appLocaleDto.toAppLocale()
+        currentLocale = newAppLocaleDto.toAppLocale()
 
         return isActivityRestartNeeded
     }
@@ -139,6 +139,6 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     }
 
     fun isActivityRestartNeeded(
-        newLayoutDirection: Int
-    ): Boolean = appLocale.layoutDirection != newLayoutDirection
+        newLocale: AppLocaleDto
+    ): Boolean = currentLocale.layoutDirectionCompose != newLocale.layoutDirectionCompose
 }
