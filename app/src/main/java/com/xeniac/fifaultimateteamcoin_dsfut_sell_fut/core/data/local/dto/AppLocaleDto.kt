@@ -1,6 +1,7 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto
 
 import androidx.compose.ui.unit.LayoutDirection
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 
 sealed class AppLocaleDto(
     val index: Int,
@@ -40,4 +41,11 @@ sealed class AppLocaleDto(
         layoutDirectionCompose = LayoutDirection.Rtl,
         layoutDirection = android.util.LayoutDirection.RTL
     )
+
+    fun toAppLocale(): AppLocale = when (this) {
+        Default -> AppLocale.Default
+        EnglishGB -> AppLocale.EnglishGB
+        EnglishUS -> AppLocale.EnglishUS
+        FarsiIR -> AppLocale.FarsiIR
+    }
 }

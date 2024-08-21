@@ -1,8 +1,8 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 
 @Database(
     entities = [PlayerEntity::class],

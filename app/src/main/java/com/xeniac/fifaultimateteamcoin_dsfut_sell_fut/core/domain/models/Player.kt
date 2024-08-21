@@ -1,8 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 
 import android.os.Parcelable
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable

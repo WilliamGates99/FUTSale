@@ -1,8 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
 import android.os.CountDownTimer
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player

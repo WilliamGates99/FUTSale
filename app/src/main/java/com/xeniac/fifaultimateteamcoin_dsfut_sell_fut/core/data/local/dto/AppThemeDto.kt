@@ -1,6 +1,7 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto
 
 import androidx.appcompat.app.AppCompatDelegate
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 
 sealed class AppThemeDto(
     val index: Int,
@@ -20,4 +21,10 @@ sealed class AppThemeDto(
         index = 2,
         setAppTheme = { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
     )
+
+    fun toAppTheme(): AppTheme = when (this) {
+        Default -> AppTheme.Default
+        Light -> AppTheme.Light
+        Dark -> AppTheme.Dark
+    }
 }
