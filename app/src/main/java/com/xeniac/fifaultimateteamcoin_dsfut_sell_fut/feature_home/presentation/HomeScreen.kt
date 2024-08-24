@@ -1,8 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
@@ -20,7 +17,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +39,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_gra
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NotificationPermissionDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.isAppInstalledFromPlayStore
 import kotlinx.coroutines.launch
@@ -55,8 +51,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val activity = context.findActivity()
     val scope = rememberCoroutineScope()
-    val activity by remember { derivedStateOf { context.findActivity() } }
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
@@ -69,10 +65,6 @@ fun HomeScreen(
     val shouldBottomAppBarBeVisible = NavigationBarItems.entries.find { navigationBarItem ->
         currentRoute.contains(navigationBarItem.screen.toString())
     } != null
-
-    val isRunningAndroid13OrNewer by remember {
-        derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
-    }
 
     val appUpdateResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -102,6 +94,8 @@ fun HomeScreen(
             }
             HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     val result = snackbarHostState.showSnackbar(
                         message = context.getString(R.string.home_app_update_message),
                         actionLabel = context.getString(R.string.home_app_update_action)
@@ -152,6 +146,8 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
             val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
@@ -166,37 +162,20 @@ fun HomeScreen(
         }
     }
 
-    @SuppressLint("InlinedApi")
-    if (isRunningAndroid13OrNewer) {
-        val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
+    PostNotificationPermissionHandler(
+        homeState = homeState,
+        onPermissionResult = { permission, isGranted ->
             homeViewModel.onEvent(
                 HomeEvent.OnPermissionResult(
-                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    permission = permission,
                     isGranted = isGranted
                 )
             )
+        },
+        onDismiss = { permission ->
+            homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
         }
-
-        LaunchedEffect(key1 = Unit) {
-            postNotificationPermissionResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
-
-        NotificationPermissionDialog(
-            isVisible = homeState.isPermissionDialogVisible,
-            activity = activity,
-            permissionQueue = homeState.permissionDialogQueue,
-            onConfirmClick = {
-                postNotificationPermissionResultLauncher.launch(
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
-            },
-            onDismiss = { permission ->
-                homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
-            }
-        )
-    }
+    )
 
     Scaffold(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },

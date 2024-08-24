@@ -68,6 +68,8 @@ fun ProfileScreen(
         when (event) {
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -82,6 +84,8 @@ fun ProfileScreen(
         when (event) {
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -94,6 +98,8 @@ fun ProfileScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
             val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
