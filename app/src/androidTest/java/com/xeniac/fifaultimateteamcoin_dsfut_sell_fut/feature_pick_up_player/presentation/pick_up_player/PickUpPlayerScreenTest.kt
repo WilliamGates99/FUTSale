@@ -17,6 +17,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -355,8 +357,10 @@ class PickUpPlayerScreenTest {
         }
 
         val backStackEntry = testNavController.currentBackStackEntry
-        val currentRoute = backStackEntry?.destination?.route
-        assertThat(currentRoute).contains(Screen.PickedUpPlayerInfoScreen::class.qualifiedName)
+        val isNavigatedToPickedUpPlayerInfoScreen = backStackEntry?.destination?.hierarchy?.any {
+            it.hasRoute(Screen.PickedUpPlayerInfoScreen::class)
+        } ?: false
+        assertThat(isNavigatedToPickedUpPlayerInfoScreen).isTrue()
     }
 
     @Test
@@ -427,8 +431,10 @@ class PickUpPlayerScreenTest {
         }
 
         val backStackEntry = testNavController.currentBackStackEntry
-        val currentRoute = backStackEntry?.destination?.route
-        assertThat(currentRoute).contains(Screen.PickedUpPlayerInfoScreen::class.qualifiedName)
+        val isNavigatedToPickedUpPlayerInfoScreen = backStackEntry?.destination?.hierarchy?.any {
+            it.hasRoute(Screen.PickedUpPlayerInfoScreen::class)
+        } ?: false
+        assertThat(isNavigatedToPickedUpPlayerInfoScreen).isTrue()
     }
 
     @Test

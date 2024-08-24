@@ -15,6 +15,8 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
@@ -357,8 +359,10 @@ class OnboardingScreenTest {
         }
 
         val backStackEntry = testNavController.currentBackStackEntry
-        val currentRoute = backStackEntry?.destination?.route
-        assertThat(currentRoute).isEqualTo(Screen.HomeScreen::class.qualifiedName)
+        val isNavigatedToHomeScreen = backStackEntry?.destination?.hierarchy?.any {
+            it.hasRoute(Screen.HomeScreen::class)
+        } ?: false
+        assertThat(isNavigatedToHomeScreen).isTrue()
     }
 
     @Test
