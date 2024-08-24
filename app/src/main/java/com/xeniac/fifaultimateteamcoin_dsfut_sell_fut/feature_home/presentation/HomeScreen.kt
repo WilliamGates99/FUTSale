@@ -62,7 +62,7 @@ fun HomeScreen(
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpPlayerScreen.toString()
-    val shouldBottomAppBarBeVisible = NavigationBarItems.entries.find { navigationBarItem ->
+    val isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
         currentRoute.contains(navigationBarItem.screen.toString())
     } != null
 
@@ -181,13 +181,12 @@ fun HomeScreen(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         bottomBar = {
             AnimatedVisibility(
-                visible = shouldBottomAppBarBeVisible,
+                visible = isBottomAppBarVisible,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CustomNavigationBar(
-                    modifier = Modifier.fillMaxWidth(),
                     currentRoute = currentRoute,
                     onItemClick = { screen ->
                         homeNavController.navigate(screen) {
@@ -201,7 +200,8 @@ fun HomeScreen(
                              */
                             popUpTo(id = homeNavController.graph.startDestinationId)
                         }
-                    }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         },
