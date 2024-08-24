@@ -34,7 +34,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.In
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
@@ -57,14 +56,20 @@ fun HomeScreen(
     val homeNavController = rememberNavController()
 
     val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
-    var isAppReviewDialog by remember { mutableStateOf(false) }
+
+    var isBottomAppBarVisible by remember { mutableStateOf(true) }
+    var isAppReviewDialogVisible by remember { mutableStateOf(false) }
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: Screen.PickUpPlayerScreen.toString()
-    val isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
-        currentRoute.contains(navigationBarItem.screen.toString())
-    } != null
+
+    LaunchedEffect(backStackEntry?.destination) {
+        val currentRoute = backStackEntry?.destination?.route
+
+        isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
+            currentRoute == navigationBarItem.screen::class.qualifiedName
+        } != null
+    }
 
     val appUpdateResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -118,7 +123,7 @@ fun HomeScreen(
     ObserverAsEvent(flow = homeViewModel.inAppReviewEventChannel) { event ->
         when (event) {
             HomeUiEvent.ShowAppReviewDialog -> {
-                isAppReviewDialog = true
+                isAppReviewDialogVisible = true
             }
             HomeUiEvent.LaunchInAppReview -> {
                 homeState.inAppReviewInfo?.let { reviewInfo ->
@@ -187,7 +192,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CustomNavigationBar(
-                    currentRoute = currentRoute,
+                    backStackEntry = backStackEntry,
                     onItemClick = { screen ->
                         homeNavController.navigate(screen) {
                             // Avoid multiple copies of the same destination when re-selecting the same item
@@ -214,7 +219,7 @@ fun HomeScreen(
     }
 
     AppReviewDialog(
-        isVisible = isAppReviewDialog,
+        isVisible = isAppReviewDialogVisible,
         onRateNowClick = {
             if (isAppInstalledFromPlayStore()) {
                 homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
@@ -230,7 +235,7 @@ fun HomeScreen(
             homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
         },
         onDismiss = {
-            isAppReviewDialog = false
+            isAppReviewDialogVisible = false
         }
     )
 }
