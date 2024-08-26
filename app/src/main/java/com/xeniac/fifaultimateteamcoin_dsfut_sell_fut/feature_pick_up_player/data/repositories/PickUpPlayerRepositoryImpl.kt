@@ -29,6 +29,7 @@ import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
@@ -38,7 +39,7 @@ import okhttp3.internal.toLongOrDefault
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: HttpClient,
@@ -113,8 +114,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         Timber.i("Pick up player response call = ${response.request.call}")
 
-        when (response.status.value) {
-            HttpStatusCode.OK.value -> { // Code: 200
+        when (response.status) {
+            HttpStatusCode.OK -> { // Code: 200
                 val pickUpPlayerResponseDto = response.body<PickUpPlayerResponseDto>()
                 val playerDto = pickUpPlayerResponseDto.playerDto
 
@@ -144,10 +145,6 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             }
             else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
         }
-    } catch (e: CancellationException) {
-        Timber.e("Pick up player CancellationException:")
-        e.printStackTrace()
-        Result.Error(PickUpPlayerError.CancellationException)
     } catch (e: UnresolvedAddressException) { // When device is offline
         Timber.e("Pick up player UnresolvedAddressException:}")
         e.printStackTrace()
@@ -181,6 +178,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.SerializationException)
     } catch (e: Exception) {
+        coroutineContext.ensureActive()
+
         Timber.e("Pick up player Exception:")
         e.printStackTrace()
         if (e.message?.lowercase(Locale.US)?.contains("unable to resolve host") == true) {

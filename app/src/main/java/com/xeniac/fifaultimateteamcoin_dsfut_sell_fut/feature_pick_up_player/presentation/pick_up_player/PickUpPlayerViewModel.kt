@@ -292,12 +292,6 @@ class PickUpPlayerViewModel @Inject constructor(
                                     delay(Constants.AUTO_PICK_UP_DELAY_IN_MILLIS)
                                     autoPickUpPlayer()
                                 }
-                                PickUpPlayerError.CancellationException -> {
-                                    savedStateHandle["pickUpPlayerState"] =
-                                        pickUpPlayerState.value.copy(
-                                            isAutoPickUpLoading = false
-                                        )
-                                }
                                 PickUpPlayerError.Network.DsfutSignature -> {
                                     _autoPickUpPlayerEventChannel.send(
                                         PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())

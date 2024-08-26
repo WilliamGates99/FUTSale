@@ -10,8 +10,6 @@ sealed class PickUpPlayerError : Error() {
     data object InvalidMaxPrice : PickUpPlayerError()
     data object InvalidTakeAfter : PickUpPlayerError()
 
-    data object CancellationException : PickUpPlayerError()
-
     sealed class Network : PickUpPlayerError() {
         data object Offline : Network()
         data object ConnectTimeoutException : Network()
