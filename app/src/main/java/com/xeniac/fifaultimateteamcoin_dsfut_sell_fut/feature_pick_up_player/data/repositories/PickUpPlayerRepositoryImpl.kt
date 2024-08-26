@@ -26,7 +26,9 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.request
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.ensureActive
@@ -107,6 +109,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                 signature = signature
             ).url
         ) {
+            contentType(ContentType.Application.Json)
+
             parameter(key = "min_buy", value = minPrice)
             parameter(key = "max_buy", value = maxPrice)
             parameter(key = "take_after", value = takeAfterDelayInSeconds)

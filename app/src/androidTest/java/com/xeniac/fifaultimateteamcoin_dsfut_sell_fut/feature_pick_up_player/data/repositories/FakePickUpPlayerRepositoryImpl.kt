@@ -23,8 +23,10 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.delay
@@ -198,6 +200,8 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 signature = signature
             ).url
         ) {
+            contentType(ContentType.Application.Json)
+
             parameter(key = "min_buy", value = minPrice)
             parameter(key = "max_buy", value = maxPrice)
             parameter(key = "take_after", value = takeAfterDelayInSeconds)
