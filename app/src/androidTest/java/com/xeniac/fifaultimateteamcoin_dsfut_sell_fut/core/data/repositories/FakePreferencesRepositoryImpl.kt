@@ -11,11 +11,20 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.AppUpdateDialogShowCount
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsAppUpdateDialogShownToday
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.todayIn
 import javax.inject.Inject
 
 class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
@@ -24,18 +33,20 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     var currentLocale: AppLocale = AppLocale.Default
     var isOnBoardingCompleted = false
     var notificationPermissionCount = 0
-    var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply {
-        add(true)
-    }
-    var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply {
-        add(true)
-    }
+    var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply { add(true) }
+    var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply { add(true) }
+    var appUpdateDialogShowCount = SnapshotStateList<Int>().apply { add(0) }
+    var appUpdateDialogShowEpochDays = SnapshotStateList<Int?>().apply { add(null) }
     var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
     var storedSecretKey: String? = null
-    var selectedPlatform = SnapshotStateList<Platform>().apply {
-        add(Platform.CONSOLE)
+    var selectedPlatform = SnapshotStateList<Platform>().apply { add(Platform.CONSOLE) }
+
+    private var shouldStoreTodayDate = true
+
+    fun setShouldStoreTodayDate(value: Boolean) {
+        shouldStoreTodayDate = value
     }
 
     fun changePartnerId(newPartnerId: String?) {
@@ -79,6 +90,56 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
         isNotificationVibrateEnabled.apply {
             clear()
             add(isEnabled)
+        }
+    }
+
+    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> = snapshotFlow {
+        appUpdateDialogShowCount.first()
+    }
+
+    override suspend fun setAppUpdateDialogShowCount(count: Int) {
+        appUpdateDialogShowCount.apply {
+            clear()
+            add(count)
+        }
+    }
+
+    override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> = snapshotFlow {
+        val dialogShowEpochDays = appUpdateDialogShowEpochDays.first()
+
+        dialogShowEpochDays?.let { epochDays ->
+            val todayDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            val dialogShowLocalDate = LocalDate.fromEpochDays(epochDays)
+
+            val isShownToday = dialogShowLocalDate.periodUntil(todayDate).days == 0
+
+            isShownToday
+        } ?: false
+    }
+
+    override suspend fun storeAppUpdateDialogShowEpochDays() {
+        appUpdateDialogShowEpochDays.apply {
+            clear()
+
+            val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+            val localDate = if (shouldStoreTodayDate) {
+                todayLocalDate
+            } else {
+                todayLocalDate.minus(
+                    value = 1,
+                    unit = DateTimeUnit.DAY
+                )
+            }
+
+            add(localDate.toEpochDays())
+        }
+    }
+
+    override suspend fun removeAppUpdateDialogShowEpochDays() {
+        appUpdateDialogShowEpochDays.apply {
+            clear()
+            add(null)
         }
     }
 

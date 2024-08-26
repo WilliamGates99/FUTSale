@@ -79,6 +79,8 @@ class PreferencesRepositoryImplTest {
     getNotificationPermissionCount -> 0
     isNotificationSoundEnabled -> true
     isNotificationVibrateEnabled -> true
+    getAppUpdateDialogShowCount -> 0
+    isAppUpdateDialogShownToday -> false
     getSelectedRateAppOption -> RateAppOption.NOT_SHOWN_YET
     getPreviousRateAppRequestTimeInMs -> null
     getPartnerId -> null
@@ -95,6 +97,9 @@ class PreferencesRepositoryImplTest {
         val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
         val initialIsNotificationVibrateEnabled =
             testRepository.isNotificationVibrateEnabled().first()
+        val initialAppUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
+        val initialIsAppUpdateDialogShownToday =
+            testRepository.isAppUpdateDialogShownToday().first()
         val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption()
         val initialPreviousRateAppRequestTime =
             testRepository.getPreviousRateAppRequestTimeInMs()
@@ -109,6 +114,8 @@ class PreferencesRepositoryImplTest {
         assertThat(initialNotificationPermissionCount).isEqualTo(0)
         assertThat(initialIsNotificationSoundEnabled).isTrue()
         assertThat(initialIsNotificationVibrateEnabled).isTrue()
+        assertThat(initialAppUpdateDialogShowCount).isEqualTo(0)
+        assertThat(initialIsAppUpdateDialogShownToday).isFalse()
         assertThat(initialSelectedRateAppOption).isEqualTo(RateAppOption.NOT_SHOWN_YET)
         assertThat(initialPreviousRateAppRequestTime).isNull()
         assertThat(initialPartnerId).isNull()
@@ -156,6 +163,36 @@ class PreferencesRepositoryImplTest {
 
         val isNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled().first()
         assertThat(isNotificationVibrateEnabled).isFalse()
+    }
+
+    @Test
+    fun writeAppUpdateDialogShowCount() = testScope.runBlockingTest {
+        val testValue = 3
+        testRepository.setAppUpdateDialogShowCount(testValue)
+
+        val appUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
+        assertThat(appUpdateDialogShowCount).isEqualTo(testValue)
+    }
+
+    @Test
+    fun writeAppUpdateDialogShowEpochDays() = testScope.runBlockingTest {
+        testRepository.storeAppUpdateDialogShowEpochDays()
+
+        val isAppUpdateDialogShownTodayBefore = testRepository.isAppUpdateDialogShownToday().first()
+        assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+    }
+
+    @Test
+    fun removeAppUpdateDialogShowEpochDays() = testScope.runBlockingTest {
+        testRepository.storeAppUpdateDialogShowEpochDays()
+
+        val isAppUpdateDialogShownTodayBefore = testRepository.isAppUpdateDialogShownToday().first()
+        assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+
+        testRepository.removeAppUpdateDialogShowEpochDays()
+
+        val isAppUpdateDialogShownTodayAfter = testRepository.isAppUpdateDialogShownToday().first()
+        assertThat(isAppUpdateDialogShownTodayAfter).isFalse()
     }
 
     @Test

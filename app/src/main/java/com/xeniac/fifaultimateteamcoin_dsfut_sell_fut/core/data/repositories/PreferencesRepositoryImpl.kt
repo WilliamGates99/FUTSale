@@ -18,7 +18,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.AppUpdateDialogShowCount
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsAppUpdateDialogShownToday
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +28,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.todayIn
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -42,6 +49,10 @@ class PreferencesRepositoryImpl @Inject constructor(
         )
         val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey(
             name = "isNotificationVibrateActive"
+        )
+        val APP_UPDATE_DIALOG_SHOW_COUNT = intPreferencesKey(name = "AppUpdateDialogShowCount")
+        val APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS = intPreferencesKey(
+            name = "appUpdateDialogShowEpochDays"
         )
         val SELECTED_RATE_APP_OPTION = stringPreferencesKey(name = "selectedRateAppOption")
         val PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS = longPreferencesKey(
@@ -143,6 +154,31 @@ class PreferencesRepositoryImpl @Inject constructor(
         Timber.e("isNotificationVibrateEnabled failed:")
         e.printStackTrace()
     }
+
+    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> =
+        settingsDataStore.data.map {
+            it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_COUNT] ?: 0
+        }.catch { e ->
+            Timber.e("getAppUpdateDialogShowCount failed:")
+            e.printStackTrace()
+        }
+
+    override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> =
+        settingsDataStore.data.map {
+            val dialogShowEpochDays = it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS]
+
+            dialogShowEpochDays?.let { epochDays ->
+                val todayDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                val dialogShowLocalDate = LocalDate.fromEpochDays(epochDays)
+
+                val isShownToday = dialogShowLocalDate.periodUntil(todayDate).days == 0
+
+                isShownToday
+            } ?: false
+        }.catch { e ->
+            Timber.e("isAppUpdateDialogShownToday failed:")
+            e.printStackTrace()
+        }
 
     override suspend fun getSelectedRateAppOption(): RateAppOption = try {
         val selectedRateAppOption = settingsDataStore.data
@@ -269,6 +305,47 @@ class PreferencesRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e("isNotificationVibrateEnabled failed:")
+            e.printStackTrace()
+        }
+    }
+
+    // TODO: WRITE TESTS
+
+    override suspend fun setAppUpdateDialogShowCount(count: Int) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_COUNT] = count
+                Timber.i("App update dialog show count edited to $count")
+            }
+        } catch (e: Exception) {
+            Timber.e("setAppUpdateDialogShowCount failed:")
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun storeAppUpdateDialogShowEpochDays() {
+        try {
+            val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            val todayEpochDays = todayLocalDate.toEpochDays()
+
+            settingsDataStore.edit {
+                it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS] = todayEpochDays
+                Timber.i("App update dialog show epoch days edited to $todayEpochDays")
+            }
+        } catch (e: Exception) {
+            Timber.e("storeAppUpdateDialogShowEpochDays failed:")
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun removeAppUpdateDialogShowEpochDays() {
+        try {
+            settingsDataStore.edit {
+                it.remove(PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS)
+                Timber.i("App update dialog show epoch days removed")
+            }
+        } catch (e: Exception) {
+            Timber.e("removeAppUpdateDialogShowEpochDays failed:")
             e.printStackTrace()
         }
     }

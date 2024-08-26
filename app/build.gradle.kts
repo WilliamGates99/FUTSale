@@ -42,8 +42,14 @@ android {
 
         buildConfigField(
             type = "String",
-            name = "KTOR_HTTP_BASE_URL",
-            value = properties.getProperty("KTOR_HTTP_BASE_URL")
+            name = "FUTSALE_HTTP_BASE_URL",
+            value = properties.getProperty("FUTSALE_HTTP_BASE_URL")
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "DSFUT_HTTP_BASE_URL",
+            value = properties.getProperty("DSFUT_HTTP_BASE_URL")
         )
     }
 

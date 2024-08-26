@@ -11,6 +11,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import kotlinx.coroutines.flow.Flow
 
 typealias IsActivityRestartNeeded = Boolean
+typealias AppUpdateDialogShowCount = Int
+typealias IsAppUpdateDialogShownToday = Boolean
 typealias PreviousRateAppRequestTimeInMs = Long
 
 interface PreferencesRepository {
@@ -28,6 +30,10 @@ interface PreferencesRepository {
     fun isNotificationSoundEnabled(): Flow<Boolean>
 
     fun isNotificationVibrateEnabled(): Flow<Boolean>
+
+    fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount>
+
+    fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday>
 
     suspend fun getSelectedRateAppOption(): RateAppOption
 
@@ -50,6 +56,12 @@ interface PreferencesRepository {
     suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
 
     suspend fun isNotificationVibrateEnabled(isEnabled: Boolean)
+
+    suspend fun setAppUpdateDialogShowCount(count: Int)
+
+    suspend fun storeAppUpdateDialogShowEpochDays()
+
+    suspend fun removeAppUpdateDialogShowEpochDays()
 
     suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
 
