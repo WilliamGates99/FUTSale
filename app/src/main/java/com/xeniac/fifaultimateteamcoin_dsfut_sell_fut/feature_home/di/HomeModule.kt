@@ -16,6 +16,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_ca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckForAppUpdatesUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsFlexibleUpdateStalledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsImmediateUpdateStalledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetLatestAppVersionUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestTimeInMsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
@@ -110,6 +111,12 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetLatestAppVersionUseCase(
+        homeRepository: HomeRepository
+    ): GetLatestAppVersionUseCase = GetLatestAppVersionUseCase(homeRepository)
+
+    @Provides
+    @ViewModelScoped
     fun provideGetNotificationPermissionCountUseCase(
         preferencesRepository: PreferencesRepository
     ): GetNotificationPermissionCountUseCase =
@@ -158,6 +165,7 @@ internal object HomeModule {
         checkIsImmediateUpdateStalledUseCase: CheckIsImmediateUpdateStalledUseCase,
         checkForAppUpdatesUseCase: CheckForAppUpdatesUseCase,
         requestInAppReviewsUseCase: RequestInAppReviewsUseCase,
+        getLatestAppVersionUseCase: GetLatestAppVersionUseCase,
         getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase,
         setNotificationPermissionCountUseCase: SetNotificationPermissionCountUseCase,
         getSelectedRateAppOptionUseCase: GetSelectedRateAppOptionUseCase,
@@ -170,6 +178,7 @@ internal object HomeModule {
         { checkIsImmediateUpdateStalledUseCase },
         { checkForAppUpdatesUseCase },
         { requestInAppReviewsUseCase },
+        { getLatestAppVersionUseCase },
         { getNotificationPermissionCountUseCase },
         { setNotificationPermissionCountUseCase },
         { getSelectedRateAppOptionUseCase },

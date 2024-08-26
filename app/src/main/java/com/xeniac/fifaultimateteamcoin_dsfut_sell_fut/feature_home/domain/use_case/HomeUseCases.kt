@@ -8,6 +8,7 @@ data class HomeUseCases(
     val checkIsImmediateUpdateStalledUseCase: Lazy<CheckIsImmediateUpdateStalledUseCase>,
     val checkForAppUpdatesUseCase: Lazy<CheckForAppUpdatesUseCase>,
     val requestInAppReviewsUseCase: Lazy<RequestInAppReviewsUseCase>,
+    val getLatestAppVersionUseCase: Lazy<GetLatestAppVersionUseCase>,
     val getNotificationPermissionCountUseCase: Lazy<GetNotificationPermissionCountUseCase>,
     val setNotificationPermissionCountUseCase: Lazy<SetNotificationPermissionCountUseCase>,
     val getSelectedRateAppOptionUseCase: Lazy<GetSelectedRateAppOptionUseCase>,
