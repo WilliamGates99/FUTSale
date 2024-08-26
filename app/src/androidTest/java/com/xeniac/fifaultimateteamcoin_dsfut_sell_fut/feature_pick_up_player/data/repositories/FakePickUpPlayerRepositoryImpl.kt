@@ -20,6 +20,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -170,7 +171,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 status = pickUpPlayerHttpStatusCode,
                 headers = headersOf(
                     name = HttpHeaders.ContentType,
-                    value = "application/json"
+                    value = ContentType.Application.Json.toString()
                 )
             )
         }
@@ -182,6 +183,9 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                     prettyPrint = true
                     coerceInputValues = true
                 })
+            }
+            install(DefaultRequest) {
+                contentType(ContentType.Application.Json)
             }
         }
 
@@ -200,8 +204,6 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 signature = signature
             ).url
         ) {
-            contentType(ContentType.Application.Json)
-
             parameter(key = "min_buy", value = minPrice)
             parameter(key = "max_buy", value = maxPrice)
             parameter(key = "take_after", value = takeAfterDelayInSeconds)
