@@ -94,6 +94,7 @@ android {
             dimension = "build"
             versionNameSuffix = " - Developer Preview"
             applicationIdSuffix = ".dev"
+            isDefault = true
 
             resValue(
                 type = "color",
@@ -114,6 +115,7 @@ android {
 
         create("playStore") {
             dimension = "market"
+            isDefault = true
 
             buildConfigField(
                 type = "String",
