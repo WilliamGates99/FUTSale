@@ -74,6 +74,11 @@
     <string name="home_nav_title_profile">پروفایل</string>
     <string name="home_nav_title_history">تاریخچه</string>
     <string name="home_nav_title_settings">تنظیمات</string>
+    <string name="home_app_update_sheet_title">نسخه جدید برنامه منتشر شد</string>
+    <!--Placeholder is for the App Name-->
+    <string name="home_app_update_sheet_message">توصیه می‌کنیم برای داشتن تجربه‌‌ای لذت‌بخش‌تر، %s را به آخرین نسخه بروز‌رسانی کنید.</string>
+    <string name="home_app_update_sheet_btn_update">بروز‌رسانی</string>
+    <string name="home_app_update_sheet_btn_dismiss">الان نه</string>
     <string name="home_app_update_message">به‌روز‌رسانی با موفقیت دانلود شد! برای تکمیل نصب، لطفاً برنامه را مجدداً راه‌اندازی کنید.</string>
     <string name="home_app_update_action">راه‌اندازی مجدد</string>
     <!--Placeholder is for the App Name-->
