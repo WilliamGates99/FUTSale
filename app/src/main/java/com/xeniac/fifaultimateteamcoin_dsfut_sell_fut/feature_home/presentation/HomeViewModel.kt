@@ -8,7 +8,10 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
@@ -16,6 +19,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.isAppInstalledFromPlayStore
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -50,18 +54,27 @@ class HomeViewModel @Inject constructor(
     val inAppReviewEventChannel = _inAppReviewsEventChannel.receiveAsFlow()
 
     init {
-        checkIsAppUpdateStalled()
-        checkFlexibleUpdateDownloadState()
         getHomeState()
-        checkForAppUpdates()
+
+        if (isAppInstalledFromPlayStore()) {
+            checkIsAppUpdateStalled()
+            checkFlexibleUpdateDownloadState()
+            checkForAppUpdates()
+            requestInAppReviews()
+        } else {
+            getLatestAppVersion()
+            checkSelectedRateAppOption()
+        }
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
+            HomeEvent.GetHomeState -> getHomeState()
             HomeEvent.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
             HomeEvent.CheckFlexibleUpdateDownloadState -> checkFlexibleUpdateDownloadState()
-            HomeEvent.GetHomeState -> getHomeState()
             HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
+            HomeEvent.GetLatestAppVersion -> getLatestAppVersion()
+            HomeEvent.DismissAppUpdateSheet -> dismissAppUpdateSheet()
             HomeEvent.RequestInAppReviews -> requestInAppReviews()
             HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
             HomeEvent.LaunchInAppReview -> launchInAppReview()
@@ -121,14 +134,37 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun requestInAppReviews() = viewModelScope.launch {
+    private fun getLatestAppVersion() = viewModelScope.launch {
+        if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
+            when (val result = homeUseCases.getLatestAppVersionUseCase.get()()) {
+                is Result.Success -> result.data?.let { latestVersionName ->
+                    mutex.withLock {
+                        savedStateHandle["homeState"] = homeState.value.copy(
+                            latestVersionName = latestVersionName
+                        )
+                    }
+                }
+                is Result.Error -> Unit
+            }
+        }
+    }
+
+    private fun dismissAppUpdateSheet() = viewModelScope.launch {
         mutex.withLock {
-            homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
+            savedStateHandle["homeState"] = homeState.value.copy(
+                latestVersionName = null
+            )
+        }
+    }
+
+    private fun requestInAppReviews() = viewModelScope.launch {
+        homeUseCases.requestInAppReviewsUseCase.get()().collect { reviewInfo ->
+            mutex.withLock {
                 savedStateHandle["homeState"] = homeState.value.copy(
                     inAppReviewInfo = reviewInfo
                 )
-                checkSelectedRateAppOption()
             }
+            checkSelectedRateAppOption()
         }
     }
 
