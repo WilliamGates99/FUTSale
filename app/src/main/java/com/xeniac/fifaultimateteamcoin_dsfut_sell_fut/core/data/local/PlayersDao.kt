@@ -21,10 +21,11 @@ interface PlayersDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
-    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
+    @Query("SELECT * FROM players ORDER BY pick_up_time_in_seconds DESC")
     fun observeLatestPickedPlayers(): Flow<List<PlayerEntity>>
 
-    @Query("SELECT * FROM players ORDER BY pickUpTimeInMillis DESC")
+    // TODO: MAYBE SHOULD BE ASCENDING???
+    @Query("SELECT * FROM players ORDER BY pick_up_time_in_seconds DESC")
     fun pagingSource(): PagingSource<Int, PlayerEntity>
 
     @Query("SELECT * FROM players WHERE id = :id")

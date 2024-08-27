@@ -1,34 +1,34 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "d2ae4828bbeaa16384c8f1adb80f0c11",
+    "version": 3,
+    "identityHash": "e8ba59be3dd97f70e174a826e213cac4",
     "entities": [
       {
         "tableName": "players",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tradeID` TEXT NOT NULL, `assetID` INTEGER NOT NULL, `resourceID` INTEGER NOT NULL, `transactionID` INTEGER NOT NULL, `name` TEXT NOT NULL, `rating` INTEGER NOT NULL, `position` TEXT NOT NULL, `startPrice` INTEGER NOT NULL, `buyNowPrice` INTEGER NOT NULL, `owners` INTEGER NOT NULL, `contracts` INTEGER NOT NULL, `chemistryStyle` TEXT NOT NULL, `chemistryStyleID` INTEGER NOT NULL, `platform` TEXT NOT NULL, `pickUpTimeInMillis` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`trade_id` TEXT NOT NULL, `asset_id` INTEGER NOT NULL, `resource_id` INTEGER NOT NULL, `transaction_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `rating` INTEGER NOT NULL, `position` TEXT NOT NULL, `start_price` INTEGER NOT NULL, `buy_now_price` INTEGER NOT NULL, `owners` INTEGER NOT NULL, `contracts` INTEGER NOT NULL, `chemistry_style` TEXT NOT NULL, `chemistry_style_id` INTEGER NOT NULL, `platform` TEXT NOT NULL, `pick_up_time_in_seconds` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
         "fields": [
           {
             "fieldPath": "tradeID",
-            "columnName": "tradeID",
+            "columnName": "trade_id",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "assetID",
-            "columnName": "assetID",
+            "columnName": "asset_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "resourceID",
-            "columnName": "resourceID",
+            "columnName": "resource_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "transactionID",
-            "columnName": "transactionID",
+            "columnName": "transaction_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -52,13 +52,13 @@
           },
           {
             "fieldPath": "startPrice",
-            "columnName": "startPrice",
+            "columnName": "start_price",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "buyNowPrice",
-            "columnName": "buyNowPrice",
+            "columnName": "buy_now_price",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -76,13 +76,13 @@
           },
           {
             "fieldPath": "chemistryStyle",
-            "columnName": "chemistryStyle",
+            "columnName": "chemistry_style",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "chemistryStyleID",
-            "columnName": "chemistryStyleID",
+            "columnName": "chemistry_style_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -93,9 +93,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "pickUpTimeInMillis",
-            "columnName": "pickUpTimeInMillis",
-            "affinity": "TEXT",
+            "fieldPath": "pickUpTimeInSeconds",
+            "columnName": "pick_up_time_in_seconds",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -118,7 +118,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd2ae4828bbeaa16384c8f1adb80f0c11')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e8ba59be3dd97f70e174a826e213cac4')"
     ]
   }
 }

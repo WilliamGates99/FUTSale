@@ -23,9 +23,9 @@ data class Player(
     val chemistryStyle: String,
     val chemistryStyleID: Int,
     val platform: Platform,
-    val pickUpTimeInMillis: Long = 0,
-    val expiryTimeInMillis: Long = 0,
-    val id: Int? = null
+    val pickUpTimeInMs: Long = 0,
+    val expiryTimeInMs: Long = 0,
+    val id: Long? = null
 ) : Parcelable {
     fun toPlayerDto(): PlayerDto = PlayerDto(
         tradeID = tradeID,
@@ -60,7 +60,7 @@ data class Player(
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         platformDto = platform.toPlatformDto(),
-        pickUpTimeInMillis = pickUpTimeInMillis.toString(),
+        pickUpTimeInSeconds = pickUpTimeInMs / 1000,
         id = id
     )
 }

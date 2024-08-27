@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
-import okhttp3.internal.toLongOrDefault
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -47,11 +46,12 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
+    // TODO: MODIFY THIS, TOO
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
         .observeLatestPickedPlayers().map { playerEntities ->
             playerEntities.filter {
                 DateHelper.isPickedPlayerNotExpired(
-                    pickUpTimeInMs = it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
+                    pickUpTimeInSeconds = it.pickUpTimeInSeconds
                 )
             }.map { it.toPlayer() }
         }

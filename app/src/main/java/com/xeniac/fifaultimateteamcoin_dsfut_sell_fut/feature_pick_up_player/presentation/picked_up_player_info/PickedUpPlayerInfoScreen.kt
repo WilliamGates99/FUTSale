@@ -48,7 +48,7 @@ fun PickedUpPlayerInfoScreen(
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.onEvent(PickedUpPlayerInfoEvent.StartCountDownTimer(player.expiryTimeInMillis))
+        viewModel.onEvent(PickedUpPlayerInfoEvent.StartCountDownTimer(player.expiryTimeInMs))
     }
 
     Scaffold(
