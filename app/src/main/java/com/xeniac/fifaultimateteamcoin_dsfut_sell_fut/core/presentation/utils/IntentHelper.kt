@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.isAppInstalledFromGitHub
 
 typealias AppNotFound = Boolean
 
@@ -49,5 +50,26 @@ object IntentHelper {
             context = context,
             urlString = BuildConfig.URL_APP_STORE
         )
+    }
+
+    fun openAppUpdatePageInStore(context: Context): AppNotFound {
+        val appStoreUrl = if (isAppInstalledFromGitHub()) {
+            BuildConfig.URL_APP_STORE + "/releases/latest"
+        } else BuildConfig.URL_APP_STORE
+
+        return try {
+            Intent().apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse(appStoreUrl)
+                setPackage(BuildConfig.PACKAGE_NAME_APP_STORE)
+                context.startActivity(this)
+            }
+            false
+        } catch (e: ActivityNotFoundException) {
+            openLinkInBrowser(
+                context = context,
+                urlString = appStoreUrl
+            )
+        }
     }
 }

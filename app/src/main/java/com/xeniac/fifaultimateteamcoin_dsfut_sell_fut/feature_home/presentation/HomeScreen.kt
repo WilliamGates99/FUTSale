@@ -36,6 +36,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.fi
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
@@ -79,14 +80,6 @@ fun HomeScreen(
             }
         }
     )
-
-    LaunchedEffect(key1 = Unit) {
-        if (isAppInstalledFromPlayStore()) {
-            homeViewModel.onEvent(HomeEvent.RequestInAppReviews)
-        } else {
-            homeViewModel.onEvent(HomeEvent.CheckSelectedRateAppOption)
-        }
-    }
 
     ObserverAsEvent(flow = homeViewModel.inAppUpdatesEventChannel) { event ->
         when (event) {
@@ -217,6 +210,16 @@ fun HomeScreen(
             bottomPadding = innerPadding.calculateBottomPadding()
         )
     }
+
+    AppUpdateBottomSheet(
+        appUpdateInfo = homeState.latestAppUpdateInfo,
+        openAppUpdatePageInStore = {
+            isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
+        },
+        onDismissRequest = {
+            homeViewModel.onEvent(HomeEvent.DismissAppUpdateSheet)
+        }
+    )
 
     AppReviewDialog(
         isVisible = isAppReviewDialogVisible,
