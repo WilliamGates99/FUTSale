@@ -52,6 +52,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models
 fun AppUpdateBottomSheet(
     appUpdateInfo: LatestAppUpdateInfo?,
     modifier: Modifier = Modifier,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     isVisible: Boolean = appUpdateInfo != null,
     enterTransition: EnterTransition = expandVertically(),
     exitTransition: ExitTransition = shrinkVertically(),
@@ -68,8 +69,7 @@ fun AppUpdateBottomSheet(
     ).value,
     animationIteration: Int = LottieConstants.IterateForever,
     animationSpeed: Float = 1f,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
-    rotationDegree: Float = when (layoutDirection) {
+    animationRotationDegree: Float = when (layoutDirection) {
         LayoutDirection.Ltr -> 0f
         LayoutDirection.Rtl -> 180f
     },
@@ -124,7 +124,7 @@ fun AppUpdateBottomSheet(
                     modifier = Modifier
                         .size(150.dp)
                         .graphicsLayer {
-                            rotationY = rotationDegree
+                            rotationY = animationRotationDegree
                         }
                 )
 

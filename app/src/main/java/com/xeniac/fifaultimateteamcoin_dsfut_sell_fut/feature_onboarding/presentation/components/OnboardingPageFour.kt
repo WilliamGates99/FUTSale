@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components
 
-import androidx.annotation.RawRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,9 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,8 +44,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -63,8 +66,17 @@ fun OnboardingPageFour(
     onboardingState: OnboardingState,
     modifier: Modifier = Modifier,
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     title: String = stringResource(id = R.string.onboarding_fourth_title),
-    @RawRes lottieAnimation: Int = R.raw.anim_onboarding_4th,
+    animationComposition: LottieComposition? = rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.anim_onboarding_4th)
+    ).value,
+    animationIteration: Int = LottieConstants.IterateForever,
+    animationSpeed: Float = 1f,
+    animationRotationDegree: Float = when (layoutDirection) {
+        LayoutDirection.Ltr -> 0f
+        LayoutDirection.Rtl -> 180f
+    },
     primaryColorHex: String = MaterialTheme.colorScheme.primary.toArgb()
         .toHexString(HexFormat.UpperCase)
         .removeRange(0, 2),
@@ -77,8 +89,6 @@ fun OnboardingPageFour(
 ) {
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
     val columnHeightDp = LocalDensity.current.run { columnHeight.toDp() }
-
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,12 +106,16 @@ fun OnboardingPageFour(
             .onSizeChanged { columnHeight = it.height }
     ) {
         LottieAnimation(
-            composition = composition,
-            iterations = LottieConstants.IterateForever,
+            composition = animationComposition,
+            iterations = animationIteration,
+            speed = animationSpeed,
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
                 .height(columnHeightDp / 3)
+                .graphicsLayer {
+                    rotationY = animationRotationDegree
+                }
         )
 
         Spacer(modifier = Modifier.height(28.dp))
