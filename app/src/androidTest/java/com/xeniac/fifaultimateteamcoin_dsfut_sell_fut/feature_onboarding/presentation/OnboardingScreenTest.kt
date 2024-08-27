@@ -15,11 +15,13 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsRule
@@ -91,6 +93,12 @@ class OnboardingScreenTest {
                 assertIsDisplayed()
             }
         }
+    }
+
+    @Test
+    fun pressBackInPickUpPlayerScreen_closesTheApp() {
+        Espresso.pressBackUnconditionally()
+        assertThat(composeTestRule.activityRule.scenario.state).isEqualTo(Lifecycle.State.DESTROYED)
     }
 
     @Test
