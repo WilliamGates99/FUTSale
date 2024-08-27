@@ -230,7 +230,7 @@ fun SettingsScreen(
     LocaleBottomSheet(
         isVisible = isLocaleBottomSheetVisible,
         currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
-        onDismiss = {
+        onDismissRequest = {
             isLocaleBottomSheetVisible = false
         },
         onLocaleSelected = { newAppLocale ->
@@ -241,7 +241,7 @@ fun SettingsScreen(
     ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
         currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
-        onDismiss = {
+        onDismissRequest = {
             isThemeDialogVisible = false
         },
         onThemeSelected = { newAppTheme ->

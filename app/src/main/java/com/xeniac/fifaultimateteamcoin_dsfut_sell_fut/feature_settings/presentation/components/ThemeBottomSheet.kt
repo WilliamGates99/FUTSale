@@ -89,7 +89,7 @@ fun ThemeBottomSheet(
     titleTextAlign: TextAlign = TextAlign.Start,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     onThemeSelected: (newAppTheme: AppTheme) -> Unit,
-    onDismiss: () -> Unit
+    onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -103,7 +103,7 @@ fun ThemeBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
             windowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0),
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismissRequest
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -143,7 +143,7 @@ fun ThemeBottomSheet(
                                     selected = isSelected,
                                     role = Role.RadioButton,
                                     onClick = {
-                                        onDismiss()
+                                        onDismissRequest()
                                         onThemeSelected(themeItem.theme)
                                     }
                                 )

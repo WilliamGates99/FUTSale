@@ -93,7 +93,7 @@ fun LocaleBottomSheet(
     titleTextAlign: TextAlign = TextAlign.Start,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     onLocaleSelected: (newAppLocale: AppLocale) -> Unit,
-    onDismiss: () -> Unit
+    onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -107,7 +107,7 @@ fun LocaleBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
             windowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0),
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismissRequest
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +147,7 @@ fun LocaleBottomSheet(
                                     selected = isSelected,
                                     role = Role.RadioButton,
                                     onClick = {
-                                        onDismiss()
+                                        onDismissRequest()
                                         onLocaleSelected(localeItem.locale)
                                     }
                                 )
