@@ -63,16 +63,11 @@ fun ProfileTextFields(
 @Composable
 fun ProfileHeaderAnimation(
     modifier: Modifier = Modifier,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     animationComposition: LottieComposition? = rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.anim_profile_header)
     ).value,
     animationIteration: Int = LottieConstants.IterateForever,
-    animationSpeed: Float = 1f,
-    animationRotationDegree: Float = when (layoutDirection) {
-        LayoutDirection.Ltr -> 0f
-        LayoutDirection.Rtl -> 180f
-    },
+    animationSpeed: Float = 1f
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -82,11 +77,7 @@ fun ProfileHeaderAnimation(
             composition = animationComposition,
             iterations = animationIteration,
             speed = animationSpeed,
-            modifier = Modifier
-                .height(150.dp)
-                .graphicsLayer {
-                    rotationY = animationRotationDegree
-                }
+            modifier = Modifier.height(150.dp)
         )
     }
 }
@@ -95,7 +86,6 @@ fun ProfileHeaderAnimation(
 fun PartnerIdTextField(
     profileState: ProfileState,
     modifier: Modifier = Modifier,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     title: String = stringResource(id = R.string.profile_textfield_title_partner_id),
     placeholder: String = stringResource(id = R.string.profile_textfield_hint_partner_id),
     leadingIcon: Painter = painterResource(id = R.drawable.ic_core_textfield_partner_id),
@@ -122,10 +112,6 @@ fun PartnerIdTextField(
         profileState.isPartnerIdSaved == false -> 1f
         else -> 1f
     },
-    animationRotationDegree: Float = when (layoutDirection) {
-        LayoutDirection.Ltr -> 0f
-        LayoutDirection.Rtl -> 180f
-    },
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Number,
     imeAction: ImeAction = ImeAction.Done,
@@ -148,11 +134,7 @@ fun PartnerIdTextField(
                     composition = trailingAnimationComposition,
                     iterations = trailingAnimationIteration,
                     speed = trailingAnimationSpeed,
-                    modifier = Modifier
-                        .height(trailingAnimationSize)
-                        .graphicsLayer {
-                            rotationY = animationRotationDegree
-                        }
+                    modifier = Modifier.height(trailingAnimationSize)
                 )
             }
         },
