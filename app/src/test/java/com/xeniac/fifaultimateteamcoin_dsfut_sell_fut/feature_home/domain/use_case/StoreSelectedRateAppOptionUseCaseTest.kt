@@ -6,6 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -43,7 +44,7 @@ class StoreSelectedRateAppOptionUseCaseTest {
         val testValue = RateAppOption.RATE_NOW
         storeSelectedRateAppOptionUseCase(testValue)
 
-        val selectedRateAppOption = getSelectedRateAppOptionUseCase()
+        val selectedRateAppOption = getSelectedRateAppOptionUseCase().first()
         assertThat(selectedRateAppOption).isEqualTo(testValue)
     }
 }

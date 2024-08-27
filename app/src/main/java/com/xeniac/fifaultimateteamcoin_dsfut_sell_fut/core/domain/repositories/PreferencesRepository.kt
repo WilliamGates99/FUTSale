@@ -25,7 +25,7 @@ interface PreferencesRepository {
 
     suspend fun isOnBoardingCompleted(): Boolean
 
-    suspend fun getNotificationPermissionCount(): Int
+    fun getNotificationPermissionCount(): Flow<Int>
 
     fun isNotificationSoundEnabled(): Flow<Boolean>
 
@@ -35,13 +35,13 @@ interface PreferencesRepository {
 
     fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday>
 
-    suspend fun getSelectedRateAppOption(): RateAppOption
+    fun getSelectedRateAppOption(): Flow<RateAppOption>
 
-    suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs?
+    fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?>
 
-    suspend fun getPartnerId(): String?
+    fun getPartnerId(): Flow<String?>
 
-    suspend fun getSecretKey(): String?
+    fun getSecretKey(): Flow<String?>
 
     fun getSelectedPlatform(): Flow<Platform>
 

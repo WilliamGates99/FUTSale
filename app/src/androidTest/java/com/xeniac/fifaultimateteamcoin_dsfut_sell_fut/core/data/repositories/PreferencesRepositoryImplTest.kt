@@ -93,18 +93,19 @@ class PreferencesRepositoryImplTest {
         val initialAppTheme = testRepository.getCurrentAppTheme().first()
         val initialAppLocale = testRepository.getCurrentAppLocale()
         val initialIsOnBoardingCompleted = testRepository.isOnBoardingCompleted()
-        val initialNotificationPermissionCount = testRepository.getNotificationPermissionCount()
+        val initialNotificationPermissionCount =
+            testRepository.getNotificationPermissionCount().first()
         val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
         val initialIsNotificationVibrateEnabled =
             testRepository.isNotificationVibrateEnabled().first()
         val initialAppUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
         val initialIsAppUpdateDialogShownToday =
             testRepository.isAppUpdateDialogShownToday().first()
-        val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption()
+        val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption().first()
         val initialPreviousRateAppRequestTime =
-            testRepository.getPreviousRateAppRequestTimeInMs()
-        val initialPartnerId = testRepository.getPartnerId()
-        val initialSecretKey = testRepository.getSecretKey()
+            testRepository.getPreviousRateAppRequestTimeInMs().first()
+        val initialPartnerId = testRepository.getPartnerId().first()
+        val initialSecretKey = testRepository.getSecretKey().first()
         val initialSelectedPlatform = testRepository.getSelectedPlatform().first()
 
         assertThat(initialAppThemeSynchronously).isEqualTo(AppTheme.Default)
@@ -145,7 +146,7 @@ class PreferencesRepositoryImplTest {
         val testValue = 2
         testRepository.storeNotificationPermissionCount(testValue)
 
-        val notificationPermissionCount = testRepository.getNotificationPermissionCount()
+        val notificationPermissionCount = testRepository.getNotificationPermissionCount().first()
         assertThat(notificationPermissionCount).isEqualTo(testValue)
     }
 
@@ -200,7 +201,7 @@ class PreferencesRepositoryImplTest {
         val testValue = RateAppOption.RATE_NOW
         testRepository.storeSelectedRateAppOption(testValue.toRateAppOptionDto())
 
-        val selectedRateAppOption = testRepository.getSelectedRateAppOption()
+        val selectedRateAppOption = testRepository.getSelectedRateAppOption().first()
         assertThat(selectedRateAppOption).isEqualTo(testValue)
     }
 
@@ -208,7 +209,7 @@ class PreferencesRepositoryImplTest {
     fun writePreviousRateAppRequestTimeInMs() = testScope.runBlockingTest {
         testRepository.storePreviousRateAppRequestTimeInMs()
 
-        val previousRateAppRequestTime = testRepository.getPreviousRateAppRequestTimeInMs()
+        val previousRateAppRequestTime = testRepository.getPreviousRateAppRequestTimeInMs().first()
         assertThat(previousRateAppRequestTime).isNotNull()
     }
 
@@ -217,7 +218,7 @@ class PreferencesRepositoryImplTest {
         val testValue = "123"
         testRepository.storePartnerId(testValue)
 
-        val partnerId = testRepository.getPartnerId()
+        val partnerId = testRepository.getPartnerId().first()
         assertThat(partnerId).isEqualTo(testValue)
     }
 
@@ -226,7 +227,7 @@ class PreferencesRepositoryImplTest {
         val testValue = "abc123"
         testRepository.storeSecretKey(testValue)
 
-        val secretKey = testRepository.getSecretKey()
+        val secretKey = testRepository.getSecretKey().first()
         assertThat(secretKey).isEqualTo(testValue)
     }
 

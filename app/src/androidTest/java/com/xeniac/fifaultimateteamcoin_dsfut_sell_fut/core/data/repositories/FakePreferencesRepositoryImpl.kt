@@ -35,9 +35,9 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     var notificationPermissionCount = 0
     var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply { add(true) }
     var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply { add(true) }
-    var appUpdateDialogShowCount = SnapshotStateList<Int>().apply { add(0) }
-    var appUpdateDialogShowEpochDays = SnapshotStateList<Int?>().apply { add(null) }
-    var selectedRateAppOption: RateAppOption = RateAppOption.NOT_SHOWN_YET
+    var appUpdateDialogShowCount = 0
+    var appUpdateDialogShowEpochDays: Int? = null
+    var selectedRateAppOption = RateAppOption.NOT_SHOWN_YET
     var previousRateAppRequestTime: PreviousRateAppRequestTimeInMs? = null
     var storedPartnerId: String? = null
     var storedSecretKey: String? = null
@@ -65,7 +65,9 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
-    override suspend fun getNotificationPermissionCount(): Int = notificationPermissionCount
+    override fun getNotificationPermissionCount(): Flow<Int> = flow {
+        emit(notificationPermissionCount)
+    }
 
     override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
         isNotificationSoundEnabled.first()
@@ -75,12 +77,12 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
         isNotificationVibrateEnabled.first()
     }
 
-    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> = snapshotFlow {
-        appUpdateDialogShowCount.first()
+    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> = flow {
+        emit(appUpdateDialogShowCount)
     }
 
     override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> = snapshotFlow {
-        val dialogShowEpochDays = appUpdateDialogShowEpochDays.first()
+        val dialogShowEpochDays = appUpdateDialogShowEpochDays
 
         dialogShowEpochDays?.let { epochDays ->
             val todayDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
@@ -92,14 +94,21 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
         } ?: false
     }
 
-    override suspend fun getSelectedRateAppOption(): RateAppOption = selectedRateAppOption
+    override fun getSelectedRateAppOption(): Flow<RateAppOption> = flow {
+        emit(selectedRateAppOption)
+    }
 
-    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
-        previousRateAppRequestTime
+    override fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?> = flow {
+        emit(previousRateAppRequestTime)
+    }
 
-    override suspend fun getPartnerId(): String? = storedPartnerId
+    override fun getPartnerId(): Flow<String?> = flow {
+        emit(storedPartnerId)
+    }
 
-    override suspend fun getSecretKey(): String? = storedSecretKey
+    override fun getSecretKey(): Flow<String?> = flow {
+        emit(storedSecretKey)
+    }
 
     override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
 
@@ -140,36 +149,26 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
     }
 
     override suspend fun storeAppUpdateDialogShowCount(count: Int) {
-        appUpdateDialogShowCount.apply {
-            clear()
-            add(count)
-        }
+        appUpdateDialogShowCount = count
     }
 
     override suspend fun storeAppUpdateDialogShowEpochDays() {
-        appUpdateDialogShowEpochDays.apply {
-            clear()
+        val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
-            val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
-
-            val localDate = if (shouldStoreTodayDate) {
-                todayLocalDate
-            } else {
-                todayLocalDate.minus(
-                    value = 1,
-                    unit = DateTimeUnit.DAY
-                )
-            }
-
-            add(localDate.toEpochDays())
+        val localDate = if (shouldStoreTodayDate) {
+            todayLocalDate
+        } else {
+            todayLocalDate.minus(
+                value = 1,
+                unit = DateTimeUnit.DAY
+            )
         }
+
+        appUpdateDialogShowEpochDays = localDate.toEpochDays()
     }
 
     override suspend fun removeAppUpdateDialogShowEpochDays() {
-        appUpdateDialogShowEpochDays.apply {
-            clear()
-            add(null)
-        }
+        appUpdateDialogShowEpochDays = null
     }
 
     override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {

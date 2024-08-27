@@ -133,12 +133,11 @@ class PreferencesRepositoryImpl @Inject constructor(
         false
     }
 
-    override suspend fun getNotificationPermissionCount(): Int = try {
-        settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
-    } catch (e: Exception) {
+    override fun getNotificationPermissionCount(): Flow<Int> = settingsDataStore.data.map {
+        it[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+    }.catch { e ->
         Timber.e("getNotificationPermissionCount failed:")
         e.printStackTrace()
-        0
     }
 
     override fun isNotificationSoundEnabled(): Flow<Boolean> = settingsDataStore.data.map {
@@ -180,44 +179,40 @@ class PreferencesRepositoryImpl @Inject constructor(
             e.printStackTrace()
         }
 
-    override suspend fun getSelectedRateAppOption(): RateAppOption = try {
-        val selectedRateAppOption = settingsDataStore.data
-            .first()[PreferencesKeys.SELECTED_RATE_APP_OPTION]
+    override fun getSelectedRateAppOption(): Flow<RateAppOption> =
+        settingsDataStore.data.map {
+            val selectedRateAppOption = it[PreferencesKeys.SELECTED_RATE_APP_OPTION]
 
-        val rateAppOptionDto = RateAppOptionDto.entries.find {
-            it.value == selectedRateAppOption
-        } ?: RateAppOptionDto.NOT_SHOWN_YET
+            val rateAppOptionDto = RateAppOptionDto.entries.find { rateAppOptionDto ->
+                rateAppOptionDto.value == selectedRateAppOption
+            } ?: RateAppOptionDto.NOT_SHOWN_YET
 
-        rateAppOptionDto.toRateAppOption()
-    } catch (e: Exception) {
-        Timber.e("getSelectedRateAppOption failed:")
-        e.printStackTrace()
-        RateAppOptionDto.NOT_SHOWN_YET.toRateAppOption()
-    }
-
-    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS]
-        } catch (e: Exception) {
-            Timber.e("getPreviousRateAppRequestTimeInMs failed:")
+            rateAppOptionDto.toRateAppOption()
+        }.catch { e ->
+            Timber.e("getSelectedRateAppOption failed:")
             e.printStackTrace()
-            null
         }
 
-    override suspend fun getPartnerId(): String? = try {
-        settingsDataStore.data.first()[PreferencesKeys.PARTNER_ID]
-    } catch (e: Exception) {
+    override fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?> =
+        settingsDataStore.data.map {
+            it[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS]
+        }.catch { e ->
+            Timber.e("getPreviousRateAppRequestTimeInMs failed:")
+            e.printStackTrace()
+        }
+
+    override fun getPartnerId(): Flow<String?> = settingsDataStore.data.map {
+        it[PreferencesKeys.PARTNER_ID]
+    }.catch { e ->
         Timber.e("getPartnerId failed:")
         e.printStackTrace()
-        null
     }
 
-    override suspend fun getSecretKey(): String? = try {
-        settingsDataStore.data.first()[PreferencesKeys.SECRET_KEY]
-    } catch (e: Exception) {
+    override fun getSecretKey(): Flow<String?> = settingsDataStore.data.map {
+        it[PreferencesKeys.SECRET_KEY]
+    }.catch { e ->
         Timber.e("getSecretKey failed:")
         e.printStackTrace()
-        null
     }
 
     override fun getSelectedPlatform(): Flow<Platform> = settingsDataStore.data.map {
