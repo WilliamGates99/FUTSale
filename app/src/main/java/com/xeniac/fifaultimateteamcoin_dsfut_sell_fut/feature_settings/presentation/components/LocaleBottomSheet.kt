@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -100,21 +99,20 @@ fun LocaleBottomSheet(
     AnimatedVisibility(
         visible = isVisible,
         enter = enterTransition,
-        exit = exitTransition
+        exit = exitTransition,
+        modifier = modifier
     ) {
         ModalBottomSheet(
-            modifier = modifier.windowInsetsPadding(WindowInsets.statusBarsIgnoringVisibility),
             sheetState = sheetState,
             properties = sheetProperties,
-            windowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0),
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
+            windowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
-                    .padding(bottom = 12.dp)
             ) {
                 Text(
                     text = headline,
