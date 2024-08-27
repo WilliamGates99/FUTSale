@@ -309,8 +309,6 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    // TODO: WRITE TESTS
-
     override suspend fun setAppUpdateDialogShowCount(count: Int) {
         try {
             settingsDataStore.edit {
