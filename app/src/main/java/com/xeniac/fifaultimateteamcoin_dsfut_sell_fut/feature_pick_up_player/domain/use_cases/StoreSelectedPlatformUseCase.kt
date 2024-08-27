@@ -5,11 +5,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.P
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PlatformError
 
-class SetSelectedPlatformUseCase(
+class StoreSelectedPlatformUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
     suspend operator fun invoke(platform: Platform): Result<Unit, PlatformError> = try {
-        preferencesRepository.setSelectedPlatform(platformDto = platform.toPlatformDto())
+        preferencesRepository.storeSelectedPlatform(platformDto = platform.toPlatformDto())
         Result.Success(Unit)
     } catch (e: Exception) {
         e.printStackTrace()

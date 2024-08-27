@@ -16,7 +16,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetIsNotificationVibrateEnabledUseCaseTest {
+class StoreIsNotificationVibrateEnabledUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -25,13 +25,13 @@ class SetIsNotificationVibrateEnabledUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setIsNotificationVibrateEnabledUseCase: SetIsNotificationVibrateEnabledUseCase
+    private lateinit var storeIsNotificationVibrateEnabledUseCase: StoreIsNotificationVibrateEnabledUseCase
     private lateinit var getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setIsNotificationVibrateEnabledUseCase = SetIsNotificationVibrateEnabledUseCase(
+        storeIsNotificationVibrateEnabledUseCase = StoreIsNotificationVibrateEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
         getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
@@ -40,16 +40,16 @@ class SetIsNotificationVibrateEnabledUseCaseTest {
     }
 
     @Test
-    fun setIsNotificationVibrateEnabled_returnsSuccess() = runTest {
+    fun storeIsNotificationVibrateEnabled_returnsSuccess() = runTest {
         val testValue = false
-        val result = setIsNotificationVibrateEnabledUseCase(testValue)
+        val result = storeIsNotificationVibrateEnabledUseCase(testValue)
         assertThat(result).isInstanceOf(Result.Success::class.java)
     }
 
     @Test
-    fun setIsNotificationVibrateEnabled_returnsNewIsNotificationVibrateEnabled() = runTest {
+    fun storeIsNotificationVibrateEnabled_returnsNewIsNotificationVibrateEnabled() = runTest {
         val testValue = false
-        setIsNotificationVibrateEnabledUseCase(testValue)
+        storeIsNotificationVibrateEnabledUseCase(testValue)
 
         val isNotificationVibrateEnabled = getIsNotificationVibrateEnabledUseCase().first()
         assertThat(isNotificationVibrateEnabled).isEqualTo(testValue)

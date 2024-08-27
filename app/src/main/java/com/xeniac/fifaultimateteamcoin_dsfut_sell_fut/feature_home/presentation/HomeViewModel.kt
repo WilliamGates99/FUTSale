@@ -206,7 +206,7 @@ class HomeViewModel @Inject constructor(
 
     private fun setSelectedRateAppOptionToNever() = viewModelScope.launch {
         val rateAppOption = RateAppOption.NEVER
-        homeUseCases.setSelectedRateAppOptionUseCase.get()(rateAppOption)
+        homeUseCases.storeSelectedRateAppOptionUseCase.get()(rateAppOption)
         savedStateHandle["homeState"] = homeState.value.copy(
             selectedRateAppOption = rateAppOption
         )
@@ -214,8 +214,8 @@ class HomeViewModel @Inject constructor(
 
     private fun setSelectedRateAppOptionToRemindLater() = viewModelScope.launch {
         val rateAppOption = RateAppOption.REMIND_LATER
-        homeUseCases.setSelectedRateAppOptionUseCase.get()(rateAppOption)
-        homeUseCases.setPreviousRateAppRequestTimeInMsUseCase.get()()
+        homeUseCases.storeSelectedRateAppOptionUseCase.get()(rateAppOption)
+        homeUseCases.storePreviousRateAppRequestTimeInMsUseCase.get()()
 
         savedStateHandle["homeState"] = homeState.value.copy(
             selectedRateAppOption = rateAppOption
@@ -241,7 +241,7 @@ class HomeViewModel @Inject constructor(
     private fun dismissPermissionDialog(permission: String) = viewModelScope.launch {
         val newCount = homeState.value.notificationPermissionCount.plus(1)
 
-        homeUseCases.setNotificationPermissionCountUseCase.get()(count = newCount)
+        homeUseCases.storeNotificationPermissionCountUseCase.get()(count = newCount)
 
         savedStateHandle["homeState"] = homeState.value.copy(
             notificationPermissionCount = newCount,

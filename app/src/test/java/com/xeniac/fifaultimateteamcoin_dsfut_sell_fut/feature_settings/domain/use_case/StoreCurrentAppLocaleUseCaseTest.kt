@@ -4,10 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -17,7 +15,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetCurrentAppThemeUseCaseTest {
+class StoreCurrentAppLocaleUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -26,33 +24,38 @@ class SetCurrentAppThemeUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setCurrentAppThemeUseCase: SetCurrentAppThemeUseCase
-    private lateinit var getCurrentAppThemeUseCase: GetCurrentAppThemeUseCase
+    private lateinit var storeCurrentAppLocaleUseCase: StoreCurrentAppLocaleUseCase
+    private lateinit var getCurrentAppLocaleUseCase: GetCurrentAppLocaleUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setCurrentAppThemeUseCase = SetCurrentAppThemeUseCase(
+        storeCurrentAppLocaleUseCase = StoreCurrentAppLocaleUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(
+        getCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
 
     @Test
-    fun setCurrentAppTheme_returnsSuccess() = runTest {
-        val testValue = AppTheme.Dark
-        val result = setCurrentAppThemeUseCase(testValue)
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+    fun storeCurrentAppLocale_returnsIsActivityRestartNeeded() = runTest {
+        val testValue = AppLocale.FarsiIR
+
+        val isActivityRestartNeeded = fakePreferencesRepository.isActivityRestartNeeded(
+            newLocale = testValue.toAppLocaleDto()
+        )
+
+        val result = storeCurrentAppLocaleUseCase(testValue)
+        assertThat(result).isEqualTo(isActivityRestartNeeded)
     }
 
     @Test
-    fun setCurrentAppTheme_returnsNewAppTheme() = runTest {
-        val testValue = AppTheme.Dark
-        setCurrentAppThemeUseCase(testValue)
+    fun storeCurrentAppLocale_returnsNewAppLocale() = runTest {
+        val testValue = AppLocale.FarsiIR
+        storeCurrentAppLocaleUseCase(testValue)
 
-        val appTheme = getCurrentAppThemeUseCase().first()
-        assertThat(appTheme).isEqualTo(testValue)
+        val appLocale = getCurrentAppLocaleUseCase()
+        assertThat(appLocale).isEqualTo(testValue)
     }
 }

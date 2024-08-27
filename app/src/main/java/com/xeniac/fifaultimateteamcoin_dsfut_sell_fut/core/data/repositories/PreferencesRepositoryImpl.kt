@@ -233,19 +233,19 @@ class PreferencesRepositoryImpl @Inject constructor(
         e.printStackTrace()
     }
 
-    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
+    override suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
                 Timber.i("AppTheme edited to ${appThemeDto.index}")
             }
         } catch (e: Exception) {
-            Timber.e("setCurrentAppTheme failed:")
+            Timber.e("storeCurrentAppTheme failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setCurrentAppLocale(
+    override suspend fun storeCurrentAppLocale(
         newAppLocaleDto: AppLocaleDto
     ): IsActivityRestartNeeded = try {
         val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
@@ -256,7 +256,7 @@ class PreferencesRepositoryImpl @Inject constructor(
 
         isActivityRestartNeeded
     } catch (e: Exception) {
-        Timber.e("setCurrentAppLocale failed:")
+        Timber.e("storeCurrentAppLocale failed:")
         e.printStackTrace()
         false
     }
@@ -273,14 +273,14 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setNotificationPermissionCount(count: Int) {
+    override suspend fun storeNotificationPermissionCount(count: Int) {
         try {
             settingsDataStore.edit { preferences ->
                 preferences[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] = count
                 Timber.i("Notification permission count edited to $count")
             }
         } catch (e: Exception) {
-            Timber.e("setNotificationPermissionCount failed:")
+            Timber.e("storeNotificationPermissionCount failed:")
             e.printStackTrace()
         }
     }
@@ -309,14 +309,14 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setAppUpdateDialogShowCount(count: Int) {
+    override suspend fun storeAppUpdateDialogShowCount(count: Int) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_COUNT] = count
                 Timber.i("App update dialog show count edited to $count")
             }
         } catch (e: Exception) {
-            Timber.e("setAppUpdateDialogShowCount failed:")
+            Timber.e("storeAppUpdateDialogShowCount failed:")
             e.printStackTrace()
         }
     }
@@ -348,19 +348,19 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
+    override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.SELECTED_RATE_APP_OPTION] = rateAppOptionDto.value
                 Timber.i("setSelectedRateAppOption edited to ${rateAppOptionDto.value}")
             }
         } catch (e: Exception) {
-            Timber.e("setSelectedRateAppOption failed:")
+            Timber.e("storeSelectedRateAppOption failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setPreviousRateAppRequestTimeInMs() {
+    override suspend fun storePreviousRateAppRequestTimeInMs() {
         try {
             val currentTimeInMs = DateHelper.getCurrentTimeInMillis()
             settingsDataStore.edit {
@@ -368,12 +368,12 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("setPreviousRateAppRequestTimeInMs edited to $currentTimeInMs")
             }
         } catch (e: Exception) {
-            Timber.e("setPreviousRateAppRequestTimeInMs failed:")
+            Timber.e("storePreviousRateAppRequestTimeInMs failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setPartnerId(partnerId: String?) {
+    override suspend fun storePartnerId(partnerId: String?) {
         try {
             settingsDataStore.edit {
                 if (partnerId.isNullOrBlank()) {
@@ -385,12 +385,12 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setPartnerId failed:")
+            Timber.e("storePartnerId failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setSecretKey(secretKey: String?) {
+    override suspend fun storeSecretKey(secretKey: String?) {
         try {
             settingsDataStore.edit {
                 if (secretKey.isNullOrBlank()) {
@@ -402,19 +402,19 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setSecretKey failed:")
+            Timber.e("storeSecretKey failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
+    override suspend fun storeSelectedPlatform(platformDto: PlatformDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.SELECTED_PLATFORM] = platformDto.value
                 Timber.i("SelectedPlatform edited to ${platformDto.value}")
             }
         } catch (e: Exception) {
-            Timber.e("setSelectedPlatform failed:")
+            Timber.e("storeSelectedPlatform failed:")
             e.printStackTrace()
         }
     }

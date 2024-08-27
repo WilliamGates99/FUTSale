@@ -126,7 +126,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeCurrentAppTheme() = testScope.runBlockingTest {
         val testValue = AppTheme.Dark
-        testRepository.setCurrentAppTheme(testValue.toAppThemeDto())
+        testRepository.storeCurrentAppTheme(testValue.toAppThemeDto())
 
         val currentAppTheme = testRepository.getCurrentAppTheme().first()
         assertThat(currentAppTheme).isEqualTo(testValue)
@@ -143,7 +143,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeNotificationPermissionCount() = testScope.runBlockingTest {
         val testValue = 2
-        testRepository.setNotificationPermissionCount(testValue)
+        testRepository.storeNotificationPermissionCount(testValue)
 
         val notificationPermissionCount = testRepository.getNotificationPermissionCount()
         assertThat(notificationPermissionCount).isEqualTo(testValue)
@@ -168,7 +168,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeAppUpdateDialogShowCount() = testScope.runBlockingTest {
         val testValue = 3
-        testRepository.setAppUpdateDialogShowCount(testValue)
+        testRepository.storeAppUpdateDialogShowCount(testValue)
 
         val appUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
         assertThat(appUpdateDialogShowCount).isEqualTo(testValue)
@@ -198,7 +198,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeSelectedRateAppOption() = testScope.runBlockingTest {
         val testValue = RateAppOption.RATE_NOW
-        testRepository.setSelectedRateAppOption(testValue.toRateAppOptionDto())
+        testRepository.storeSelectedRateAppOption(testValue.toRateAppOptionDto())
 
         val selectedRateAppOption = testRepository.getSelectedRateAppOption()
         assertThat(selectedRateAppOption).isEqualTo(testValue)
@@ -206,7 +206,7 @@ class PreferencesRepositoryImplTest {
 
     @Test
     fun writePreviousRateAppRequestTimeInMs() = testScope.runBlockingTest {
-        testRepository.setPreviousRateAppRequestTimeInMs()
+        testRepository.storePreviousRateAppRequestTimeInMs()
 
         val previousRateAppRequestTime = testRepository.getPreviousRateAppRequestTimeInMs()
         assertThat(previousRateAppRequestTime).isNotNull()
@@ -215,7 +215,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writePartnerId() = testScope.runBlockingTest {
         val testValue = "123"
-        testRepository.setPartnerId(testValue)
+        testRepository.storePartnerId(testValue)
 
         val partnerId = testRepository.getPartnerId()
         assertThat(partnerId).isEqualTo(testValue)
@@ -224,7 +224,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeSecretKey() = testScope.runBlockingTest {
         val testValue = "abc123"
-        testRepository.setSecretKey(testValue)
+        testRepository.storeSecretKey(testValue)
 
         val secretKey = testRepository.getSecretKey()
         assertThat(secretKey).isEqualTo(testValue)
@@ -233,7 +233,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeSelectedPlatform() = testScope.runBlockingTest {
         val testValue = Platform.PC
-        testRepository.setSelectedPlatform(testValue.toPlatformDto())
+        testRepository.storeSelectedPlatform(testValue.toPlatformDto())
 
         val selectedPlatform = testRepository.getSelectedPlatform().first()
         assertThat(selectedPlatform).isEqualTo(testValue)

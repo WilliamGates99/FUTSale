@@ -1,10 +1,11 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -15,7 +16,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetSelectedRateAppOptionUseCaseTest {
+class StoreSelectedPlatformUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -24,26 +25,20 @@ class SetSelectedRateAppOptionUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setSelectedRateAppOptionUseCase: SetSelectedRateAppOptionUseCase
-    private lateinit var getSelectedRateAppOptionUseCase: GetSelectedRateAppOptionUseCase
+    private lateinit var storeSelectedPlatformUseCase: StoreSelectedPlatformUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setSelectedRateAppOptionUseCase = SetSelectedRateAppOptionUseCase(
-            preferencesRepository = fakePreferencesRepository
-        )
-        getSelectedRateAppOptionUseCase = GetSelectedRateAppOptionUseCase(
+        storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
 
     @Test
-    fun setNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
-        val testValue = RateAppOption.RATE_NOW
-        setSelectedRateAppOptionUseCase(testValue)
-
-        val selectedRateAppOption = getSelectedRateAppOptionUseCase()
-        assertThat(selectedRateAppOption).isEqualTo(testValue)
+    fun storeSelectedPlatform_returnsSuccess() = runTest {
+        val newPlatform = Platform.PC
+        val result = storeSelectedPlatformUseCase(platform = newPlatform)
+        assertThat(result).isInstanceOf(Result.Success::class.java)
     }
 }

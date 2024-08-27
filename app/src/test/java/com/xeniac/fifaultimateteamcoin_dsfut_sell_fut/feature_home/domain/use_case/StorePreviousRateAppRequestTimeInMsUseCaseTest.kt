@@ -14,7 +14,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetNotificationPermissionCountUseCaseTest {
+class StorePreviousRateAppRequestTimeInMsUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -23,26 +23,25 @@ class SetNotificationPermissionCountUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setNotificationPermissionCountUseCase: SetNotificationPermissionCountUseCase
-    private lateinit var getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase
+    private lateinit var storePreviousRateAppRequestTimeInMsUseCase: StorePreviousRateAppRequestTimeInMsUseCase
+    private lateinit var getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setNotificationPermissionCountUseCase = SetNotificationPermissionCountUseCase(
+        storePreviousRateAppRequestTimeInMsUseCase = StorePreviousRateAppRequestTimeInMsUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
+        getPreviousRateAppRequestTimeInMsUseCase = GetPreviousRateAppRequestTimeInMsUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
 
     @Test
-    fun setNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
-        val testValue = 2
-        setNotificationPermissionCountUseCase(testValue)
+    fun storePreviousRateAppRequestTime_returnsNewPreviousRateAppRequestTime() = runTest {
+        storePreviousRateAppRequestTimeInMsUseCase()
 
-        val notificationPermissionCount = getNotificationPermissionCountUseCase()
-        assertThat(notificationPermissionCount).isEqualTo(testValue)
+        val previousRateAppRequestTime = getPreviousRateAppRequestTimeInMsUseCase()
+        assertThat(previousRateAppRequestTime).isNotNull()
     }
 }

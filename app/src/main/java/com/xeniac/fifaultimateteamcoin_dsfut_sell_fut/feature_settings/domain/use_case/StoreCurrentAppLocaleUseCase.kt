@@ -4,12 +4,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 
-class SetCurrentAppLocaleUseCase(
+class StoreCurrentAppLocaleUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
     suspend operator fun invoke(
         newAppLocale: AppLocale
-    ): IsActivityRestartNeeded = preferencesRepository.setCurrentAppLocale(
+    ): IsActivityRestartNeeded = preferencesRepository.storeCurrentAppLocale(
         newAppLocaleDto = newAppLocale.toAppLocaleDto()
     )
 }

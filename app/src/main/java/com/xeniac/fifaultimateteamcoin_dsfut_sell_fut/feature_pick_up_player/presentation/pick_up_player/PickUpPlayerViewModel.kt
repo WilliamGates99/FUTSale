@@ -132,7 +132,7 @@ class PickUpPlayerViewModel @Inject constructor(
     }
 
     private fun setSelectedPlatform(platform: Platform) = viewModelScope.launch {
-        when (val result = pickUpPlayerUseCases.setSelectedPlatformUseCase.get()(platform)) {
+        when (val result = pickUpPlayerUseCases.storeSelectedPlatformUseCase.get()(platform)) {
             is Result.Success -> Unit
             is Result.Error -> {
                 when (result.error) {

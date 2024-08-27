@@ -105,7 +105,7 @@ class SettingsViewModel @Inject constructor(
     private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
         val shouldUpdateAppLocale = newAppLocale != settingsState.value.currentAppLocale
         if (shouldUpdateAppLocale) {
-            val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
+            val isActivityRestartNeeded = settingsUseCases.storeCurrentAppLocaleUseCase.get()(
                 newAppLocale = newAppLocale
             )
 
@@ -123,7 +123,7 @@ class SettingsViewModel @Inject constructor(
     private fun setCurrentAppTheme(newAppTheme: AppTheme) = viewModelScope.launch {
         val shouldUpdateAppTheme = newAppTheme != settingsState.value.currentAppTheme
         if (shouldUpdateAppTheme) {
-            when (val result = settingsUseCases.setCurrentAppThemeUseCase.get()(newAppTheme)) {
+            when (val result = settingsUseCases.storeCurrentAppThemeUseCase.get()(newAppTheme)) {
                 is Result.Success -> {
                     _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
                 }
@@ -141,7 +141,8 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setNotificationSoundSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        when (val result = settingsUseCases.setIsNotificationSoundEnabledUseCase.get()(isEnabled)) {
+        when (val result =
+            settingsUseCases.storeIsNotificationSoundEnabledUseCase.get()(isEnabled)) {
             is Result.Success -> Unit
             is Result.Error -> {
                 when (result.error) {
@@ -157,7 +158,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun setNotificationVibrateSwitch(isEnabled: Boolean) = viewModelScope.launch {
         when (val result = settingsUseCases
-            .setIsNotificationVibrateEnabledUseCase.get()(isEnabled)) {
+            .storeIsNotificationVibrateEnabledUseCase.get()(isEnabled)) {
             is Result.Success -> Unit
             is Result.Error -> {
                 when (result.error) {

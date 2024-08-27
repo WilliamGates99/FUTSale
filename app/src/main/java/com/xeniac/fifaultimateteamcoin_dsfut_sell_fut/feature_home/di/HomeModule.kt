@@ -22,9 +22,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_ca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.RequestInAppReviewsUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetNotificationPermissionCountUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetPreviousRateAppRequestTimeInMsUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.SetSelectedRateAppOptionUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StoreNotificationPermissionCountUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StorePreviousRateAppRequestTimeInMsUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StoreSelectedRateAppOptionUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -124,10 +124,10 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetNotificationPermissionCountUseCase(
+    fun provideStoreNotificationPermissionCountUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetNotificationPermissionCountUseCase =
-        SetNotificationPermissionCountUseCase(preferencesRepository)
+    ): StoreNotificationPermissionCountUseCase =
+        StoreNotificationPermissionCountUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
@@ -137,9 +137,9 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetSelectedRateAppOptionUseCase(
+    fun provideStoreSelectedRateAppOptionUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetSelectedRateAppOptionUseCase = SetSelectedRateAppOptionUseCase(preferencesRepository)
+    ): StoreSelectedRateAppOptionUseCase = StoreSelectedRateAppOptionUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
@@ -151,9 +151,9 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetPreviousRateAppRequestTimeInMsUseCase(
+    fun provideStorePreviousRateAppRequestTimeInMsUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetPreviousRateAppRequestTimeInMsUseCase = SetPreviousRateAppRequestTimeInMsUseCase(
+    ): StorePreviousRateAppRequestTimeInMsUseCase = StorePreviousRateAppRequestTimeInMsUseCase(
         preferencesRepository
     )
 
@@ -167,11 +167,11 @@ internal object HomeModule {
         requestInAppReviewsUseCase: RequestInAppReviewsUseCase,
         getLatestAppVersionUseCase: GetLatestAppVersionUseCase,
         getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase,
-        setNotificationPermissionCountUseCase: SetNotificationPermissionCountUseCase,
+        storeNotificationPermissionCountUseCase: StoreNotificationPermissionCountUseCase,
         getSelectedRateAppOptionUseCase: GetSelectedRateAppOptionUseCase,
-        setSelectedRateAppOptionUseCase: SetSelectedRateAppOptionUseCase,
+        storeSelectedRateAppOptionUseCase: StoreSelectedRateAppOptionUseCase,
         getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
-        setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
+        storePreviousRateAppRequestTimeInMsUseCase: StorePreviousRateAppRequestTimeInMsUseCase
     ): HomeUseCases = HomeUseCases(
         { checkFlexibleUpdateDownloadStateUseCase },
         { checkIsFlexibleUpdateStalledUseCase },
@@ -180,10 +180,10 @@ internal object HomeModule {
         { requestInAppReviewsUseCase },
         { getLatestAppVersionUseCase },
         { getNotificationPermissionCountUseCase },
-        { setNotificationPermissionCountUseCase },
+        { storeNotificationPermissionCountUseCase },
         { getSelectedRateAppOptionUseCase },
-        { setSelectedRateAppOptionUseCase },
+        { storeSelectedRateAppOptionUseCase },
         { getPreviousRateAppRequestTimeInMsUseCase },
-        { setPreviousRateAppRequestTimeInMsUseCase }
+        { storePreviousRateAppRequestTimeInMsUseCase }
     )
 }

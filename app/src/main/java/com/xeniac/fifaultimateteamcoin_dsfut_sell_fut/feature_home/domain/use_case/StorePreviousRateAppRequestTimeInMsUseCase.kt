@@ -2,10 +2,12 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_c
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 
-class SetNotificationPermissionCountUseCase(
+class StorePreviousRateAppRequestTimeInMsUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(
-        count: Int
-    ) = preferencesRepository.setNotificationPermissionCount(count)
+    suspend operator fun invoke() = try {
+        preferencesRepository.storePreviousRateAppRequestTimeInMs()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

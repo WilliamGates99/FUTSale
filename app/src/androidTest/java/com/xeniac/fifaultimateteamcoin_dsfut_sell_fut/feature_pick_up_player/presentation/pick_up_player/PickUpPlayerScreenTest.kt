@@ -42,8 +42,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.SetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
@@ -103,7 +103,7 @@ class PickUpPlayerScreenTest {
         val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        val setSelectedPlatformUseCase = SetSelectedPlatformUseCase(
+        val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
         val pickUpPlayerUseCase = PickUpPlayerUseCase(
@@ -124,7 +124,7 @@ class PickUpPlayerScreenTest {
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
-            { setSelectedPlatformUseCase },
+            { storeSelectedPlatformUseCase },
             { pickUpPlayerUseCase },
             { startCountDownTimerUseCase }
         )
@@ -312,8 +312,8 @@ class PickUpPlayerScreenTest {
     fun clickOnPickOnceBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakePreferencesRepository.setPartnerId("123")
-        fakePreferencesRepository.setSecretKey("abc123")
+        fakePreferencesRepository.storePartnerId("123")
+        fakePreferencesRepository.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -334,8 +334,8 @@ class PickUpPlayerScreenTest {
     fun clickOnPickOnceBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-        fakePreferencesRepository.setPartnerId("123")
-        fakePreferencesRepository.setSecretKey("abc123")
+        fakePreferencesRepository.storePartnerId("123")
+        fakePreferencesRepository.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -386,8 +386,8 @@ class PickUpPlayerScreenTest {
     fun clickOnAutoPickUpBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakePreferencesRepository.setPartnerId("123")
-        fakePreferencesRepository.setSecretKey("abc123")
+        fakePreferencesRepository.storePartnerId("123")
+        fakePreferencesRepository.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
@@ -408,8 +408,8 @@ class PickUpPlayerScreenTest {
     fun clickOnAutoPickUpBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-        fakePreferencesRepository.setPartnerId("123")
-        fakePreferencesRepository.setSecretKey("abc123")
+        fakePreferencesRepository.storePartnerId("123")
+        fakePreferencesRepository.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
@@ -441,8 +441,8 @@ class PickUpPlayerScreenTest {
     fun clickOnPickOnceBtnThenPressBackBtn_showsLatestPickedUpPlayersPager() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-        fakePreferencesRepository.setPartnerId("123")
-        fakePreferencesRepository.setSecretKey("abc123")
+        fakePreferencesRepository.storePartnerId("123")
+        fakePreferencesRepository.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -468,8 +468,8 @@ class PickUpPlayerScreenTest {
 
             fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-            fakePreferencesRepository.setPartnerId("123")
-            fakePreferencesRepository.setSecretKey("abc123")
+            fakePreferencesRepository.storePartnerId("123")
+            fakePreferencesRepository.storeSecretKey("abc123")
 
             composeTestRule.apply {
                 repeat(repeatTimes) {

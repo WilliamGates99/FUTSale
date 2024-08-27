@@ -16,7 +16,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetIsNotificationSoundEnabledUseCaseTest {
+class StoreIsNotificationSoundEnabledUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -25,13 +25,13 @@ class SetIsNotificationSoundEnabledUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setIsNotificationSoundEnabledUseCase: SetIsNotificationSoundEnabledUseCase
+    private lateinit var storeIsNotificationSoundEnabledUseCase: StoreIsNotificationSoundEnabledUseCase
     private lateinit var getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setIsNotificationSoundEnabledUseCase = SetIsNotificationSoundEnabledUseCase(
+        storeIsNotificationSoundEnabledUseCase = StoreIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
         getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
@@ -40,16 +40,16 @@ class SetIsNotificationSoundEnabledUseCaseTest {
     }
 
     @Test
-    fun setIsNotificationSoundEnabled_returnsSuccess() = runTest {
+    fun storeIsNotificationSoundEnabled_returnsSuccess() = runTest {
         val testValue = false
-        val result = setIsNotificationSoundEnabledUseCase(testValue)
+        val result = storeIsNotificationSoundEnabledUseCase(testValue)
         assertThat(result).isInstanceOf(Result.Success::class.java)
     }
 
     @Test
-    fun setIsNotificationSoundEnabled_returnsNewIsNotificationSoundEnabled() = runTest {
+    fun storeIsNotificationSoundEnabled_returnsNewIsNotificationSoundEnabled() = runTest {
         val testValue = false
-        setIsNotificationSoundEnabledUseCase(testValue)
+        storeIsNotificationSoundEnabledUseCase(testValue)
 
         val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
         assertThat(isNotificationSoundEnabled).isEqualTo(testValue)

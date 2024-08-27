@@ -59,7 +59,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNullPartnerId_returnsBlankPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.setPartnerId(null)
+        fakePreferencesRepositoryImpl.storePartnerId(null)
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.BlankPartnerId::class.java)
@@ -67,7 +67,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithBlankPartnerId_returnsBlankPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.setPartnerId("")
+        fakePreferencesRepositoryImpl.storePartnerId("")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.BlankPartnerId::class.java)
@@ -75,7 +75,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNonDigitPartnerId_returnsInvalidPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.setPartnerId("abc123")
+        fakePreferencesRepositoryImpl.storePartnerId("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.InvalidPartnerId::class.java)
@@ -83,7 +83,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNullSecretKey_returnsBlankSecretKeyError() = runTest {
-        fakePreferencesRepositoryImpl.setSecretKey(null)
+        fakePreferencesRepositoryImpl.storeSecretKey(null)
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.secretKeyError).isInstanceOf(PickUpPlayerError.BlankSecretKey::class.java)
@@ -91,7 +91,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithBlankSecretKey_returnsBlankSecretKeyError() = runTest {
-        fakePreferencesRepositoryImpl.setSecretKey("")
+        fakePreferencesRepositoryImpl.storeSecretKey("")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.secretKeyError).isInstanceOf(PickUpPlayerError.BlankSecretKey::class.java)
@@ -114,8 +114,8 @@ class PickUpPlayerUseCaseTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.OK)
         fakePickUpPlayerRepositoryImpl.setIsPlayersQueueEmpty(false)
 
-        fakePreferencesRepositoryImpl.setPartnerId("123")
-        fakePreferencesRepositoryImpl.setSecretKey("secretKey")
+        fakePreferencesRepositoryImpl.storePartnerId("123")
+        fakePreferencesRepositoryImpl.storeSecretKey("secretKey")
 
         val pickUpPlayerResult = pickUpPlayerUseCase(
             minPrice = "10000",
@@ -132,8 +132,8 @@ class PickUpPlayerUseCaseTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.OK)
         fakePickUpPlayerRepositoryImpl.setIsPlayersQueueEmpty(true)
 
-        fakePreferencesRepositoryImpl.setPartnerId("123")
-        fakePreferencesRepositoryImpl.setSecretKey("abc123")
+        fakePreferencesRepositoryImpl.storePartnerId("123")
+        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
 
@@ -145,8 +145,8 @@ class PickUpPlayerUseCaseTest {
     fun pickUpPlayerWithValidInputsAndUnavailableNetwork_returnsError() = runTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.RequestTimeout)
 
-        fakePreferencesRepositoryImpl.setPartnerId("123")
-        fakePreferencesRepositoryImpl.setSecretKey("abc123")
+        fakePreferencesRepositoryImpl.storePartnerId("123")
+        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
 

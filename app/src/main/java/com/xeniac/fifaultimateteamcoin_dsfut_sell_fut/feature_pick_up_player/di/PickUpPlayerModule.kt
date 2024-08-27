@@ -8,8 +8,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.SetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
@@ -73,9 +73,9 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetSelectedPlatformUseCase(
+    fun provideStoreSelectedPlatformUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetSelectedPlatformUseCase = SetSelectedPlatformUseCase(preferencesRepository)
+    ): StoreSelectedPlatformUseCase = StoreSelectedPlatformUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
@@ -110,7 +110,7 @@ object PickUpPlayerModule {
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
-        setSelectedPlatformUseCase: SetSelectedPlatformUseCase,
+        storeSelectedPlatformUseCase: StoreSelectedPlatformUseCase,
         pickUpPlayerUseCase: PickUpPlayerUseCase,
         startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
@@ -118,7 +118,7 @@ object PickUpPlayerModule {
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
         { getSelectedPlatformUseCase },
-        { setSelectedPlatformUseCase },
+        { storeSelectedPlatformUseCase },
         { pickUpPlayerUseCase },
         { startCountDownTimerUseCase }
     )

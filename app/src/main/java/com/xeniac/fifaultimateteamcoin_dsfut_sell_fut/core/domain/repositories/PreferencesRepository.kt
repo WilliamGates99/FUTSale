@@ -45,31 +45,31 @@ interface PreferencesRepository {
 
     fun getSelectedPlatform(): Flow<Platform>
 
-    suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
+    suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto)
 
-    suspend fun setCurrentAppLocale(newAppLocaleDto: AppLocaleDto): IsActivityRestartNeeded
+    suspend fun storeCurrentAppLocale(newAppLocaleDto: AppLocaleDto): IsActivityRestartNeeded
 
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 
-    suspend fun setNotificationPermissionCount(count: Int)
+    suspend fun storeNotificationPermissionCount(count: Int)
 
     suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
 
     suspend fun isNotificationVibrateEnabled(isEnabled: Boolean)
 
-    suspend fun setAppUpdateDialogShowCount(count: Int)
+    suspend fun storeAppUpdateDialogShowCount(count: Int)
 
     suspend fun storeAppUpdateDialogShowEpochDays()
 
     suspend fun removeAppUpdateDialogShowEpochDays()
 
-    suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
+    suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
 
-    suspend fun setPreviousRateAppRequestTimeInMs()
+    suspend fun storePreviousRateAppRequestTimeInMs()
 
-    suspend fun setPartnerId(partnerId: String?)
+    suspend fun storePartnerId(partnerId: String?)
 
-    suspend fun setSecretKey(secretKey: String?)
+    suspend fun storeSecretKey(secretKey: String?)
 
-    suspend fun setSelectedPlatform(platformDto: PlatformDto)
+    suspend fun storeSelectedPlatform(platformDto: PlatformDto)
 }

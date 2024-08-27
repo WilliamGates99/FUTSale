@@ -3,11 +3,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_c
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 
-class SetSelectedRateAppOptionUseCase(
+class StoreSelectedRateAppOptionUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
     suspend operator fun invoke(rateAppOption: RateAppOption) = try {
-        preferencesRepository.setSelectedRateAppOption(
+        preferencesRepository.storeSelectedRateAppOption(
             rateAppOptionDto = rateAppOption.toRateAppOptionDto()
         )
     } catch (e: Exception) {

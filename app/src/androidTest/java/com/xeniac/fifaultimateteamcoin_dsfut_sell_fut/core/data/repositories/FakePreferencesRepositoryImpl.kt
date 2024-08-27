@@ -65,43 +65,18 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
     override suspend fun isOnBoardingCompleted(): Boolean = isOnBoardingCompleted
 
-    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
-        isOnBoardingCompleted = isCompleted
-    }
-
     override suspend fun getNotificationPermissionCount(): Int = notificationPermissionCount
 
     override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
         isNotificationSoundEnabled.first()
     }
 
-    override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
-        isNotificationSoundEnabled.apply {
-            clear()
-            add(isEnabled)
-        }
-    }
-
     override fun isNotificationVibrateEnabled(): Flow<Boolean> = snapshotFlow {
         isNotificationVibrateEnabled.first()
     }
 
-    override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
-        isNotificationVibrateEnabled.apply {
-            clear()
-            add(isEnabled)
-        }
-    }
-
     override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> = snapshotFlow {
         appUpdateDialogShowCount.first()
-    }
-
-    override suspend fun setAppUpdateDialogShowCount(count: Int) {
-        appUpdateDialogShowCount.apply {
-            clear()
-            add(count)
-        }
     }
 
     override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> = snapshotFlow {
@@ -115,6 +90,60 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
 
             isShownToday
         } ?: false
+    }
+
+    override suspend fun getSelectedRateAppOption(): RateAppOption = selectedRateAppOption
+
+    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
+        previousRateAppRequestTime
+
+    override suspend fun getPartnerId(): String? = storedPartnerId
+
+    override suspend fun getSecretKey(): String? = storedSecretKey
+
+    override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
+
+    override suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto) {
+        currentAppTheme = appThemeDto.toAppTheme()
+    }
+
+    override suspend fun storeCurrentAppLocale(
+        newAppLocaleDto: AppLocaleDto
+    ): IsActivityRestartNeeded {
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
+
+        currentLocale = newAppLocaleDto.toAppLocale()
+
+        return isActivityRestartNeeded
+    }
+
+    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
+        isOnBoardingCompleted = isCompleted
+    }
+
+    override suspend fun storeNotificationPermissionCount(count: Int) {
+        notificationPermissionCount = count
+    }
+
+    override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
+        isNotificationSoundEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
+    }
+
+    override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
+        isNotificationVibrateEnabled.apply {
+            clear()
+            add(isEnabled)
+        }
+    }
+
+    override suspend fun storeAppUpdateDialogShowCount(count: Int) {
+        appUpdateDialogShowCount.apply {
+            clear()
+            add(count)
+        }
     }
 
     override suspend fun storeAppUpdateDialogShowEpochDays() {
@@ -143,59 +172,30 @@ class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepositor
         }
     }
 
-    override suspend fun getSelectedRateAppOption(): RateAppOption = selectedRateAppOption
-
-    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
-        previousRateAppRequestTime
-
-    override suspend fun getPartnerId(): String? = storedPartnerId
-
-    override suspend fun getSecretKey(): String? = storedSecretKey
-
-    override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
-
-    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
-        currentAppTheme = appThemeDto.toAppTheme()
-    }
-
-    override suspend fun setCurrentAppLocale(
-        newAppLocaleDto: AppLocaleDto
-    ): IsActivityRestartNeeded {
-        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
-
-        currentLocale = newAppLocaleDto.toAppLocale()
-
-        return isActivityRestartNeeded
-    }
-
-    override suspend fun setNotificationPermissionCount(count: Int) {
-        notificationPermissionCount = count
-    }
-
-    override suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
+    override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
         selectedRateAppOption = rateAppOptionDto.toRateAppOption()
     }
 
-    override suspend fun setPreviousRateAppRequestTimeInMs() {
+    override suspend fun storePreviousRateAppRequestTimeInMs() {
         previousRateAppRequestTime = DateHelper.getCurrentTimeInMillis()
     }
 
-    override suspend fun setPartnerId(partnerId: String?) {
+    override suspend fun storePartnerId(partnerId: String?) {
         storedPartnerId = partnerId
     }
 
-    override suspend fun setSecretKey(secretKey: String?) {
+    override suspend fun storeSecretKey(secretKey: String?) {
         storedSecretKey = secretKey
     }
 
-    override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
+    override suspend fun storeSelectedPlatform(platformDto: PlatformDto) {
         selectedPlatform.apply {
             clear()
             add(platformDto.toPlatform())
         }
     }
 
-    private fun isActivityRestartNeeded(
+    fun isActivityRestartNeeded(
         newLocale: AppLocaleDto
     ): Boolean = currentLocale.layoutDirectionCompose != newLocale.layoutDirectionCompose
 }

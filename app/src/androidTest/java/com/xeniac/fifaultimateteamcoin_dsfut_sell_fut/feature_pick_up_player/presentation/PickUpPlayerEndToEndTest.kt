@@ -37,7 +37,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.SetSelectedPlatformUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
@@ -112,7 +112,7 @@ class PickUpPlayerEndToEndTest {
         val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        val setSelectedPlatformUseCase = SetSelectedPlatformUseCase(
+        val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
             preferencesRepository = fakePreferencesRepository
         )
         val pickUpPlayerUseCase = PickUpPlayerUseCase(
@@ -133,7 +133,7 @@ class PickUpPlayerEndToEndTest {
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
-            { setSelectedPlatformUseCase },
+            { storeSelectedPlatformUseCase },
             { pickUpPlayerUseCase },
             { startCountDownTimerUseCase }
         )

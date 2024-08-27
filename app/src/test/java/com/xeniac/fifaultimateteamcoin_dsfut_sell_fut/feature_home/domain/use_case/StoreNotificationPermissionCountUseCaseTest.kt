@@ -14,7 +14,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class SetPreviousRateAppRequestTimeInMsUseCaseTest {
+class StoreNotificationPermissionCountUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -23,25 +23,26 @@ class SetPreviousRateAppRequestTimeInMsUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
-    private lateinit var setPreviousRateAppRequestTimeInMsUseCase: SetPreviousRateAppRequestTimeInMsUseCase
-    private lateinit var getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase
+    private lateinit var storeNotificationPermissionCountUseCase: StoreNotificationPermissionCountUseCase
+    private lateinit var getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase
 
     @Before
     fun setUp() {
         fakePreferencesRepository = FakePreferencesRepositoryImpl()
-        setPreviousRateAppRequestTimeInMsUseCase = SetPreviousRateAppRequestTimeInMsUseCase(
+        storeNotificationPermissionCountUseCase = StoreNotificationPermissionCountUseCase(
             preferencesRepository = fakePreferencesRepository
         )
-        getPreviousRateAppRequestTimeInMsUseCase = GetPreviousRateAppRequestTimeInMsUseCase(
+        getNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
             preferencesRepository = fakePreferencesRepository
         )
     }
 
     @Test
-    fun setPreviousRateAppRequestTime_returnsNewPreviousRateAppRequestTime() = runTest {
-        setPreviousRateAppRequestTimeInMsUseCase()
+    fun storeNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
+        val testValue = 2
+        storeNotificationPermissionCountUseCase(testValue)
 
-        val previousRateAppRequestTime = getPreviousRateAppRequestTimeInMsUseCase()
-        assertThat(previousRateAppRequestTime).isNotNull()
+        val notificationPermissionCount = getNotificationPermissionCountUseCase()
+        assertThat(notificationPermissionCount).isEqualTo(testValue)
     }
 }

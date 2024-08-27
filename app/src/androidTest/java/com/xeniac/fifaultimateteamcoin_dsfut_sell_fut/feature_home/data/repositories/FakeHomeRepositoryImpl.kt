@@ -176,7 +176,7 @@ class FakeHomeRepositoryImpl @Inject constructor(
 
                     if (shouldShowAppUpdateDialog) {
                         preferencesRepository.get().apply {
-                            setAppUpdateDialogShowCount(
+                            storeAppUpdateDialogShowCount(
                                 if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
                                 else 0
                             )
@@ -192,7 +192,7 @@ class FakeHomeRepositoryImpl @Inject constructor(
                     } else Result.Success(null)
                 } else {
                     preferencesRepository.get().apply {
-                        setAppUpdateDialogShowCount(0)
+                        storeAppUpdateDialogShowCount(0)
                         removeAppUpdateDialogShowEpochDays()
                     }
 

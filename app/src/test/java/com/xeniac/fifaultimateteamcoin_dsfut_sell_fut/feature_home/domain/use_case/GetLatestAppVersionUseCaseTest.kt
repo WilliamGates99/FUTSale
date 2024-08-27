@@ -91,7 +91,7 @@ class GetLatestAppVersionUseCaseTest {
         runBlocking {
             fakePreferencesRepositoryImpl.setShouldStoreTodayDate(true)
             fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.setAppUpdateDialogShowCount(3)
+            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
@@ -113,7 +113,7 @@ class GetLatestAppVersionUseCaseTest {
         runBlocking {
             fakePreferencesRepositoryImpl.setShouldStoreTodayDate(false)
             fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.setAppUpdateDialogShowCount(3)
+            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
