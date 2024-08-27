@@ -25,9 +25,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.todayIn
-import javax.inject.Inject
 
-class FakePreferencesRepositoryImpl @Inject constructor() : PreferencesRepository {
+class FakePreferencesRepositoryImpl : PreferencesRepository {
 
     var currentAppTheme: AppTheme = AppTheme.Default
     var currentLocale: AppLocale = AppLocale.Default
