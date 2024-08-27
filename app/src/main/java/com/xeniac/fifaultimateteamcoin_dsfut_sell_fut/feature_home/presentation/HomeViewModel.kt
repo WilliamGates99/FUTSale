@@ -137,10 +137,10 @@ class HomeViewModel @Inject constructor(
     private fun getLatestAppVersion() = viewModelScope.launch {
         if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
             when (val result = homeUseCases.getLatestAppVersionUseCase.get()()) {
-                is Result.Success -> result.data?.let { latestVersionName ->
+                is Result.Success -> result.data?.let { latestAppUpdateInfo ->
                     mutex.withLock {
                         savedStateHandle["homeState"] = homeState.value.copy(
-                            latestVersionName = latestVersionName
+                            latestAppUpdateInfo = latestAppUpdateInfo
                         )
                     }
                 }
@@ -152,7 +152,7 @@ class HomeViewModel @Inject constructor(
     private fun dismissAppUpdateSheet() = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["homeState"] = homeState.value.copy(
-                latestVersionName = null
+                latestAppUpdateInfo = null
             )
         }
     }

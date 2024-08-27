@@ -6,9 +6,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.LatestAppVersionName
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
 import dagger.Lazy
 import io.ktor.client.HttpClient
@@ -116,7 +116,7 @@ class FakeHomeRepositoryImpl @Inject constructor(
         } else emit(null)
     }
 
-    override suspend fun getLatestAppVersion(): Result<LatestAppVersionName?, GetLatestAppVersionError> {
+    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
         if (!isNetworkAvailable) {
             return Result.Error(GetLatestAppVersionError.Network.Offline)
         }
@@ -160,7 +160,6 @@ class FakeHomeRepositoryImpl @Inject constructor(
 
                 val currentVersionCode = BuildConfig.VERSION_CODE
                 val latestVersionCode = getLatestAppVersionResponse.versionCode
-                val latestVersionName = getLatestAppVersionResponse.versionName
 
                 val isAppOutdated = currentVersionCode < latestVersionCode
                 if (isAppOutdated) {
@@ -184,7 +183,12 @@ class FakeHomeRepositoryImpl @Inject constructor(
                             storeAppUpdateDialogShowEpochDays()
                         }
 
-                        Result.Success(latestVersionName)
+                        Result.Success(
+                            LatestAppUpdateInfo(
+                                versionCode = latestAppVersionCode,
+                                versionName = getLatestAppVersionResponse.versionName
+                            )
+                        )
                     } else Result.Success(null)
                 } else {
                     preferencesRepository.get().apply {

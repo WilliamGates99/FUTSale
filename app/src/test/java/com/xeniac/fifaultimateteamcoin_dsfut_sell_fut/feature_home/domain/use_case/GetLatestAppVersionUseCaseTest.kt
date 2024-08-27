@@ -7,6 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -70,18 +71,19 @@ class GetLatestAppVersionUseCaseTest {
 
     @Test
     fun getLatestAppVersionWhenAppIsOutdated_returnsNewVersionName() = runBlocking {
-        val newVersionCode = BuildConfig.VERSION_CODE + 1
-        val newVersionName = BuildConfig.VERSION_NAME + "-test"
+        val latestAppUpdateInfo = LatestAppUpdateInfo(
+            versionCode = BuildConfig.VERSION_CODE + 1,
+            versionName = BuildConfig.VERSION_NAME + "-test"
+        )
 
         fakeHomeRepositoryImpl.setLatestAppVersion(
-            versionCode = newVersionCode,
-            versionName = newVersionName
+            latestAppUpdateInfo = latestAppUpdateInfo
         )
 
         val getLatestAppVersionResult = getLatestAppVersionUseCase()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
-        assertThat((getLatestAppVersionResult as Result.Success).data).isEqualTo(newVersionName)
+        assertThat((getLatestAppVersionResult as Result.Success).data).isEqualTo(latestAppUpdateInfo)
     }
 
     @Test
@@ -91,12 +93,13 @@ class GetLatestAppVersionUseCaseTest {
             fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
             fakePreferencesRepositoryImpl.setAppUpdateDialogShowCount(3)
 
-            val newVersionCode = BuildConfig.VERSION_CODE + 1
-            val newVersionName = BuildConfig.VERSION_NAME + "-test"
+            val latestAppUpdateInfo = LatestAppUpdateInfo(
+                versionCode = BuildConfig.VERSION_CODE + 1,
+                versionName = BuildConfig.VERSION_NAME + "-test"
+            )
 
             fakeHomeRepositoryImpl.setLatestAppVersion(
-                versionCode = newVersionCode,
-                versionName = newVersionName
+                latestAppUpdateInfo = latestAppUpdateInfo
             )
 
             val getLatestAppVersionResult = getLatestAppVersionUseCase()
@@ -112,17 +115,19 @@ class GetLatestAppVersionUseCaseTest {
             fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
             fakePreferencesRepositoryImpl.setAppUpdateDialogShowCount(3)
 
-            val newVersionCode = BuildConfig.VERSION_CODE + 1
-            val newVersionName = BuildConfig.VERSION_NAME + "-test"
+            val latestAppUpdateInfo = LatestAppUpdateInfo(
+                versionCode = BuildConfig.VERSION_CODE + 1,
+                versionName = BuildConfig.VERSION_NAME + "-test"
+            )
 
             fakeHomeRepositoryImpl.setLatestAppVersion(
-                versionCode = newVersionCode,
-                versionName = newVersionName
+                latestAppUpdateInfo = latestAppUpdateInfo
             )
 
             val getLatestAppVersionResult = getLatestAppVersionUseCase()
 
             assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
-            assertThat((getLatestAppVersionResult as Result.Success).data).isEqualTo(newVersionName)
+            assertThat((getLatestAppVersionResult as Result.Success).data)
+                .isEqualTo(latestAppUpdateInfo)
         }
 }
