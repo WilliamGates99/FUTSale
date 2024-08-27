@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FUTSale 24</string>
+    <string name="app_name">FUTSale</string>
 
 
     <string name="notification_fcm_channel_group_name">Other</string>
