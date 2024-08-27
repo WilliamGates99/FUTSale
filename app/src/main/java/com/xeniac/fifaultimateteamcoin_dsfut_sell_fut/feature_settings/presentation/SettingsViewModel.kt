@@ -103,19 +103,19 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
-        mutex.withLock {
-            val shouldUpdateAppLocale = newAppLocale != settingsState.value.currentAppLocale
-            if (shouldUpdateAppLocale) {
-                val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
-                    newAppLocale = newAppLocale
-                )
+        val shouldUpdateAppLocale = newAppLocale != settingsState.value.currentAppLocale
+        if (shouldUpdateAppLocale) {
+            val isActivityRestartNeeded = settingsUseCases.setCurrentAppLocaleUseCase.get()(
+                newAppLocale = newAppLocale
+            )
 
+            mutex.withLock {
                 savedStateHandle["appLocale"] = newAppLocale
+            }
 
-                when (isActivityRestartNeeded) {
-                    true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
-                    false -> Unit
-                }
+            when (isActivityRestartNeeded) {
+                true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
+                false -> Unit
             }
         }
     }
