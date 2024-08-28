@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class Migration1To2Test {
+class Migration3To4Test {
 
     @get:Rule
     val migrationHelper = MigrationTestHelper(
@@ -25,42 +25,44 @@ class Migration1To2Test {
     )
 
     @Test
-    fun migration1To2_containsCorrectData() = runTest {
-        val currentTime = DateHelper.getCurrentTimeInMillis()
+    fun migration3To4_containsCorrectData() = runTest {
+        val currentTime = DateHelper.getCurrentTimeInSeconds()
 
         migrationHelper.createDatabase(
             name = Constants.MIGRATION_DB_NAME,
-            version = 1
+            version = 3
         ).apply {
             execSQL(
                 sql = """
                 INSERT INTO players VALUES(
-                '1', -- tradeID
-                1, -- assetID
-                1, -- resourceID
-                1, -- transactionID
+                '1', -- trade_id
+                1, -- asset_id
+                1, -- resource_id
+                1, -- transaction_id
                 'Test Player', -- name
                 80, -- rating
                 'FW', -- position
-                1500, -- startPrice
-                2500, -- buyNowPrice
+                1500, -- start_price
+                2500, -- buy_now_price
                 1, -- owners
                 1, -- contracts
-                'Basic', -- chemistryStyle
-                1, -- chemistryStyleID
+                'Basic', -- chemistry_style
+                1, -- chemistry_style_id
                 'pc', -- platform
-                $currentTime, -- pickUpTimeInMillis
+                $currentTime, -- pick_up_time_in_seconds
                 1 -- id
                 )
                 """.trimIndent()
             )
+
             close()
         }
 
         val db = migrationHelper.runMigrationsAndValidate(
             name = Constants.MIGRATION_DB_NAME,
-            version = 2,
-            validateDroppedTables = true
+            version = 4,
+            validateDroppedTables = true,
+            MIGRATION_3_TO_4
         )
 
         db.query(query = "SELECT * FROM players").apply {
@@ -81,7 +83,8 @@ class Migration1To2Test {
             assertThat(getString(getColumnIndex("chemistry_style"))).isEqualTo("Basic")
             assertThat(getInt(getColumnIndex("chemistry_style_id"))).isEqualTo(1)
             assertThat(getString(getColumnIndex("platform"))).isEqualTo("pc")
-            assertThat(getString(getColumnIndex("pick_up_time_in_seconds"))).isEqualTo(currentTime.toString())
+            assertThat(getInt(getColumnIndex("pick_up_time_in_seconds"))).isEqualTo(currentTime)
+            assertThat(getInt(getColumnIndex("expiry_time_in_seconds"))).isEqualTo(currentTime + 180)
         }
     }
 }
