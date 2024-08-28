@@ -55,7 +55,10 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
     }
 
     override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {
-        val playersPagingData = PagingData.from(playerEntitiesHistory).map { it.toPlayer() }
+        val sortedPlayerEntitiesHistory = playerEntitiesHistory.toMutableList()
+        sortedPlayerEntitiesHistory.sortByDescending { it.pickUpTimeInSeconds }
+
+        val playersPagingData = PagingData.from(sortedPlayerEntitiesHistory).map { it.toPlayer() }
         emit(playersPagingData)
     }
 }
