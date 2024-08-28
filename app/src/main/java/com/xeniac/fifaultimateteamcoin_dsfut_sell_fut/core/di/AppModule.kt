@@ -17,6 +17,7 @@ import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import dagger.Lazy
@@ -130,7 +131,10 @@ internal object AppModule {
         klass = FutSaleDatabase::class.java,
         name = "FUTSale.db"
     ).apply {
-        addMigrations(MIGRATION_2_TO_3)
+        addMigrations(
+            MIGRATION_2_TO_3,
+            MIGRATION_3_TO_4
+        )
     }.build()
 
     @Provides

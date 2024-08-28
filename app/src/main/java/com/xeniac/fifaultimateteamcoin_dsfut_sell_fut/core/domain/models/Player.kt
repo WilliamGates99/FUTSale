@@ -42,7 +42,7 @@ data class Player(
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         expires = 0,
-        platformDto = platform.toPlatformDto(),
+        platformDto = platform.toPlatformDto()
     )
 
     fun toPlayerEntity(): PlayerEntity = PlayerEntity(
@@ -61,6 +61,7 @@ data class Player(
         chemistryStyleID = chemistryStyleID,
         platformDto = platform.toPlatformDto(),
         pickUpTimeInSeconds = pickUpTimeInMs / 1000,
+        expiryTimeInSeconds = expiryTimeInMs / 1000,
         id = id
     )
 }

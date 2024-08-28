@@ -39,6 +39,8 @@ data class PlayerEntity(
     val platformDto: PlatformDto,
     @ColumnInfo(name = "pick_up_time_in_seconds")
     val pickUpTimeInSeconds: Long = DateHelper.getCurrentTimeInSeconds(),
+    @ColumnInfo(name = "expiry_time_in_seconds")
+    val expiryTimeInSeconds: Long = pickUpTimeInSeconds + Constants.PLAYER_EXPIRY_TIME_IN_SECONDS,
     @PrimaryKey(autoGenerate = true) val id: Long? = null
 ) {
     fun toPlayer(): Player {
@@ -61,7 +63,7 @@ data class PlayerEntity(
             chemistryStyleID = chemistryStyleID,
             platform = platformDto.toPlatform(),
             pickUpTimeInMs = pickUpTimeInSeconds * 1000,
-            expiryTimeInMs = (pickUpTimeInSeconds + Constants.PLAYER_EXPIRY_TIME_IN_SECONDS) * 1000,
+            expiryTimeInMs = expiryTimeInSeconds * 1000,
             id = id
         )
     }

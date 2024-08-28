@@ -8,7 +8,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations
 
 @Database(
     entities = [PlayerEntity::class],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = Migration1To2::class)
     ]
