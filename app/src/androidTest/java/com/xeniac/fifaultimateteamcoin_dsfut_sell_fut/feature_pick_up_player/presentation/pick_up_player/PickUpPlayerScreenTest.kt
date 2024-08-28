@@ -332,8 +332,6 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
-
         fakePreferencesRepository.storePartnerId("123")
         fakePreferencesRepository.storeSecretKey("abc123")
 
@@ -406,8 +404,6 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnAutoPickUpBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
-
         fakePreferencesRepository.storePartnerId("123")
         fakePreferencesRepository.storeSecretKey("abc123")
 
@@ -439,8 +435,6 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnThenPressBackBtn_showsLatestPickedUpPlayersPager() = runTest {
-        fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
-
         fakePreferencesRepository.storePartnerId("123")
         fakePreferencesRepository.storeSecretKey("abc123")
 
