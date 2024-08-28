@@ -108,19 +108,5 @@ fun PickUpOnceButton(
                 )
             }
         }
-//        if (pickUpPlayerState.isPickUpOnceLoading) {
-//            CircularProgressIndicator(
-//                strokeWidth = 3.dp,
-//                strokeCap = StrokeCap.Round,
-//                modifier = Modifier.size(LocalDensity.current.run { (textFontSize * 1.5).toDp() })
-//            )
-//        } else {
-//            Text(
-//                text = stringResource(id = R.string.pick_up_player_btn_pick_once),
-//                fontSize = textFontSize,
-//                lineHeight = textLineHeight,
-//                fontWeight = textFontWeight
-//            )
-//        }
     }
 }

@@ -2,8 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.di
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
 import dagger.Module

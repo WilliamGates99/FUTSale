@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components
 
-import androidx.annotation.RawRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
@@ -46,6 +45,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -63,20 +63,22 @@ fun PickedUpPlayerInfo(
     timerText: String,
     horizontalPadding: Dp,
     modifier: Modifier = Modifier,
-    @RawRes lottieAnimation: Int = R.raw.anim_pick_up_player_success
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
+    animationComposition: LottieComposition? = rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.anim_pick_up_player_success)
+    ).value,
+    animationIteration: Int = 1,
+    animationSpeed: Float = 0.75f
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             LottieAnimation(
-                composition = composition,
-                speed = 0.75f,
-                iterations = 1,
+                composition = animationComposition,
+                iterations = animationIteration,
+                speed = animationSpeed,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .size(200.dp)

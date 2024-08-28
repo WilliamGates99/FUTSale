@@ -24,7 +24,7 @@ class UpdatePartnerIdUseCase(
                 )
             }
 
-            preferencesRepository.setPartnerId(partnerId = partnerId)
+            preferencesRepository.storePartnerId(partnerId = partnerId)
 
             return UpdatePartnerIdResult(
                 result = Result.Success(Unit)

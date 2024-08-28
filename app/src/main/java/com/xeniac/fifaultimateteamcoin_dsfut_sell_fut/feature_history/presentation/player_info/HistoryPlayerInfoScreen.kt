@@ -87,7 +87,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             PickUpDate(
-                pickUpTimeInMillis = player.pickUpTimeInMillis,
+                pickUpTimeInMs = player.pickUpTimeInMs,
                 modifier = Modifier.fillMaxWidth()
             )
         }

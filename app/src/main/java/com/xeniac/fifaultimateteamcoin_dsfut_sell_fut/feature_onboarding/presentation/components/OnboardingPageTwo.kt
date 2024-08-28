@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components
 
-import androidx.annotation.RawRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -48,14 +48,16 @@ fun OnboardingPageTwo(
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.onboarding_second_title),
     description: String = stringResource(id = R.string.onboarding_second_description),
-    @RawRes lottieAnimation: Int = R.raw.anim_onboarding_2nd,
+    animationComposition: LottieComposition? = rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.anim_onboarding_2nd)
+    ).value,
+    animationIteration: Int = LottieConstants.IterateForever,
+    animationSpeed: Float = 0.75f,
     onBackBtnClick: () -> Unit,
     onNextBtnClick: () -> Unit
 ) {
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
     val columnHeightDp = LocalDensity.current.run { columnHeight.toDp() }
-
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,9 +74,9 @@ fun OnboardingPageTwo(
             .onSizeChanged { columnHeight = it.height }
     ) {
         LottieAnimation(
-            composition = composition,
-            speed = 0.75f,
-            iterations = LottieConstants.IterateForever,
+            composition = animationComposition,
+            iterations = animationIteration,
+            speed = animationSpeed,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()

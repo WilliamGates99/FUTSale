@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import androidx.core.text.layoutDirection
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -10,20 +9,18 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.RateAppOptionDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toAppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toRateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.AppUpdateDialogShowCount
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsAppUpdateDialogShownToday
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +28,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.todayIn
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,6 +49,10 @@ class PreferencesRepositoryImpl @Inject constructor(
         )
         val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey(
             name = "isNotificationVibrateActive"
+        )
+        val APP_UPDATE_DIALOG_SHOW_COUNT = intPreferencesKey(name = "AppUpdateDialogShowCount")
+        val APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS = intPreferencesKey(
+            name = "appUpdateDialogShowEpochDays"
         )
         val SELECTED_RATE_APP_OPTION = stringPreferencesKey(name = "selectedRateAppOption")
         val PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS = longPreferencesKey(
@@ -127,12 +133,11 @@ class PreferencesRepositoryImpl @Inject constructor(
         false
     }
 
-    override suspend fun getNotificationPermissionCount(): Int = try {
-        settingsDataStore.data.first()[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
-    } catch (e: Exception) {
+    override fun getNotificationPermissionCount(): Flow<Int> = settingsDataStore.data.map {
+        it[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+    }.catch { e ->
         Timber.e("getNotificationPermissionCount failed:")
         e.printStackTrace()
-        0
     }
 
     override fun isNotificationSoundEnabled(): Flow<Boolean> = settingsDataStore.data.map {
@@ -149,44 +154,65 @@ class PreferencesRepositoryImpl @Inject constructor(
         e.printStackTrace()
     }
 
-    override suspend fun getSelectedRateAppOption(): RateAppOption = try {
-        val selectedRateAppOption = settingsDataStore.data
-            .first()[PreferencesKeys.SELECTED_RATE_APP_OPTION]
-
-        val rateAppOptionDto = RateAppOptionDto.entries.find {
-            it.value == selectedRateAppOption
-        } ?: RateAppOptionDto.NOT_SHOWN_YET
-
-        rateAppOptionDto.toRateAppOption()
-    } catch (e: Exception) {
-        Timber.e("getSelectedRateAppOption failed:")
-        e.printStackTrace()
-        RateAppOptionDto.NOT_SHOWN_YET.toRateAppOption()
-    }
-
-    override suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs? =
-        try {
-            settingsDataStore.data.first()[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS]
-        } catch (e: Exception) {
-            Timber.e("getPreviousRateAppRequestTimeInMs failed:")
+    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> =
+        settingsDataStore.data.map {
+            it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_COUNT] ?: 0
+        }.catch { e ->
+            Timber.e("getAppUpdateDialogShowCount failed:")
             e.printStackTrace()
-            null
         }
 
-    override suspend fun getPartnerId(): String? = try {
-        settingsDataStore.data.first()[PreferencesKeys.PARTNER_ID]
-    } catch (e: Exception) {
+    override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> =
+        settingsDataStore.data.map {
+            val dialogShowEpochDays = it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS]
+
+            dialogShowEpochDays?.let { epochDays ->
+                val todayDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                val dialogShowLocalDate = LocalDate.fromEpochDays(epochDays)
+
+                val isShownToday = dialogShowLocalDate.periodUntil(todayDate).days == 0
+
+                isShownToday
+            } ?: false
+        }.catch { e ->
+            Timber.e("isAppUpdateDialogShownToday failed:")
+            e.printStackTrace()
+        }
+
+    override fun getSelectedRateAppOption(): Flow<RateAppOption> =
+        settingsDataStore.data.map {
+            val selectedRateAppOption = it[PreferencesKeys.SELECTED_RATE_APP_OPTION]
+
+            val rateAppOptionDto = RateAppOptionDto.entries.find { rateAppOptionDto ->
+                rateAppOptionDto.value == selectedRateAppOption
+            } ?: RateAppOptionDto.NOT_SHOWN_YET
+
+            rateAppOptionDto.toRateAppOption()
+        }.catch { e ->
+            Timber.e("getSelectedRateAppOption failed:")
+            e.printStackTrace()
+        }
+
+    override fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?> =
+        settingsDataStore.data.map {
+            it[PreferencesKeys.PREVIOUS_RATE_APP_REQUEST_TIME_IN_MS]
+        }.catch { e ->
+            Timber.e("getPreviousRateAppRequestTimeInMs failed:")
+            e.printStackTrace()
+        }
+
+    override fun getPartnerId(): Flow<String?> = settingsDataStore.data.map {
+        it[PreferencesKeys.PARTNER_ID]
+    }.catch { e ->
         Timber.e("getPartnerId failed:")
         e.printStackTrace()
-        null
     }
 
-    override suspend fun getSecretKey(): String? = try {
-        settingsDataStore.data.first()[PreferencesKeys.SECRET_KEY]
-    } catch (e: Exception) {
+    override fun getSecretKey(): Flow<String?> = settingsDataStore.data.map {
+        it[PreferencesKeys.SECRET_KEY]
+    }.catch { e ->
         Timber.e("getSecretKey failed:")
         e.printStackTrace()
-        null
     }
 
     override fun getSelectedPlatform(): Flow<Platform> = settingsDataStore.data.map {
@@ -202,30 +228,30 @@ class PreferencesRepositoryImpl @Inject constructor(
         e.printStackTrace()
     }
 
-    override suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto) {
+    override suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
                 Timber.i("AppTheme edited to ${appThemeDto.index}")
             }
         } catch (e: Exception) {
-            Timber.e("setCurrentAppTheme failed:")
+            Timber.e("storeCurrentAppTheme failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setCurrentAppLocale(
-        appLocaleDto: AppLocaleDto
+    override suspend fun storeCurrentAppLocale(
+        newAppLocaleDto: AppLocaleDto
     ): IsActivityRestartNeeded = try {
-        val isActivityRestartNeeded = isActivityRestartNeeded(
-            newLayoutDirection = appLocaleDto.layoutDirection
-        )
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
+
         AppCompatDelegate.setApplicationLocales(
-            /* locales = */ LocaleListCompat.forLanguageTags(appLocaleDto.languageTag)
+            /* locales = */ LocaleListCompat.forLanguageTags(newAppLocaleDto.languageTag)
         )
+
         isActivityRestartNeeded
     } catch (e: Exception) {
-        Timber.e("setCurrentAppLocale failed:")
+        Timber.e("storeCurrentAppLocale failed:")
         e.printStackTrace()
         false
     }
@@ -242,14 +268,14 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setNotificationPermissionCount(count: Int) {
+    override suspend fun storeNotificationPermissionCount(count: Int) {
         try {
             settingsDataStore.edit { preferences ->
                 preferences[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] = count
                 Timber.i("Notification permission count edited to $count")
             }
         } catch (e: Exception) {
-            Timber.e("setNotificationPermissionCount failed:")
+            Timber.e("storeNotificationPermissionCount failed:")
             e.printStackTrace()
         }
     }
@@ -278,19 +304,58 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
+    override suspend fun storeAppUpdateDialogShowCount(count: Int) {
+        try {
+            settingsDataStore.edit {
+                it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_COUNT] = count
+                Timber.i("App update dialog show count edited to $count")
+            }
+        } catch (e: Exception) {
+            Timber.e("storeAppUpdateDialogShowCount failed:")
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun storeAppUpdateDialogShowEpochDays() {
+        try {
+            val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            val todayEpochDays = todayLocalDate.toEpochDays()
+
+            settingsDataStore.edit {
+                it[PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS] = todayEpochDays
+                Timber.i("App update dialog show epoch days edited to $todayEpochDays")
+            }
+        } catch (e: Exception) {
+            Timber.e("storeAppUpdateDialogShowEpochDays failed:")
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun removeAppUpdateDialogShowEpochDays() {
+        try {
+            settingsDataStore.edit {
+                it.remove(PreferencesKeys.APP_UPDATE_DIALOG_SHOW_EPOCH_DAYS)
+                Timber.i("App update dialog show epoch days removed")
+            }
+        } catch (e: Exception) {
+            Timber.e("removeAppUpdateDialogShowEpochDays failed:")
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.SELECTED_RATE_APP_OPTION] = rateAppOptionDto.value
                 Timber.i("setSelectedRateAppOption edited to ${rateAppOptionDto.value}")
             }
         } catch (e: Exception) {
-            Timber.e("setSelectedRateAppOption failed:")
+            Timber.e("storeSelectedRateAppOption failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setPreviousRateAppRequestTimeInMs() {
+    override suspend fun storePreviousRateAppRequestTimeInMs() {
         try {
             val currentTimeInMs = DateHelper.getCurrentTimeInMillis()
             settingsDataStore.edit {
@@ -298,12 +363,12 @@ class PreferencesRepositoryImpl @Inject constructor(
                 Timber.i("setPreviousRateAppRequestTimeInMs edited to $currentTimeInMs")
             }
         } catch (e: Exception) {
-            Timber.e("setPreviousRateAppRequestTimeInMs failed:")
+            Timber.e("storePreviousRateAppRequestTimeInMs failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setPartnerId(partnerId: String?) {
+    override suspend fun storePartnerId(partnerId: String?) {
         try {
             settingsDataStore.edit {
                 if (partnerId.isNullOrBlank()) {
@@ -315,12 +380,12 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setPartnerId failed:")
+            Timber.e("storePartnerId failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setSecretKey(secretKey: String?) {
+    override suspend fun storeSecretKey(secretKey: String?) {
         try {
             settingsDataStore.edit {
                 if (secretKey.isNullOrBlank()) {
@@ -332,26 +397,24 @@ class PreferencesRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e("setSecretKey failed:")
+            Timber.e("storeSecretKey failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun setSelectedPlatform(platformDto: PlatformDto) {
+    override suspend fun storeSelectedPlatform(platformDto: PlatformDto) {
         try {
             settingsDataStore.edit {
                 it[PreferencesKeys.SELECTED_PLATFORM] = platformDto.value
                 Timber.i("SelectedPlatform edited to ${platformDto.value}")
             }
         } catch (e: Exception) {
-            Timber.e("setSelectedPlatform failed:")
+            Timber.e("storeSelectedPlatform failed:")
             e.printStackTrace()
         }
     }
 
-    private fun isActivityRestartNeeded(newLayoutDirection: Int): Boolean {
-        val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
-        val currentLayoutDirection = currentLocale?.layoutDirection
-        return currentLayoutDirection != newLayoutDirection
-    }
+    private fun isActivityRestartNeeded(
+        newLocale: AppLocaleDto
+    ): Boolean = getCurrentAppLocale().layoutDirectionCompose != newLocale.layoutDirectionCompose
 }

@@ -2,18 +2,48 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.review.ReviewInfo
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
+import dagger.Lazy
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-class FakeHomeRepositoryImpl : HomeRepository {
+class FakeHomeRepositoryImpl(
+    private val preferencesRepository: Lazy<PreferencesRepository>
+) : HomeRepository {
 
     private var isFlexibleUpdateDownloaded = false
     private var isFlexibleUpdateStalled = false
     private var isImmediateUpdateStalled = false
     private var isAppUpdateAvailable = false
     private var isInAppReviewsAvailable = false
+
+    private var isNetworkAvailable = true
+    private var latestAppVersionCode = BuildConfig.VERSION_CODE
+    private var latestAppVersionName = BuildConfig.VERSION_NAME
+    private var getLatestAppVersionHttpStatusCode = HttpStatusCode.OK
 
     fun isFlexibleUpdateDownloaded(isDownloaded: Boolean) {
         isFlexibleUpdateDownloaded = isDownloaded
@@ -33,6 +63,19 @@ class FakeHomeRepositoryImpl : HomeRepository {
 
     fun isInAppReviewsAvailable(isAvailable: Boolean) {
         isInAppReviewsAvailable = isAvailable
+    }
+
+    fun isNetworkAvailable(isAvailable: Boolean) {
+        isNetworkAvailable = isAvailable
+    }
+
+    fun setGetLatestAppVersionHttpStatusCode(httpStatusCode: HttpStatusCode) {
+        getLatestAppVersionHttpStatusCode = httpStatusCode
+    }
+
+    fun setLatestAppVersion(latestAppUpdateInfo: LatestAppUpdateInfo) {
+        latestAppVersionCode = latestAppUpdateInfo.versionCode
+        latestAppVersionName = latestAppUpdateInfo.versionName
     }
 
     override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = flow {
@@ -67,5 +110,92 @@ class FakeHomeRepositoryImpl : HomeRepository {
         if (isInAppReviewsAvailable) {
             emit(null)
         } else emit(null)
+    }
+
+    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
+        if (!isNetworkAvailable) {
+            return Result.Error(GetLatestAppVersionError.Network.Offline)
+        }
+
+        val mockEngine = MockEngine {
+            val getLatestAppVersionResponseDto = GetLatestAppVersionResponseDto(
+                versionCode = latestAppVersionCode,
+                versionName = latestAppVersionName
+            )
+
+            respond(
+                content = Json.encodeToString(getLatestAppVersionResponseDto),
+                status = getLatestAppVersionHttpStatusCode,
+                headers = headersOf(
+                    name = HttpHeaders.ContentType,
+                    value = ContentType.Application.Json.toString()
+                )
+            )
+        }
+
+        val testClient = HttpClient(engine = mockEngine) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                    coerceInputValues = true
+                })
+            }
+            install(DefaultRequest) {
+                contentType(ContentType.Application.Json)
+            }
+        }
+
+        val response = testClient.get(urlString = HomeRepository.EndPoints.GetLatestAppVersion.url)
+
+        return when (response.status) {
+            HttpStatusCode.OK -> {
+                val getLatestAppVersionResponse = Json
+                    .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
+                    .toGetLatestAppVersionResponse()
+
+                val currentVersionCode = BuildConfig.VERSION_CODE
+                val latestVersionCode = getLatestAppVersionResponse.versionCode
+
+                val isAppOutdated = currentVersionCode < latestVersionCode
+                if (isAppOutdated) {
+                    val updateDialogShowCount = preferencesRepository.get()
+                        .getAppUpdateDialogShowCount().first()
+                    val isAppUpdateDialogShownToday = preferencesRepository.get()
+                        .isAppUpdateDialogShownToday().first()
+
+                    val shouldShowAppUpdateDialog = when {
+                        isAppUpdateDialogShownToday && updateDialogShowCount < 2 -> true
+                        !isAppUpdateDialogShownToday -> true
+                        else -> false
+                    }
+
+                    if (shouldShowAppUpdateDialog) {
+                        preferencesRepository.get().apply {
+                            storeAppUpdateDialogShowCount(
+                                if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
+                                else 0
+                            )
+                            storeAppUpdateDialogShowEpochDays()
+                        }
+
+                        Result.Success(
+                            LatestAppUpdateInfo(
+                                versionCode = latestAppVersionCode,
+                                versionName = getLatestAppVersionResponse.versionName
+                            )
+                        )
+                    } else Result.Success(null)
+                } else {
+                    preferencesRepository.get().apply {
+                        storeAppUpdateDialogShowCount(0)
+                        removeAppUpdateDialogShowEpochDays()
+                    }
+
+                    Result.Success(null)
+                }
+            }
+            else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
+        }
     }
 }

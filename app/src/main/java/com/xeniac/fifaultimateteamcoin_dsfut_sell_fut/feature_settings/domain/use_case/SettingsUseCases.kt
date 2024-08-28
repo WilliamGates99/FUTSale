@@ -7,8 +7,8 @@ data class SettingsUseCases(
     val getCurrentAppThemeUseCase: Lazy<GetCurrentAppThemeUseCase>,
     val getIsNotificationSoundEnabledUseCase: Lazy<GetIsNotificationSoundEnabledUseCase>,
     val getIsNotificationVibrateEnabledUseCase: Lazy<GetIsNotificationVibrateEnabledUseCase>,
-    val setCurrentAppLocaleUseCase: Lazy<SetCurrentAppLocaleUseCase>,
-    val setCurrentAppThemeUseCase: Lazy<SetCurrentAppThemeUseCase>,
-    val setIsNotificationSoundEnabledUseCase: Lazy<SetIsNotificationSoundEnabledUseCase>,
-    val setIsNotificationVibrateEnabledUseCase: Lazy<SetIsNotificationVibrateEnabledUseCase>
+    val storeCurrentAppLocaleUseCase: Lazy<StoreCurrentAppLocaleUseCase>,
+    val storeCurrentAppThemeUseCase: Lazy<StoreCurrentAppThemeUseCase>,
+    val storeIsNotificationSoundEnabledUseCase: Lazy<StoreIsNotificationSoundEnabledUseCase>,
+    val storeIsNotificationVibrateEnabledUseCase: Lazy<StoreIsNotificationVibrateEnabledUseCase>
 )

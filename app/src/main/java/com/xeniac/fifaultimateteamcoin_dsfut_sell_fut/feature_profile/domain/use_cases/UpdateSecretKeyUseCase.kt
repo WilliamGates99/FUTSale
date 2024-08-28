@@ -24,7 +24,7 @@ class UpdateSecretKeyUseCase(
                 )
             }
 
-            preferencesRepository.setSecretKey(secretKey = secretKey)
+            preferencesRepository.storeSecretKey(secretKey = secretKey)
 
             return UpdateSecretKeyResult(
                 result = Result.Success(Unit)

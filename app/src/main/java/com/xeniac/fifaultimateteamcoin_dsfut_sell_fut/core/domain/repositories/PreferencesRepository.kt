@@ -1,9 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.RateAppOptionDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
@@ -11,6 +11,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateApp
 import kotlinx.coroutines.flow.Flow
 
 typealias IsActivityRestartNeeded = Boolean
+typealias AppUpdateDialogShowCount = Int
+typealias IsAppUpdateDialogShownToday = Boolean
 typealias PreviousRateAppRequestTimeInMs = Long
 
 interface PreferencesRepository {
@@ -23,41 +25,51 @@ interface PreferencesRepository {
 
     suspend fun isOnBoardingCompleted(): Boolean
 
-    suspend fun getNotificationPermissionCount(): Int
+    fun getNotificationPermissionCount(): Flow<Int>
 
     fun isNotificationSoundEnabled(): Flow<Boolean>
 
     fun isNotificationVibrateEnabled(): Flow<Boolean>
 
-    suspend fun getSelectedRateAppOption(): RateAppOption
+    fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount>
 
-    suspend fun getPreviousRateAppRequestTimeInMs(): PreviousRateAppRequestTimeInMs?
+    fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday>
 
-    suspend fun getPartnerId(): String?
+    fun getSelectedRateAppOption(): Flow<RateAppOption>
 
-    suspend fun getSecretKey(): String?
+    fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?>
+
+    fun getPartnerId(): Flow<String?>
+
+    fun getSecretKey(): Flow<String?>
 
     fun getSelectedPlatform(): Flow<Platform>
 
-    suspend fun setCurrentAppTheme(appThemeDto: AppThemeDto)
+    suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto)
 
-    suspend fun setCurrentAppLocale(appLocaleDto: AppLocaleDto): IsActivityRestartNeeded
+    suspend fun storeCurrentAppLocale(newAppLocaleDto: AppLocaleDto): IsActivityRestartNeeded
 
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 
-    suspend fun setNotificationPermissionCount(count: Int)
+    suspend fun storeNotificationPermissionCount(count: Int)
 
     suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
 
     suspend fun isNotificationVibrateEnabled(isEnabled: Boolean)
 
-    suspend fun setSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
+    suspend fun storeAppUpdateDialogShowCount(count: Int)
 
-    suspend fun setPreviousRateAppRequestTimeInMs()
+    suspend fun storeAppUpdateDialogShowEpochDays()
 
-    suspend fun setPartnerId(partnerId: String?)
+    suspend fun removeAppUpdateDialogShowEpochDays()
 
-    suspend fun setSecretKey(secretKey: String?)
+    suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
 
-    suspend fun setSelectedPlatform(platformDto: PlatformDto)
+    suspend fun storePreviousRateAppRequestTimeInMs()
+
+    suspend fun storePartnerId(partnerId: String?)
+
+    suspend fun storeSecretKey(secretKey: String?)
+
+    suspend fun storeSelectedPlatform(platformDto: PlatformDto)
 }

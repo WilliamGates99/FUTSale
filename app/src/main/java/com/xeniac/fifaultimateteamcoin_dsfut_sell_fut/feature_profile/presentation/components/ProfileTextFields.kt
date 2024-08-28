@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
@@ -60,11 +63,16 @@ fun ProfileTextFields(
 @Composable
 fun ProfileHeaderAnimation(
     modifier: Modifier = Modifier,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     animationComposition: LottieComposition? = rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.anim_profile_header)
     ).value,
     animationIteration: Int = LottieConstants.IterateForever,
-    animationSpeed: Float = 1f
+    animationSpeed: Float = 1f,
+    animationRotationDegree: Float = when (layoutDirection) {
+        LayoutDirection.Ltr -> 0f
+        LayoutDirection.Rtl -> 180f
+    }
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -74,7 +82,11 @@ fun ProfileHeaderAnimation(
             composition = animationComposition,
             iterations = animationIteration,
             speed = animationSpeed,
-            modifier = Modifier.height(150.dp)
+            modifier = Modifier
+                .height(150.dp)
+                .graphicsLayer {
+                    rotationY = animationRotationDegree
+                }
         )
     }
 }

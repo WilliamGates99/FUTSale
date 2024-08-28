@@ -23,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
@@ -68,7 +71,7 @@ enum class NavigationBarItems(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomNavigationBar(
-    currentRoute: String,
+    backStackEntry: NavBackStackEntry?,
     modifier: Modifier = Modifier,
     alwaysShowLabel: Boolean = true,
     iconSize: Dp = 24.dp,
@@ -80,7 +83,9 @@ fun CustomNavigationBar(
             testTagsAsResourceId = true
         }) {
         NavigationBarItems.entries.forEach { navigationBarItem ->
-            val isSelected = currentRoute.contains(navigationBarItem.screen.toString())
+            val isSelected = backStackEntry?.destination?.hierarchy?.any {
+                it.hasRoute(navigationBarItem.screen::class)
+            } ?: false
 
             NavigationBarItem(
                 enabled = !isSelected,

@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components
 
-import androidx.annotation.RawRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,16 +24,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -46,16 +49,23 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.present
 fun OnboardingPageThree(
     bottomPadding: Dp,
     modifier: Modifier = Modifier,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     title: String = stringResource(id = R.string.onboarding_third_title),
     description: String = stringResource(id = R.string.onboarding_third_description),
-    @RawRes lottieAnimation: Int = R.raw.anim_onboarding_3rd,
+    animationComposition: LottieComposition? = rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.anim_onboarding_3rd)
+    ).value,
+    animationIteration: Int = LottieConstants.IterateForever,
+    animationSpeed: Float = 1f,
+    animationRotationDegree: Float = when (layoutDirection) {
+        LayoutDirection.Ltr -> 0f
+        LayoutDirection.Rtl -> 180f
+    },
     onBackBtnClick: () -> Unit,
     onNextBtnClick: () -> Unit
 ) {
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
     val columnHeightDp = LocalDensity.current.run { columnHeight.toDp() }
-
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(lottieAnimation))
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,12 +82,16 @@ fun OnboardingPageThree(
             .onSizeChanged { columnHeight = it.height }
     ) {
         LottieAnimation(
-            composition = composition,
-            iterations = LottieConstants.IterateForever,
+            composition = animationComposition,
+            iterations = animationIteration,
+            speed = animationSpeed,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .height(columnHeightDp / 2)
+                .graphicsLayer {
+                    rotationY = animationRotationDegree
+                }
         )
 
         Spacer(modifier = Modifier.height(40.dp))

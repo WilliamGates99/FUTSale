@@ -2,8 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repo
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
@@ -39,12 +39,12 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
                         true -> PlatformDto.CONSOLE
                         false -> PlatformDto.PC
                     },
-                    pickUpTimeInMillis = DateHelper.getCurrentTimeInMillis().plus(
+                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
-                            from = -600000, // 10 minutes ago
+                            from = -600, // 10 minutes ago
                             until = 0 // Now
                         )
-                    ).toString()
+                    )
                 )
             )
         }
@@ -55,7 +55,10 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
     }
 
     override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {
-        val playersPagingData = PagingData.from(playerEntitiesHistory).map { it.toPlayer() }
+        val sortedPlayerEntitiesHistory = playerEntitiesHistory.toMutableList()
+        sortedPlayerEntitiesHistory.sortByDescending { it.pickUpTimeInSeconds }
+
+        val playersPagingData = PagingData.from(sortedPlayerEntitiesHistory).map { it.toPlayer() }
         emit(playersPagingData)
     }
 }

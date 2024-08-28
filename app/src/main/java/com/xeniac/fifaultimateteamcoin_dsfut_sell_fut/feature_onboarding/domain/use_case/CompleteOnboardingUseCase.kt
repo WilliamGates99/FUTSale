@@ -11,8 +11,8 @@ class CompleteOnboardingUseCase(
         partnerId: String?,
         secretKey: String?
     ): Result<Unit, OnboardingError> = try {
-        preferencesRepository.setPartnerId(partnerId = partnerId)
-        preferencesRepository.setSecretKey(secretKey = secretKey)
+        preferencesRepository.storePartnerId(partnerId = partnerId)
+        preferencesRepository.storeSecretKey(secretKey = secretKey)
         preferencesRepository.isOnBoardingCompleted(isCompleted = true)
         Result.Success(Unit)
     } catch (e: Exception) {

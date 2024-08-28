@@ -64,8 +64,8 @@ class HistoryPlayerInfoScreenTest {
         chemistryStyle = "Basic",
         chemistryStyleID = 1,
         platform = Platform.PC,
-        pickUpTimeInMillis = 1720521991000, // Jul 9, 2024 - 10:45:00
-        expiryTimeInMillis = 1720522080000 // Jul 9, 2024 - 10:48:00
+        pickUpTimeInMs = 1720521991000, // Jul 9, 2024 - 10:45:00
+        expiryTimeInMs = 1720522080000 // Jul 9, 2024 - 10:48:00
     )
 
     @Before

@@ -7,7 +7,7 @@ data class PickUpPlayerUseCases(
     val getIsNotificationSoundEnabledUseCase: Lazy<GetIsNotificationSoundEnabledUseCase>,
     val getIsNotificationVibrateEnabledUseCase: Lazy<GetIsNotificationVibrateEnabledUseCase>,
     val getSelectedPlatformUseCase: Lazy<GetSelectedPlatformUseCase>,
-    val setSelectedPlatformUseCase: Lazy<SetSelectedPlatformUseCase>,
+    val storeSelectedPlatformUseCase: Lazy<StoreSelectedPlatformUseCase>,
     val pickUpPlayerUseCase: Lazy<PickUpPlayerUseCase>,
     val startCountDownTimerUseCase: Lazy<StartCountDownTimerUseCase>
 )

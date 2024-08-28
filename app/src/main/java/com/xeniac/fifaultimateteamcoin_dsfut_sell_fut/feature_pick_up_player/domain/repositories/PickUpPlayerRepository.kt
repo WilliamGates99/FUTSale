@@ -30,7 +30,7 @@ interface PickUpPlayerRepository {
             val signature: String,
             val gameYear: Int = 24
         ) : EndPoints(
-            url = "${BuildConfig.KTOR_HTTP_BASE_URL}/$gameYear/$platform/$partnerId/$timestamp/$signature"
+            url = "${BuildConfig.DSFUT_HTTP_BASE_URL}/$gameYear/$platform/$partnerId/$timestamp/$signature"
         )
     }
 }

@@ -6,6 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -62,8 +63,8 @@ class CompleteOnboardingUseCaseTest {
             )
 
             val isOnBoardingCompleted = fakePreferencesRepository.isOnBoardingCompleted()
-            val storedPartnerId = fakePreferencesRepository.getPartnerId()
-            val storedSecretKey = fakePreferencesRepository.getSecretKey()
+            val storedPartnerId = fakePreferencesRepository.getPartnerId().first()
+            val storedSecretKey = fakePreferencesRepository.getSecretKey().first()
 
             advanceUntilIdle()
 

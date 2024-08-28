@@ -28,8 +28,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
-        versionCode = 24
-        versionName = "2.0.3"
+        versionCode = 25
+        versionName = "2.0.4"
 
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
@@ -42,9 +42,20 @@ android {
 
         buildConfigField(
             type = "String",
-            name = "KTOR_HTTP_BASE_URL",
-            value = properties.getProperty("KTOR_HTTP_BASE_URL")
+            name = "FUTSALE_HTTP_BASE_URL",
+            value = properties.getProperty("FUTSALE_HTTP_BASE_URL")
         )
+
+        buildConfigField(
+            type = "String",
+            name = "DSFUT_HTTP_BASE_URL",
+            value = properties.getProperty("DSFUT_HTTP_BASE_URL")
+        )
+    }
+
+    sourceSets {
+        // Adds room exported schema location as test app assets
+        getByName("androidTest").assets.srcDirs("$projectDir/roomSchemas")
     }
 
     signingConfigs {
@@ -58,7 +69,7 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix = " - debug"
+            versionNameSuffix = " - Debug"
             applicationIdSuffix = ".debug"
 
             resValue(
@@ -88,6 +99,7 @@ android {
             dimension = "build"
             versionNameSuffix = " - Developer Preview"
             applicationIdSuffix = ".dev"
+            isDefault = true
 
             resValue(
                 type = "color",
@@ -108,6 +120,7 @@ android {
 
         create("playStore") {
             dimension = "market"
+            isDefault = true
 
             buildConfigField(
                 type = "String",
@@ -189,7 +202,7 @@ android {
     }
 
     room {
-        schemaDirectory("$projectDir/roomSchemas")
+        schemaDirectory(path = "$projectDir/roomSchemas")
     }
 
     packaging {

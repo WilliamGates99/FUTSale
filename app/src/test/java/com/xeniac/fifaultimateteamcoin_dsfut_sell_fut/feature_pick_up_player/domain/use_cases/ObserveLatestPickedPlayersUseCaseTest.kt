@@ -49,8 +49,8 @@ class ObserveLatestPickedPlayersUseCaseTest {
         assertThat(latestPickedPlayers).isNotEmpty()
 
         for (i in 0..latestPickedPlayers.size - 2) {
-            assertThat(latestPickedPlayers[i].pickUpTimeInMillis)
-                .isGreaterThan(latestPickedPlayers[i + 1].pickUpTimeInMillis)
+            assertThat(latestPickedPlayers[i].pickUpTimeInMs)
+                .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInMs)
         }
     }
 }

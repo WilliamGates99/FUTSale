@@ -1,8 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 
 import android.os.Parcelable
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -24,9 +23,9 @@ data class Player(
     val chemistryStyle: String,
     val chemistryStyleID: Int,
     val platform: Platform,
-    val pickUpTimeInMillis: Long = 0,
-    val expiryTimeInMillis: Long = 0,
-    val id: Int? = null
+    val pickUpTimeInMs: Long = 0,
+    val expiryTimeInMs: Long = 0,
+    val id: Long? = null
 ) : Parcelable {
     fun toPlayerDto(): PlayerDto = PlayerDto(
         tradeID = tradeID,
@@ -43,7 +42,7 @@ data class Player(
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         expires = 0,
-        platformDto = platform.toPlatformDto(),
+        platformDto = platform.toPlatformDto()
     )
 
     fun toPlayerEntity(): PlayerEntity = PlayerEntity(
@@ -61,7 +60,8 @@ data class Player(
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         platformDto = platform.toPlatformDto(),
-        pickUpTimeInMillis = pickUpTimeInMillis.toString(),
+        pickUpTimeInSeconds = pickUpTimeInMs / 1000,
+        expiryTimeInSeconds = expiryTimeInMs / 1000,
         id = id
     )
 }

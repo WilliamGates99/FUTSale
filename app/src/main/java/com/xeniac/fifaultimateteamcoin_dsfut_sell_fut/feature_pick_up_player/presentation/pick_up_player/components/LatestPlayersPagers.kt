@@ -83,7 +83,7 @@ fun LatestPlayersPagers(
         val pagerState = rememberPagerState(pageCount = { latestPickedPlayers.size })
 
         LaunchedEffect(key1 = pagerState.settledPage) {
-            onCountDownStart(latestPickedPlayers[pagerState.currentPage].expiryTimeInMillis)
+            onCountDownStart(latestPickedPlayers[pagerState.currentPage].expiryTimeInMs)
         }
 
         Box(

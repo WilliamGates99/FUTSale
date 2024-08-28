@@ -57,6 +57,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val activity = context.findActivity()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -71,9 +72,11 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
-            is SettingsUiEvent.RestartActivity -> context.findActivity().restartActivity()
+            is SettingsUiEvent.RestartActivity -> activity.restartActivity()
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -88,6 +91,8 @@ fun SettingsScreen(
             is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -102,6 +107,8 @@ fun SettingsScreen(
         when (event) {
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -116,6 +123,8 @@ fun SettingsScreen(
         when (event) {
             is UiEvent.ShowShortSnackbar -> {
                 scope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -128,6 +137,8 @@ fun SettingsScreen(
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
         if (isIntentAppNotFoundErrorVisible) {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
             val result = snackbarHostState.showSnackbar(
                 message = context.getString(R.string.error_intent_app_not_found),
                 duration = SnackbarDuration.Short
@@ -219,7 +230,7 @@ fun SettingsScreen(
     LocaleBottomSheet(
         isVisible = isLocaleBottomSheetVisible,
         currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
-        onDismiss = {
+        onDismissRequest = {
             isLocaleBottomSheetVisible = false
         },
         onLocaleSelected = { newAppLocale ->
@@ -230,7 +241,7 @@ fun SettingsScreen(
     ThemeBottomSheet(
         isVisible = isThemeDialogVisible,
         currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
-        onDismiss = {
+        onDismissRequest = {
             isThemeDialogVisible = false
         },
         onThemeSelected = { newAppTheme ->

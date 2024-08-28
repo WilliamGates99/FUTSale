@@ -45,7 +45,7 @@ class ObservePickedPlayersHistoryUseCaseTest {
     }
 
     @Test
-    fun observePickedPlayersHistory_returnsEntirePlayersList() = runTest {
+    fun observePickedPlayersHistory_returnsEntirePlayersListInDescendingOrder() = runTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToLatestPlayers()
 
         val pickedPlayersHistoryPagingData = fakeHistoryRepositoryImpl.observePickedPlayersHistory()
@@ -53,5 +53,10 @@ class ObservePickedPlayersHistoryUseCaseTest {
 
         assertThat(pickedPlayersHistory).isNotEmpty()
         assertThat(pickedPlayersHistory.size).isEqualTo(fakeHistoryRepositoryImpl.playerEntitiesHistory.size)
+
+        for (i in 0..pickedPlayersHistory.size - 2) {
+            assertThat(pickedPlayersHistory[i].pickUpTimeInMs)
+                .isAtLeast(pickedPlayersHistory[i + 1].pickUpTimeInMs)
+        }
     }
 }

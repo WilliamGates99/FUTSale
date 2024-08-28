@@ -2,16 +2,15 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper.isPickedPlayerExpired
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
@@ -20,11 +19,14 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.delay
@@ -37,14 +39,22 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerRepository {
 
-    private var isNetworkAvailable = false
-
-    private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
+    private var isNetworkAvailable = true
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
+    private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
+
     fun isNetworkAvailable(isAvailable: Boolean) {
         isNetworkAvailable = isAvailable
+    }
+
+    fun setPickUpPlayerHttpStatusCode(httpStatusCode: HttpStatusCode) {
+        pickUpPlayerHttpStatusCode = httpStatusCode
+    }
+
+    fun setIsPlayersQueueEmpty(isEmpty: Boolean) {
+        isPlayersQueueEmpty = isEmpty
     }
 
     fun addDummyPlayersToLatestPlayers() {
@@ -70,12 +80,12 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                         true -> PlatformDto.CONSOLE
                         false -> PlatformDto.PC
                     },
-                    pickUpTimeInMillis = getCurrentTimeInMillis().plus(
+                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
-                            from = -600000, // 10 minutes ago
+                            from = -600, // 10 minutes ago
                             until = 0 // Now
                         )
-                    ).toString()
+                    )
                 )
             )
         }
@@ -85,34 +95,36 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         playersToInsert.forEach { latestPlayerEntities.add(it) }
     }
 
-    fun setPickUpPlayerHttpStatusCode(httpStatusCode: HttpStatusCode) {
-        pickUpPlayerHttpStatusCode = httpStatusCode
-    }
-
-    fun setIsPlayersQueueEmpty(isEmpty: Boolean) {
-        isPlayersQueueEmpty = isEmpty
-    }
-
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = snapshotFlow {
-        latestPlayerEntities.map { it.toPlayer() }
+        val notExpiredLatestPlayerEntities = latestPlayerEntities.filter { playerEntity ->
+            val currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+            val isNotExpired = currentTimeInSeconds <= playerEntity.expiryTimeInSeconds
+            isNotExpired
+        }
+
+        val sortedLatestPlayerEntities = notExpiredLatestPlayerEntities.toMutableList()
+        sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
+
+        sortedLatestPlayerEntities.map { it.toPlayer() }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
-        val currentTime = getCurrentTimeInMillis()
+        val currentTime = DateHelper.getCurrentTimeInMillis()
         val expiryTime = currentTime + expiryTimeInMs
-        val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTime)
+        val isPlayerExpired = isPickedPlayerExpired(expiryTime)
 
         if (isPlayerExpired) {
             emit(0)
-        } else {
-            val timerStartTimeInMs = expiryTime - currentTime
-            var currentTimerValueInMs = timerStartTimeInMs
+            return@flow
+        }
 
-            while (currentTimerValueInMs >= 0) {
-                emit((currentTimerValueInMs / 1000).toInt())
-                delay(timeMillis = Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS)
-                currentTimerValueInMs -= Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
-            }
+        val timerStartTimeInMs = expiryTime - currentTime
+        var currentTimerValueInMs = timerStartTimeInMs
+
+        while (currentTimerValueInMs >= 0) {
+            emit((currentTimerValueInMs / 1000).toInt())
+            delay(timeMillis = Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS)
+            currentTimerValueInMs -= Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
         }
     }
 
@@ -131,7 +143,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
             val pickUpPlayerResponseDto = if (pickUpPlayerHttpStatusCode == HttpStatusCode.OK) {
                 if (isPlayersQueueEmpty) {
                     PickUpPlayerResponseDto(
-                        error = "empty",
+                        error = Constants.ERROR_DSFUT_EMPTY,
                         message = "Queue is empty"
                     )
                 } else {
@@ -158,7 +170,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 }
             } else {
                 PickUpPlayerResponseDto(
-                    error = "empty",
+                    error = Constants.ERROR_DSFUT_EMPTY,
                     message = "Queue is empty"
                 )
             }
@@ -168,7 +180,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                 status = pickUpPlayerHttpStatusCode,
                 headers = headersOf(
                     name = HttpHeaders.ContentType,
-                    value = "application/json"
+                    value = ContentType.Application.Json.toString()
                 )
             )
         }
@@ -181,9 +193,12 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                     coerceInputValues = true
                 })
             }
+            install(DefaultRequest) {
+                contentType(ContentType.Application.Json)
+            }
         }
 
-        val timestampInSeconds = getCurrentTimeInSeconds()
+        val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
             secretKey = secretKey,

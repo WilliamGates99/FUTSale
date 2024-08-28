@@ -14,8 +14,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.FutSaleDatabase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import dagger.Lazy
@@ -26,13 +28,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,6 +117,9 @@ internal object AppModule {
             requestTimeoutMillis = 20000 // 20 seconds
             socketTimeoutMillis = 20000 // 20 seconds
         }
+        install(DefaultRequest) {
+            contentType(ContentType.Application.Json)
+        }
     }
 
     @Provides
@@ -122,7 +130,12 @@ internal object AppModule {
         context = context,
         klass = FutSaleDatabase::class.java,
         name = "FUTSale.db"
-    ).build()
+    ).apply {
+        addMigrations(
+            MIGRATION_2_TO_3,
+            MIGRATION_3_TO_4
+        )
+    }.build()
 
     @Provides
     @Singleton

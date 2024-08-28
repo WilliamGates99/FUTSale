@@ -2,10 +2,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_c
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
+import kotlinx.coroutines.flow.Flow
 
 class GetPreviousRateAppRequestTimeInMsUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
-    suspend operator fun invoke(): PreviousRateAppRequestTimeInMs? =
+    operator fun invoke(): Flow<PreviousRateAppRequestTimeInMs?> =
         preferencesRepository.getPreviousRateAppRequestTimeInMs()
 }

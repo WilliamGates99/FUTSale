@@ -1,16 +1,14 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
 import android.os.CountDownTimer
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.db.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mapper.toPlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper.isPickedPlayerExpired
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
@@ -30,16 +28,16 @@ import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
-import okhttp3.internal.toLongOrDefault
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: HttpClient,
@@ -48,38 +46,36 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 ) : PickUpPlayerRepository {
 
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
-        .observeLatestPickedPlayers().map { playerEntities ->
-            playerEntities.filter {
-                DateHelper.isPickedPlayerNotExpired(
-                    pickUpTimeInMs = it.pickUpTimeInMillis.toLongOrDefault(defaultValue = 0L)
-                )
-            }.map { it.toPlayer() }
+        .observeLatestPickedPlayers(
+            currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+        ).map { playerEntities ->
+            playerEntities.map { it.toPlayer() }
         }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
-            var countDownTimer: CountDownTimer? = null
-
-            val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTimeInMs)
+            val isPlayerExpired = isPickedPlayerExpired(expiryTimeInMs)
             if (isPlayerExpired) {
                 send(0)
-            } else {
-                val timerStartTimeInMs = expiryTimeInMs - getCurrentTimeInMillis()
-
-                countDownTimer = object : CountDownTimer(
-                    /* millisInFuture = */ timerStartTimeInMs,
-                    /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
-                ) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        trySend((millisUntilFinished / 1000).toInt())
-                    }
-
-                    override fun onFinish() {
-                        Timber.i("Player Expiry timer is finished.")
-                        trySend(0)
-                    }
-                }.start()
+                close()
+                return@callbackFlow
             }
+
+            val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
+            val countDownTimer = object : CountDownTimer(
+                /* millisInFuture = */ timerStartTimeInMs,
+                /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
+            ) {
+                override fun onTick(millisUntilFinished: Long) {
+                    trySend((millisUntilFinished / 1000).toInt())
+                }
+
+                override fun onFinish() {
+                    Timber.i("Player Expiry timer is finished.")
+                    trySend(0)
+                    close()
+                }
+            }.start()
 
             awaitClose { countDownTimer?.cancel() }
         }
@@ -92,7 +88,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
         val platform = preferencesRepository.get().getSelectedPlatform().first()
-        val timestampInSeconds = getCurrentTimeInSeconds()
+        val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
             secretKey = secretKey,
@@ -114,8 +110,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         Timber.i("Pick up player response call = ${response.request.call}")
 
-        when (response.status.value) {
-            HttpStatusCode.OK.value -> { // Code: 200
+        when (response.status) {
+            HttpStatusCode.OK -> { // Code: 200
                 val pickUpPlayerResponseDto = response.body<PickUpPlayerResponseDto>()
                 val playerDto = pickUpPlayerResponseDto.playerDto
 
@@ -145,10 +141,6 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             }
             else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
         }
-    } catch (e: CancellationException) {
-        Timber.e("Pick up player CancellationException:")
-        e.printStackTrace()
-        Result.Error(PickUpPlayerError.CancellationException)
     } catch (e: UnresolvedAddressException) { // When device is offline
         Timber.e("Pick up player UnresolvedAddressException:}")
         e.printStackTrace()
@@ -182,6 +174,8 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.SerializationException)
     } catch (e: Exception) {
+        coroutineContext.ensureActive()
+
         Timber.e("Pick up player Exception:")
         e.printStackTrace()
         if (e.message?.lowercase(Locale.US)?.contains("unable to resolve host") == true) {

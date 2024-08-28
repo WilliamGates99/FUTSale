@@ -5,11 +5,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.us
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetCurrentAppThemeUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetIsNotificationVibrateEnabledUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SetCurrentAppLocaleUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SetCurrentAppThemeUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SetIsNotificationSoundEnabledUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SettingsUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.StoreCurrentAppLocaleUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.StoreCurrentAppThemeUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.StoreIsNotificationSoundEnabledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.StoreIsNotificationVibrateEnabledUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,29 +48,29 @@ internal object SettingsModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSetCurrentAppLocaleUseCase(
+    fun provideStoreCurrentAppLocaleUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetCurrentAppLocaleUseCase = SetCurrentAppLocaleUseCase(preferencesRepository)
+    ): StoreCurrentAppLocaleUseCase = StoreCurrentAppLocaleUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
-    fun provideSetCurrentAppThemeUseCase(
+    fun provideStoreCurrentAppThemeUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetCurrentAppThemeUseCase = SetCurrentAppThemeUseCase(preferencesRepository)
+    ): StoreCurrentAppThemeUseCase = StoreCurrentAppThemeUseCase(preferencesRepository)
 
     @Provides
     @ViewModelScoped
-    fun provideSetIsNotificationSoundEnabledUseCase(
+    fun provideStoreIsNotificationSoundEnabledUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetIsNotificationSoundEnabledUseCase = SetIsNotificationSoundEnabledUseCase(
+    ): StoreIsNotificationSoundEnabledUseCase = StoreIsNotificationSoundEnabledUseCase(
         preferencesRepository
     )
 
     @Provides
     @ViewModelScoped
-    fun provideSetIsNotificationVibrateEnabledUseCase(
+    fun provideStoreIsNotificationVibrateEnabledUseCase(
         preferencesRepository: PreferencesRepository
-    ): SetIsNotificationVibrateEnabledUseCase = SetIsNotificationVibrateEnabledUseCase(
+    ): StoreIsNotificationVibrateEnabledUseCase = StoreIsNotificationVibrateEnabledUseCase(
         preferencesRepository
     )
 
@@ -81,18 +81,18 @@ internal object SettingsModule {
         getCurrentAppThemeUseCase: GetCurrentAppThemeUseCase,
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
-        setCurrentAppLocaleUseCase: SetCurrentAppLocaleUseCase,
-        setCurrentAppThemeUseCase: SetCurrentAppThemeUseCase,
-        setIsNotificationSoundEnabledUseCase: SetIsNotificationSoundEnabledUseCase,
-        setIsNotificationVibrateEnabledUseCase: SetIsNotificationVibrateEnabledUseCase
+        storeCurrentAppLocaleUseCase: StoreCurrentAppLocaleUseCase,
+        storeCurrentAppThemeUseCase: StoreCurrentAppThemeUseCase,
+        storeIsNotificationSoundEnabledUseCase: StoreIsNotificationSoundEnabledUseCase,
+        storeIsNotificationVibrateEnabledUseCase: StoreIsNotificationVibrateEnabledUseCase
     ): SettingsUseCases = SettingsUseCases(
         { getCurrentAppLocaleUseCase },
         { getCurrentAppThemeUseCase },
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
-        { setCurrentAppLocaleUseCase },
-        { setCurrentAppThemeUseCase },
-        { setIsNotificationSoundEnabledUseCase },
-        { setIsNotificationVibrateEnabledUseCase }
+        { storeCurrentAppLocaleUseCase },
+        { storeCurrentAppThemeUseCase },
+        { storeIsNotificationSoundEnabledUseCase },
+        { storeIsNotificationVibrateEnabledUseCase }
     )
 }
