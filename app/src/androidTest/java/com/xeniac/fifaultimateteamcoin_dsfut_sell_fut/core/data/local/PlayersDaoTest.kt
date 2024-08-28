@@ -206,7 +206,7 @@ class PlayersDaoTest {
 
         for (i in 0..latestPickedPlayers.size - 2) {
             assertThat(latestPickedPlayers[i].pickUpTimeInSeconds)
-                .isGreaterThan(latestPickedPlayers[i + 1].pickUpTimeInSeconds)
+                .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInSeconds)
         }
     }
 

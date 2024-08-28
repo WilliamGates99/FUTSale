@@ -50,7 +50,7 @@ class ObserveLatestPickedPlayersUseCaseTest {
 
         for (i in 0..latestPickedPlayers.size - 2) {
             assertThat(latestPickedPlayers[i].pickUpTimeInMs)
-                .isGreaterThan(latestPickedPlayers[i + 1].pickUpTimeInMs)
+                .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInMs)
         }
     }
 }

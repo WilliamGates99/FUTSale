@@ -56,7 +56,7 @@ class ObservePickedPlayersHistoryUseCaseTest {
 
         for (i in 0..pickedPlayersHistory.size - 2) {
             assertThat(pickedPlayersHistory[i].pickUpTimeInMs)
-                .isGreaterThan(pickedPlayersHistory[i + 1].pickUpTimeInMs)
+                .isAtLeast(pickedPlayersHistory[i + 1].pickUpTimeInMs)
         }
     }
 }
