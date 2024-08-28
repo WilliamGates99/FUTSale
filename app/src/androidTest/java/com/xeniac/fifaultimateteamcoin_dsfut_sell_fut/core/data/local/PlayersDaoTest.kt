@@ -7,6 +7,7 @@ import androidx.paging.testing.TestPager
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -68,12 +69,13 @@ class PlayersDaoTest {
         )
         dao.insertPlayer(playerEntity)
 
-        val pickedPlayers = dao.observeLatestPickedPlayers().first()
+        val pickedPlayers = dao.getPlayers()
         assertThat(pickedPlayers).contains(playerEntity)
     }
 
     @Test
     fun clearPlayers() = runTest {
+        val dummyPlayers = mutableListOf<PlayerEntity>()
         repeat(times = 10) { index ->
             val playerEntity = PlayerEntity(
                 id = index.toLong(),
@@ -92,15 +94,18 @@ class PlayersDaoTest {
                 chemistryStyleID = index,
                 platformDto = PlatformDto.CONSOLE
             )
+
+            dummyPlayers.add(playerEntity)
             dao.insertPlayer(playerEntity)
         }
 
-        val pickedPlayers = dao.observeLatestPickedPlayers().first()
+        val pickedPlayers = dao.getPlayers()
         assertThat(pickedPlayers).isNotEmpty()
+        assertThat(pickedPlayers).containsExactlyElementsIn(dummyPlayers)
 
         dao.clearPlayers()
 
-        val pickedPlayersAfterClear = dao.observeLatestPickedPlayers().first()
+        val pickedPlayersAfterClear = dao.getPlayers()
         assertThat(pickedPlayersAfterClear).isEmpty()
     }
 
@@ -125,17 +130,18 @@ class PlayersDaoTest {
         )
         dao.insertPlayer(playerEntity)
 
-        val pickedPlayers = dao.observeLatestPickedPlayers().first()
+        val pickedPlayers = dao.getPlayers()
         assertThat(pickedPlayers).contains(playerEntity)
 
         dao.deletePlayer(playerEntity)
 
-        val pickedPlayersAfterDelete = dao.observeLatestPickedPlayers().first()
+        val pickedPlayersAfterDelete = dao.getPlayers()
         assertThat(pickedPlayersAfterDelete).doesNotContain(playerEntity)
     }
 
     @Test
-    fun observeLatestPickedPlayers() = runTest {
+    fun getPlayers() = runTest {
+        val dummyPlayers = mutableListOf<PlayerEntity>()
         repeat(times = 10) { index ->
             val playerEntity = PlayerEntity(
                 id = index.toLong(),
@@ -154,11 +160,54 @@ class PlayersDaoTest {
                 chemistryStyleID = index,
                 platformDto = PlatformDto.CONSOLE
             )
+
+            dummyPlayers.add(playerEntity)
             dao.insertPlayer(playerEntity)
         }
 
-        val pickedPlayers = dao.observeLatestPickedPlayers().first()
-        assertThat(pickedPlayers).isNotEmpty()
+        val latestPickedPlayers = dao.getPlayers()
+
+        assertThat(latestPickedPlayers).isNotEmpty()
+        assertThat(latestPickedPlayers).containsExactlyElementsIn(dummyPlayers)
+    }
+
+    @Test
+    fun observeLatestPickedPlayers() = runTest {
+        val dummyPlayers = mutableListOf<PlayerEntity>()
+        repeat(times = 10) { index ->
+            val playerEntity = PlayerEntity(
+                id = index.toLong(),
+                tradeID = index.toString(),
+                assetID = index,
+                resourceID = index,
+                transactionID = index,
+                name = "Test $index",
+                rating = 88,
+                position = "FW",
+                startPrice = 10000,
+                buyNowPrice = 50000,
+                owners = index,
+                contracts = index,
+                chemistryStyle = "Basic",
+                chemistryStyleID = index,
+                platformDto = PlatformDto.CONSOLE
+            )
+
+            dummyPlayers.add(playerEntity)
+            dao.insertPlayer(playerEntity)
+        }
+
+        val latestPickedPlayers = dao.observeLatestPickedPlayers(
+            currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+        ).first()
+
+        assertThat(latestPickedPlayers).isNotEmpty()
+        assertThat(latestPickedPlayers).containsExactlyElementsIn(dummyPlayers)
+
+        for (i in 0..latestPickedPlayers.size - 2) {
+            assertThat(latestPickedPlayers[i].pickUpTimeInSeconds)
+                .isGreaterThan(latestPickedPlayers[i + 1].pickUpTimeInSeconds)
+        }
     }
 
     @Test
@@ -207,6 +256,7 @@ class PlayersDaoTest {
                 chemistryStyleID = index,
                 platformDto = PlatformDto.CONSOLE
             )
+
             dummyPlayers.add(playerEntity)
             dao.insertPlayer(playerEntity)
         }

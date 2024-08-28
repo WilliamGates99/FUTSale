@@ -21,6 +21,9 @@ interface PlayersDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
+    @Query("SELECT * FROM players")
+    fun getPlayers(): List<PlayerEntity>
+
     @Query(
         """
         SELECT * FROM players
