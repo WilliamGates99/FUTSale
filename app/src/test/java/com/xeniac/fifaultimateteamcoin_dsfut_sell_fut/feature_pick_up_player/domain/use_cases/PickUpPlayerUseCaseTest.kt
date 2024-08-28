@@ -143,6 +143,18 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithValidInputsAndUnavailableNetwork_returnsError() = runTest {
+        fakePickUpPlayerRepositoryImpl.isNetworkAvailable(isAvailable = false)
+
+        fakePreferencesRepositoryImpl.storePartnerId("123")
+        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
+
+        val pickUpPlayerResult = pickUpPlayerUseCase()
+
+        assertThat(pickUpPlayerResult.result).isInstanceOf(Result.Error::class.java)
+    }
+
+    @Test
+    fun pickUpPlayerWithValidInputsAndBadNetwork_returnsError() = runTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.RequestTimeout)
 
         fakePreferencesRepositoryImpl.storePartnerId("123")

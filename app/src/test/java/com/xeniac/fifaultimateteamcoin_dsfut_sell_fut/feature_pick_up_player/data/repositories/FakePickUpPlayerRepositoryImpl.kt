@@ -2,14 +2,13 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper.isPickedPlayerExpired
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
@@ -37,9 +36,23 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
-    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
+    private var isNetworkAvailable = true
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
+
+    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
+
+    fun isNetworkAvailable(isAvailable: Boolean) {
+        isNetworkAvailable = isAvailable
+    }
+
+    fun setPickUpPlayerHttpStatusCode(httpStatusCode: HttpStatusCode) {
+        pickUpPlayerHttpStatusCode = httpStatusCode
+    }
+
+    fun setIsPlayersQueueEmpty(isEmpty: Boolean) {
+        isPlayersQueueEmpty = isEmpty
+    }
 
     fun addDummyPlayersToLatestPlayers() {
         val playersToInsert = mutableListOf<PlayerEntity>()
@@ -64,12 +77,12 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
                         true -> PlatformDto.CONSOLE
                         false -> PlatformDto.PC
                     },
-                    pickUpTimeInMillis = getCurrentTimeInMillis().plus(
+                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
-                            from = -600000, // 10 minutes ago
+                            from = -600, // 10 minutes ago
                             until = 0 // Now
                         )
-                    ).toString()
+                    )
                 )
             )
         }
@@ -79,35 +92,36 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         playersToInsert.forEach { latestPlayerEntities.add(it) }
     }
 
-    fun setPickUpPlayerHttpStatusCode(httpStatusCode: HttpStatusCode) {
-        pickUpPlayerHttpStatusCode = httpStatusCode
-    }
-
-    fun setIsPlayersQueueEmpty(isEmpty: Boolean) {
-        isPlayersQueueEmpty = isEmpty
-    }
-
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
-        latestPlayerEntities.sortByDescending { it.pickUpTimeInMillis }
-        emit(latestPlayerEntities.map { it.toPlayer() })
+        val notExpiredLatestPlayerEntities = latestPlayerEntities.filter { playerEntity ->
+            val currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+            val isNotExpired = currentTimeInSeconds <= playerEntity.expiryTimeInSeconds
+            isNotExpired
+        }
+
+        val sortedLatestPlayerEntities = notExpiredLatestPlayerEntities.toMutableList()
+        sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
+
+        emit(sortedLatestPlayerEntities.map { it.toPlayer() })
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
-        val currentTime = getCurrentTimeInMillis()
+        val currentTime = DateHelper.getCurrentTimeInMillis()
         val expiryTime = currentTime + expiryTimeInMs
-        val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTime)
+        val isPlayerExpired = isPickedPlayerExpired(expiryTime)
 
         if (isPlayerExpired) {
             emit(0)
-        } else {
-            val timerStartTimeInMs = expiryTime - currentTime
-            var currentTimerValueInMs = timerStartTimeInMs
+            return@flow
+        }
 
-            while (currentTimerValueInMs >= 0) {
-                emit((currentTimerValueInMs / 1000).toInt())
-                delay(timeMillis = Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS)
-                currentTimerValueInMs -= Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
-            }
+        val timerStartTimeInMs = expiryTime - currentTime
+        var currentTimerValueInMs = timerStartTimeInMs
+
+        while (currentTimerValueInMs >= 0) {
+            emit((currentTimerValueInMs / 1000).toInt())
+            delay(timeMillis = Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS)
+            currentTimerValueInMs -= Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
         }
     }
 
@@ -118,11 +132,15 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> {
+        if (!isNetworkAvailable) {
+            return Result.Error(PickUpPlayerError.Network.Offline)
+        }
+
         val mockEngine = MockEngine {
             val pickUpPlayerResponseDto = if (pickUpPlayerHttpStatusCode == HttpStatusCode.OK) {
                 if (isPlayersQueueEmpty) {
                     PickUpPlayerResponseDto(
-                        error = "empty",
+                        error = Constants.ERROR_DSFUT_EMPTY,
                         message = "Queue is empty"
                     )
                 } else {
@@ -149,7 +167,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
                 }
             } else {
                 PickUpPlayerResponseDto(
-                    error = "empty",
+                    error = Constants.ERROR_DSFUT_EMPTY,
                     message = "Queue is empty"
                 )
             }
@@ -177,7 +195,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
             }
         }
 
-        val timestampInSeconds = getCurrentTimeInSeconds()
+        val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
             secretKey = secretKey,
