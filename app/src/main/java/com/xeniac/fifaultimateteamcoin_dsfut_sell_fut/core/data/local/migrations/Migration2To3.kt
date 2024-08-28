@@ -41,7 +41,7 @@ val MIGRATION_2_TO_3 = object : Migration(startVersion = 2, endVersion = 3) {
                 buy_now_price, owners, contracts, chemistry_style, chemistry_style_id, platform,
                 pick_up_time_in_seconds / 1000  -- Convert milliseconds to seconds
                 FROM players
-        """.trimIndent()
+                """.trimIndent()
         )
 
         // Remove the old table
