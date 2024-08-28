@@ -39,12 +39,12 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
                         true -> PlatformDto.CONSOLE
                         false -> PlatformDto.PC
                     },
-                    pickUpTimeInMillis = DateHelper.getCurrentTimeInMillis().plus(
+                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
-                            from = -600000, // 10 minutes ago
+                            from = -600, // 10 minutes ago
                             until = 0 // Now
                         )
-                    ).toString()
+                    )
                 )
             )
         }
