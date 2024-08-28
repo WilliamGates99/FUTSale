@@ -197,7 +197,7 @@ android {
     }
 
     room {
-        schemaDirectory("$projectDir/roomSchemas")
+        schemaDirectory(path = "$projectDir/roomSchemas")
     }
 
     packaging {
