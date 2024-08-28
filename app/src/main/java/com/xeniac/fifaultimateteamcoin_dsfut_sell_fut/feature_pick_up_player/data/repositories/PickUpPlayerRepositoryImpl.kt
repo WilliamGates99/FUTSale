@@ -54,28 +54,28 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
-            var countDownTimer: CountDownTimer? = null
-
             val isPlayerExpired = isPickedPlayerExpired(expiryTimeInMs)
             if (isPlayerExpired) {
                 send(0)
-            } else {
-                val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
-
-                countDownTimer = object : CountDownTimer(
-                    /* millisInFuture = */ timerStartTimeInMs,
-                    /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
-                ) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        trySend((millisUntilFinished / 1000).toInt())
-                    }
-
-                    override fun onFinish() {
-                        Timber.i("Player Expiry timer is finished.")
-                        trySend(0)
-                    }
-                }.start()
+                close()
+                return@callbackFlow
             }
+
+            val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
+            val countDownTimer = object : CountDownTimer(
+                /* millisInFuture = */ timerStartTimeInMs,
+                /* countDownInterval = */ Constants.COUNT_DOWN_TIMER_INTERVAL_IN_MS
+            ) {
+                override fun onTick(millisUntilFinished: Long) {
+                    trySend((millisUntilFinished / 1000).toInt())
+                }
+
+                override fun onFinish() {
+                    Timber.i("Player Expiry timer is finished.")
+                    trySend(0)
+                    close()
+                }
+            }.start()
 
             awaitClose { countDownTimer?.cancel() }
         }
