@@ -21,12 +21,18 @@ interface PlayersDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
-    @Query("SELECT * FROM players ORDER BY pick_up_time_in_seconds DESC")
-    fun observeLatestPickedPlayers(): Flow<List<PlayerEntity>>
+    @Query(
+        """
+        SELECT * FROM players
+        WHERE :currentTimeInSeconds <= expiry_time_in_seconds
+        ORDER BY pick_up_time_in_seconds DESC
+        """
+    )
+    fun observeLatestPickedPlayers(currentTimeInSeconds: Long): Flow<List<PlayerEntity>>
 
     @Query("SELECT * FROM players ORDER BY pick_up_time_in_seconds DESC")
     fun pagingSource(): PagingSource<Int, PlayerEntity>
 
     @Query("SELECT * FROM players WHERE id = :id")
-    fun getPlayer(id: Int): Flow<PlayerEntity>
+    fun getPlayer(id: Long): Flow<PlayerEntity>
 }

@@ -2,14 +2,13 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInMillis
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper.getCurrentTimeInSeconds
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DateHelper.isPickedPlayerExpired
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.HashHelper.getMd5Signature
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
@@ -46,25 +45,22 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    // TODO: MODIFY THIS, TOO
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
-        .observeLatestPickedPlayers().map { playerEntities ->
-            playerEntities.filter {
-                DateHelper.isPickedPlayerNotExpired(
-                    pickUpTimeInSeconds = it.pickUpTimeInSeconds
-                )
-            }.map { it.toPlayer() }
+        .observeLatestPickedPlayers(
+            currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+        ).map { playerEntities ->
+            playerEntities.map { it.toPlayer() }
         }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
             var countDownTimer: CountDownTimer? = null
 
-            val isPlayerExpired = DateHelper.isPickedPlayerExpired(expiryTimeInMs)
+            val isPlayerExpired = isPickedPlayerExpired(expiryTimeInMs)
             if (isPlayerExpired) {
                 send(0)
             } else {
-                val timerStartTimeInMs = expiryTimeInMs - getCurrentTimeInMillis()
+                val timerStartTimeInMs = expiryTimeInMs - DateHelper.getCurrentTimeInMillis()
 
                 countDownTimer = object : CountDownTimer(
                     /* millisInFuture = */ timerStartTimeInMs,
@@ -92,7 +88,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
         val platform = preferencesRepository.get().getSelectedPlatform().first()
-        val timestampInSeconds = getCurrentTimeInSeconds()
+        val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
             secretKey = secretKey,

@@ -76,7 +76,7 @@ class PlayersDaoTest {
     fun clearPlayers() = runTest {
         repeat(times = 10) { index ->
             val playerEntity = PlayerEntity(
-                id = index,
+                id = index.toLong(),
                 tradeID = index.toString(),
                 assetID = index,
                 resourceID = index,
@@ -138,7 +138,7 @@ class PlayersDaoTest {
     fun observeLatestPickedPlayers() = runTest {
         repeat(times = 10) { index ->
             val playerEntity = PlayerEntity(
-                id = index,
+                id = index.toLong(),
                 tradeID = index.toString(),
                 assetID = index,
                 resourceID = index,
@@ -191,7 +191,7 @@ class PlayersDaoTest {
         val dummyPlayers = mutableListOf<PlayerEntity>()
         repeat(times = 50) { index ->
             val playerEntity = PlayerEntity(
-                id = index,
+                id = index.toLong(),
                 tradeID = index.toString(),
                 assetID = index,
                 resourceID = index,
