@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.LayoutDirection
 fun SwipeableSnackbar(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     dismissSnackbarState: SwipeToDismissBoxState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
             if (value != SwipeToDismissBoxValue.Settled) {
@@ -28,8 +29,6 @@ fun SwipeableSnackbar(
         }
     )
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-
     // Set the layout direction to LTR to solve the opposite swipe direction in RTL layouts
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         LaunchedEffect(dismissSnackbarState.currentValue) {
