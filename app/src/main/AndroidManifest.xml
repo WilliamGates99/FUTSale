@@ -19,7 +19,7 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FUTSale"
+        android:theme="@style/Theme.FUTSale.SplashScreen"
         tools:targetApi="tiramisu">
 
         <profileable
@@ -30,7 +30,6 @@
             android:name=".core.presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FUTSale.SplashScreen"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
