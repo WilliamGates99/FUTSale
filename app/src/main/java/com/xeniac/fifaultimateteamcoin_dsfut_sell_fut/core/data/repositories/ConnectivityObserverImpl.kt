@@ -42,7 +42,10 @@ class ConnectivityObserverImpl @Inject constructor(
             connectivityManager.registerDefaultNetworkCallback(
                 /* networkCallback = */ callback
             )
+        } else {
+            send(ConnectivityObserver.Status.AVAILABLE)
         }
+
         awaitClose {
             connectivityManager.unregisterNetworkCallback(
                 /* networkCallback = */ callback
