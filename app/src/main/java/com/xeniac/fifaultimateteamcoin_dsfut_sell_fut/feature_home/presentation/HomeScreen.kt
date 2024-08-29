@@ -66,9 +66,8 @@ fun HomeScreen(
 
     LaunchedEffect(backStackEntry?.destination) {
         val currentRoute = backStackEntry?.destination?.route
-
         isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
-            currentRoute == navigationBarItem.screen::class.qualifiedName
+            currentRoute?.contains(navigationBarItem.screen.toString()) == true
         } != null
     }
 
