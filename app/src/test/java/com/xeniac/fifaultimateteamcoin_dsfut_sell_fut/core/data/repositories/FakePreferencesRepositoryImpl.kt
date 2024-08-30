@@ -2,10 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
@@ -111,16 +107,16 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
 
     override fun getSelectedPlatform(): Flow<Platform> = snapshotFlow { selectedPlatform.first() }
 
-    override suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto) {
-        currentAppTheme = appThemeDto.toAppTheme()
+    override suspend fun storeCurrentAppTheme(appTheme: AppTheme) {
+        currentAppTheme = appTheme
     }
 
     override suspend fun storeCurrentAppLocale(
-        newAppLocaleDto: AppLocaleDto
+        newAppLocale: AppLocale
     ): IsActivityRestartNeeded {
-        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocale)
 
-        currentLocale = newAppLocaleDto.toAppLocale()
+        currentLocale = newAppLocale
 
         return isActivityRestartNeeded
     }
@@ -170,8 +166,8 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
         appUpdateDialogShowEpochDays = null
     }
 
-    override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
-        selectedRateAppOption = rateAppOptionDto.toRateAppOption()
+    override suspend fun storeSelectedRateAppOption(rateAppOption: RateAppOption) {
+        selectedRateAppOption = rateAppOption
     }
 
     override suspend fun storePreviousRateAppRequestTimeInMs() {
@@ -186,14 +182,14 @@ class FakePreferencesRepositoryImpl : PreferencesRepository {
         storedSecretKey = secretKey
     }
 
-    override suspend fun storeSelectedPlatform(platformDto: PlatformDto) {
+    override suspend fun storeSelectedPlatform(platform: Platform) {
         selectedPlatform.apply {
             clear()
-            add(platformDto.toPlatform())
+            add(platform)
         }
     }
 
     fun isActivityRestartNeeded(
-        newLocale: AppLocaleDto
+        newLocale: AppLocale
     ): Boolean = currentLocale.layoutDirectionCompose != newLocale.layoutDirectionCompose
 }

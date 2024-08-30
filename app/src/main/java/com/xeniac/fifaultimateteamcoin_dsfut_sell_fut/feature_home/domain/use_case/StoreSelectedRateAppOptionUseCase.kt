@@ -7,9 +7,7 @@ class StoreSelectedRateAppOptionUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
     suspend operator fun invoke(rateAppOption: RateAppOption) = try {
-        preferencesRepository.storeSelectedRateAppOption(
-            rateAppOptionDto = rateAppOption.toRateAppOptionDto()
-        )
+        preferencesRepository.storeSelectedRateAppOption(rateAppOption)
     } catch (e: Exception) {
         e.printStackTrace()
     }

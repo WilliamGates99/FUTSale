@@ -9,10 +9,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
@@ -68,32 +64,28 @@ class PreferencesRepositoryImpl @Inject constructor(
             val appThemeIndex = settingsDataStore
                 .data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
-            val appThemeDto = when (appThemeIndex) {
-                AppThemeDto.Default.index -> AppThemeDto.Default
-                AppThemeDto.Light.index -> AppThemeDto.Light
-                AppThemeDto.Dark.index -> AppThemeDto.Dark
-                else -> AppThemeDto.Default
+            when (appThemeIndex) {
+                AppTheme.Default.index -> AppTheme.Default
+                AppTheme.Light.index -> AppTheme.Light
+                AppTheme.Dark.index -> AppTheme.Dark
+                else -> AppTheme.Default
             }
-
-            appThemeDto.toAppTheme()
         } catch (e: Exception) {
             Timber.e("getCurrentAppThemeSynchronously failed:")
             e.printStackTrace()
-            AppThemeDto.Default.toAppTheme()
+            AppTheme.Default
         }
     }
 
     override fun getCurrentAppTheme(): Flow<AppTheme> = settingsDataStore.data.map {
         val appThemeIndex = it[PreferencesKeys.CURRENT_APP_THEME] ?: 0
 
-        val appThemeDto = when (appThemeIndex) {
-            AppThemeDto.Default.index -> AppThemeDto.Default
-            AppThemeDto.Light.index -> AppThemeDto.Light
-            AppThemeDto.Dark.index -> AppThemeDto.Dark
-            else -> AppThemeDto.Default
+        when (appThemeIndex) {
+            AppTheme.Default.index -> AppTheme.Default
+            AppTheme.Light.index -> AppTheme.Light
+            AppTheme.Dark.index -> AppTheme.Dark
+            else -> AppTheme.Default
         }
-
-        appThemeDto.toAppTheme()
     }.catch { e ->
         Timber.e("getCurrentAppTheme failed:")
         e.printStackTrace()
@@ -104,25 +96,23 @@ class PreferencesRepositoryImpl @Inject constructor(
 
         if (appLocaleList.isEmpty) {
             Timber.i("App locale list is Empty.")
-            AppLocaleDto.Default.toAppLocale()
+            AppLocale.Default
         } else {
             val localeString = appLocaleList[0].toString()
             Timber.i("Current app locale string is $localeString")
 
-            val appLocaleDto = when (localeString) {
-                AppLocaleDto.Default.localeString -> AppLocaleDto.Default
-                AppLocaleDto.EnglishUS.localeString -> AppLocaleDto.EnglishUS
-                AppLocaleDto.EnglishGB.localeString -> AppLocaleDto.EnglishGB
-                AppLocaleDto.FarsiIR.localeString -> AppLocaleDto.FarsiIR
-                else -> AppLocaleDto.Default
+            when (localeString) {
+                AppLocale.Default.localeString -> AppLocale.Default
+                AppLocale.EnglishUS.localeString -> AppLocale.EnglishUS
+                AppLocale.EnglishGB.localeString -> AppLocale.EnglishGB
+                AppLocale.FarsiIR.localeString -> AppLocale.FarsiIR
+                else -> AppLocale.Default
             }
-
-            appLocaleDto.toAppLocale()
         }
     } catch (e: Exception) {
         Timber.e("getCurrentAppLocale failed:")
         e.printStackTrace()
-        AppLocaleDto.Default.toAppLocale()
+        AppLocale.Default
     }
 
     override suspend fun isOnBoardingCompleted(): Boolean = try {
@@ -183,11 +173,9 @@ class PreferencesRepositoryImpl @Inject constructor(
         settingsDataStore.data.map {
             val selectedRateAppOption = it[PreferencesKeys.SELECTED_RATE_APP_OPTION]
 
-            val rateAppOptionDto = RateAppOptionDto.entries.find { rateAppOptionDto ->
-                rateAppOptionDto.value == selectedRateAppOption
-            } ?: RateAppOptionDto.NOT_SHOWN_YET
-
-            rateAppOptionDto.toRateAppOption()
+            RateAppOption.entries.find { rateAppOption ->
+                rateAppOption.value == selectedRateAppOption
+            } ?: RateAppOption.NOT_SHOWN_YET
         }.catch { e ->
             Timber.e("getSelectedRateAppOption failed:")
             e.printStackTrace()
@@ -218,21 +206,19 @@ class PreferencesRepositoryImpl @Inject constructor(
     override fun getSelectedPlatform(): Flow<Platform> = settingsDataStore.data.map {
         val selectedPlatform = it[PreferencesKeys.SELECTED_PLATFORM]
 
-        val platformDto = PlatformDto.entries.find { platformDto ->
-            platformDto.value == selectedPlatform
-        } ?: PlatformDto.CONSOLE
-
-        platformDto.toPlatform()
+        Platform.entries.find { platform ->
+            platform.value == selectedPlatform
+        } ?: Platform.CONSOLE
     }.catch { e ->
         Timber.e("getSelectedPlatform failed:")
         e.printStackTrace()
     }
 
-    override suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto) {
+    override suspend fun storeCurrentAppTheme(appTheme: AppTheme) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.CURRENT_APP_THEME] = appThemeDto.index
-                Timber.i("AppTheme edited to ${appThemeDto.index}")
+                it[PreferencesKeys.CURRENT_APP_THEME] = appTheme.index
+                Timber.i("AppTheme edited to ${appTheme.index}")
             }
         } catch (e: Exception) {
             Timber.e("storeCurrentAppTheme failed:")
@@ -241,12 +227,12 @@ class PreferencesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun storeCurrentAppLocale(
-        newAppLocaleDto: AppLocaleDto
+        newAppLocale: AppLocale
     ): IsActivityRestartNeeded = try {
-        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocaleDto)
+        val isActivityRestartNeeded = isActivityRestartNeeded(newAppLocale)
 
         AppCompatDelegate.setApplicationLocales(
-            /* locales = */ LocaleListCompat.forLanguageTags(newAppLocaleDto.languageTag)
+            /* locales = */ LocaleListCompat.forLanguageTags(newAppLocale.languageTag)
         )
 
         isActivityRestartNeeded
@@ -343,11 +329,11 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto) {
+    override suspend fun storeSelectedRateAppOption(rateAppOption: RateAppOption) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.SELECTED_RATE_APP_OPTION] = rateAppOptionDto.value
-                Timber.i("setSelectedRateAppOption edited to ${rateAppOptionDto.value}")
+                it[PreferencesKeys.SELECTED_RATE_APP_OPTION] = rateAppOption.value
+                Timber.i("setSelectedRateAppOption edited to ${rateAppOption.value}")
             }
         } catch (e: Exception) {
             Timber.e("storeSelectedRateAppOption failed:")
@@ -402,11 +388,11 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun storeSelectedPlatform(platformDto: PlatformDto) {
+    override suspend fun storeSelectedPlatform(platform: Platform) {
         try {
             settingsDataStore.edit {
-                it[PreferencesKeys.SELECTED_PLATFORM] = platformDto.value
-                Timber.i("SelectedPlatform edited to ${platformDto.value}")
+                it[PreferencesKeys.SELECTED_PLATFORM] = platform.value
+                Timber.i("SelectedPlatform edited to ${platform.value}")
             }
         } catch (e: Exception) {
             Timber.e("storeSelectedPlatform failed:")
@@ -415,6 +401,6 @@ class PreferencesRepositoryImpl @Inject constructor(
     }
 
     private fun isActivityRestartNeeded(
-        newLocale: AppLocaleDto
+        newLocale: AppLocale
     ): Boolean = getCurrentAppLocale().layoutDirectionCompose != newLocale.layoutDirectionCompose
 }

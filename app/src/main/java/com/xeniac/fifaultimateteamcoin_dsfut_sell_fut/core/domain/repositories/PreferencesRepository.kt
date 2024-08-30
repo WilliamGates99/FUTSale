@@ -1,9 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppLocaleDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.AppThemeDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.RateAppOptionDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
@@ -45,9 +41,9 @@ interface PreferencesRepository {
 
     fun getSelectedPlatform(): Flow<Platform>
 
-    suspend fun storeCurrentAppTheme(appThemeDto: AppThemeDto)
+    suspend fun storeCurrentAppTheme(appTheme: AppTheme)
 
-    suspend fun storeCurrentAppLocale(newAppLocaleDto: AppLocaleDto): IsActivityRestartNeeded
+    suspend fun storeCurrentAppLocale(newAppLocale: AppLocale): IsActivityRestartNeeded
 
     suspend fun isOnBoardingCompleted(isCompleted: Boolean)
 
@@ -63,7 +59,7 @@ interface PreferencesRepository {
 
     suspend fun removeAppUpdateDialogShowEpochDays()
 
-    suspend fun storeSelectedRateAppOption(rateAppOptionDto: RateAppOptionDto)
+    suspend fun storeSelectedRateAppOption(rateAppOption: RateAppOption)
 
     suspend fun storePreviousRateAppRequestTimeInMs()
 
@@ -71,5 +67,5 @@ interface PreferencesRepository {
 
     suspend fun storeSecretKey(secretKey: String?)
 
-    suspend fun storeSelectedPlatform(platformDto: PlatformDto)
+    suspend fun storeSelectedPlatform(platform: Platform)
 }

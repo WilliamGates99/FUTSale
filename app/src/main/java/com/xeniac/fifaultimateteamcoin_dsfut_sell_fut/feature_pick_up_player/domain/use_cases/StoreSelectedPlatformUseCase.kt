@@ -9,7 +9,7 @@ class StoreSelectedPlatformUseCase(
     private val preferencesRepository: PreferencesRepository
 ) {
     suspend operator fun invoke(platform: Platform): Result<Unit, PlatformError> = try {
-        preferencesRepository.storeSelectedPlatform(platformDto = platform.toPlatformDto())
+        preferencesRepository.storeSelectedPlatform(platform)
         Result.Success(Unit)
     } catch (e: Exception) {
         e.printStackTrace()

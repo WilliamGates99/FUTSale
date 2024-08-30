@@ -9,7 +9,5 @@ class StoreCurrentAppLocaleUseCase(
 ) {
     suspend operator fun invoke(
         newAppLocale: AppLocale
-    ): IsActivityRestartNeeded = preferencesRepository.storeCurrentAppLocale(
-        newAppLocaleDto = newAppLocale.toAppLocaleDto()
-    )
+    ): IsActivityRestartNeeded = preferencesRepository.storeCurrentAppLocale(newAppLocale)
 }

@@ -43,7 +43,7 @@ class StoreCurrentAppLocaleUseCaseTest {
         val testValue = AppLocale.FarsiIR
 
         val isActivityRestartNeeded = fakePreferencesRepository.isActivityRestartNeeded(
-            newLocale = testValue.toAppLocaleDto()
+            newLocale = testValue
         )
 
         val result = storeCurrentAppLocaleUseCase(testValue)
