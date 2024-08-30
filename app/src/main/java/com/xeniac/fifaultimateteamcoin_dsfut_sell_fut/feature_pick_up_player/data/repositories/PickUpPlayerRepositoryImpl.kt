@@ -87,7 +87,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
-        val platform = preferencesRepository.get().getSelectedPlatform().first()
+        val selectedPlatform = preferencesRepository.get().getSelectedPlatform().first()
         val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
@@ -97,7 +97,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         val response = httpClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = platform.value,
+                platform = selectedPlatform.value,
                 partnerId = partnerId,
                 timestamp = timestampInSeconds,
                 signature = signature
@@ -118,7 +118,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
                     val playerEntity = playerDto!!.copy(
-                        platformDto = platform.toPlatformDto()
+                        platform = selectedPlatform
                     ).toPlayerEntity()
                     playerDao.get().insertPlayer(playerEntity)
                     Result.Success(playerEntity.toPlayer())

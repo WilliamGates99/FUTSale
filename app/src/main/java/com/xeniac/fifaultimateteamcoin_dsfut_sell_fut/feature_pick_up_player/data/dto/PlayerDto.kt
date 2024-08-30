@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import kotlinx.serialization.SerialName
@@ -40,7 +40,7 @@ data class PlayerDto(
     val chemistryStyleID: Int,
     @SerialName("expires")
     val expires: Int,
-    val platformDto: PlatformDto = PlatformDto.CONSOLE
+    val platform: Platform = Platform.CONSOLE
 ) {
     fun toPlayerEntity(): PlayerEntity = PlayerEntity(
         tradeID = tradeID.toString(),
@@ -56,7 +56,7 @@ data class PlayerDto(
         contracts = contracts,
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
-        platformDto = platformDto
+        platform = platform
     )
 
     fun toPlayer(): Player = Player(
@@ -76,6 +76,6 @@ data class PlayerDto(
         contracts = contracts,
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
-        platform = platformDto.toPlatform()
+        platform = platform
     )
 }
