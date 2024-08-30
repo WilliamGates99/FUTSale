@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.services.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_firebase_cloud_messaging.services.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
