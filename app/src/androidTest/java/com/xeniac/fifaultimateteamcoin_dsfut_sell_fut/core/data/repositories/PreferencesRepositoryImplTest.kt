@@ -127,7 +127,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeCurrentAppTheme() = testScope.runBlockingTest {
         val testValue = AppTheme.Dark
-        testRepository.storeCurrentAppTheme(testValue.toAppThemeDto())
+        testRepository.storeCurrentAppTheme(testValue)
 
         val currentAppTheme = testRepository.getCurrentAppTheme().first()
         assertThat(currentAppTheme).isEqualTo(testValue)
@@ -199,7 +199,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeSelectedRateAppOption() = testScope.runBlockingTest {
         val testValue = RateAppOption.RATE_NOW
-        testRepository.storeSelectedRateAppOption(testValue.toRateAppOptionDto())
+        testRepository.storeSelectedRateAppOption(testValue)
 
         val selectedRateAppOption = testRepository.getSelectedRateAppOption().first()
         assertThat(selectedRateAppOption).isEqualTo(testValue)
@@ -234,7 +234,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun writeSelectedPlatform() = testScope.runBlockingTest {
         val testValue = Platform.PC
-        testRepository.storeSelectedPlatform(testValue.toPlatformDto())
+        testRepository.storeSelectedPlatform(testValue)
 
         val selectedPlatform = testRepository.getSelectedPlatform().first()
         assertThat(selectedPlatform).isEqualTo(testValue)

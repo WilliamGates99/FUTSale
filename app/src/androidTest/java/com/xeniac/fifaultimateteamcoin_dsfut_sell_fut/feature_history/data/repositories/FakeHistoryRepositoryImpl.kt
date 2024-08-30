@@ -2,9 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repo
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import kotlinx.coroutines.flow.Flow
@@ -35,9 +35,9 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
                     contracts = 1,
                     chemistryStyle = "Basic",
                     chemistryStyleID = index,
-                    platformDto = when (Random.nextBoolean()) {
-                        true -> PlatformDto.CONSOLE
-                        false -> PlatformDto.PC
+                    platform = when (Random.nextBoolean()) {
+                        true -> Platform.CONSOLE
+                        false -> Platform.PC
                     },
                     pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
