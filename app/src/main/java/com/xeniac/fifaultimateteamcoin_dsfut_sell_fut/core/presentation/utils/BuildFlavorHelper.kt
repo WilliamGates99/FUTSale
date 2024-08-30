@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 
