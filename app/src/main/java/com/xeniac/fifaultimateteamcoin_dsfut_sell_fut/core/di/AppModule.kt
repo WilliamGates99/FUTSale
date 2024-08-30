@@ -157,7 +157,7 @@ internal object AppModule {
     }
 
     @Provides
-    fun provideAppThemeIndex(
+    fun provideAppTheme(
         preferencesRepository: PreferencesRepository
     ): AppTheme = preferencesRepository.getCurrentAppThemeSynchronously()
 
