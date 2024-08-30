@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
@@ -73,9 +73,9 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
                     contracts = 1,
                     chemistryStyle = "Basic",
                     chemistryStyleID = index,
-                    platformDto = when (Random.nextBoolean()) {
-                        true -> PlatformDto.CONSOLE
-                        false -> PlatformDto.PC
+                    platform = when (Random.nextBoolean()) {
+                        true -> Platform.CONSOLE
+                        false -> Platform.PC
                     },
                     pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
@@ -204,7 +204,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
         val response = testClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = PlatformDto.CONSOLE.value,
+                platform = Platform.CONSOLE.value,
                 partnerId = partnerId,
                 timestamp = timestampInSeconds,
                 signature = signature
