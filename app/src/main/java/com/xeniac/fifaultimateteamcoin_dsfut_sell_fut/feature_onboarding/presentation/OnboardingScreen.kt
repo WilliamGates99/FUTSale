@@ -86,13 +86,13 @@ fun OnboardingScreen(
             bottomPadding = innerPadding.calculateBottomPadding(),
             onboardingState = onboardingState,
             onPartnerIdChange = { newPartnerId ->
-                viewModel.onEvent(OnboardingEvent.PartnerIdChanged(newPartnerId))
+                viewModel.onAction(OnboardingAction.PartnerIdChanged(newPartnerId))
             },
             onSecretKeyChange = { newSecretKey ->
-                viewModel.onEvent(OnboardingEvent.SecretKeyChanged(newSecretKey))
+                viewModel.onAction(OnboardingAction.SecretKeyChanged(newSecretKey))
             },
             onStartBtnClick = {
-                viewModel.onEvent(OnboardingEvent.SaveUserData)
+                viewModel.onAction(OnboardingAction.SaveUserData)
             },
             onRegisterBtnClick = {
                 isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(

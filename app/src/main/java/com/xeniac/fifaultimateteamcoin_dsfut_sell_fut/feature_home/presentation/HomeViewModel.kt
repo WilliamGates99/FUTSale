@@ -100,25 +100,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: HomeEvent) {
-        when (event) {
-            HomeEvent.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
-            HomeEvent.CheckFlexibleUpdateDownloadState -> checkFlexibleUpdateDownloadState()
-            HomeEvent.CheckForAppUpdates -> checkForAppUpdates()
-            HomeEvent.GetLatestAppVersion -> getLatestAppVersion()
-            HomeEvent.DismissAppUpdateSheet -> _homeState.update { state ->
+    fun onAction(action: HomeAction) {
+        when (action) {
+            HomeAction.CheckIsAppUpdateStalled -> checkIsAppUpdateStalled()
+            HomeAction.CheckFlexibleUpdateDownloadState -> checkFlexibleUpdateDownloadState()
+            HomeAction.CheckForAppUpdates -> checkForAppUpdates()
+            HomeAction.GetLatestAppVersion -> getLatestAppVersion()
+            HomeAction.DismissAppUpdateSheet -> _homeState.update { state ->
                 state.copy(latestAppUpdateInfo = null)
             }
-            HomeEvent.RequestInAppReviews -> requestInAppReviews()
-            HomeEvent.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
-            HomeEvent.LaunchInAppReview -> launchInAppReview()
-            is HomeEvent.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
-            is HomeEvent.SetSelectedRateAppOptionToRemindLater -> setSelectedRateAppOptionToRemindLater()
-            is HomeEvent.OnPermissionResult -> onPermissionResult(
-                permission = event.permission,
-                isGranted = event.isGranted
+            HomeAction.RequestInAppReviews -> requestInAppReviews()
+            HomeAction.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
+            HomeAction.LaunchInAppReview -> launchInAppReview()
+            is HomeAction.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
+            is HomeAction.SetSelectedRateAppOptionToRemindLater -> setSelectedRateAppOptionToRemindLater()
+            is HomeAction.OnPermissionResult -> onPermissionResult(
+                permission = action.permission,
+                isGranted = action.isGranted
             )
-            is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog(permission = event.permission)
+            is HomeAction.DismissPermissionDialog -> dismissPermissionDialog(permission = action.permission)
         }
     }
 

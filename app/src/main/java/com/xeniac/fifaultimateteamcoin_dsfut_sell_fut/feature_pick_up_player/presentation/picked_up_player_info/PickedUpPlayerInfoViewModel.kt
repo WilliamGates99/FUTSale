@@ -31,9 +31,9 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
 
     private var countDownTimerJob: Job? = null
 
-    fun onEvent(event: PickedUpPlayerInfoEvent) {
-        when (event) {
-            is PickedUpPlayerInfoEvent.StartCountDownTimer -> startCountDownTimer(event.expiryTimeInMs)
+    fun onAction(action: PickedUpPlayerInfoAction) {
+        when (action) {
+            is PickedUpPlayerInfoAction.StartCountDownTimer -> startCountDownTimer(action.expiryTimeInMs)
         }
     }
 

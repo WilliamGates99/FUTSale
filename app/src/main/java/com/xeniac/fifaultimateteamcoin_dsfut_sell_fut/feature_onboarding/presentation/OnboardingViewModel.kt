@@ -37,11 +37,11 @@ class OnboardingViewModel @Inject constructor(
     private val _completeOnboardingEventChannel = Channel<Event>()
     val completeOnboardingEventChannel = _completeOnboardingEventChannel.receiveAsFlow()
 
-    fun onEvent(event: OnboardingEvent) {
-        when (event) {
-            is OnboardingEvent.PartnerIdChanged -> partnerIdChanged(event.partnerId)
-            is OnboardingEvent.SecretKeyChanged -> secretKeyChanged(event.secretKey)
-            OnboardingEvent.SaveUserData -> saveUserData()
+    fun onAction(action: OnboardingAction) {
+        when (action) {
+            is OnboardingAction.PartnerIdChanged -> partnerIdChanged(action.partnerId)
+            is OnboardingAction.SecretKeyChanged -> secretKeyChanged(action.secretKey)
+            OnboardingAction.SaveUserData -> saveUserData()
         }
     }
 

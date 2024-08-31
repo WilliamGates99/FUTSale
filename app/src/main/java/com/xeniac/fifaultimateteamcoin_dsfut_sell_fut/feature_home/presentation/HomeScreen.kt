@@ -162,15 +162,15 @@ fun HomeScreen(
     PostNotificationPermissionHandler(
         homeState = homeState,
         onPermissionResult = { permission, isGranted ->
-            homeViewModel.onEvent(
-                HomeEvent.OnPermissionResult(
+            homeViewModel.onAction(
+                HomeAction.OnPermissionResult(
                     permission = permission,
                     isGranted = isGranted
                 )
             )
         },
         onDismiss = { permission ->
-            homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
+            homeViewModel.onAction(HomeAction.DismissPermissionDialog(permission))
         }
     )
 
@@ -216,7 +216,7 @@ fun HomeScreen(
             isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
         },
         onDismissRequest = {
-            homeViewModel.onEvent(HomeEvent.DismissAppUpdateSheet)
+            homeViewModel.onAction(HomeAction.DismissAppUpdateSheet)
         }
     )
 
@@ -224,17 +224,17 @@ fun HomeScreen(
         isVisible = isAppReviewDialogVisible,
         onRateNowClick = {
             if (isAppInstalledFromPlayStore()) {
-                homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
+                homeViewModel.onAction(HomeAction.LaunchInAppReview)
             } else {
                 isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
             }
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
+            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToNever)
         },
         onRemindLaterClick = {
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToRemindLater)
+            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToRemindLater)
         },
         onNeverClick = {
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
+            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToNever)
         },
         onDismiss = {
             isAppReviewDialogVisible = false

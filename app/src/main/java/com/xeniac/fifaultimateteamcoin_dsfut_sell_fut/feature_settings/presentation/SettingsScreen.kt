@@ -194,10 +194,10 @@ fun SettingsScreen(
                     isThemeDialogVisible = true
                 },
                 onNotificationSoundChange = { isChecked ->
-                    viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
+                    viewModel.onAction(SettingsAction.SetNotificationSoundSwitch(isChecked))
                 },
                 onNotificationVibrateChange = { isChecked ->
-                    viewModel.onEvent(SettingsEvent.SetNotificationVibrateSwitch(isChecked))
+                    viewModel.onAction(SettingsAction.SetNotificationVibrateSwitch(isChecked))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -234,7 +234,7 @@ fun SettingsScreen(
             isLocaleBottomSheetVisible = false
         },
         onLocaleSelected = { newAppLocale ->
-            viewModel.onEvent(SettingsEvent.SetCurrentAppLocale(newAppLocale))
+            viewModel.onAction(SettingsAction.SetCurrentAppLocale(newAppLocale))
         }
     )
 
@@ -245,7 +245,7 @@ fun SettingsScreen(
             isThemeDialogVisible = false
         },
         onThemeSelected = { newAppTheme ->
-            viewModel.onEvent(SettingsEvent.SetCurrentAppTheme(newAppTheme))
+            viewModel.onAction(SettingsAction.SetCurrentAppTheme(newAppTheme))
         }
     )
 }

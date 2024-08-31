@@ -117,17 +117,17 @@ class PickUpPlayerViewModel @Inject constructor(
     private var autoPickUpPlayerJob: Job? = null
     private var countDownTimerJob: Job? = null
 
-    fun onEvent(event: PickUpPlayerEvent) {
-        when (event) {
-            is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
-            is PickUpPlayerEvent.MinPriceChanged -> minPriceChanged(event.minPrice)
-            is PickUpPlayerEvent.MaxPriceChanged -> maxPriceChanged(event.maxPrice)
-            is PickUpPlayerEvent.TakeAfterCheckedChanged -> takeAfterCheckedChanged(event.isChecked)
-            is PickUpPlayerEvent.TakeAfterSliderChanged -> takeAfterSliderChanged(event.delayInSeconds)
-            PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
-            PickUpPlayerEvent.AutoPickUpPlayer -> autoPickUpPlayer()
-            PickUpPlayerEvent.PickUpPlayerOnce -> pickUpPlayerOnce()
-            is PickUpPlayerEvent.StartCountDownTimer -> startCountDownTimer(event.expiryTimeInMs)
+    fun onAction(action: PickUpPlayerAction) {
+        when (action) {
+            is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(platform = action.platform)
+            is PickUpPlayerAction.MinPriceChanged -> minPriceChanged(action.minPrice)
+            is PickUpPlayerAction.MaxPriceChanged -> maxPriceChanged(action.maxPrice)
+            is PickUpPlayerAction.TakeAfterCheckedChanged -> takeAfterCheckedChanged(action.isChecked)
+            is PickUpPlayerAction.TakeAfterSliderChanged -> takeAfterSliderChanged(action.delayInSeconds)
+            PickUpPlayerAction.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
+            PickUpPlayerAction.AutoPickUpPlayer -> autoPickUpPlayer()
+            PickUpPlayerAction.PickUpPlayerOnce -> pickUpPlayerOnce()
+            is PickUpPlayerAction.StartCountDownTimer -> startCountDownTimer(action.expiryTimeInMs)
         }
     }
 

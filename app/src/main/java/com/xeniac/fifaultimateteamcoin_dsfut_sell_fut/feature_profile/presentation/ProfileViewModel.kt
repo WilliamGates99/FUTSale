@@ -48,18 +48,18 @@ class ProfileViewModel @Inject constructor(
         getProfile()
     }
 
-    fun onEvent(event: ProfileEvent) {
-        when (event) {
-            ProfileEvent.GetProfile -> getProfile()
-            is ProfileEvent.PartnerIdChanged -> {
+    fun onAction(action: ProfileAction) {
+        when (action) {
+            ProfileAction.GetProfile -> getProfile()
+            is ProfileAction.PartnerIdChanged -> {
                 updatePartnerIdJob?.cancel()
                 updatePartnerIdJob = updatePartnerId(
-                    partnerId = event.partnerId.filter { it.isDigit() }.trim()
+                    partnerId = action.partnerId.filter { it.isDigit() }.trim()
                 )
             }
-            is ProfileEvent.SecretKeyChanged -> {
+            is ProfileAction.SecretKeyChanged -> {
                 updateSecretKeyJob?.cancel()
-                updateSecretKeyJob = updateSecretKey(secretKey = event.secretKey.trim())
+                updateSecretKeyJob = updateSecretKey(secretKey = action.secretKey.trim())
             }
         }
     }

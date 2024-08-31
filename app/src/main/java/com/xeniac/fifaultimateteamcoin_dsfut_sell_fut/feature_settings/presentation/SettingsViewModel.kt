@@ -93,12 +93,12 @@ class SettingsViewModel @Inject constructor(
     private val _setNotificationVibrateEventChannel = Channel<UiEvent>()
     val setNotificationVibrateEventChannel = _setNotificationVibrateEventChannel.receiveAsFlow()
 
-    fun onEvent(event: SettingsEvent) {
-        when (event) {
-            is SettingsEvent.SetCurrentAppLocale -> setCurrentAppLocale(event.newAppLocale)
-            is SettingsEvent.SetCurrentAppTheme -> setCurrentAppTheme(event.newAppTheme)
-            is SettingsEvent.SetNotificationSoundSwitch -> setNotificationSoundSwitch(event.isEnabled)
-            is SettingsEvent.SetNotificationVibrateSwitch -> setNotificationVibrateSwitch(event.isEnabled)
+    fun onAction(action: SettingsAction) {
+        when (action) {
+            is SettingsAction.SetCurrentAppLocale -> setCurrentAppLocale(action.newAppLocale)
+            is SettingsAction.SetCurrentAppTheme -> setCurrentAppTheme(action.newAppTheme)
+            is SettingsAction.SetNotificationSoundSwitch -> setNotificationSoundSwitch(action.isEnabled)
+            is SettingsAction.SetNotificationVibrateSwitch -> setNotificationVibrateSwitch(action.isEnabled)
         }
     }
 

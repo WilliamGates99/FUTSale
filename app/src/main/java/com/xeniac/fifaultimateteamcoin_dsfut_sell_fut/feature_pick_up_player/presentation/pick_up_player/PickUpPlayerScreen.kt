@@ -348,7 +348,7 @@ fun PickUpPlayerScreen(
                 timerText = timerText.asString(),
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
                 onCountDownStart = { expiryTimeInMillis ->
-                    viewModel.onEvent(PickUpPlayerEvent.StartCountDownTimer(expiryTimeInMillis))
+                    viewModel.onAction(PickUpPlayerAction.StartCountDownTimer(expiryTimeInMillis))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -365,7 +365,7 @@ fun PickUpPlayerScreen(
                 PlatformSelector(
                     pickUpPlayerState = pickUpPlayerState,
                     onPlatformClick = { newPlatform ->
-                        viewModel.onEvent(PickUpPlayerEvent.PlatformChanged(newPlatform))
+                        viewModel.onAction(PickUpPlayerAction.PlatformChanged(newPlatform))
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -375,10 +375,10 @@ fun PickUpPlayerScreen(
                 PriceTextFields(
                     pickUpPlayerState = pickUpPlayerState,
                     onMinPriceChange = { newPrice ->
-                        viewModel.onEvent(PickUpPlayerEvent.MinPriceChanged(newPrice))
+                        viewModel.onAction(PickUpPlayerAction.MinPriceChanged(newPrice))
                     },
                     onMaxPriceChange = { newPrice ->
-                        viewModel.onEvent(PickUpPlayerEvent.MaxPriceChanged(newPrice))
+                        viewModel.onAction(PickUpPlayerAction.MaxPriceChanged(newPrice))
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -389,10 +389,10 @@ fun PickUpPlayerScreen(
                     pickUpPlayerState = pickUpPlayerState,
                     modifier = Modifier.fillMaxWidth(),
                     onCheckedChange = { isChecked ->
-                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterCheckedChanged(isChecked))
+                        viewModel.onAction(PickUpPlayerAction.TakeAfterCheckedChanged(isChecked))
                     },
                     onSliderValueChangeFinished = { sliderPosition ->
-                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterSliderChanged(sliderPosition))
+                        viewModel.onAction(PickUpPlayerAction.TakeAfterSliderChanged(sliderPosition))
                     }
                 )
 
@@ -401,7 +401,7 @@ fun PickUpPlayerScreen(
                 AutoPickUpButton(
                     pickUpPlayerState = pickUpPlayerState,
                     onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
-                    onCancelClick = { viewModel.onEvent(PickUpPlayerEvent.CancelAutoPickUpPlayer) },
+                    onCancelClick = { viewModel.onAction(PickUpPlayerAction.CancelAutoPickUpPlayer) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
@@ -422,9 +422,9 @@ fun PickUpPlayerScreen(
 }
 
 private fun autoPickUpPlayer(viewModel: PickUpPlayerViewModel) {
-    viewModel.onEvent(PickUpPlayerEvent.AutoPickUpPlayer)
+    viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
 }
 
 private fun pickUpPlayerOnce(viewModel: PickUpPlayerViewModel) {
-    viewModel.onEvent(PickUpPlayerEvent.PickUpPlayerOnce)
+    viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
 }
