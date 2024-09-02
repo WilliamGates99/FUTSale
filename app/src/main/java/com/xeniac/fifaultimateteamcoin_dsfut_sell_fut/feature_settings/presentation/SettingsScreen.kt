@@ -209,7 +209,7 @@ fun SettingsScreen(
                 },
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
+                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
                             context = context,
                             urlString = url
                         )

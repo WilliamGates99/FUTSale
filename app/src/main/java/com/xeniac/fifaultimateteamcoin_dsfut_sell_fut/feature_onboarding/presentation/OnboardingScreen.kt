@@ -101,7 +101,7 @@ fun OnboardingScreen(
                 )
             },
             onPrivacyPolicyBtnClick = {
-                IntentHelper.openLinkInInAppBrowser(
+                isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
                     context = context,
                     urlString = Constants.URL_PRIVACY_POLICY
                 )
