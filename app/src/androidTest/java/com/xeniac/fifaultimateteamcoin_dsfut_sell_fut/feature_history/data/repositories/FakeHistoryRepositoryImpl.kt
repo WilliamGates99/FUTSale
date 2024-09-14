@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
@@ -58,7 +60,14 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
         val sortedPlayerEntitiesHistory = playerEntitiesHistory.toMutableList()
         sortedPlayerEntitiesHistory.sortByDescending { it.pickUpTimeInSeconds }
 
-        val playersPagingData = PagingData.from(sortedPlayerEntitiesHistory).map { it.toPlayer() }
+        val playersPagingData = PagingData.from(
+            data = sortedPlayerEntitiesHistory,
+            sourceLoadStates = LoadStates(
+                refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                append = LoadState.NotLoading(endOfPaginationReached = true)
+            )
+        ).map { it.toPlayer() }
         emit(playersPagingData)
     }
 }
