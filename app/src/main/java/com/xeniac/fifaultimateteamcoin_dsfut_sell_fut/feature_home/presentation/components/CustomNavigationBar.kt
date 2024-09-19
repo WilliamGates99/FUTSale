@@ -77,11 +77,13 @@ fun CustomNavigationBar(
     iconSize: Dp = 24.dp,
     onItemClick: (screen: Screen) -> Unit
 ) {
-    NavigationBar(modifier = modifier
-        .testTag(NAVIGATION_BAR)
-        .semantics {
-            testTagsAsResourceId = true
-        }) {
+    NavigationBar(
+        modifier = modifier
+            .testTag(NAVIGATION_BAR)
+            .semantics {
+                testTagsAsResourceId = true
+            }
+    ) {
         NavigationBarItems.entries.forEach { navigationBarItem ->
             val isSelected = backStackEntry?.destination?.hierarchy?.any {
                 it.hasRoute(navigationBarItem.screen::class)
