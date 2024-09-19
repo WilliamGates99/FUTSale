@@ -151,7 +151,7 @@ internal object AppModule {
     ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
         PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(name = "settings") }
         )
     }
