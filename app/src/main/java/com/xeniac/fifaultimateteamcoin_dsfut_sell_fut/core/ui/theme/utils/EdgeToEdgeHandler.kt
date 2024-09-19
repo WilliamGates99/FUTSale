@@ -58,7 +58,7 @@ fun EnableEdgeToEdgeWindow(
 
 private interface EdgeToEdgeHandler {
 
-    val statusBarColorV21: Color
+    val systemBarsColorV21Light: Color
     val navigationBarColorV23: Color
     val navigationBarColorV26Light: Color
     val navigationBarColorV26Dark: Color
@@ -73,11 +73,11 @@ private interface EdgeToEdgeHandler {
 
 private open class EdgeToEdgeHandlerBaseImpl : EdgeToEdgeHandler {
 
-    override val statusBarColorV21: Color
-        get() = Color(0x26444444)
+    override val systemBarsColorV21Light: Color
+        get() = Color(0x331B1B1B)
 
     override val navigationBarColorV23: Color
-        get() = Color(0x801B1B1B)
+        get() = Color(0x331B1B1B)
 
     override val navigationBarColorV26Light: Color
         get() = Color(0xE6FFFFFF)
@@ -105,10 +105,13 @@ private class EdgeToEdgeHandlerApi21 : EdgeToEdgeHandlerBaseImpl() {
         window: Window,
         isDarkTheme: Boolean
     ) {
-        window.statusBarColor = if (isDarkTheme) {
-            Color.Transparent.toArgb()
-        } else statusBarColorV21.toArgb()
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        if (isDarkTheme) {
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
+        } else {
+            window.statusBarColor = systemBarsColorV21Light.toArgb()
+            window.navigationBarColor = systemBarsColorV21Light.toArgb()
+        }
     }
 }
 
@@ -122,7 +125,9 @@ private class EdgeToEdgeHandlerApi23 : EdgeToEdgeHandlerBaseImpl() {
         isDarkTheme: Boolean
     ) {
         window.statusBarColor = Color.Transparent.toArgb()
-        window.navigationBarColor = navigationBarColorV23.toArgb()
+        window.navigationBarColor = if (isDarkTheme) {
+            Color.Transparent.toArgb()
+        } else navigationBarColorV23.toArgb()
     }
 }
 
@@ -136,9 +141,7 @@ private open class EdgeToEdgeHandlerApi26 : EdgeToEdgeHandlerBaseImpl() {
         isDarkTheme: Boolean
     ) {
         window.statusBarColor = Color.Transparent.toArgb()
-        window.navigationBarColor = if (isDarkTheme) {
-            navigationBarColorV26Dark.toArgb()
-        } else navigationBarColorV26Light.toArgb()
+        window.navigationBarColor = Color.Transparent.toArgb()
     }
 }
 
@@ -163,7 +166,6 @@ private open class EdgeToEdgeHandlerApi29 : EdgeToEdgeHandlerApi28() {
     ) {
         window.statusBarColor = Color.Transparent.toArgb()
         window.navigationBarColor = Color.Transparent.toArgb()
-        window.isNavigationBarContrastEnforced = true
     }
 }
 
