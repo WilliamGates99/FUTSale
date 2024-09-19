@@ -8,13 +8,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -64,7 +60,7 @@ enum class LocaleItems(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocaleBottomSheet(
     isVisible: Boolean,
@@ -105,14 +101,11 @@ fun LocaleBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = onDismissRequest,
-            windowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
+            onDismissRequest = onDismissRequest
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = headline,
