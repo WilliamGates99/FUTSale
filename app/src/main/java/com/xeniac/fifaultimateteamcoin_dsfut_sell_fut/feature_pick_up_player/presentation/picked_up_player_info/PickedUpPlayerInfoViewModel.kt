@@ -8,11 +8,15 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PickedUpPlayerInfoViewModel @Inject constructor(
@@ -27,7 +31,15 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
             decimalFormat.format(0)
         )
     )
-    val timerText = _timerText.asStateFlow()
+    val timerText = _timerText.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
+        initialValue = UiText.StringResource(
+            R.string.picked_up_player_info_timer,
+            decimalFormat.format(0),
+            decimalFormat.format(0)
+        )
+    )
 
     private var countDownTimerJob: Job? = null
 
@@ -39,24 +51,24 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
 
     private fun startCountDownTimer(expiryTimeInMs: Long) {
         countDownTimerJob?.cancel()
-        countDownTimerJob = viewModelScope.launch {
-            pickUpPlayerUseCases.startCountDownTimerUseCase.get()(expiryTimeInMs).collect { timerValueInSeconds ->
-                _timerText.update {
-                    val isTimerFinished = timerValueInSeconds == 0
-                    if (isTimerFinished) {
-                        UiText.StringResource(R.string.picked_up_player_info_timer_expired)
-                    } else {
-                        val minutes = decimalFormat.format(timerValueInSeconds / 60)
-                        val seconds = decimalFormat.format(timerValueInSeconds % 60)
+        countDownTimerJob = pickUpPlayerUseCases.startCountDownTimerUseCase.get()(
+            expiryTimeInMs = expiryTimeInMs
+        ).onEach { timerValueInSeconds ->
+            _timerText.update {
+                val isTimerFinished = timerValueInSeconds == 0
+                if (isTimerFinished) {
+                    UiText.StringResource(R.string.picked_up_player_info_timer_expired)
+                } else {
+                    val minutes = decimalFormat.format(timerValueInSeconds / 60)
+                    val seconds = decimalFormat.format(timerValueInSeconds % 60)
 
-                        UiText.StringResource(
-                            R.string.picked_up_player_info_timer,
-                            minutes,
-                            seconds
-                        )
-                    }
+                    UiText.StringResource(
+                        R.string.picked_up_player_info_timer,
+                        minutes,
+                        seconds
+                    )
                 }
             }
-        }
+        }.launchIn(scope = viewModelScope)
     }
 }

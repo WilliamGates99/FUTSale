@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -22,59 +21,37 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsUseCases: SettingsUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val settingsUseCases: SettingsUseCases
 ) : ViewModel() {
-
-    private val mutex: Mutex = Mutex()
-
-    private val _appTheme = settingsUseCases.getCurrentAppThemeUseCase.get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-    private val _isNotificationSoundEnabled = settingsUseCases.getIsNotificationSoundEnabledUseCase
-        .get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-    private val _isNotificationVibrateEnabled =
-        settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()().stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    private val _appLocale = savedStateHandle.getStateFlow<AppLocale?>(
-        key = "appLocale",
-        initialValue = settingsUseCases.getCurrentAppLocaleUseCase.get()()
-    )
 
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState = combine(
         flow = _settingsState,
-        flow2 = _appTheme,
-        flow3 = _appLocale,
-        flow4 = _isNotificationSoundEnabled,
-        flow5 = _isNotificationVibrateEnabled
-    ) { settingsState, appTheme, appLocale, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
+        flow2 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
+        flow3 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
+        flow4 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
+    ) { settingsState, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
         settingsState.copy(
             currentAppTheme = appTheme,
-            currentAppLocale = appLocale,
             isNotificationSoundEnabled = isNotificationSoundEnabled,
             isNotificationVibrateEnabled = isNotificationVibrateEnabled
         )
+    }.onStart {
+        _settingsState.update { state ->
+            state.copy(
+                currentAppLocale = settingsUseCases.getCurrentAppLocaleUseCase.get()()
+            )
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
@@ -109,8 +86,8 @@ class SettingsViewModel @Inject constructor(
                 newAppLocale = newAppLocale
             )
 
-            mutex.withLock {
-                savedStateHandle["appLocale"] = newAppLocale
+            _settingsState.update { state ->
+                state.copy(currentAppLocale = newAppLocale)
             }
 
             when (isActivityRestartNeeded) {

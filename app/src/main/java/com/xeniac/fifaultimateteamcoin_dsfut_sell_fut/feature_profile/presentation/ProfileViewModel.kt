@@ -15,12 +15,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -30,8 +35,15 @@ class ProfileViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
-    val profileState = savedStateHandle.getStateFlow(
+    private val _profileState = savedStateHandle.getStateFlow(
         key = "profileState",
+        initialValue = ProfileState()
+    )
+    val profileState = _profileState.onStart {
+        getProfile()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
         initialValue = ProfileState()
     )
 
@@ -43,10 +55,6 @@ class ProfileViewModel @Inject constructor(
 
     private var updatePartnerIdJob: Job? = null
     private var updateSecretKeyJob: Job? = null
-
-    init {
-        getProfile()
-    }
 
     fun onAction(action: ProfileAction) {
         when (action) {

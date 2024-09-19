@@ -42,10 +42,11 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import java.util.Locale
+import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
@@ -156,7 +157,8 @@ class HomeRepositoryImpl @Inject constructor(
         awaitClose { }
     }
 
-    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> =
+    override fun getLatestAppVersion(
+    ): Flow<Result<LatestAppUpdateInfo?, GetLatestAppVersionError>> = flow {
         try {
             val response = httpClient.get().get(
                 urlString = HomeRepository.EndPoints.GetLatestAppVersion.url
@@ -195,63 +197,68 @@ class HomeRepositoryImpl @Inject constructor(
                                 storeAppUpdateDialogShowEpochDays()
                             }
 
-                            Result.Success(
-                                LatestAppUpdateInfo(
-                                    versionCode = latestVersionCode,
-                                    versionName = getLatestAppVersionResponse.versionName
+                            emit(
+                                Result.Success(
+                                    LatestAppUpdateInfo(
+                                        versionCode = latestVersionCode,
+                                        versionName = getLatestAppVersionResponse.versionName
+                                    )
                                 )
                             )
-                        } else Result.Success(null)
+                        } else emit(Result.Success(null))
                     } else {
                         preferencesRepository.get().apply {
                             storeAppUpdateDialogShowCount(0)
                             removeAppUpdateDialogShowEpochDays()
                         }
 
-                        Result.Success(null)
+                        emit(Result.Success(null))
                     }
                 }
-                else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
+                else -> emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
             }
         } catch (e: UnresolvedAddressException) { // When device is offline
             Timber.e("Get latest app version UnresolvedAddressException:}")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.Offline)
+            emit(Result.Error(GetLatestAppVersionError.Network.Offline))
+        } catch (e: UnknownHostException) { // When device is offline
+            Timber.e("Get latest app version UnknownHostException:")
+            e.printStackTrace()
+            emit(Result.Error(GetLatestAppVersionError.Network.Offline))
         } catch (e: ConnectTimeoutException) {
             Timber.e("Get latest app version ConnectTimeoutException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.ConnectTimeoutException)
+            emit(Result.Error(GetLatestAppVersionError.Network.ConnectTimeoutException))
         } catch (e: HttpRequestTimeoutException) {
             Timber.e("Get latest app version HttpRequestTimeoutException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.HttpRequestTimeoutException)
+            emit(Result.Error(GetLatestAppVersionError.Network.HttpRequestTimeoutException))
         } catch (e: SocketTimeoutException) {
             Timber.e("Get latest app version SocketTimeoutException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.SocketTimeoutException)
+            emit(Result.Error(GetLatestAppVersionError.Network.SocketTimeoutException))
         } catch (e: RedirectResponseException) { // 3xx responses
             Timber.e("Get latest app version RedirectResponseException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.RedirectResponseException)
+            emit(Result.Error(GetLatestAppVersionError.Network.RedirectResponseException))
         } catch (e: ClientRequestException) { // 4xx responses
             Timber.e("Get latest app version ClientRequestException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.ClientRequestException)
+            emit(Result.Error(GetLatestAppVersionError.Network.ClientRequestException))
         } catch (e: ServerResponseException) { // 5xx responses
             Timber.e("Get latest app version ServerResponseException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.ServerResponseException)
+            emit(Result.Error(GetLatestAppVersionError.Network.ServerResponseException))
         } catch (e: SerializationException) {
             Timber.e("Get latest app version SerializationException:")
             e.printStackTrace()
-            Result.Error(GetLatestAppVersionError.Network.SerializationException)
+            emit(Result.Error(GetLatestAppVersionError.Network.SerializationException))
         } catch (e: Exception) {
             coroutineContext.ensureActive()
 
             Timber.e("Get latest app version Exception:")
             e.printStackTrace()
-            if (e.message?.lowercase(Locale.US)?.contains("unable to resolve host") == true) {
-                Result.Error(GetLatestAppVersionError.Network.Offline)
-            } else Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
+            emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
         }
+    }
 }
