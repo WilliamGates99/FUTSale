@@ -4,6 +4,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 
 sealed interface SettingsAction {
+    data object ShowLocaleBottomSheet : SettingsAction
+    data object DismissLocaleBottomSheet : SettingsAction
+    data object ShowThemeBottomSheet : SettingsAction
+    data object DismissThemeBottomSheet : SettingsAction
+
     data class SetCurrentAppLocale(val newAppLocale: AppLocale) : SettingsAction
     data class SetCurrentAppTheme(val newAppTheme: AppTheme) : SettingsAction
     data class SetNotificationSoundSwitch(val isEnabled: Boolean) : SettingsAction

@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomCheckbox
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import kotlin.math.roundToInt
@@ -61,8 +62,7 @@ fun TakeAfterSlider(
     errorTextFontSize: TextUnit = 12.sp,
     errorTextFontWeight: FontWeight = FontWeight.Normal,
     errorTextColor: Color = MaterialTheme.colorScheme.error,
-    onCheckedChange: (isChecked: Boolean) -> Unit,
-    onSliderValueChangeFinished: (sliderPosition: Int) -> Unit
+    onAction: (action: PickUpPlayerAction) -> Unit
 ) {
     var sliderPosition by remember {
         mutableFloatStateOf(
@@ -83,7 +83,9 @@ fun TakeAfterSlider(
         CustomCheckbox(
             isLoading = isLoading,
             isChecked = pickUpPlayerState.isTakeAfterChecked,
-            onCheckedChange = onCheckedChange,
+            onCheckedChange = { isChecked ->
+                onAction(PickUpPlayerAction.TakeAfterCheckedChanged(isChecked))
+            },
             text = if (!pickUpPlayerState.isTakeAfterChecked) stringResource(id = R.string.pick_up_player_title_take_after)
             else pluralStringResource(
                 id = R.plurals.pick_up_player_title_take_after,
@@ -140,10 +142,10 @@ fun TakeAfterSlider(
                     )
                 }
             },
-            onValueChange = {
-                sliderPosition = it
+            onValueChange = { sliderPosition = it },
+            onValueChangeFinished = {
+                onAction(PickUpPlayerAction.TakeAfterSliderChanged(sliderPosition.roundToInt()))
             },
-            onValueChangeFinished = { onSliderValueChangeFinished(sliderPosition.roundToInt()) },
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(TestTags.TAKE_AFTER_SLIDER)

@@ -2,11 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -43,13 +41,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.AutoPickUpButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.TakeAfterSlider
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpPlayerSection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
 import kotlinx.coroutines.launch
@@ -207,7 +200,9 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> autoPickUpPlayer(viewModel)
+                        SnackbarResult.ActionPerformed -> {
+                            viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
+                        }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -305,7 +300,9 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> pickUpPlayerOnce(viewModel)
+                        SnackbarResult.ActionPerformed -> {
+                            viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
+                        }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -346,85 +343,18 @@ fun PickUpPlayerScreen(
             LatestPlayersPagers(
                 latestPickedPlayers = pickUpPlayerState.latestPickedPlayers,
                 timerText = timerText.asString(),
+                onAction = viewModel::onAction,
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
-                onCountDownStart = { expiryTimeInMillis ->
-                    viewModel.onAction(PickUpPlayerAction.StartCountDownTimer(expiryTimeInMillis))
-                },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Column(
+            PickUpPlayerSection(
+                pickUpPlayerState = pickUpPlayerState,
+                onAction = viewModel::onAction,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = horizontalPadding)
-            ) {
-                InstructionTexts(modifier = Modifier.fillMaxWidth())
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                PlatformSelector(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onPlatformClick = { newPlatform ->
-                        viewModel.onAction(PickUpPlayerAction.PlatformChanged(newPlatform))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                PriceTextFields(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onMinPriceChange = { newPrice ->
-                        viewModel.onAction(PickUpPlayerAction.MinPriceChanged(newPrice))
-                    },
-                    onMaxPriceChange = { newPrice ->
-                        viewModel.onAction(PickUpPlayerAction.MaxPriceChanged(newPrice))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                TakeAfterSlider(
-                    pickUpPlayerState = pickUpPlayerState,
-                    modifier = Modifier.fillMaxWidth(),
-                    onCheckedChange = { isChecked ->
-                        viewModel.onAction(PickUpPlayerAction.TakeAfterCheckedChanged(isChecked))
-                    },
-                    onSliderValueChangeFinished = { sliderPosition ->
-                        viewModel.onAction(PickUpPlayerAction.TakeAfterSliderChanged(sliderPosition))
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                AutoPickUpButton(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
-                    onCancelClick = { viewModel.onAction(PickUpPlayerAction.CancelAutoPickUpPlayer) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PickUpOnceButton(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onClick = { pickUpPlayerOnce(viewModel) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp)
-                )
-            }
+            )
         }
     }
-}
-
-private fun autoPickUpPlayer(viewModel: PickUpPlayerViewModel) {
-    viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
-}
-
-private fun pickUpPlayerOnce(viewModel: PickUpPlayerViewModel) {
-    viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
 }

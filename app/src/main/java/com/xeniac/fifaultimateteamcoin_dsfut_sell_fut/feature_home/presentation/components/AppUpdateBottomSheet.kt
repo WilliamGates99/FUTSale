@@ -16,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -42,6 +41,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,11 +53,9 @@ fun AppUpdateBottomSheet(
     enterTransition: EnterTransition = expandVertically(),
     exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
-    isFocusable: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
-    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties(
+    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
         shouldDismissOnBackPress = dismissOnBackPress,
-        isFocusable = isFocusable,
         securePolicy = securePolicy
     ),
     animationComposition: LottieComposition? = rememberLottieComposition(
@@ -84,8 +82,8 @@ fun AppUpdateBottomSheet(
     messageFontWeight: FontWeight = FontWeight.Medium,
     messageTextAlign: TextAlign = TextAlign.Center,
     messageColor: Color = MaterialTheme.colorScheme.onSurface,
-    openAppUpdatePageInStore: () -> Unit,
-    onDismissRequest: () -> Unit
+    onAction: (action: HomeAction) -> Unit,
+    openAppUpdatePageInStore: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -98,7 +96,9 @@ fun AppUpdateBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = {
+                onAction(HomeAction.DismissAppUpdateSheet)
+            }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -148,7 +148,7 @@ fun AppUpdateBottomSheet(
 
                 UpdateButton(
                     onClick = {
-                        onDismissRequest()
+                        onAction(HomeAction.DismissAppUpdateSheet)
                         openAppUpdatePageInStore()
                     },
                     modifier = Modifier
@@ -159,7 +159,9 @@ fun AppUpdateBottomSheet(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 DismissButton(
-                    onClick = onDismissRequest,
+                    onClick = {
+                        onAction(HomeAction.DismissAppUpdateSheet)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 28.dp)

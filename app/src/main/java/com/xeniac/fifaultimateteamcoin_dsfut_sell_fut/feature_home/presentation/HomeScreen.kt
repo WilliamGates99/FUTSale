@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +32,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
@@ -48,7 +46,7 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -56,11 +54,10 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
-    val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
+    val homeState by viewModel.homeState.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
-    var isAppReviewDialogVisible by remember { mutableStateOf(false) }
-    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
 
@@ -80,13 +77,13 @@ fun HomeScreen(
         }
     )
 
-    ObserverAsEvent(flow = homeViewModel.inAppUpdatesEventChannel) { event ->
+    ObserverAsEvent(flow = viewModel.inAppUpdatesEventChannel) { event ->
         when (event) {
             is HomeUiEvent.StartAppUpdateFlow -> {
-                homeViewModel.appUpdateManager.get().startUpdateFlowForResult(
+                viewModel.appUpdateManager.get().startUpdateFlowForResult(
                     event.appUpdateInfo,
                     appUpdateResultLauncher,
-                    homeViewModel.appUpdateOptions.get()
+                    viewModel.appUpdateOptions.get()
                 )
             }
             HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
@@ -100,26 +97,23 @@ fun HomeScreen(
 
                     when (result) {
                         SnackbarResult.ActionPerformed -> {
-                            homeViewModel.appUpdateManager.get().completeUpdate()
+                            viewModel.appUpdateManager.get().completeUpdate()
                         }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
             }
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
-                homeViewModel.appUpdateManager.get().completeUpdate()
+                viewModel.appUpdateManager.get().completeUpdate()
             }
         }
     }
 
-    ObserverAsEvent(flow = homeViewModel.inAppReviewEventChannel) { event ->
+    ObserverAsEvent(flow = viewModel.inAppReviewEventChannel) { event ->
         when (event) {
-            HomeUiEvent.ShowAppReviewDialog -> {
-                isAppReviewDialogVisible = true
-            }
             HomeUiEvent.LaunchInAppReview -> {
                 homeState.inAppReviewInfo?.let { reviewInfo ->
-                    homeViewModel.reviewManager.get().launchReviewFlow(
+                    viewModel.reviewManager.get().launchReviewFlow(
                         activity,
                         reviewInfo
                     ).addOnCompleteListener {
@@ -161,17 +155,7 @@ fun HomeScreen(
 
     PostNotificationPermissionHandler(
         homeState = homeState,
-        onPermissionResult = { permission, isGranted ->
-            homeViewModel.onAction(
-                HomeAction.OnPermissionResult(
-                    permission = permission,
-                    isGranted = isGranted
-                )
-            )
-        },
-        onDismiss = { permission ->
-            homeViewModel.onAction(HomeAction.DismissPermissionDialog(permission))
-        }
+        onAction = viewModel::onAction
     )
 
     Scaffold(
@@ -212,32 +196,17 @@ fun HomeScreen(
 
     AppUpdateBottomSheet(
         appUpdateInfo = homeState.latestAppUpdateInfo,
+        onAction = viewModel::onAction,
         openAppUpdatePageInStore = {
             isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
-        },
-        onDismissRequest = {
-            homeViewModel.onAction(HomeAction.DismissAppUpdateSheet)
         }
     )
 
     AppReviewDialog(
-        isVisible = isAppReviewDialogVisible,
-        onRateNowClick = {
-            if (isAppInstalledFromPlayStore()) {
-                homeViewModel.onAction(HomeAction.LaunchInAppReview)
-            } else {
-                isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-            }
-            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToNever)
-        },
-        onRemindLaterClick = {
-            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToRemindLater)
-        },
-        onNeverClick = {
-            homeViewModel.onAction(HomeAction.SetSelectedRateAppOptionToNever)
-        },
-        onDismiss = {
-            isAppReviewDialogVisible = false
+        isVisible = homeState.isAppReviewDialogVisible,
+        onAction = viewModel::onAction,
+        openAppPageInStore = {
+            isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
         }
     )
 }

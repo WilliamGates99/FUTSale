@@ -56,6 +56,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral70
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
@@ -81,9 +82,7 @@ fun OnboardingPageFour(
         .toHexString(HexFormat.UpperCase)
         .removeRange(0, 2),
     textBtnNeutralColor: Color = if (isSystemInDarkTheme) Neutral70 else Neutral30,
-    onPartnerIdChange: (newPartnerId: String) -> Unit,
-    onSecretKeyChange: (newSecretKey: String) -> Unit,
-    onStartBtnClick: () -> Unit,
+    onAction: (action: OnboardingAction) -> Unit,
     onRegisterBtnClick: () -> Unit,
     onPrivacyPolicyBtnClick: () -> Unit
 ) {
@@ -161,7 +160,9 @@ fun OnboardingPageFour(
         CustomOutlinedTextField(
             isLoading = false,
             value = onboardingState.partnerId,
-            onValueChange = onPartnerIdChange,
+            onValueChange = { newPartnerId ->
+                onAction(OnboardingAction.PartnerIdChanged(newPartnerId))
+            },
             title = stringResource(id = R.string.onboarding_fourth_title_partner_id),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_partner_id),
@@ -179,14 +180,18 @@ fun OnboardingPageFour(
         CustomOutlinedTextField(
             isLoading = false,
             value = onboardingState.secretKey,
-            onValueChange = onSecretKeyChange,
+            onValueChange = { newSecretKey ->
+                onAction(OnboardingAction.SecretKeyChanged(newSecretKey))
+            },
             title = stringResource(id = R.string.onboarding_fourth_title_secret_key),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_secret_key),
             errorText = onboardingState.secretKeyErrorText?.asString(),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
-            keyboardAction = onStartBtnClick,
+            keyboardAction = {
+                onAction(OnboardingAction.SaveUserData)
+            },
             testTag = TestTags.SECRET_KEY_TEXT_FIELD,
             modifier = Modifier
                 .fillMaxWidth()
@@ -196,7 +201,9 @@ fun OnboardingPageFour(
         Spacer(modifier = Modifier.height(40.dp))
 
         Button(
-            onClick = onStartBtnClick,
+            onClick = {
+                onAction(OnboardingAction.SaveUserData)
+            },
             contentPadding = PaddingValues(vertical = 12.dp),
             modifier = Modifier
                 .fillMaxWidth()

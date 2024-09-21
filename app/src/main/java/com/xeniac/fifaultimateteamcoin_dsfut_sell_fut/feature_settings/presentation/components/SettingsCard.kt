@@ -39,6 +39,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppThem
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.addTestTag
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 
@@ -52,10 +53,7 @@ fun SettingsCard(
     titleFontWeight: FontWeight = FontWeight.ExtraBold,
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
     cardShape: Shape = RoundedCornerShape(12.dp),
-    onLanguageClick: () -> Unit,
-    onThemeClick: () -> Unit,
-    onNotificationSoundChange: (isChecked: Boolean) -> Unit,
-    onNotificationVibrateChange: (isChecked: Boolean) -> Unit
+    onAction: (action: SettingsAction) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -85,7 +83,9 @@ fun SettingsCard(
                     AppLocale.FarsiIR -> stringResource(id = R.string.settings_text_settings_language_farsi_ir)
                     null -> null
                 },
-                onClick = onLanguageClick
+                onClick = {
+                    onAction(SettingsAction.ShowLocaleBottomSheet)
+                }
             )
 
             HorizontalDivider()
@@ -99,7 +99,9 @@ fun SettingsCard(
                     AppTheme.Dark -> stringResource(id = R.string.settings_text_settings_theme_dark)
                     null -> null
                 },
-                onClick = onThemeClick
+                onClick = {
+                    onAction(SettingsAction.ShowThemeBottomSheet)
+                }
             )
 
             HorizontalDivider()
@@ -109,7 +111,9 @@ fun SettingsCard(
                 title = stringResource(id = R.string.settings_text_settings_notification_sound),
                 isChecked = settingsState.isNotificationSoundEnabled,
                 testTag = TestTags.NOTIFICATION_SOUND_SWITCH,
-                onCheckedChange = onNotificationSoundChange
+                onCheckedChange = { isChecked ->
+                    onAction(SettingsAction.SetNotificationSoundSwitch(isChecked))
+                }
             )
 
             HorizontalDivider()
@@ -119,7 +123,9 @@ fun SettingsCard(
                 title = stringResource(id = R.string.settings_text_settings_notification_vibrate),
                 isChecked = settingsState.isNotificationVibrateEnabled,
                 testTag = TestTags.NOTIFICATION_VIBRATE_SWITCH,
-                onCheckedChange = onNotificationVibrateChange
+                onCheckedChange = { isChecked ->
+                    onAction(SettingsAction.SetNotificationVibrateSwitch(isChecked))
+                }
             )
         }
     }

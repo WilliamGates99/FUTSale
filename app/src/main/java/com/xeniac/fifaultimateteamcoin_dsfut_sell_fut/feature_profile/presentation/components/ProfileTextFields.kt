@@ -26,6 +26,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 
@@ -33,8 +34,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentati
 fun ProfileTextFields(
     profileState: ProfileState,
     modifier: Modifier = Modifier,
-    onPartnerIdChange: (newPartnerId: String) -> Unit,
-    onSecretKeyChange: (newSecretKey: String) -> Unit
+    onAction: (action: ProfileAction) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,7 +46,7 @@ fun ProfileTextFields(
 
         PartnerIdTextField(
             profileState = profileState,
-            onPartnerIdChange = onPartnerIdChange,
+            onAction = onAction,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -54,7 +54,7 @@ fun ProfileTextFields(
 
         SecretKeyTextField(
             profileState = profileState,
-            onSecretKeyChange = onSecretKeyChange,
+            onAction = onAction,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -124,13 +124,15 @@ fun PartnerIdTextField(
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Number,
     imeAction: ImeAction = ImeAction.Done,
-    onPartnerIdChange: (newPartnerId: String) -> Unit
+    onAction: (action: ProfileAction) -> Unit
 ) {
     CustomOutlinedTextField(
         isLoading = false,
         value = profileState.partnerId,
         errorText = profileState.partnerIdErrorText?.asString(),
-        onValueChange = onPartnerIdChange,
+        onValueChange = { newPartnerId ->
+            onAction(ProfileAction.PartnerIdChanged(newPartnerId))
+        },
         title = title,
         placeholder = placeholder,
         leadingIcon = leadingIcon,
@@ -187,13 +189,15 @@ fun SecretKeyTextField(
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
-    onSecretKeyChange: (newSecretKey: String) -> Unit
+    onAction: (action: ProfileAction) -> Unit
 ) {
     CustomOutlinedTextField(
         isLoading = false,
         value = profileState.secretKey,
         errorText = profileState.secretKeyErrorText?.asString(),
-        onValueChange = onSecretKeyChange,
+        onValueChange = { newSecretKey ->
+            onAction(ProfileAction.SecretKeyChanged(newSecretKey))
+        },
         title = title,
         placeholder = placeholder,
         leadingIcon = leadingIcon,

@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 
 enum class ThemeItems(
     val theme: AppTheme,
@@ -65,11 +65,9 @@ fun ThemeBottomSheet(
     enterTransition: EnterTransition = expandVertically(),
     exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
-    isFocusable: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
-    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties(
+    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
         shouldDismissOnBackPress = dismissOnBackPress,
-        isFocusable = isFocusable,
         securePolicy = securePolicy
     ),
     headline: String = stringResource(id = R.string.settings_bottom_sheet_title_theme).uppercase(),
@@ -83,8 +81,7 @@ fun ThemeBottomSheet(
     titleFontWeight: FontWeight = FontWeight.Medium,
     titleTextAlign: TextAlign = TextAlign.Start,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
-    onThemeSelected: (newAppTheme: AppTheme) -> Unit,
-    onDismissRequest: () -> Unit
+    onAction: (action: SettingsAction) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -97,7 +94,9 @@ fun ThemeBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = {
+                onAction(SettingsAction.DismissThemeBottomSheet)
+            }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -134,8 +133,8 @@ fun ThemeBottomSheet(
                                     selected = isSelected,
                                     role = Role.RadioButton,
                                     onClick = {
-                                        onDismissRequest()
-                                        onThemeSelected(themeItem.theme)
+                                        onAction(SettingsAction.DismissThemeBottomSheet)
+                                        onAction(SettingsAction.SetCurrentAppTheme(themeItem.theme))
                                     }
                                 )
                                 .padding(

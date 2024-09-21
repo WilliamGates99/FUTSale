@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
@@ -76,7 +77,7 @@ fun PlatformSelector(
     segmentedButtonLabelLineHeight: TextUnit = 20.sp,
     segmentedButtonLabelFontWeight: FontWeight = FontWeight.SemiBold,
     segmentedButtonLabelTextAlignment: TextAlign = TextAlign.Center,
-    onPlatformClick: (platform: Platform) -> Unit
+    onAction: (action: PickUpPlayerAction) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
@@ -122,7 +123,9 @@ fun PlatformSelector(
                         )
                     },
                     icon = {},
-                    onClick = { onPlatformClick(platformItem.platform) },
+                    onClick = {
+                        onAction(PickUpPlayerAction.PlatformChanged(platformItem.platform))
+                    },
                     modifier = Modifier.testTag(platformItem.testTag)
                 )
             }
@@ -130,7 +133,6 @@ fun PlatformSelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Stable
 internal fun SegmentedButtonColors.borderColor(enabled: Boolean, active: Boolean): Color {
     return when {

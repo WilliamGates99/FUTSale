@@ -149,12 +149,7 @@ fun ProfileScreen(
         ) {
             ProfileTextFields(
                 profileState = profileState,
-                onPartnerIdChange = { newPartnerId ->
-                    viewModel.onAction(ProfileAction.PartnerIdChanged(newPartnerId))
-                },
-                onSecretKeyChange = { newSecretKey ->
-                    viewModel.onAction(ProfileAction.SecretKeyChanged(newSecretKey))
-                },
+                onAction = viewModel::onAction,
                 modifier = Modifier.fillMaxWidth()
             )
 

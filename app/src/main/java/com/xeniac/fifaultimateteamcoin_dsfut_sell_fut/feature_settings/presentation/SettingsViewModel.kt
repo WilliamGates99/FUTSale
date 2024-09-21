@@ -72,10 +72,38 @@ class SettingsViewModel @Inject constructor(
 
     fun onAction(action: SettingsAction) {
         when (action) {
+            SettingsAction.ShowLocaleBottomSheet -> showLocaleBottomSheet()
+            SettingsAction.DismissLocaleBottomSheet -> dismissLocaleBottomSheet()
+            SettingsAction.ShowThemeBottomSheet -> showThemeBottomSheet()
+            SettingsAction.DismissThemeBottomSheet -> dismissThemeBottomSheet()
             is SettingsAction.SetCurrentAppLocale -> setCurrentAppLocale(action.newAppLocale)
             is SettingsAction.SetCurrentAppTheme -> setCurrentAppTheme(action.newAppTheme)
             is SettingsAction.SetNotificationSoundSwitch -> setNotificationSoundSwitch(action.isEnabled)
             is SettingsAction.SetNotificationVibrateSwitch -> setNotificationVibrateSwitch(action.isEnabled)
+        }
+    }
+
+    private fun showLocaleBottomSheet() = viewModelScope.launch {
+        _settingsState.update { state ->
+            state.copy(isLocaleBottomSheetVisible = true)
+        }
+    }
+
+    private fun dismissLocaleBottomSheet() = viewModelScope.launch {
+        _settingsState.update { state ->
+            state.copy(isLocaleBottomSheetVisible = false)
+        }
+    }
+
+    private fun showThemeBottomSheet() = viewModelScope.launch {
+        _settingsState.update { state ->
+            state.copy(isThemeBottomSheetVisible = true)
+        }
+    }
+
+    private fun dismissThemeBottomSheet() = viewModelScope.launch {
+        _settingsState.update { state ->
+            state.copy(isThemeBottomSheetVisible = false)
         }
     }
 

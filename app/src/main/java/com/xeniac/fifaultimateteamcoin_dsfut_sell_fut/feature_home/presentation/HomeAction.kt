@@ -11,6 +11,7 @@ sealed interface HomeAction {
     data object LaunchInAppReview : HomeAction
     data object SetSelectedRateAppOptionToNever : HomeAction
     data object SetSelectedRateAppOptionToRemindLater : HomeAction
+    data object DismissAppReviewDialog : HomeAction
 
     data class OnPermissionResult(
         val permission: String,

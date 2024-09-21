@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 
 enum class LocaleItems(
     val locale: AppLocale,
@@ -69,11 +69,9 @@ fun LocaleBottomSheet(
     enterTransition: EnterTransition = expandVertically(),
     exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
-    isFocusable: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
-    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties(
+    sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
         shouldDismissOnBackPress = dismissOnBackPress,
-        isFocusable = isFocusable,
         securePolicy = securePolicy
     ),
     headline: String = stringResource(id = R.string.settings_bottom_sheet_title_language).uppercase(),
@@ -87,8 +85,7 @@ fun LocaleBottomSheet(
     titleFontWeight: FontWeight = FontWeight.Medium,
     titleTextAlign: TextAlign = TextAlign.Start,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
-    onLocaleSelected: (newAppLocale: AppLocale) -> Unit,
-    onDismissRequest: () -> Unit
+    onAction: (action: SettingsAction) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -101,7 +98,9 @@ fun LocaleBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = {
+                onAction(SettingsAction.DismissLocaleBottomSheet)
+            }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -138,8 +137,8 @@ fun LocaleBottomSheet(
                                     selected = isSelected,
                                     role = Role.RadioButton,
                                     onClick = {
-                                        onDismissRequest()
-                                        onLocaleSelected(localeItem.locale)
+                                        onAction(SettingsAction.DismissLocaleBottomSheet)
+                                        onAction(SettingsAction.SetCurrentAppLocale(localeItem.locale))
                                     }
                                 )
                                 .padding(

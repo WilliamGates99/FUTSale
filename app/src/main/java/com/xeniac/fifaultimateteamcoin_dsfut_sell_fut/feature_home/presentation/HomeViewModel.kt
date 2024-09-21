@@ -92,8 +92,9 @@ class HomeViewModel @Inject constructor(
             HomeAction.RequestInAppReviews -> requestInAppReviews()
             HomeAction.CheckSelectedRateAppOption -> checkSelectedRateAppOption()
             HomeAction.LaunchInAppReview -> launchInAppReview()
-            is HomeAction.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
-            is HomeAction.SetSelectedRateAppOptionToRemindLater -> setSelectedRateAppOptionToRemindLater()
+            HomeAction.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
+            HomeAction.SetSelectedRateAppOptionToRemindLater -> setSelectedRateAppOptionToRemindLater()
+            HomeAction.DismissAppReviewDialog -> dismissAppReviewDialog()
             is HomeAction.OnPermissionResult -> onPermissionResult(
                 permission = action.permission,
                 isGranted = action.isGranted
@@ -181,7 +182,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkDaysFromFirstInstallTime() {
+    private fun checkDaysFromFirstInstallTime() {
         val daysFromFirstInstallTime = DateHelper.getDaysFromFirstInstallTime(
             firstInstallTimeInMs = firstInstallTimeInMs.get()
         )
@@ -189,18 +190,22 @@ class HomeViewModel @Inject constructor(
         val shouldShowAppReviewDialog =
             daysFromFirstInstallTime >= Constants.IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME
         if (shouldShowAppReviewDialog) {
-            _inAppReviewsEventChannel.send(HomeUiEvent.ShowAppReviewDialog)
+            _homeState.update { state ->
+                state.copy(isAppReviewDialogVisible = true)
+            }
         }
     }
 
-    private suspend fun checkDaysFromPreviousRequestTime() {
+    private fun checkDaysFromPreviousRequestTime() {
         homeState.value.previousRateAppRequestTimeInMs?.let {
             val daysFromPreviousRequestTime = DateHelper.getDaysFromPreviousRequestTime(it)
 
             val shouldShowAppReviewDialog =
                 daysFromPreviousRequestTime >= Constants.IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME
             if (shouldShowAppReviewDialog) {
-                _inAppReviewsEventChannel.send(HomeUiEvent.ShowAppReviewDialog)
+                _homeState.update { state ->
+                    state.copy(isAppReviewDialogVisible = true)
+                }
             }
         }
     }
@@ -216,6 +221,12 @@ class HomeViewModel @Inject constructor(
     private fun setSelectedRateAppOptionToRemindLater() = viewModelScope.launch {
         homeUseCases.storeSelectedRateAppOptionUseCase.get()(rateAppOption = RateAppOption.REMIND_LATER)
         homeUseCases.storePreviousRateAppRequestTimeInMsUseCase.get()()
+    }
+
+    private fun dismissAppReviewDialog() = viewModelScope.launch {
+        _homeState.update { state ->
+            state.copy(isAppReviewDialogVisible = false)
+        }
     }
 
     private fun onPermissionResult(

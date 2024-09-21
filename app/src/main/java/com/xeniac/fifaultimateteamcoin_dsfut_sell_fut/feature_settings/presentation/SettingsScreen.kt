@@ -67,8 +67,6 @@ fun SettingsScreen(
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
-    var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
-    var isThemeDialogVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -187,18 +185,7 @@ fun SettingsScreen(
         ) {
             SettingsCard(
                 settingsState = settingsState,
-                onLanguageClick = {
-                    isLocaleBottomSheetVisible = true
-                },
-                onThemeClick = {
-                    isThemeDialogVisible = true
-                },
-                onNotificationSoundChange = { isChecked ->
-                    viewModel.onAction(SettingsAction.SetNotificationSoundSwitch(isChecked))
-                },
-                onNotificationVibrateChange = { isChecked ->
-                    viewModel.onAction(SettingsAction.SetNotificationVibrateSwitch(isChecked))
-                },
+                onAction = viewModel::onAction,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -228,24 +215,14 @@ fun SettingsScreen(
     }
 
     LocaleBottomSheet(
-        isVisible = isLocaleBottomSheetVisible,
+        isVisible = settingsState.isLocaleBottomSheetVisible,
         currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
-        onDismissRequest = {
-            isLocaleBottomSheetVisible = false
-        },
-        onLocaleSelected = { newAppLocale ->
-            viewModel.onAction(SettingsAction.SetCurrentAppLocale(newAppLocale))
-        }
+        onAction = viewModel::onAction
     )
 
     ThemeBottomSheet(
-        isVisible = isThemeDialogVisible,
+        isVisible = settingsState.isThemeBottomSheetVisible,
         currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
-        onDismissRequest = {
-            isThemeDialogVisible = false
-        },
-        onThemeSelected = { newAppTheme ->
-            viewModel.onAction(SettingsAction.SetCurrentAppTheme(newAppTheme))
-        }
+        onAction = viewModel::onAction
     )
 }
