@@ -11,10 +11,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 import kotlin.random.Random
 
-class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
+class FakeHistoryRepositoryImpl : HistoryRepository {
 
     var playerEntitiesHistory = mutableListOf<PlayerEntity>()
 
