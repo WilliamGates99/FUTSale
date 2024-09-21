@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 typealias TimerValueInSeconds = Int
 
+const val FIFA_VERSION = 24
+
 interface PickUpPlayerRepository {
 
     fun observeLatestPickedPlayers(): Flow<List<Player>>
@@ -28,7 +30,7 @@ interface PickUpPlayerRepository {
             val partnerId: String,
             val timestamp: Long,
             val signature: String,
-            val gameYear: Int = 24
+            val gameYear: Int = FIFA_VERSION
         ) : EndPoints(
             url = "${BuildConfig.DSFUT_HTTP_BASE_URL}/$gameYear/$platform/$partnerId/$timestamp/$signature"
         )
