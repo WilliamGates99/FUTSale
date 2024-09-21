@@ -20,7 +20,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platfor
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -58,8 +58,8 @@ class PickedUpPlayerInfoScreenTest {
         position = "ST",
         startPrice = "50000",
         buyNowPrice = "200000",
-        owners = 5,
-        contracts = 4,
+        owners = "5",
+        contracts = "4",
         chemistryStyle = "Basic",
         chemistryStyleID = 1,
         platform = Platform.PC,
@@ -82,7 +82,7 @@ class PickedUpPlayerInfoScreenTest {
 
                 LaunchedEffect(key1 = Unit) {
                     testNavController.navigate(
-                        Screen.PickedUpPlayerInfoScreen(player = testPlayer)
+                        PickedUpPlayerInfoScreen(playerId = testPlayer.id!!)
                     )
                 }
             }

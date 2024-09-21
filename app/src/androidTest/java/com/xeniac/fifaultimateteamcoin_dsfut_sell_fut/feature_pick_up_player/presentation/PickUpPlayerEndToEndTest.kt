@@ -17,24 +17,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.historyNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
@@ -65,7 +67,6 @@ import org.junit.Rule
 import org.junit.Test
 import java.text.DecimalFormat
 import javax.inject.Inject
-import kotlin.reflect.typeOf
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -103,6 +104,9 @@ class PickUpPlayerEndToEndTest {
         val observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
+        val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
+            pickUpPlayerRepository = fakePickUpPlayerRepository
+        )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             preferencesRepository = fakePreferencesRepository
         )
@@ -130,6 +134,7 @@ class PickUpPlayerEndToEndTest {
 
         val pickUpPlayerUseCases = PickUpPlayerUseCases(
             { observeLatestPickedPlayersUseCaseUseCase },
+            { observePickedUpPlayerUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
@@ -160,14 +165,14 @@ class PickUpPlayerEndToEndTest {
 
                 NavHost(
                     navController = rememberNavController(),
-                    startDestination = Screen.HomeScreen
+                    startDestination = HomeScreen
                 ) {
-                    composable<Screen.HomeScreen> {
+                    composable<HomeScreen> {
                         NavHost(
                             navController = testNavController,
-                            startDestination = Screen.PickUpPlayerScreen
+                            startDestination = PickUpPlayerScreen
                         ) {
-                            composable<Screen.PickUpPlayerScreen> {
+                            composable<PickUpPlayerScreen> {
                                 PickUpPlayerScreen(
                                     viewModel = PickUpPlayerViewModel(
                                         pickUpPlayerUseCases = pickUpPlayerUseCases,
@@ -176,33 +181,26 @@ class PickUpPlayerEndToEndTest {
                                     ),
                                     bottomPadding = 0.dp,
                                     onNavigateToProfileScreen = {
-                                        testNavController.navigate(Screen.ProfileScreen) {
+                                        testNavController.navigate(ProfileScreen) {
                                             launchSingleTop = true
                                             popUpTo(testNavController.graph.startDestinationId)
                                         }
                                     },
-                                    onNavigateToPickedUpPlayerInfoScreen = { player ->
+                                    onNavigateToPickedUpPlayerInfoScreen = { playerId ->
                                         testNavController.navigate(
-                                            Screen.PickedUpPlayerInfoScreen(
-                                                player = player
-                                            )
+                                            PickedUpPlayerInfoScreen(playerId)
                                         )
                                     }
                                 )
                             }
 
-                            composable<Screen.PickedUpPlayerInfoScreen>(
-                                typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-                            ) { backStackEntry ->
-                                val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
-
+                            composable<PickedUpPlayerInfoScreen> {
                                 PickedUpPlayerInfoScreen(
-                                    player = args.player,
                                     onNavigateUp = testNavController::navigateUp
                                 )
                             }
 
-                            composable<Screen.ProfileScreen> {
+                            composable<ProfileScreen> {
                                 ProfileScreen(
                                     viewModel = ProfileViewModel(
                                         profileUseCases = profileUseCases,
@@ -217,7 +215,7 @@ class PickUpPlayerEndToEndTest {
                                 bottomPadding = 0.dp
                             )
 
-                            composable<Screen.SettingsScreen> {
+                            composable<SettingsScreen> {
                                 SettingsScreen(bottomPadding = 0.dp)
                             }
                         }

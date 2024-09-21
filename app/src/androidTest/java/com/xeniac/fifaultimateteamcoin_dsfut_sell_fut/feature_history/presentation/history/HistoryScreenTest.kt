@@ -11,14 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
@@ -31,7 +29,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -68,29 +65,22 @@ class HistoryScreenTest {
 
                 NavHost(
                     navController = testNavController,
-                    startDestination = Screen.HistoryScreen
+                    startDestination = HistoryScreen
                 ) {
-                    composable<Screen.HistoryScreen> {
+                    composable<HistoryScreen> {
                         HistoryScreen(
                             viewModel = HistoryViewModel(
                                 observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
                             ),
                             bottomPadding = 0.dp,
-                            onNavigateToPlayerInfoScreen = { player ->
-                                testNavController.navigate(
-                                    Screen.HistoryPlayerInfoScreen(player = player)
-                                )
+                            onNavigateToPlayerInfoScreen = { playerId ->
+                                testNavController.navigate(HistoryPlayerInfoScreen(playerId))
                             }
                         )
                     }
 
-                    composable<Screen.HistoryPlayerInfoScreen>(
-                        typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-                    ) { backStackEntry ->
-                        val args = backStackEntry.toRoute<Screen.HistoryPlayerInfoScreen>()
-
+                    composable<HistoryPlayerInfoScreen> {
                         HistoryPlayerInfoScreen(
-                            player = args.player,
                             onNavigateUp = testNavController::navigateUp
                         )
                     }

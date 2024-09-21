@@ -20,7 +20,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platfor
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_HISTORY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
@@ -59,8 +61,8 @@ class HistoryPlayerInfoScreenTest {
         position = "ST",
         startPrice = "50000",
         buyNowPrice = "200000",
-        owners = 5,
-        contracts = 4,
+        owners = "5",
+        contracts = "4",
         chemistryStyle = "Basic",
         chemistryStyleID = 1,
         platform = Platform.PC,
@@ -82,13 +84,13 @@ class HistoryPlayerInfoScreenTest {
                 )
 
                 LaunchedEffect(key1 = Unit) {
-                    testNavController.navigate(Screen.HistoryScreen) {
+                    testNavController.navigate(HistoryScreen) {
                         launchSingleTop = true
-                        popUpTo(Screen.PickUpPlayerScreen)
+                        popUpTo(PickUpPlayerScreen)
                     }
 
                     testNavController.navigate(
-                        Screen.HistoryPlayerInfoScreen(player = testPlayer)
+                        HistoryPlayerInfoScreen(playerId = testPlayer.id!!)
                     )
                 }
             }
