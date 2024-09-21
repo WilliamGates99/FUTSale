@@ -73,7 +73,9 @@ fun PlayersLazyColumn(
                             onClick(playerId)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TestTags.HISTORY_LAZY_COLUMN_ITEM)
                 )
             }
         }

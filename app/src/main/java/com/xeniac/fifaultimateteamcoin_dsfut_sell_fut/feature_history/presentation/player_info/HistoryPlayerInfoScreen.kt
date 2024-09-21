@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,6 +34,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PickUpDate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerInfo
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +66,7 @@ fun HistoryPlayerInfoScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .testTag(tag = TestTags.TEST_TAG_SCREEN_HISTORY_PLAYER_INFO)
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -18,6 +18,10 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
 
     var playerEntitiesHistory = mutableListOf<PlayerEntity>()
 
+    fun addDummyPlayerToHistory(player: Player) {
+        playerEntitiesHistory.add(player.toPlayerEntity())
+    }
+
     fun addDummyPlayersToHistory() {
         val playersToInsert = mutableListOf<PlayerEntity>()
 
@@ -29,7 +33,7 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
                     assetID = index,
                     resourceID = index,
                     transactionID = index,
-                    name = char.toString(),
+                    name = "Test Player $char",
                     rating = Random.nextInt(from = 10, until = 99),
                     position = "CDM",
                     startPrice = 1000,
