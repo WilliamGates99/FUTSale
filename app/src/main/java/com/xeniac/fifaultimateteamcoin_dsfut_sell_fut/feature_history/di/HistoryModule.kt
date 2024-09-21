@@ -6,6 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,4 +31,10 @@ object HistoryModule {
     fun provideObservePickedPlayersHistoryUseCase(
         historyRepository: HistoryRepository
     ): ObservePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(historyRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideObservePlayerUseCase(
+        historyRepository: HistoryRepository
+    ): ObservePlayerUseCase = ObservePlayerUseCase(historyRepository)
 }

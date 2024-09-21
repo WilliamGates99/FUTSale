@@ -211,7 +211,7 @@ class PlayersDaoTest {
     }
 
     @Test
-    fun getPlayer() = runTest {
+    fun observerPlayer() = runTest {
         val playerEntity = PlayerEntity(
             id = 1,
             tradeID = "1",
@@ -231,7 +231,7 @@ class PlayersDaoTest {
         )
         dao.insertPlayer(playerEntity)
 
-        val player = dao.getPlayer(playerEntity.id!!).first()
+        val player = dao.observerPlayer(playerEntity.id!!).first()
         assertThat(player).isEqualTo(playerEntity)
     }
 

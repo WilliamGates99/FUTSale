@@ -14,6 +14,8 @@ interface PickUpPlayerRepository {
 
     fun observeLatestPickedPlayers(): Flow<List<Player>>
 
+    fun observePickedUpPlayer(playerId: Long): Flow<Player>
+
     fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds>
 
     suspend fun pickUpPlayer(

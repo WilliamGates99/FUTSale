@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -38,19 +37,5 @@ inline fun <reified T : Any> serializableNavType(
 
     override fun get(bundle: Bundle, key: String): T? = bundle.getString(key)?.let { value ->
         json.decodeFromString(Uri.decode(value))
-    }
-}
-
-val PlayerCustomNavType = object : NavType<Player>(isNullableAllowed = false) {
-    override fun serializeAsValue(value: Player): String = Uri.encode(Json.encodeToString(value))
-
-    override fun parseValue(value: String): Player = Json.decodeFromString(Uri.decode(value))
-
-    override fun put(bundle: Bundle, key: String, value: Player) = bundle.putString(
-        key, Uri.encode(Json.encodeToString(value))
-    )
-
-    override fun get(bundle: Bundle, key: String): Player? = bundle.getString(key)?.let { value ->
-        Json.decodeFromString(Uri.decode(value))
     }
 }

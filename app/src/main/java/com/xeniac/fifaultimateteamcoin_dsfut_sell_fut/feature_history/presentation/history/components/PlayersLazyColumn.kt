@@ -51,7 +51,7 @@ fun PlayersLazyColumn(
     pickedPlayersHistory: LazyPagingItems<Player>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    onClick: (player: Player) -> Unit
+    onClick: (playerId: Long) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -68,7 +68,11 @@ fun PlayersLazyColumn(
             player?.let {
                 PlayerCard(
                     player = player,
-                    onClick = { onClick(player) },
+                    onClick = {
+                        player.id?.let { playerId ->
+                            onClick(playerId)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

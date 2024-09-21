@@ -28,6 +28,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PickUpDate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerAnimation
@@ -42,11 +43,13 @@ fun HistoryPlayerInfoScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
+    val player by viewModel.player.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(viewModel.player.name) },
+                title = { Text(text = player?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -79,7 +82,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PlayerInfo(
-                player = viewModel.player,
+                player = player,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -87,7 +90,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             PickUpDate(
-                pickUpTimeInMs = viewModel.player.pickUpTimeInMs,
+                pickUpTimeInMs = player?.pickUpTimeInMs,
                 modifier = Modifier.fillMaxWidth()
             )
         }

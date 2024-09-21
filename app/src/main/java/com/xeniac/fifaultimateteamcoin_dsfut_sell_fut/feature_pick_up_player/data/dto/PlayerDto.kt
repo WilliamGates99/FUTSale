@@ -72,8 +72,8 @@ data class PlayerDto(
         position = position,
         startPrice = formatNumber(startPrice),
         buyNowPrice = formatNumber(buyNowPrice),
-        owners = owners,
-        contracts = contracts,
+        owners = owners.toString(),
+        contracts = contracts.toString(),
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         platform = platform

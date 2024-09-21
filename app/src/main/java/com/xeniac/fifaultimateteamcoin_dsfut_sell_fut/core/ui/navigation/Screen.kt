@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +12,7 @@ data object HomeScreen
 data object PickUpPlayerScreen
 
 @Serializable
-data class PickedUpPlayerInfoScreen(val player: Player)
+data class PickedUpPlayerInfoScreen(val playerId: Long)
 
 @Serializable
 data object ProfileScreen
@@ -22,7 +21,7 @@ data object ProfileScreen
 data object HistoryScreen
 
 @Serializable
-data class HistoryPlayerInfoScreen(val player: Player)
+data class HistoryPlayerInfoScreen(val playerId: Long)
 
 @Serializable
 data object SettingsScreen

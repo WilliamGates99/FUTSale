@@ -42,15 +42,19 @@ import kotlin.coroutines.coroutineContext
 class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: Lazy<HttpClient>,
     private val preferencesRepository: Lazy<PreferencesRepository>,
-    private val playerDao: Lazy<PlayersDao>
+    private val playersDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playersDao.get()
         .observeLatestPickedPlayers(
             currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
         ).map { playerEntities ->
             playerEntities.map { it.toPlayer() }
         }
+
+    override fun observePickedUpPlayer(playerId: Long): Flow<Player> = playersDao.get()
+        .observerPlayer(id = playerId)
+        .map { it.toPlayer() }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
@@ -120,8 +124,13 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                     val playerEntity = playerDto!!.copy(
                         platform = selectedPlatform
                     ).toPlayerEntity()
-                    playerDao.get().insertPlayer(playerEntity)
-                    Result.Success(playerEntity.toPlayer())
+                    val playerId = playersDao.get().insertPlayer(playerEntity)
+
+                    val player = playerEntity.copy(
+                        id = playerId
+                    ).toPlayer()
+
+                    Result.Success(player)
                 } else {
                     val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
                         Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock(message = pickUpPlayerResponseDto.message)

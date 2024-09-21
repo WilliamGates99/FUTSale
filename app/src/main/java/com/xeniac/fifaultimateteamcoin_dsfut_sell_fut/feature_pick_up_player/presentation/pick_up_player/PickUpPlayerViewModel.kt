@@ -253,7 +253,7 @@ class PickUpPlayerViewModel @Inject constructor(
                             PickUpPlayerUiEvent.ShowSuccessNotification(player.name)
                         )
                         _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
+                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
                         )
                     }
                     is Result.Error -> {
@@ -388,7 +388,7 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
 
                     _pickUpPlayerOnceEventChannel.send(
-                        PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
+                        PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
                     )
                 }
                 is Result.Error -> {

@@ -39,7 +39,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
 
 @Composable
 fun PlayerInfo(
-    player: Player,
+    player: Player?,
     modifier: Modifier = Modifier
 ) {
     var rowHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
@@ -60,25 +60,25 @@ fun PlayerInfo(
         ) {
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_rating),
-                value = player.rating,
+                value = player?.rating,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_start_price),
-                value = player.buyNowPrice,
+                value = player?.buyNowPrice,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_owners),
-                value = player.owners.toString(),
+                value = player?.owners,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_chemistry_style),
-                value = player.chemistryStyle,
+                value = player?.chemistryStyle,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -102,25 +102,25 @@ fun PlayerInfo(
         ) {
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_position),
-                value = player.position,
+                value = player?.position,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_buy_now_price),
-                value = player.buyNowPrice,
+                value = player?.buyNowPrice,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_contracts),
-                value = player.contracts.toString(),
+                value = player?.contracts,
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerInfoText(
                 title = stringResource(id = R.string.history_player_info_title_platform),
-                value = player.platform.asUiText().asString(),
+                value = player?.platform?.asUiText()?.asString(),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -130,7 +130,7 @@ fun PlayerInfo(
 @Composable
 fun PlayerInfoText(
     title: String,
-    value: String,
+    value: String?,
     modifier: Modifier = Modifier,
     titleFontSize: TextUnit = 12.sp,
     titleLineHeight: TextUnit = 12.sp,
@@ -164,7 +164,7 @@ fun PlayerInfoText(
         )
 
         Text(
-            text = value,
+            text = value ?: "",
             fontSize = valueFontSize,
             lineHeight = valueLineHeight,
             fontWeight = valueFontWeight,

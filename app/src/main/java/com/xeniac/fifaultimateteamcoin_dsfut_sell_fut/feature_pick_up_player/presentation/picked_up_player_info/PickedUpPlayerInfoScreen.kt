@@ -42,13 +42,14 @@ fun PickedUpPlayerInfoScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
+    val player by viewModel.player.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(viewModel.player.name) },
+                title = { Text(text = player?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -70,11 +71,11 @@ fun PickedUpPlayerInfoScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(
                     top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = verticalPadding
+                    bottom = innerPadding.calculateBottomPadding() + verticalPadding
                 )
         ) {
             PickedUpPlayerInfo(
-                player = viewModel.player,
+                player = player,
                 timerText = timerText.asString(),
                 horizontalPadding = horizontalPadding,
                 modifier = Modifier.fillMaxWidth()

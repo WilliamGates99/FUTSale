@@ -73,7 +73,7 @@ fun LatestPlayersPagers(
     beyondViewportPageCount: Int = 1,
     pageSpacing: Dp = 12.dp,
     onAction: (action: PickUpPlayerAction) -> Unit,
-    onPlayerCardClick: (player: Player) -> Unit
+    onPlayerCardClick: (playerId: Long) -> Unit
 ) {
     AnimatedVisibility(
         visible = latestPickedPlayers.isNotEmpty(),
@@ -103,7 +103,11 @@ fun LatestPlayersPagers(
                 PlayerCard(
                     player = player,
                     timerText = timerText,
-                    onClick = { onPlayerCardClick(player) },
+                    onClick = {
+                        player.id?.let { playerId ->
+                            onPlayerCardClick(playerId)
+                        }
+                    },
                     modifier = Modifier
                         .graphicsLayer {
                             /*

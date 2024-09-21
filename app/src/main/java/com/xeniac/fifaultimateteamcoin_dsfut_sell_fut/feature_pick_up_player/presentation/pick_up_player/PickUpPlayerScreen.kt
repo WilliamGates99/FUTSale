@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
@@ -52,7 +51,7 @@ import kotlinx.coroutines.launch
 fun PickUpPlayerScreen(
     bottomPadding: Dp,
     onNavigateToProfileScreen: () -> Unit,
-    onNavigateToPickedUpPlayerInfoScreen: (player: Player) -> Unit,
+    onNavigateToPickedUpPlayerInfoScreen: (playerId: Long) -> Unit,
     viewModel: PickUpPlayerViewModel = hiltViewModel(),
     notificationService: PickUpPlayerNotificationService = requirePickUpPlayerNotificationService()
 ) {
@@ -177,7 +176,7 @@ fun PickUpPlayerScreen(
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
-                onNavigateToPickedUpPlayerInfoScreen(event.player)
+                onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
             is UiEvent.ShowLongSnackbar -> {
                 scope.launch {
@@ -277,7 +276,7 @@ fun PickUpPlayerScreen(
                 }
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
-                onNavigateToPickedUpPlayerInfoScreen(event.player)
+                onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
             is UiEvent.ShowLongSnackbar -> {
                 scope.launch {

@@ -6,6 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
@@ -50,6 +51,12 @@ object PickUpPlayerModule {
     fun provideObserveLatestPickedPlayersUseCase(
         pickUpPlayerRepository: PickUpPlayerRepository
     ): ObserveLatestPickedPlayersUseCase = ObserveLatestPickedPlayersUseCase(pickUpPlayerRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideObservePickedUpPlayerUseCase(
+        pickUpPlayerRepository: PickUpPlayerRepository
+    ): ObservePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(pickUpPlayerRepository)
 
     @Provides
     @ViewModelScoped
@@ -107,6 +114,7 @@ object PickUpPlayerModule {
     @ViewModelScoped
     fun provideGetThreeLatestPlayersUseCase(
         observeLatestPickedPlayersUseCase: ObserveLatestPickedPlayersUseCase,
+        observePickedUpPlayerUseCase: ObservePickedUpPlayerUseCase,
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
@@ -115,6 +123,7 @@ object PickUpPlayerModule {
         startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeLatestPickedPlayersUseCase },
+        { observePickedUpPlayerUseCase },
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
         { getSelectedPlatformUseCase },
