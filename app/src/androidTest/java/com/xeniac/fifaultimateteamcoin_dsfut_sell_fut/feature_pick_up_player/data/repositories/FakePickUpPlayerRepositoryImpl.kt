@@ -63,6 +63,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         ('a'..'z').forEachIndexed { index, char ->
             playersToInsert.add(
                 PlayerEntity(
+                    id = index.toLong(),
                     tradeID = index.toString(),
                     assetID = index,
                     resourceID = index,
@@ -106,6 +107,14 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
 
         sortedLatestPlayerEntities.map { it.toPlayer() }
+    }
+
+    override fun observePickedUpPlayer(playerId: Long): Flow<Player> = flow {
+        val player = latestPlayerEntities.find { playerEntity ->
+            playerEntity.id == playerId
+        }?.toPlayer()
+
+        player?.let { emit(it) }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
