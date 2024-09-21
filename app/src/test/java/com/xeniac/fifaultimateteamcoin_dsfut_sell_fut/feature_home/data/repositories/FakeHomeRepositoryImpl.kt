@@ -112,9 +112,10 @@ class FakeHomeRepositoryImpl(
         } else emit(null)
     }
 
-    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
+    override fun getLatestAppVersion(
+    ): Flow<Result<LatestAppUpdateInfo?, GetLatestAppVersionError>> = flow {
         if (!isNetworkAvailable) {
-            return Result.Error(GetLatestAppVersionError.Network.Offline)
+            return@flow emit(Result.Error(GetLatestAppVersionError.Network.Offline))
         }
 
         val mockEngine = MockEngine {
@@ -148,7 +149,7 @@ class FakeHomeRepositoryImpl(
 
         val response = testClient.get(urlString = HomeRepository.EndPoints.GetLatestAppVersion.url)
 
-        return when (response.status) {
+        when (response.status) {
             HttpStatusCode.OK -> {
                 val getLatestAppVersionResponse = Json
                     .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
@@ -179,23 +180,25 @@ class FakeHomeRepositoryImpl(
                             storeAppUpdateDialogShowEpochDays()
                         }
 
-                        Result.Success(
-                            LatestAppUpdateInfo(
-                                versionCode = latestAppVersionCode,
-                                versionName = getLatestAppVersionResponse.versionName
+                        emit(
+                            Result.Success(
+                                LatestAppUpdateInfo(
+                                    versionCode = latestAppVersionCode,
+                                    versionName = getLatestAppVersionResponse.versionName
+                                )
                             )
                         )
-                    } else Result.Success(null)
+                    } else emit(Result.Success(null))
                 } else {
                     preferencesRepository.get().apply {
                         storeAppUpdateDialogShowCount(0)
                         removeAppUpdateDialogShowEpochDays()
                     }
 
-                    Result.Success(null)
+                    emit(Result.Success(null))
                 }
             }
-            else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
+            else -> emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
         }
     }
 }

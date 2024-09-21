@@ -10,6 +10,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposito
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -47,7 +48,7 @@ class GetLatestAppVersionUseCaseTest {
     fun getLatestAppVersionWithUnavailableNetwork_returnsError() = runBlocking {
         fakeHomeRepositoryImpl.isNetworkAvailable(isAvailable = false)
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Error::class.java)
     }
@@ -56,14 +57,14 @@ class GetLatestAppVersionUseCaseTest {
     fun getLatestAppVersionWithNoneOkStatusCode_returnsError() = runBlocking {
         fakeHomeRepositoryImpl.setGetLatestAppVersionHttpStatusCode(HttpStatusCode.RequestTimeout)
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Error::class.java)
     }
 
     @Test
     fun getLatestAppVersionWhenAppIsUpdated_returnsNull() = runBlocking {
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
         assertThat((getLatestAppVersionResult as Result.Success).data).isNull()
@@ -80,7 +81,7 @@ class GetLatestAppVersionUseCaseTest {
             latestAppUpdateInfo = latestAppUpdateInfo
         )
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
         assertThat((getLatestAppVersionResult as Result.Success).data).isEqualTo(latestAppUpdateInfo)
@@ -102,7 +103,7 @@ class GetLatestAppVersionUseCaseTest {
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 
-            val getLatestAppVersionResult = getLatestAppVersionUseCase()
+            val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
             assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
             assertThat((getLatestAppVersionResult as Result.Success).data).isNull()
@@ -124,7 +125,7 @@ class GetLatestAppVersionUseCaseTest {
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 
-            val getLatestAppVersionResult = getLatestAppVersionUseCase()
+            val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
             assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
             assertThat((getLatestAppVersionResult as Result.Success).data)

@@ -46,7 +46,7 @@ class ObservePickedPlayersHistoryUseCaseTest {
 
     @Test
     fun observePickedPlayersHistory_returnsEntirePlayersListInDescendingOrder() = runTest {
-        fakeHistoryRepositoryImpl.addDummyPlayersToLatestPlayers()
+        fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
 
         val pickedPlayersHistoryPagingData = fakeHistoryRepositoryImpl.observePickedPlayersHistory()
         val pickedPlayersHistory = pickedPlayersHistoryPagingData.asSnapshot()

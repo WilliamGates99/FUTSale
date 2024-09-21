@@ -111,7 +111,7 @@ class HistoryScreenTest {
 
     @Test
     fun launchingHistoryScreenWithPlayersHistoryList_showsPlayersList() = runTest {
-        fakeHistoryRepository.addDummyPlayersToLatestPlayers()
+        fakeHistoryRepository.addDummyPlayersToHistory()
 
         composeTestRule.onNodeWithTag(TestTags.HISTORY_LAZY_COLUMN).apply {
             assertExists()
