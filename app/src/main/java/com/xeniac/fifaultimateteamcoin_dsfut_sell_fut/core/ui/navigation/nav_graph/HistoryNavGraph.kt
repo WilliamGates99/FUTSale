@@ -22,7 +22,7 @@ fun NavGraphBuilder.historyNavGraph(
         )
     }
 
-    composable<HistoryPlayerInfoScreen>() {
+    composable<HistoryPlayerInfoScreen> {
         HistoryPlayerInfoScreen(
             onNavigateUp = homeNavController::navigateUp
         )
