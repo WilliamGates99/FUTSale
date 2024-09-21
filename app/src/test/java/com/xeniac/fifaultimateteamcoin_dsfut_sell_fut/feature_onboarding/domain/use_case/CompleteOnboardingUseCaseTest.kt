@@ -7,7 +7,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Fak
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -37,18 +36,16 @@ class CompleteOnboardingUseCaseTest {
     }
 
     @Test
-    fun completeOnboarding_returnsSuccess() {
-        runTest {
-            val partnerId = "123"
-            val secretKey = "abc123"
+    fun completeOnboarding_returnsSuccess() = runTest {
+        val partnerId = "123"
+        val secretKey = "abc123"
 
-            val result = completeOnboardingUseCase(
-                partnerId = partnerId,
-                secretKey = secretKey
-            )
+        val result = completeOnboardingUseCase(
+            partnerId = partnerId,
+            secretKey = secretKey
+        ).first()
 
-            assertThat(result).isInstanceOf(Result.Success::class.java)
-        }
+        assertThat(result).isInstanceOf(Result.Success::class.java)
     }
 
     @Test
@@ -57,17 +54,16 @@ class CompleteOnboardingUseCaseTest {
             val partnerId = "123"
             val secretKey = "abc123"
 
-            completeOnboardingUseCase(
+            val result = completeOnboardingUseCase(
                 partnerId = partnerId,
                 secretKey = secretKey
-            )
+            ).first()
 
             val isOnBoardingCompleted = fakePreferencesRepository.isOnBoardingCompleted()
             val storedPartnerId = fakePreferencesRepository.getPartnerId().first()
             val storedSecretKey = fakePreferencesRepository.getSecretKey().first()
 
-            advanceUntilIdle()
-
+            assertThat(result).isInstanceOf(Result.Success::class.java)
             assertThat(isOnBoardingCompleted).isTrue()
             assertThat(storedPartnerId).isEqualTo(partnerId)
             assertThat(storedSecretKey).isEqualTo(secretKey)
