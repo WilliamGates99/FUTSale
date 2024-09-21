@@ -35,12 +35,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import timber.log.Timber
-import java.util.Locale
+import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
-    private val httpClient: HttpClient,
+    private val httpClient: Lazy<HttpClient>,
     private val preferencesRepository: Lazy<PreferencesRepository>,
     private val playerDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
@@ -95,7 +95,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             timestamp = timestampInSeconds
         )
 
-        val response = httpClient.get(
+        val response = httpClient.get().get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = selectedPlatform.value,
                 partnerId = partnerId,
@@ -142,7 +142,11 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
         }
     } catch (e: UnresolvedAddressException) { // When device is offline
-        Timber.e("Pick up player UnresolvedAddressException:}")
+        Timber.e("Pick up player UnresolvedAddressException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.Offline)
+    } catch (e: UnknownHostException) { // When device is offline
+        Timber.e("Pick up player UnknownHostException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.Offline)
     } catch (e: ConnectTimeoutException) {
@@ -178,8 +182,6 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         Timber.e("Pick up player Exception:")
         e.printStackTrace()
-        if (e.message?.lowercase(Locale.US)?.contains("unable to resolve host") == true) {
-            Result.Error(PickUpPlayerError.Network.Offline)
-        } else Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
+        Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
     }
 }
