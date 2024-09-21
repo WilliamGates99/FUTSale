@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -60,11 +62,13 @@ fun HomeScreen(
     var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
 
-    LaunchedEffect(backStackEntry?.destination) {
-        val currentRoute = backStackEntry?.destination?.route
-        isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
-            currentRoute?.contains(navigationBarItem.screen.toString()) == true
+    LaunchedEffect(currentDestination) {
+        isBottomAppBarVisible = NavigationBarItems.entries.find { navItem ->
+            currentDestination?.hierarchy?.any {
+                it.hasRoute(route = navItem.screen::class)
+            } ?: false
         } != null
     }
 
@@ -168,7 +172,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CustomNavigationBar(
-                    backStackEntry = backStackEntry,
+                    currentDestination = currentDestination,
                     onItemClick = { screen ->
                         homeNavController.navigate(screen) {
                             // Avoid multiple copies of the same destination when re-selecting the same item

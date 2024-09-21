@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.MainUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.MainActivityState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.OnboardingScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,10 +41,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getPostSplashDestination(): Screen {
+    private suspend fun getPostSplashDestination(): Any {
         val isOnboardingCompleted = mainUseCases.getIsOnboardingCompletedUseCase.get()()
 
-        return if (isOnboardingCompleted) Screen.HomeScreen
-        else Screen.OnboardingScreen
+        return if (isOnboardingCompleted) HomeScreen
+        else OnboardingScreen
     }
 }

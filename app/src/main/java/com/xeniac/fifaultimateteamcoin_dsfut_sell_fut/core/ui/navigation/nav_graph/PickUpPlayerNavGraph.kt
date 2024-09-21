@@ -4,9 +4,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoScreen
@@ -16,28 +17,25 @@ fun NavGraphBuilder.pickUpPlayerNavGraph(
     homeNavController: NavHostController,
     bottomPadding: Dp
 ) {
-    composable<Screen.PickUpPlayerScreen> {
+    composable<PickUpPlayerScreen> {
         PickUpPlayerScreen(
             bottomPadding = bottomPadding,
             onNavigateToProfileScreen = {
-                homeNavController.navigate(Screen.ProfileScreen) {
+                homeNavController.navigate(ProfileScreen) {
                     launchSingleTop = true
                     popUpTo(homeNavController.graph.startDestinationId)
                 }
             },
             onNavigateToPickedUpPlayerInfoScreen = { player ->
-                homeNavController.navigate(Screen.PickedUpPlayerInfoScreen(player = player))
+                homeNavController.navigate(PickedUpPlayerInfoScreen(player = player))
             }
         )
     }
 
-    composable<Screen.PickedUpPlayerInfoScreen>(
+    composable<PickedUpPlayerInfoScreen>(
         typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-    ) { backStackEntry ->
-        val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
-
+    ) {
         PickedUpPlayerInfoScreen(
-            player = args.player,
             onNavigateUp = homeNavController::navigateUp
         )
     }

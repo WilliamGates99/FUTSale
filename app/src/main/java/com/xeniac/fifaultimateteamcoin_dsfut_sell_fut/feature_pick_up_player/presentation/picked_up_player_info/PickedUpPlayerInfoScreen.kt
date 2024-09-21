@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,14 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components.InstructionCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components.PickedUpPlayerInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickedUpPlayerInfoScreen(
-    player: Player,
     onNavigateUp: () -> Unit,
     viewModel: PickedUpPlayerInfoViewModel = hiltViewModel()
 ) {
@@ -47,15 +44,11 @@ fun PickedUpPlayerInfoScreen(
 
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onAction(PickedUpPlayerInfoAction.StartCountDownTimer(player.expiryTimeInMs))
-    }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(player.name) },
+                title = { Text(viewModel.player.name) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -81,7 +74,7 @@ fun PickedUpPlayerInfoScreen(
                 )
         ) {
             PickedUpPlayerInfo(
-                player = player,
+                player = viewModel.player,
                 timerText = timerText.asString(),
                 horizontalPadding = horizontalPadding,
                 modifier = Modifier.fillMaxWidth()

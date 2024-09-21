@@ -1,9 +1,14 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.serializableNavType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -12,17 +17,24 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.text.DecimalFormat
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PickedUpPlayerInfoViewModel @Inject constructor(
     private val pickUpPlayerUseCases: PickUpPlayerUseCases,
-    private val decimalFormat: DecimalFormat
+    private val decimalFormat: DecimalFormat,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    // TODO: GET PLAYER ID FROM NAVIGATION
+    val player = savedStateHandle.toRoute<PickedUpPlayerInfoScreen>(
+        typeMap = mapOf(typeOf<Player>() to serializableNavType<Player>())
+    ).player
 
     private val _timerText = MutableStateFlow<UiText>(
         UiText.StringResource(
@@ -31,7 +43,9 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
             decimalFormat.format(0)
         )
     )
-    val timerText = _timerText.stateIn(
+    val timerText = _timerText.onStart {
+        startCountDownTimer(player.expiryTimeInMs)
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
         initialValue = UiText.StringResource(

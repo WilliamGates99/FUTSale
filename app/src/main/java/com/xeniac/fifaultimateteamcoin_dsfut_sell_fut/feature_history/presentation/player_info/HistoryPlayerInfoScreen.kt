@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PickUpDate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerInfo
@@ -36,8 +36,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentati
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryPlayerInfoScreen(
-    player: Player,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    viewModel: HistoryPlayerInfoViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val verticalPadding by remember { derivedStateOf { 16.dp } }
@@ -46,7 +46,7 @@ fun HistoryPlayerInfoScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(player.name) },
+                title = { Text(viewModel.player.name) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -79,7 +79,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PlayerInfo(
-                player = player,
+                player = viewModel.player,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -87,7 +87,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             PickUpDate(
-                pickUpTimeInMs = player.pickUpTimeInMs,
+                pickUpTimeInMs = viewModel.player.pickUpTimeInMs,
                 modifier = Modifier.fillMaxWidth()
             )
         }
