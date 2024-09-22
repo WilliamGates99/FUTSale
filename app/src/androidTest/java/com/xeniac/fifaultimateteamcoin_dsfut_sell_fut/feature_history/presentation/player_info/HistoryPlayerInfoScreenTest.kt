@@ -125,6 +125,12 @@ class HistoryPlayerInfoScreenTest {
     @Test
     fun clickOnBackBtn_navigatesToHistoryScreen() {
         composeTestRule.apply {
+            onNodeWithText(testPlayer.name).apply {
+                assertExists()
+                assertIsDisplayed()
+                performClick()
+            }
+
             onNodeWithContentDescription(context.getString(R.string.core_content_description_back)).apply {
                 assertExists()
                 assertIsDisplayed()
@@ -137,7 +143,16 @@ class HistoryPlayerInfoScreenTest {
 
     @Test
     fun pressBack_navigatesToHistoryScreen() {
-        Espresso.pressBackUnconditionally()
-        composeTestRule.onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
+        composeTestRule.apply {
+            onNodeWithText(testPlayer.name).apply {
+                assertExists()
+                assertIsDisplayed()
+                performClick()
+            }
+
+            Espresso.pressBackUnconditionally()
+
+            onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
+        }
     }
 }
