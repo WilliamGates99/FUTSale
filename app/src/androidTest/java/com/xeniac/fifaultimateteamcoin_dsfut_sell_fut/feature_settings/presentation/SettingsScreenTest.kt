@@ -47,10 +47,10 @@ class SettingsScreenTest {
         android.Manifest.permission.POST_NOTIFICATIONS
     )
 
-    @get:Rule(order = 3)
+    @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @get:Rule(order = 4)
+    @get:Rule(order = 3)
     val intentsTestRule = IntentsRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
