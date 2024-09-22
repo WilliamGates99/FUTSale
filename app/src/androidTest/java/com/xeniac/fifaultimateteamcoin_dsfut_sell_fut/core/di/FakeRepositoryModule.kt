@@ -28,12 +28,12 @@ abstract class FakeRepositoryModule {
     @Binds
     @ViewModelScoped
     abstract fun bindPickUpPlayerRepository(
-        fakePickUpPlayerRepositoryImp: FakePickUpPlayerRepositoryImpl
+        fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
     ): PickUpPlayerRepository
 
     @Binds
     @ViewModelScoped
     abstract fun bindHistoryRepository(
-        fakeHistoryRepositoryImp: FakeHistoryRepositoryImpl
+        fakeHistoryRepositoryImpl: FakeHistoryRepositoryImpl
     ): HistoryRepository
 }
