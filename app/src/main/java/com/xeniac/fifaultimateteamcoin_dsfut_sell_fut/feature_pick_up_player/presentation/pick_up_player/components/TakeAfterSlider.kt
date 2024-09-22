@@ -195,16 +195,18 @@ fun TakeAfterSlider(
             modifier = Modifier
                 .fillMaxWidth()
                 .systemGestureExclusion { coordinates ->
-                    Rect(
-                        topLeft = Offset(
-                            x = 0f - 100f,
-                            y = 0f
-                        ),
-                        bottomRight = Offset(
-                            x = coordinates.size.width + 100f,
-                            y = coordinates.size.height.toFloat()
+                    if (isEnabled) {
+                        Rect(
+                            topLeft = Offset(
+                                x = 0f - 100f,
+                                y = 0f
+                            ),
+                            bottomRight = Offset(
+                                x = coordinates.size.width + 100f,
+                                y = coordinates.size.height.toFloat()
+                            )
                         )
-                    )
+                    } else Rect(left = 0f, top = 0f, right = 0f, bottom = 0f)
                 }
                 .testTag(TestTags.TAKE_AFTER_SLIDER)
         )
