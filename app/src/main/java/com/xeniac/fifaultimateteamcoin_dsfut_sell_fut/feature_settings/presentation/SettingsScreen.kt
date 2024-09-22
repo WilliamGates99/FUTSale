@@ -175,12 +175,14 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    horizontal = horizontalPadding,
+                    vertical = verticalPadding
                 )
         ) {
             SettingsCard(

@@ -139,12 +139,14 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    horizontal = horizontalPadding,
+                    vertical = verticalPadding
                 )
         ) {
             ProfileTextFields(

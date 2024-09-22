@@ -333,11 +333,12 @@ fun PickUpPlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
-                .verticalScroll(rememberScrollState())
                 .padding(
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
                 )
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = verticalPadding)
         ) {
             LatestPlayersPagers(
                 latestPickedPlayers = pickUpPlayerState.latestPickedPlayers,

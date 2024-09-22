@@ -86,13 +86,16 @@ fun HistoryScreen(
                 PlayersLazyColumn(
                     pickedPlayersHistory = pickedPlayersHistory,
                     contentPadding = PaddingValues(
-                        start = horizontalPadding,
-                        end = horizontalPadding,
-                        top = innerPadding.calculateTopPadding() + verticalPadding,
-                        bottom = bottomPadding + verticalPadding
+                        horizontal = horizontalPadding,
+                        vertical = verticalPadding
                     ),
                     onClick = onNavigateToPlayerInfoScreen,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = bottomPadding
+                        )
                 )
             }
         }
