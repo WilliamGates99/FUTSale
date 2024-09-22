@@ -16,10 +16,35 @@ import kotlin.random.Random
 
 class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
 
+    companion object {
+        val dummyPlayer = PlayerEntity(
+            id = 100,
+            tradeID = "100",
+            assetID = 100,
+            resourceID = 100,
+            transactionID = 100,
+            name = "Test Player 100",
+            rating = 69,
+            position = "CDM",
+            startPrice = 150000,
+            buyNowPrice = 200000,
+            owners = 3,
+            contracts = 7,
+            chemistryStyle = "Basic",
+            chemistryStyleID = 100,
+            platform = Platform.CONSOLE,
+            pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+        )
+    }
+
     var playerEntitiesHistory = mutableListOf<PlayerEntity>()
 
-    fun addDummyPlayerToHistory(player: Player) {
-        playerEntitiesHistory.add(player.toPlayerEntity())
+    init {
+        addDummyPlayerToHistory()
+    }
+
+    private fun addDummyPlayerToHistory() {
+        playerEntitiesHistory.add(dummyPlayer)
     }
 
     fun addDummyPlayersToHistory() {
@@ -59,6 +84,10 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
         playersToInsert.shuffle()
 
         playersToInsert.forEach { playerEntitiesHistory.add(it) }
+    }
+
+    fun clearDummyPlayersFromHistory() {
+        playerEntitiesHistory.clear()
     }
 
     override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {

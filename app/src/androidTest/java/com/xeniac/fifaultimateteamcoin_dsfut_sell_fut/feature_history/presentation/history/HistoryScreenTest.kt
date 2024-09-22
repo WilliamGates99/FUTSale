@@ -97,6 +97,8 @@ class HistoryScreenTest {
 
     @Test
     fun launchingHistoryScreenWithEmptyPlayersHistoryList_showsEmptyAnimation() = runTest {
+        fakeHistoryRepository.clearDummyPlayersFromHistory()
+
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.history_empty_list_message)).apply {
                 assertExists()

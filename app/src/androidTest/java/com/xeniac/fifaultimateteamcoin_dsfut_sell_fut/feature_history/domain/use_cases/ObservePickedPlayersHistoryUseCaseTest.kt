@@ -40,6 +40,8 @@ class ObservePickedPlayersHistoryUseCaseTest {
 
     @Test
     fun observePickedPlayersHistoryWithNoPlayers_returnsEmptyPlayersList() = runTest {
+        fakeHistoryRepositoryImpl.clearDummyPlayersFromHistory()
+
         val pickedPlayersHistory = fakeHistoryRepositoryImpl.observePickedPlayersHistory()
         assertThat(pickedPlayersHistory.asSnapshot()).isEmpty()
     }

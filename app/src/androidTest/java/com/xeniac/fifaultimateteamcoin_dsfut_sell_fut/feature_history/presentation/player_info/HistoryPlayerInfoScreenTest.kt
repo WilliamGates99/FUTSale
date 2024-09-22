@@ -17,18 +17,13 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_HISTORY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -55,40 +50,11 @@ class HistoryPlayerInfoScreenTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val testPlayer = Player(
-        id = 1,
-        tradeID = 1,
-        assetID = 1,
-        resourceID = 1,
-        transactionID = 1,
-        name = "Test Player",
-        rating = "88",
-        position = "ST",
-        startPrice = "50000",
-        buyNowPrice = "200000",
-        owners = "5",
-        contracts = "4",
-        chemistryStyle = "Basic",
-        chemistryStyleID = 1,
-        platform = Platform.PC,
-        pickUpTimeInMs = 1720521991000, // Jul 9, 2024 - 10:45:00
-        expiryTimeInMs = 1720522080000 // Jul 9, 2024 - 10:48:00
-    )
+    private val testPlayer = FakeHistoryRepositoryImpl.dummyPlayer.toPlayer()
 
     @Before
     fun setUp() {
         hiltRule.inject()
-
-        val fakeHistoryRepository = FakeHistoryRepositoryImpl().apply {
-            addDummyPlayerToHistory(testPlayer)
-        }
-
-        val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
-            historyRepository = fakeHistoryRepository
-        )
-        val observePlayerUseCase = ObservePlayerUseCase(
-            historyRepository = fakeHistoryRepository
-        )
 
         composeTestRule.activity.setContent {
             FutSaleTheme {
@@ -100,9 +66,6 @@ class HistoryPlayerInfoScreenTest {
                 ) {
                     composable<HistoryScreen> {
                         HistoryScreen(
-                            viewModel = HistoryViewModel(
-                                observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
-                            ),
                             bottomPadding = 0.dp,
                             onNavigateToPlayerInfoScreen = { playerId ->
                                 testNavController.navigate(HistoryPlayerInfoScreen(playerId))
@@ -110,12 +73,8 @@ class HistoryPlayerInfoScreenTest {
                         )
                     }
 
-                    composable<HistoryPlayerInfoScreen> { backStackEntry ->
+                    composable<HistoryPlayerInfoScreen> {
                         HistoryPlayerInfoScreen(
-                            viewModel = HistoryPlayerInfoViewModel(
-                                observePlayerUseCase = { observePlayerUseCase },
-                                savedStateHandle = backStackEntry.savedStateHandle
-                            ),
                             onNavigateUp = testNavController::navigateUp
                         )
                     }
