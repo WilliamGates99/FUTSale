@@ -40,6 +40,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
+    private var pickedUpPlayerId = 0L
     private var latestPlayerEntities = mutableListOf<PlayerEntity>()
 
     fun isNetworkAvailable(isAvailable: Boolean) {
@@ -231,7 +232,10 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    val playerEntity = playerDto!!.toPlayerEntity()
+                    pickedUpPlayerId += 1
+                    val playerEntity = playerDto!!.toPlayerEntity().copy(
+                        id = pickedUpPlayerId * 100
+                    )
                     latestPlayerEntities.add(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {

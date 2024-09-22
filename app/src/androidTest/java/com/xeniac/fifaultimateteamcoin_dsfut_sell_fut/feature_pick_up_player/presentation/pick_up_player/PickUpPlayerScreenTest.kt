@@ -16,13 +16,13 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
@@ -51,6 +51,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateTakeAfter
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -76,13 +77,15 @@ class PickUpPlayerScreenTest {
     @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    private val context: Context = ApplicationProvider.getApplicationContext()
-
     @Inject
     lateinit var decimalFormat: DecimalFormat
 
+    private val context: Context = ApplicationProvider.getApplicationContext()
+
     private val fakePreferencesRepository = FakePreferencesRepositoryImpl()
     private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
+
+    private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
 
     private lateinit var testNavController: NavHostController
 
@@ -140,12 +143,12 @@ class PickUpPlayerScreenTest {
                     navController = testNavController,
                     startDestination = PickUpPlayerScreen
                 ) {
-                    composable<PickUpPlayerScreen> {
+                    composable<PickUpPlayerScreen> { backStackEntry ->
                         PickUpPlayerScreen(
                             viewModel = PickUpPlayerViewModel(
                                 pickUpPlayerUseCases = pickUpPlayerUseCases,
                                 decimalFormat = decimalFormat,
-                                savedStateHandle = SavedStateHandle()
+                                savedStateHandle = backStackEntry.savedStateHandle
                             ),
                             bottomPadding = 0.dp,
                             onNavigateToProfileScreen = {
@@ -160,8 +163,16 @@ class PickUpPlayerScreenTest {
                         )
                     }
 
-                    composable<PickedUpPlayerInfoScreen> {
+                    composable<PickedUpPlayerInfoScreen> { backStackEntry ->
+                        backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                            .toRoute<PickedUpPlayerInfoScreen>().playerId
+
                         PickedUpPlayerInfoScreen(
+                            viewModel = PickedUpPlayerInfoViewModel(
+                                pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                decimalFormat = decimalFormat,
+                                savedStateHandle = backStackEntry.savedStateHandle
+                            ),
                             onNavigateUp = testNavController::navigateUp
                         )
                     }
@@ -342,7 +353,7 @@ class PickUpPlayerScreenTest {
             onNodeWithText(
                 text = context.getString(
                     R.string.picked_up_player_info_message,
-                    "Test Player"
+                    testPlayer.name
                 )
             ).apply {
                 assertExists()
@@ -414,7 +425,7 @@ class PickUpPlayerScreenTest {
             onNodeWithText(
                 text = context.getString(
                     R.string.picked_up_player_info_message,
-                    "Test Player"
+                    testPlayer.name
                 )
             ).apply {
                 assertExists()
@@ -469,6 +480,8 @@ class PickUpPlayerScreenTest {
                         assertIsDisplayed()
                         performClick()
                     }
+
+                    awaitIdle()
 
                     Espresso.pressBackUnconditionally()
                 }

@@ -39,10 +39,30 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerRepository {
 
+    companion object {
+        val dummyPlayerDto = PlayerDto(
+            tradeID = 1,
+            assetID = 1,
+            resourceID = 1,
+            transactionID = 1,
+            name = "Test Player",
+            rating = 88,
+            position = "GK",
+            startPrice = 10000,
+            buyNowPrice = 15000,
+            owners = 1,
+            contracts = 1,
+            chemistryStyle = "Basic",
+            chemistryStyleID = 1,
+            expires = 0
+        )
+    }
+
     private var isNetworkAvailable = true
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
+    private var pickedUpPlayerId = 0L
     private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
 
     fun isNetworkAvailable(isAvailable: Boolean) {
@@ -159,22 +179,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                     PickUpPlayerResponseDto(
                         error = "",
                         message = "1 player popped",
-                        playerDto = PlayerDto(
-                            tradeID = 1,
-                            assetID = 1,
-                            resourceID = 1,
-                            transactionID = 1,
-                            name = "Test Player",
-                            rating = 88,
-                            position = "GK",
-                            startPrice = 10000,
-                            buyNowPrice = 15000,
-                            owners = 1,
-                            contracts = 1,
-                            chemistryStyle = "Basic",
-                            chemistryStyleID = 1,
-                            expires = 0
-                        )
+                        playerDto = dummyPlayerDto
                     )
                 }
             } else {
@@ -234,7 +239,10 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    val playerEntity = playerDto!!.toPlayerEntity()
+                    pickedUpPlayerId += 1
+                    val playerEntity = playerDto!!.toPlayerEntity().copy(
+                        id = pickedUpPlayerId * 100
+                    )
                     latestPlayerEntities.add(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {
