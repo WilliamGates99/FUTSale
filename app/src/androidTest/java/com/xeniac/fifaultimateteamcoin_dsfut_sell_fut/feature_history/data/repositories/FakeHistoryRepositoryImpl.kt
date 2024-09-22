@@ -39,11 +39,7 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
 
     var playerEntitiesHistory = mutableListOf<PlayerEntity>()
 
-    init {
-        addDummyPlayerToHistory()
-    }
-
-    private fun addDummyPlayerToHistory() {
+    fun addDummyPlayerToHistory() {
         playerEntitiesHistory.add(dummyPlayer)
     }
 
@@ -84,10 +80,6 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
         playersToInsert.shuffle()
 
         playersToInsert.forEach { playerEntitiesHistory.add(it) }
-    }
-
-    fun clearDummyPlayersFromHistory() {
-        playerEntitiesHistory.clear()
     }
 
     override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {

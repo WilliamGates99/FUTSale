@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
@@ -23,7 +24,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.History
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -56,29 +60,56 @@ class HistoryPlayerInfoScreenTest {
     fun setUp() {
         hiltRule.inject()
 
-        composeTestRule.activity.setContent {
-            FutSaleTheme {
-                val testNavController = rememberNavController()
+        val fakeHistoryRepository = FakeHistoryRepositoryImpl().apply {
+            addDummyPlayerToHistory()
+        }
 
-                NavHost(
-                    navController = testNavController,
-                    startDestination = HistoryScreen
-                ) {
-                    composable<HistoryScreen> {
-                        HistoryScreen(
-                            bottomPadding = 0.dp,
-                            onNavigateToPlayerInfoScreen = { playerId ->
-                                testNavController.navigate(HistoryPlayerInfoScreen(playerId))
-                            }
-                        )
-                    }
+        val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
+            historyRepository = fakeHistoryRepository
+        )
+        val observePlayerUseCase = ObservePlayerUseCase(
+            historyRepository = fakeHistoryRepository
+        )
 
-                    composable<HistoryPlayerInfoScreen> {
-                        HistoryPlayerInfoScreen(
-                            onNavigateUp = testNavController::navigateUp
-                        )
+        composeTestRule.apply {
+            activity.setContent {
+                FutSaleTheme {
+                    val testNavController = rememberNavController()
+
+                    NavHost(
+                        navController = testNavController,
+                        startDestination = HistoryScreen
+                    ) {
+                        composable<HistoryScreen> {
+                            HistoryScreen(
+                                viewModel = HistoryViewModel(
+                                    observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
+                                ),
+                                bottomPadding = 0.dp,
+                                onNavigateToPlayerInfoScreen = { playerId ->
+                                    testNavController.navigate(HistoryPlayerInfoScreen(playerId))
+                                }
+                            )
+                        }
+
+                        composable<HistoryPlayerInfoScreen> { backStackEntry ->
+                            backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                                .toRoute<HistoryPlayerInfoScreen>().playerId
+
+                            HistoryPlayerInfoScreen(
+                                viewModel = HistoryPlayerInfoViewModel(
+                                    observePlayerUseCase = { observePlayerUseCase },
+                                    savedStateHandle = backStackEntry.savedStateHandle
+                                ),
+                                onNavigateUp = testNavController::navigateUp
+                            )
+                        }
                     }
                 }
+            }
+
+            onNodeWithText(testPlayer.name).apply {
+                performClick()
             }
         }
     }
@@ -86,12 +117,6 @@ class HistoryPlayerInfoScreenTest {
     @Test
     fun navigatingToHistoryPlayerInfoScreen_showsPlayerInfoAndPickUpDate() = runTest {
         composeTestRule.apply {
-            onNodeWithText(testPlayer.name).apply {
-                assertExists()
-                assertIsDisplayed()
-                performClick()
-            }
-
             onNodeWithText(testPlayer.name).apply {
                 assertExists()
                 assertIsDisplayed()
@@ -125,12 +150,6 @@ class HistoryPlayerInfoScreenTest {
     @Test
     fun clickOnBackBtn_navigatesToHistoryScreen() {
         composeTestRule.apply {
-            onNodeWithText(testPlayer.name).apply {
-                assertExists()
-                assertIsDisplayed()
-                performClick()
-            }
-
             onNodeWithContentDescription(context.getString(R.string.core_content_description_back)).apply {
                 assertExists()
                 assertIsDisplayed()
@@ -143,16 +162,7 @@ class HistoryPlayerInfoScreenTest {
 
     @Test
     fun pressBack_navigatesToHistoryScreen() {
-        composeTestRule.apply {
-            onNodeWithText(testPlayer.name).apply {
-                assertExists()
-                assertIsDisplayed()
-                performClick()
-            }
-
-            Espresso.pressBackUnconditionally()
-
-            onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
-        }
+        Espresso.pressBackUnconditionally()
+        composeTestRule.onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY).assertIsDisplayed()
     }
 }

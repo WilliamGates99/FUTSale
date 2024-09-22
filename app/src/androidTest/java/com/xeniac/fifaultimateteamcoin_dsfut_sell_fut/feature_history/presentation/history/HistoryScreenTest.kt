@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -24,8 +25,10 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.History
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags.TEST_TAG_SCREEN_HISTORY_PLAYER_INFO
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -64,6 +67,9 @@ class HistoryScreenTest {
         val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepository
         )
+        val observePlayerUseCase = ObservePlayerUseCase(
+            historyRepository = fakeHistoryRepository
+        )
 
         composeTestRule.activity.setContent {
             FutSaleTheme {
@@ -85,8 +91,15 @@ class HistoryScreenTest {
                         )
                     }
 
-                    composable<HistoryPlayerInfoScreen> {
+                    composable<HistoryPlayerInfoScreen> { backStackEntry ->
+                        backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                            .toRoute<HistoryPlayerInfoScreen>().playerId
+
                         HistoryPlayerInfoScreen(
+                            viewModel = HistoryPlayerInfoViewModel(
+                                observePlayerUseCase = { observePlayerUseCase },
+                                savedStateHandle = backStackEntry.savedStateHandle
+                            ),
                             onNavigateUp = testNavController::navigateUp
                         )
                     }
@@ -97,8 +110,6 @@ class HistoryScreenTest {
 
     @Test
     fun launchingHistoryScreenWithEmptyPlayersHistoryList_showsEmptyAnimation() = runTest {
-        fakeHistoryRepository.clearDummyPlayersFromHistory()
-
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.history_empty_list_message)).apply {
                 assertExists()
@@ -119,7 +130,7 @@ class HistoryScreenTest {
 
     @Test
     fun clickOnPlayerCard_NavigatesToHistoryPlayerInfoScreen() = runTest {
-        fakeHistoryRepository.addDummyPlayersToHistory()
+        fakeHistoryRepository.addDummyPlayerToHistory()
 
         composeTestRule.apply {
             onNodeWithTag(TestTags.HISTORY_LAZY_COLUMN).apply {
