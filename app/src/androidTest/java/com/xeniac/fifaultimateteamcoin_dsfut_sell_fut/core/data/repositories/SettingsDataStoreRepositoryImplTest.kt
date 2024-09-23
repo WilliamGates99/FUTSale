@@ -3,9 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -13,6 +11,8 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -43,9 +43,10 @@ class SettingsDataStoreRepositoryImplTest {
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private val testScope: TestScope = TestScope(context = testDispatcher)
 
-    private val testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+    private val testDataStore: DataStore<SettingsPreferences> = DataStoreFactory.create(
+        serializer = SettingsPreferencesSerializer,
         scope = testScope.backgroundScope,
-        produceFile = { context.preferencesDataStoreFile(name = "Settings-Test") }
+        produceFile = { context.preferencesDataStoreFile(name = "Settings-Test.pb") }
     )
 
     private val testRepository: SettingsDataStoreRepository = SettingsDataStoreRepositoryImpl(
@@ -55,7 +56,7 @@ class SettingsDataStoreRepositoryImplTest {
     @Before
     fun setUp() {
         testScope.launch {
-            testDataStore.edit { it.clear() }
+            testDataStore.updateData { SettingsPreferences() }
         }
     }
 
@@ -97,7 +98,7 @@ class SettingsDataStoreRepositoryImplTest {
 
     @Test
     fun writeIsOnboardingCompleted() = testScope.runTest {
-        testRepository.isOnBoardingCompleted(true)
+        testRepository.isOnboardingCompleted(true)
 
         val isOnboardingCompleted = testRepository.isOnboardingCompleted()
         assertThat(isOnboardingCompleted).isTrue()

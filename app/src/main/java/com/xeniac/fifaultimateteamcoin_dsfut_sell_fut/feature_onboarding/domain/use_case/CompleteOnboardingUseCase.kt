@@ -19,7 +19,7 @@ class CompleteOnboardingUseCase(
         try {
             dsfutDataStoreRepository.storePartnerId(partnerId = partnerId)
             dsfutDataStoreRepository.storeSecretKey(secretKey = secretKey)
-            settingsDataStoreRepository.isOnBoardingCompleted(isCompleted = true)
+            settingsDataStoreRepository.isOnboardingCompleted(isCompleted = true)
             send(Result.Success(Unit))
         } catch (e: Exception) {
             e.printStackTrace()

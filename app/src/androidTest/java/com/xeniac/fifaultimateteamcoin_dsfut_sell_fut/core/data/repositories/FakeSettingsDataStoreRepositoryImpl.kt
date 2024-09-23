@@ -39,7 +39,7 @@ class FakeSettingsDataStoreRepositoryImpl @Inject constructor() : SettingsDataSt
         isNotificationVibrateEnabled.first()
     }
 
-    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
+    override suspend fun isOnboardingCompleted(isCompleted: Boolean) {
         isOnBoardingCompleted = isCompleted
     }
 

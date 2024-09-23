@@ -8,10 +8,9 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
@@ -19,6 +18,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import dagger.Lazy
 import dagger.Module
@@ -153,11 +158,12 @@ internal object AppModule {
     @SettingsDataStoreQualifier
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+    ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = SettingsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Settings") }
+            produceFile = { context.preferencesDataStoreFile(name = "Settings.pb") }
         )
     }
 
@@ -167,11 +173,12 @@ internal object AppModule {
     @DsfutDataStoreQualifier
     fun provideDsfutDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Dsfut") }
+            produceFile = { context.dataStoreFile(fileName = "Dsfut.pb") }
         )
     }
 
@@ -181,11 +188,12 @@ internal object AppModule {
     @MiscellaneousDataStoreQualifier
     fun provideMiscellaneousDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+    ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = MiscellaneousPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous") }
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous.pb") }
         )
     }
 

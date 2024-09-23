@@ -3,14 +3,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,9 +42,10 @@ class DsfutDataStoreRepositoryImplTest {
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private val testScope: TestScope = TestScope(context = testDispatcher)
 
-    private val testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+    private val testDataStore: DataStore<DsfutPreferences> = DataStoreFactory.create(
+        serializer = DsfutPreferencesSerializer,
         scope = testScope.backgroundScope,
-        produceFile = { context.preferencesDataStoreFile(name = "Dsfut-Test") }
+        produceFile = { context.preferencesDataStoreFile(name = "Dsfut-Test.pb") }
     )
 
     private val testRepository: DsfutDataStoreRepository = DsfutDataStoreRepositoryImpl(
@@ -54,7 +55,7 @@ class DsfutDataStoreRepositoryImplTest {
     @Before
     fun setUp() {
         testScope.launch {
-            testDataStore.edit { it.clear() }
+            testDataStore.updateData { DsfutPreferences() }
         }
     }
 

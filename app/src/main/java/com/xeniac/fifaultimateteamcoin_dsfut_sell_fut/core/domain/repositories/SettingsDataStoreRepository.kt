@@ -22,7 +22,7 @@ interface SettingsDataStoreRepository {
 
     fun isNotificationVibrateEnabled(): Flow<Boolean>
 
-    suspend fun isOnBoardingCompleted(isCompleted: Boolean)
+    suspend fun isOnboardingCompleted(isCompleted: Boolean)
 
     suspend fun storeNotificationPermissionCount(count: Int)
 

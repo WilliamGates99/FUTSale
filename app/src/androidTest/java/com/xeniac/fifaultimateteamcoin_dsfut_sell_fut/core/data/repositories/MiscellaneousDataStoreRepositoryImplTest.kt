@@ -3,14 +3,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,9 +42,10 @@ class MiscellaneousDataStoreRepositoryImplTest {
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private val testScope: TestScope = TestScope(context = testDispatcher)
 
-    private val testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+    private val testDataStore: DataStore<MiscellaneousPreferences> = DataStoreFactory.create(
+        serializer = MiscellaneousPreferencesSerializer,
         scope = testScope.backgroundScope,
-        produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous-Test") }
+        produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous-Test.pb") }
     )
 
     private val testRepository: MiscellaneousDataStoreRepository =
@@ -53,7 +54,7 @@ class MiscellaneousDataStoreRepositoryImplTest {
     @Before
     fun setUp() {
         testScope.launch {
-            testDataStore.edit { it.clear() }
+            testDataStore.updateData { MiscellaneousPreferences() }
         }
     }
 

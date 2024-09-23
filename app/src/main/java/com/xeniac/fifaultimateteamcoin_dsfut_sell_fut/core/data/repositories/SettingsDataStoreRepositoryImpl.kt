@@ -3,13 +3,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.SettingsDataStoreQualifier
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,24 +18,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsDataStoreRepositoryImpl @Inject constructor(
-    @SettingsDataStoreQualifier private val dataStore: DataStore<Preferences>
+    @SettingsDataStoreQualifier private val dataStore: DataStore<SettingsPreferences>
 ) : SettingsDataStoreRepository {
 
-    private object PreferencesKeys {
-        val IS_ONBOARDING_COMPLETED = booleanPreferencesKey(name = "isOnboardingCompleted")
-        val NOTIFICATION_PERMISSION_COUNT = intPreferencesKey(name = "notificationPermissionCount")
-
-        val CURRENT_APP_THEME = intPreferencesKey(name = "theme")
-        val IS_NOTIFICATION_SOUND_ENABLED = booleanPreferencesKey(
-            name = "isNotificationSoundActive"
-        )
-        val IS_NOTIFICATION_VIBRATE_ENABLED = booleanPreferencesKey(
-            name = "isNotificationVibrateActive"
-        )
-    }
-
     override suspend fun isOnboardingCompleted(): Boolean = try {
-        dataStore.data.first()[PreferencesKeys.IS_ONBOARDING_COMPLETED] ?: false
+        dataStore.data.first().isOnboardingCompleted
     } catch (e: Exception) {
         Timber.e("Get is onboarding completed failed:")
         e.printStackTrace()
@@ -46,7 +30,7 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
     }
 
     override fun getNotificationPermissionCount(): Flow<Int> = dataStore.data.map {
-        it[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] ?: 0
+        it.notificationPermissionCount
     }.catch { e ->
         Timber.e("Get notification permission count failed:")
         e.printStackTrace()
@@ -54,7 +38,7 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = try {
         val appThemeIndex = runBlocking {
-            dataStore.data.first()[PreferencesKeys.CURRENT_APP_THEME] ?: 0
+            dataStore.data.first().themeIndex
         }
 
         when (appThemeIndex) {
@@ -70,7 +54,7 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
     }
 
     override fun getCurrentAppTheme(): Flow<AppTheme> = dataStore.data.map {
-        val appThemeIndex = it[PreferencesKeys.CURRENT_APP_THEME] ?: 0
+        val appThemeIndex = it.themeIndex
 
         when (appThemeIndex) {
             AppTheme.Default.index -> AppTheme.Default
@@ -108,25 +92,23 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
     }
 
     override fun isNotificationSoundEnabled(): Flow<Boolean> = dataStore.data.map {
-        it[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] ?: true
+        it.isNotificationSoundEnabled
     }.catch { e ->
         Timber.e("Get is notification sound enabled failed:")
         e.printStackTrace()
     }
 
     override fun isNotificationVibrateEnabled(): Flow<Boolean> = dataStore.data.map {
-        it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] ?: true
+        it.isNotificationVibrateEnabled
     }.catch { e ->
         Timber.e("Get is notification vibrate enabled failed:")
         e.printStackTrace()
     }
 
-    override suspend fun isOnBoardingCompleted(isCompleted: Boolean) {
+    override suspend fun isOnboardingCompleted(isCompleted: Boolean) {
         try {
-            dataStore.edit {
-                it[PreferencesKeys.IS_ONBOARDING_COMPLETED] = isCompleted
-                Timber.i("isOnBoardingCompleted edited to $isCompleted")
-            }
+            dataStore.updateData { it.copy(isOnboardingCompleted = isCompleted) }
+            Timber.i("Is onboarding completed edited to $isCompleted")
         } catch (e: Exception) {
             Timber.e("Store is onboarding completed failed:")
             e.printStackTrace()
@@ -135,10 +117,8 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
 
     override suspend fun storeNotificationPermissionCount(count: Int) {
         try {
-            dataStore.edit { preferences ->
-                preferences[PreferencesKeys.NOTIFICATION_PERMISSION_COUNT] = count
-                Timber.i("Notification permission count edited to $count")
-            }
+            dataStore.updateData { it.copy(notificationPermissionCount = count) }
+            Timber.i("Notification permission count edited to $count")
         } catch (e: Exception) {
             Timber.e("Store notification permission count failed:")
             e.printStackTrace()
@@ -147,10 +127,8 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
 
     override suspend fun storeCurrentAppTheme(appTheme: AppTheme) {
         try {
-            dataStore.edit {
-                it[PreferencesKeys.CURRENT_APP_THEME] = appTheme.index
-                Timber.i("Current app theme edited to ${appTheme.index}")
-            }
+            dataStore.updateData { it.copy(themeIndex = appTheme.index) }
+            Timber.i("Current app theme edited to ${appTheme.index}")
         } catch (e: Exception) {
             Timber.e("Store current app theme failed:")
             e.printStackTrace()
@@ -175,10 +153,8 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
 
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
         try {
-            dataStore.edit {
-                it[PreferencesKeys.IS_NOTIFICATION_SOUND_ENABLED] = isEnabled
-                Timber.i("Is notification sound enabled edited to $isEnabled")
-            }
+            dataStore.updateData { it.copy(isNotificationSoundEnabled = isEnabled) }
+            Timber.i("Is notification sound enabled edited to $isEnabled")
         } catch (e: Exception) {
             Timber.e("Store is notification sound enabled failed:")
             e.printStackTrace()
@@ -187,10 +163,8 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {
         try {
-            dataStore.edit {
-                it[PreferencesKeys.IS_NOTIFICATION_VIBRATE_ENABLED] = isEnabled
-                Timber.i("Is notification vibrate enabled edited to $isEnabled")
-            }
+            dataStore.updateData { it.copy(isNotificationVibrateEnabled = isEnabled) }
+            Timber.i("Is notification vibrate enabled edited to $isEnabled")
         } catch (e: Exception) {
             Timber.e("Store is notification vibrate enabled failed:")
             e.printStackTrace()
