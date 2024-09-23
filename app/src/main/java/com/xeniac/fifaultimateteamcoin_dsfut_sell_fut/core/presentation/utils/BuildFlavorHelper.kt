@@ -11,3 +11,8 @@ fun isAppInstalledFromGitHub() = when (BuildConfig.FLAVOR_market) {
     "gitHub" -> true
     else -> false
 }
+
+fun isAppInstalledFromMyket() = when (BuildConfig.FLAVOR_market) {
+    "myket" -> true
+    else -> false
+}

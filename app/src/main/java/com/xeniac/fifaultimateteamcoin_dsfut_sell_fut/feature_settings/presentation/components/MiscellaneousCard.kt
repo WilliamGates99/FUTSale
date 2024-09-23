@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromMyket
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 
 enum class MiscellaneousRowItems(
@@ -40,7 +41,6 @@ enum class MiscellaneousRowItems(
     @StringRes val title: Int,
     val url: String?
 ) {
-    // TODO: COMMENT DONATE FOR MYKET RELEASE
     Donate(
         icon = R.drawable.ic_settings_donate,
         title = R.string.settings_text_miscellaneous_donate,
@@ -95,19 +95,25 @@ fun MiscellaneousCard(
             modifier = Modifier.fillMaxWidth()
         ) {
             MiscellaneousRowItems.entries.forEachIndexed { index, miscellaneousItem ->
-                CardClickableLinkRowItem(
-                    icon = painterResource(id = miscellaneousItem.icon),
-                    title = stringResource(id = miscellaneousItem.title),
-                    onClick = {
-                        when (miscellaneousItem) {
-                            MiscellaneousRowItems.RateUs -> openAppPageInStore()
-                            MiscellaneousRowItems.PrivacyPolicy -> openUrlInInAppBrowser(
-                                miscellaneousItem.url
-                            )
-                            else -> openUrlInBrowser(miscellaneousItem.url)
+                val shouldShowItem = if (isAppInstalledFromMyket()) {
+                    miscellaneousItem != MiscellaneousRowItems.Donate
+                } else true
+
+                if (shouldShowItem) {
+                    CardClickableLinkRowItem(
+                        icon = painterResource(id = miscellaneousItem.icon),
+                        title = stringResource(id = miscellaneousItem.title),
+                        onClick = {
+                            when (miscellaneousItem) {
+                                MiscellaneousRowItems.RateUs -> openAppPageInStore()
+                                MiscellaneousRowItems.PrivacyPolicy -> openUrlInInAppBrowser(
+                                    miscellaneousItem.url
+                                )
+                                else -> openUrlInBrowser(miscellaneousItem.url)
+                            }
                         }
-                    }
-                )
+                    )
+                }
 
                 val isNotLastItem = index != MiscellaneousRowItems.entries.size - 1
                 if (isNotLastItem) {
