@@ -19,7 +19,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -151,20 +151,49 @@ internal object TestAppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
+    @SettingsDataStoreQualifier
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
         PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "settings") }
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Settings") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @DsfutDataStoreQualifier
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Dsfut") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @MiscellaneousDataStoreQualifier
+    fun provideMiscellaneousDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous") }
         )
     }
 
     @Provides
     fun provideAppTheme(
-        preferencesRepository: PreferencesRepository
-    ): AppTheme = preferencesRepository.getCurrentAppThemeSynchronously()
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): AppTheme = settingsDataStoreRepository.getCurrentAppThemeSynchronously()
 
     @Provides
     @Singleton

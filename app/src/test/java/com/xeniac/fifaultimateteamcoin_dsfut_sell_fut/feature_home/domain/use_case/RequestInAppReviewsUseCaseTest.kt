@@ -32,7 +32,7 @@ class RequestInAppReviewsUseCaseTest {
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepository = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         requestInAppReviewsUseCase = RequestInAppReviewsUseCase(

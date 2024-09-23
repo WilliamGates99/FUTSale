@@ -36,7 +36,7 @@ class GetLatestAppVersionUseCaseTest {
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepositoryImpl = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         getLatestAppVersionUseCase = GetLatestAppVersionUseCase(

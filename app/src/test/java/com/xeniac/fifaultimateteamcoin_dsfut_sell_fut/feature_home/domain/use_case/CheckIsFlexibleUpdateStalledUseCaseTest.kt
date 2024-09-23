@@ -32,7 +32,7 @@ class CheckIsFlexibleUpdateStalledUseCaseTest {
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepository = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         checkIsFlexibleUpdateStalledUseCase = CheckIsFlexibleUpdateStalledUseCase(

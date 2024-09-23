@@ -10,7 +10,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
-import dagger.Lazy
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -31,7 +30,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class FakeHomeRepositoryImpl(
-    private val miscellaneousDataStoreRepository: Lazy<MiscellaneousDataStoreRepository>
+    private val miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
 ) : HomeRepository {
 
     private var isFlexibleUpdateDownloaded = false
@@ -160,9 +159,9 @@ class FakeHomeRepositoryImpl(
 
                 val isAppOutdated = currentVersionCode < latestVersionCode
                 if (isAppOutdated) {
-                    val updateDialogShowCount = miscellaneousDataStoreRepository.get()
+                    val updateDialogShowCount = miscellaneousDataStoreRepository
                         .getAppUpdateDialogShowCount().first()
-                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository.get()
+                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository
                         .isAppUpdateDialogShownToday().first()
 
                     val shouldShowAppUpdateDialog = when {
@@ -172,7 +171,7 @@ class FakeHomeRepositoryImpl(
                     }
 
                     if (shouldShowAppUpdateDialog) {
-                        miscellaneousDataStoreRepository.get().apply {
+                        miscellaneousDataStoreRepository.apply {
                             storeAppUpdateDialogShowCount(
                                 if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
                                 else 0
@@ -190,7 +189,7 @@ class FakeHomeRepositoryImpl(
                         )
                     } else emit(Result.Success(null))
                 } else {
-                    miscellaneousDataStoreRepository.get().apply {
+                    miscellaneousDataStoreRepository.apply {
                         storeAppUpdateDialogShowCount(0)
                         removeAppUpdateDialogShowEpochDays()
                     }

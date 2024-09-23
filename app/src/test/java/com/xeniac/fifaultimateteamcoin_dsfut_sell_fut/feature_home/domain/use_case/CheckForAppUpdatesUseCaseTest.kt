@@ -32,7 +32,7 @@ class CheckForAppUpdatesUseCaseTest {
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepository = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         checkForAppUpdatesUseCase = CheckForAppUpdatesUseCase(

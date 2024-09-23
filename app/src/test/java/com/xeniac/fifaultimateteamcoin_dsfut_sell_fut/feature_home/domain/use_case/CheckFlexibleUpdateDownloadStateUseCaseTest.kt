@@ -33,7 +33,7 @@ class CheckFlexibleUpdateDownloadStateUseCaseTest {
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepository = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         checkFlexibleUpdateDownloadStateUseCase = CheckFlexibleUpdateDownloadStateUseCase(

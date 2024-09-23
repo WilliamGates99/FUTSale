@@ -22,7 +22,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
@@ -91,7 +92,8 @@ class PickUpPlayerEndToEndTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val fakePreferencesRepository = FakePreferencesRepositoryImpl()
+    private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
+    private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
     private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
 
     private val testPartnerId = "123"
@@ -111,19 +113,19 @@ class PickUpPlayerEndToEndTest {
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val pickUpPlayerUseCase = PickUpPlayerUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             pickUpPlayerRepository = fakePickUpPlayerRepository,
             validatePartnerId = ValidatePartnerId(),
             validateSecretKey = ValidateSecretKey(),
@@ -146,13 +148,15 @@ class PickUpPlayerEndToEndTest {
             { startCountDownTimerUseCase }
         )
 
-        val getProfileUseCase = GetProfileUseCase(preferencesRepository = fakePreferencesRepository)
+        val getProfileUseCase = GetProfileUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
+        )
         val updatePartnerIdUseCase = UpdatePartnerIdUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validatePartnerId = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId()
         )
         val updateSecretKeyUseCase = UpdateSecretKeyUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validateSecretKey = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey()
         )
 

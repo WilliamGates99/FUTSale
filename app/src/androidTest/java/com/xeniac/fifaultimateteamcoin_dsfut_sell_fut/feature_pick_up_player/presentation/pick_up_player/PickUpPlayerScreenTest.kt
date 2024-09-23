@@ -28,7 +28,8 @@ import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
@@ -82,7 +83,8 @@ class PickUpPlayerScreenTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val fakePreferencesRepository = FakePreferencesRepositoryImpl()
+    private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
+    private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
     private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
 
     private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
@@ -100,19 +102,19 @@ class PickUpPlayerScreenTest {
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val pickUpPlayerUseCase = PickUpPlayerUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             pickUpPlayerRepository = fakePickUpPlayerRepository,
             validatePartnerId = ValidatePartnerId(),
             validateSecretKey = ValidateSecretKey(),
@@ -319,8 +321,8 @@ class PickUpPlayerScreenTest {
     fun clickOnPickOnceBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakePreferencesRepository.storePartnerId("123")
-        fakePreferencesRepository.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -339,8 +341,8 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakePreferencesRepository.storePartnerId("123")
-        fakePreferencesRepository.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -391,8 +393,8 @@ class PickUpPlayerScreenTest {
     fun clickOnAutoPickUpBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakePreferencesRepository.storePartnerId("123")
-        fakePreferencesRepository.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
@@ -411,8 +413,8 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnAutoPickUpBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakePreferencesRepository.storePartnerId("123")
-        fakePreferencesRepository.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
@@ -442,8 +444,8 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnThenPressBackBtn_showsLatestPickedUpPlayersPager() = runTest {
-        fakePreferencesRepository.storePartnerId("123")
-        fakePreferencesRepository.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         composeTestRule.apply {
             onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
@@ -469,8 +471,8 @@ class PickUpPlayerScreenTest {
 
             fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-            fakePreferencesRepository.storePartnerId("123")
-            fakePreferencesRepository.storeSecretKey("abc123")
+            fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+            fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
             composeTestRule.apply {
                 repeat(repeatTimes) {
