@@ -1,6 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.models.PickUpPlayerResult
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
@@ -11,7 +11,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import kotlinx.coroutines.flow.first
 
 class PickUpPlayerUseCase(
-    private val preferencesRepository: PreferencesRepository,
+    private val dsfutDataStoreRepository: DsfutDataStoreRepository,
     private val pickUpPlayerRepository: PickUpPlayerRepository,
     private val validatePartnerId: ValidatePartnerId,
     private val validateSecretKey: ValidateSecretKey,
@@ -24,8 +24,8 @@ class PickUpPlayerUseCase(
         maxPrice: String? = null,
         takeAfterDelayInSeconds: Int? = null
     ): PickUpPlayerResult {
-        val partnerId = preferencesRepository.getPartnerId().first()
-        val secretKey = preferencesRepository.getSecretKey().first()
+        val partnerId = dsfutDataStoreRepository.getPartnerId().first()
+        val secretKey = dsfutDataStoreRepository.getSecretKey().first()
 
         val partnerIdError = validatePartnerId(partnerId)
         val secretKeyError = validateSecretKey(secretKey)

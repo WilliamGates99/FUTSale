@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class CheckFlexibleUpdateDownloadStateUseCase(
     private val homeRepository: HomeRepository
 ) {
-    operator fun invoke(): Flow<IsUpdateDownloaded> =
-        homeRepository.checkFlexibleUpdateDownloadState()
+    operator fun invoke(): Flow<IsUpdateDownloaded> = homeRepository
+        .checkFlexibleUpdateDownloadState()
 }

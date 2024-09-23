@@ -15,7 +15,7 @@ import com.google.android.play.core.ktx.totalBytesToDownload
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.utils.Constants
@@ -55,7 +55,7 @@ class HomeRepositoryImpl @Inject constructor(
     private val appUpdateManager: Lazy<AppUpdateManager>,
     private val reviewManager: Lazy<ReviewManager>,
     private val httpClient: Lazy<HttpClient>,
-    private val preferencesRepository: Lazy<PreferencesRepository>
+    private val miscellaneousDataStoreRepository: Lazy<MiscellaneousDataStoreRepository>
 ) : HomeRepository {
 
     override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = callbackFlow {
@@ -177,9 +177,9 @@ class HomeRepositoryImpl @Inject constructor(
 
                     val isAppOutdated = currentVersionCode < latestVersionCode
                     if (isAppOutdated) {
-                        val updateDialogShowCount = preferencesRepository.get()
+                        val updateDialogShowCount = miscellaneousDataStoreRepository.get()
                             .getAppUpdateDialogShowCount().first()
-                        val isAppUpdateDialogShownToday = preferencesRepository.get()
+                        val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository.get()
                             .isAppUpdateDialogShownToday().first()
 
                         val shouldShowAppUpdateDialog = when {
@@ -189,7 +189,7 @@ class HomeRepositoryImpl @Inject constructor(
                         }
 
                         if (shouldShowAppUpdateDialog) {
-                            preferencesRepository.get().apply {
+                            miscellaneousDataStoreRepository.get().apply {
                                 storeAppUpdateDialogShowCount(
                                     if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
                                     else 0
@@ -207,7 +207,7 @@ class HomeRepositoryImpl @Inject constructor(
                             )
                         } else emit(Result.Success(null))
                     } else {
-                        preferencesRepository.get().apply {
+                        miscellaneousDataStoreRepository.get().apply {
                             storeAppUpdateDialogShowCount(0)
                             removeAppUpdateDialogShowEpochDays()
                         }

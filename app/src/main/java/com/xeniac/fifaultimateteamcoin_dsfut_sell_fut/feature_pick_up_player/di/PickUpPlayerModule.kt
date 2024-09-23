@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
@@ -61,33 +62,35 @@ object PickUpPlayerModule {
     @Provides
     @ViewModelScoped
     fun provideGetSelectedPlatformUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetSelectedPlatformUseCase = GetSelectedPlatformUseCase(preferencesRepository)
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): GetSelectedPlatformUseCase = GetSelectedPlatformUseCase(dsfutDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideGetIsNotificationSoundEnabledUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetIsNotificationSoundEnabledUseCase =
-        GetIsNotificationSoundEnabledUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): GetIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
+        settingsDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideGetIsNotificationVibrateEnabledUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetIsNotificationVibrateEnabledUseCase =
-        GetIsNotificationVibrateEnabledUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): GetIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
+        settingsDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideStoreSelectedPlatformUseCase(
-        preferencesRepository: PreferencesRepository
-    ): StoreSelectedPlatformUseCase = StoreSelectedPlatformUseCase(preferencesRepository)
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): StoreSelectedPlatformUseCase = StoreSelectedPlatformUseCase(dsfutDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun providePickUpPlayerUseCase(
-        preferencesRepository: PreferencesRepository,
+        dsfutDataStoreRepository: DsfutDataStoreRepository,
         pickUpPlayerRepository: PickUpPlayerRepository,
         validatePartnerId: ValidatePartnerId,
         validateSecretKey: ValidateSecretKey,
@@ -95,7 +98,7 @@ object PickUpPlayerModule {
         validateMaxPrice: ValidateMaxPrice,
         validateTakeAfter: ValidateTakeAfter
     ): PickUpPlayerUseCase = PickUpPlayerUseCase(
-        preferencesRepository = preferencesRepository,
+        dsfutDataStoreRepository = dsfutDataStoreRepository,
         pickUpPlayerRepository = pickUpPlayerRepository,
         validatePartnerId = validatePartnerId,
         validateSecretKey = validateSecretKey,

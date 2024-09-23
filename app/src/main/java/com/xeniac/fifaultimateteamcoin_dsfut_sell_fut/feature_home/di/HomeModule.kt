@@ -9,7 +9,8 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckFlexibleUpdateDownloadStateUseCase
@@ -118,43 +119,49 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideGetNotificationPermissionCountUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetNotificationPermissionCountUseCase =
-        GetNotificationPermissionCountUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): GetNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
+        settingsDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideStoreNotificationPermissionCountUseCase(
-        preferencesRepository: PreferencesRepository
-    ): StoreNotificationPermissionCountUseCase =
-        StoreNotificationPermissionCountUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): StoreNotificationPermissionCountUseCase = StoreNotificationPermissionCountUseCase(
+        settingsDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideGetSelectedRateAppOptionUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetSelectedRateAppOptionUseCase = GetSelectedRateAppOptionUseCase(preferencesRepository)
+        miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
+    ): GetSelectedRateAppOptionUseCase = GetSelectedRateAppOptionUseCase(
+        miscellaneousDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideStoreSelectedRateAppOptionUseCase(
-        preferencesRepository: PreferencesRepository
-    ): StoreSelectedRateAppOptionUseCase = StoreSelectedRateAppOptionUseCase(preferencesRepository)
+        miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
+    ): StoreSelectedRateAppOptionUseCase = StoreSelectedRateAppOptionUseCase(
+        miscellaneousDataStoreRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideGetPreviousRateAppRequestTimeInMsUseCase(
-        preferencesRepository: PreferencesRepository
+        miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
     ): GetPreviousRateAppRequestTimeInMsUseCase = GetPreviousRateAppRequestTimeInMsUseCase(
-        preferencesRepository
+        miscellaneousDataStoreRepository
     )
 
     @Provides
     @ViewModelScoped
     fun provideStorePreviousRateAppRequestTimeInMsUseCase(
-        preferencesRepository: PreferencesRepository
+        miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
     ): StorePreviousRateAppRequestTimeInMsUseCase = StorePreviousRateAppRequestTimeInMsUseCase(
-        preferencesRepository
+        miscellaneousDataStoreRepository
     )
 
     @Provides

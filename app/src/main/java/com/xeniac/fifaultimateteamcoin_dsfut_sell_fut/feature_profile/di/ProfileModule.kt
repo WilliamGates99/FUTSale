@@ -1,6 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetProfileUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdatePartnerIdUseCase
@@ -28,26 +28,26 @@ object ProfileModule {
     @Provides
     @ViewModelScoped
     fun provideGetProfileUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetProfileUseCase = GetProfileUseCase(preferencesRepository)
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): GetProfileUseCase = GetProfileUseCase(dsfutDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideUpdatePartnerIdUseCase(
-        preferencesRepository: PreferencesRepository,
+        dsfutDataStoreRepository: DsfutDataStoreRepository,
         validatePartnerId: ValidatePartnerId
     ): UpdatePartnerIdUseCase = UpdatePartnerIdUseCase(
-        preferencesRepository,
+        dsfutDataStoreRepository,
         validatePartnerId
     )
 
     @Provides
     @ViewModelScoped
     fun provideUpdateSecretKeyUseCase(
-        preferencesRepository: PreferencesRepository,
+        dsfutDataStoreRepository: DsfutDataStoreRepository,
         validateSecretKey: ValidateSecretKey
     ): UpdateSecretKeyUseCase = UpdateSecretKeyUseCase(
-        preferencesRepository,
+        dsfutDataStoreRepository,
         validateSecretKey
     )
 
