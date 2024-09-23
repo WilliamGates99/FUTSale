@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,14 +60,14 @@ fun AppReviewDialog(
     rateNowButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_rate_now),
     askLaterButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_remind_later),
     noThanksButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_never),
-    onRateNowClick: () -> Unit,
-    onRemindLaterClick: () -> Unit,
-    onNeverClick: () -> Unit,
-    onDismiss: () -> Unit
+    onAction: (action: HomeAction) -> Unit,
+    openAppPageInStore: () -> Unit
 ) {
     if (isVisible) {
         BasicAlertDialog(
-            onDismissRequest = onDismiss,
+            onDismissRequest = {
+                onAction(HomeAction.DismissAppReviewDialog)
+            },
             properties = dialogProperties,
             modifier = modifier
         ) {
@@ -105,8 +107,13 @@ fun AppReviewDialog(
                         confirmButton = {
                             TextButton(
                                 onClick = {
-                                    onRateNowClick()
-                                    onDismiss()
+                                    if (isAppInstalledFromPlayStore()) {
+                                        onAction(HomeAction.LaunchInAppReview)
+                                    } else {
+                                        openAppPageInStore()
+                                    }
+                                    onAction(HomeAction.SetSelectedRateAppOptionToNever)
+                                    onAction(HomeAction.DismissAppReviewDialog)
                                 }
                             ) {
                                 Text(
@@ -120,8 +127,8 @@ fun AppReviewDialog(
                         neutralButton = {
                             TextButton(
                                 onClick = {
-                                    onRemindLaterClick()
-                                    onDismiss()
+                                    onAction(HomeAction.SetSelectedRateAppOptionToRemindLater)
+                                    onAction(HomeAction.DismissAppReviewDialog)
                                 }
                             ) {
                                 Text(
@@ -135,8 +142,8 @@ fun AppReviewDialog(
                         dismissButton = {
                             TextButton(
                                 onClick = {
-                                    onNeverClick()
-                                    onDismiss()
+                                    onAction(HomeAction.SetSelectedRateAppOptionToNever)
+                                    onAction(HomeAction.DismissAppReviewDialog)
                                 }
                             ) {
                                 Text(

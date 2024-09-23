@@ -23,44 +23,47 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR
 
 enum class NavigationBarItems(
-    val screen: Screen,
+    val screen: Any,
     @StringRes val title: Int,
     @DrawableRes val inactiveIconId: Int,
     @DrawableRes val activeIconId: Int,
     val testTag: String
 ) {
     PickUpPlayer(
-        screen = Screen.PickUpPlayerScreen,
+        screen = PickUpPlayerScreen,
         title = R.string.home_nav_title_pick_up_player,
         inactiveIconId = R.drawable.ic_home_nav_pick_up_player_outlined,
         activeIconId = R.drawable.ic_home_nav_pick_up_player_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PICK_UP_PLAYER
     ),
     Profile(
-        screen = Screen.ProfileScreen,
+        screen = ProfileScreen,
         title = R.string.home_nav_title_profile,
         inactiveIconId = R.drawable.ic_home_nav_profile_outlined,
         activeIconId = R.drawable.ic_home_nav_profile_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PROFILE
     ),
     History(
-        screen = Screen.HistoryScreen,
+        screen = HistoryScreen,
         title = R.string.home_nav_title_history,
         inactiveIconId = R.drawable.ic_home_nav_history_outlined,
         activeIconId = R.drawable.ic_home_nav_history_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_HISTORY
     ),
     Settings(
-        screen = Screen.SettingsScreen,
+        screen = SettingsScreen,
         title = R.string.home_nav_title_settings,
         inactiveIconId = R.drawable.ic_home_nav_settings_outlined,
         activeIconId = R.drawable.ic_home_nav_settings_filled,
@@ -71,20 +74,22 @@ enum class NavigationBarItems(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomNavigationBar(
-    backStackEntry: NavBackStackEntry?,
+    currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
     alwaysShowLabel: Boolean = true,
     iconSize: Dp = 24.dp,
-    onItemClick: (screen: Screen) -> Unit
+    onItemClick: (screen: Any) -> Unit
 ) {
-    NavigationBar(modifier = modifier
-        .testTag(NAVIGATION_BAR)
-        .semantics {
-            testTagsAsResourceId = true
-        }) {
-        NavigationBarItems.entries.forEach { navigationBarItem ->
-            val isSelected = backStackEntry?.destination?.hierarchy?.any {
-                it.hasRoute(navigationBarItem.screen::class)
+    NavigationBar(
+        modifier = modifier
+            .testTag(NAVIGATION_BAR)
+            .semantics {
+                testTagsAsResourceId = true
+            }
+    ) {
+        NavigationBarItems.entries.forEach { navItem ->
+            val isSelected = currentDestination?.hierarchy?.any {
+                it.hasRoute(route = navItem.screen::class)
             } ?: false
 
             NavigationBarItem(
@@ -106,24 +111,26 @@ fun CustomNavigationBar(
                         modifier = Modifier.size(iconSize)
                     ) {
                         Icon(
-                            painter = painterResource(id = if (isSelected) navigationBarItem.activeIconId else navigationBarItem.inactiveIconId),
-                            contentDescription = stringResource(id = navigationBarItem.title)
+                            painter = painterResource(
+                                id = if (isSelected) navItem.activeIconId else navItem.inactiveIconId
+                            ),
+                            contentDescription = stringResource(id = navItem.title)
                         )
                     }
 
                 },
                 label = {
                     Text(
-                        text = stringResource(id = navigationBarItem.title),
+                        text = stringResource(id = navItem.title),
                         fontSize = 12.sp,
                         lineHeight = 16.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                     )
                 },
                 onClick = {
-                    onItemClick(navigationBarItem.screen)
+                    onItemClick(navItem.screen)
                 },
-                modifier = Modifier.testTag(navigationBarItem.testTag)
+                modifier = Modifier.testTag(navItem.testTag)
             )
         }
     }

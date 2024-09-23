@@ -14,14 +14,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.MainActivityState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.observeNetworkConnection
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.utils.enableEdgeToEdgeWindow
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        enableEdgeToEdgeWindow()
         splashScreen()
         observeNetworkConnection(connectivityObserver)
 
@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
                 CompositionLocalProvider(
                     value = LocalLayoutDirection provides mainState.currentAppLocale.layoutDirectionCompose
                 ) {
-                    FutSaleRootSurface(startDestination = mainState.postSplashDestination)
+                    FutSaleRootSurface(mainState = mainState)
                 }
             } else {
-                FutSaleRootSurface(startDestination = mainState.postSplashDestination)
+                FutSaleRootSurface(mainState = mainState)
             }
         }
     }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun FutSaleRootSurface(
-        startDestination: Screen?
+        mainState: MainActivityState
     ) {
         FutSaleTheme {
             Surface(
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 val rootNavController = rememberNavController()
 
-                startDestination?.let { destination ->
+                mainState.postSplashDestination?.let { destination ->
                     SetupRootNavGraph(
                         rootNavController = rootNavController,
                         startDestination = destination

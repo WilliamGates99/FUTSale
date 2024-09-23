@@ -7,17 +7,24 @@ import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import androidx.test.filters.SdkSuppress
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -26,13 +33,18 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -95,6 +107,7 @@ internal object TestAppModule {
         expectSuccess = true
 
         install(Logging) {
+            logger = Logger.ANDROID
             level = LogLevel.INFO
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
@@ -115,6 +128,9 @@ internal object TestAppModule {
             requestTimeoutMillis = 20000 // 20 seconds
             socketTimeoutMillis = 20000 // 20 seconds
         }
+        install(DefaultRequest) {
+            contentType(ContentType.Application.Json)
+        }
     }
 
     @Provides
@@ -124,7 +140,12 @@ internal object TestAppModule {
     ): FutSaleDatabase = Room.inMemoryDatabaseBuilder(
         context = context,
         klass = FutSaleDatabase::class.java,
-    ).build()
+    ).apply {
+        addMigrations(
+            MIGRATION_2_TO_3,
+            MIGRATION_3_TO_4
+        )
+    }.build()
 
     @Provides
     @Singleton
@@ -135,20 +156,52 @@ internal object TestAppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
+    @SettingsDataStoreQualifier
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "settings") }
+    ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = SettingsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Settings-Test.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @DsfutDataStoreQualifier
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.dataStoreFile(fileName = "Dsfut-Test.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @MiscellaneousDataStoreQualifier
+    fun provideMiscellaneousDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = MiscellaneousPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous-Test.pb") }
         )
     }
 
     @Provides
-    fun provideAppThemeIndex(
-        preferencesRepository: PreferencesRepository
-    ): AppTheme = preferencesRepository.getCurrentAppThemeSynchronously()
+    fun provideAppTheme(
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): AppTheme = settingsDataStoreRepository.getCurrentAppThemeSynchronously()
 
     @Provides
     @Singleton

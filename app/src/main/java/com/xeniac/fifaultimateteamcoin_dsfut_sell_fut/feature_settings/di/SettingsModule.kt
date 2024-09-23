@@ -1,6 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetCurrentAppLocaleUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetCurrentAppThemeUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.GetIsNotificationSoundEnabledUseCase
@@ -23,55 +23,55 @@ internal object SettingsModule {
     @Provides
     @ViewModelScoped
     fun provideGetCurrentAppLocaleUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): GetCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideGetCurrentAppThemeUseCase(
-        preferencesRepository: PreferencesRepository
-    ): GetCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): GetCurrentAppThemeUseCase = GetCurrentAppThemeUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideGetIsNotificationSoundEnabledUseCase(
-        preferencesRepository: PreferencesRepository
+        settingsDataStoreRepository: SettingsDataStoreRepository
     ): GetIsNotificationSoundEnabledUseCase =
-        GetIsNotificationSoundEnabledUseCase(preferencesRepository)
+        GetIsNotificationSoundEnabledUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideGetIsNotificationVibrateEnabledUseCase(
-        preferencesRepository: PreferencesRepository
+        settingsDataStoreRepository: SettingsDataStoreRepository
     ): GetIsNotificationVibrateEnabledUseCase =
-        GetIsNotificationVibrateEnabledUseCase(preferencesRepository)
+        GetIsNotificationVibrateEnabledUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideStoreCurrentAppLocaleUseCase(
-        preferencesRepository: PreferencesRepository
-    ): StoreCurrentAppLocaleUseCase = StoreCurrentAppLocaleUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): StoreCurrentAppLocaleUseCase = StoreCurrentAppLocaleUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideStoreCurrentAppThemeUseCase(
-        preferencesRepository: PreferencesRepository
-    ): StoreCurrentAppThemeUseCase = StoreCurrentAppThemeUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): StoreCurrentAppThemeUseCase = StoreCurrentAppThemeUseCase(settingsDataStoreRepository)
 
     @Provides
     @ViewModelScoped
     fun provideStoreIsNotificationSoundEnabledUseCase(
-        preferencesRepository: PreferencesRepository
+        settingsDataStoreRepository: SettingsDataStoreRepository
     ): StoreIsNotificationSoundEnabledUseCase = StoreIsNotificationSoundEnabledUseCase(
-        preferencesRepository
+        settingsDataStoreRepository
     )
 
     @Provides
     @ViewModelScoped
     fun provideStoreIsNotificationVibrateEnabledUseCase(
-        preferencesRepository: PreferencesRepository
+        settingsDataStoreRepository: SettingsDataStoreRepository
     ): StoreIsNotificationVibrateEnabledUseCase = StoreIsNotificationVibrateEnabledUseCase(
-        preferencesRepository
+        settingsDataStoreRepository
     )
 
     @Provides

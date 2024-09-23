@@ -56,6 +56,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.calculateCurrentPageOffset
 
@@ -71,8 +72,8 @@ fun LatestPlayersPagers(
     ),
     beyondViewportPageCount: Int = 1,
     pageSpacing: Dp = 12.dp,
-    onPlayerCardClick: (player: Player) -> Unit,
-    onCountDownStart: (expiryTimeInMillis: Long) -> Unit
+    onAction: (action: PickUpPlayerAction) -> Unit,
+    onPlayerCardClick: (playerId: Long) -> Unit
 ) {
     AnimatedVisibility(
         visible = latestPickedPlayers.isNotEmpty(),
@@ -83,7 +84,8 @@ fun LatestPlayersPagers(
         val pagerState = rememberPagerState(pageCount = { latestPickedPlayers.size })
 
         LaunchedEffect(key1 = pagerState.settledPage) {
-            onCountDownStart(latestPickedPlayers[pagerState.currentPage].expiryTimeInMs)
+            val expiryTimeInMillis = latestPickedPlayers[pagerState.currentPage].expiryTimeInMs
+            onAction(PickUpPlayerAction.StartCountDownTimer(expiryTimeInMillis))
         }
 
         Box(
@@ -101,7 +103,11 @@ fun LatestPlayersPagers(
                 PlayerCard(
                     player = player,
                     timerText = timerText,
-                    onClick = { onPlayerCardClick(player) },
+                    onClick = {
+                        player.id?.let { playerId ->
+                            onPlayerCardClick(playerId)
+                        }
+                    },
                     modifier = Modifier
                         .graphicsLayer {
                             /*

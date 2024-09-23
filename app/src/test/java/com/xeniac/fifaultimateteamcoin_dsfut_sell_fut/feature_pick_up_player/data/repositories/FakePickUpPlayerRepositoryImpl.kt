@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
@@ -40,6 +40,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
+    private var pickedUpPlayerId = 0L
     private var latestPlayerEntities = mutableListOf<PlayerEntity>()
 
     fun isNetworkAvailable(isAvailable: Boolean) {
@@ -60,6 +61,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         ('a'..'z').forEachIndexed { index, char ->
             playersToInsert.add(
                 PlayerEntity(
+                    id = index.toLong(),
                     tradeID = index.toString(),
                     assetID = index,
                     resourceID = index,
@@ -73,9 +75,9 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
                     contracts = 1,
                     chemistryStyle = "Basic",
                     chemistryStyleID = index,
-                    platformDto = when (Random.nextBoolean()) {
-                        true -> PlatformDto.CONSOLE
-                        false -> PlatformDto.PC
+                    platform = when (Random.nextBoolean()) {
+                        true -> Platform.CONSOLE
+                        false -> Platform.PC
                     },
                     pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
@@ -103,6 +105,14 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
         sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
 
         emit(sortedLatestPlayerEntities.map { it.toPlayer() })
+    }
+
+    override fun observePickedUpPlayer(playerId: Long): Flow<Player> = flow {
+        val player = latestPlayerEntities.find { playerEntity ->
+            playerEntity.id == playerId
+        }?.toPlayer()
+
+        player?.let { emit(it) }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
@@ -204,7 +214,7 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
         val response = testClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = PlatformDto.CONSOLE.value,
+                platform = Platform.CONSOLE.value,
                 partnerId = partnerId,
                 timestamp = timestampInSeconds,
                 signature = signature
@@ -222,7 +232,10 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    val playerEntity = playerDto!!.toPlayerEntity()
+                    pickedUpPlayerId += 1
+                    val playerEntity = playerDto!!.toPlayerEntity().copy(
+                        id = pickedUpPlayerId * 100
+                    )
                     latestPlayerEntities.add(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {

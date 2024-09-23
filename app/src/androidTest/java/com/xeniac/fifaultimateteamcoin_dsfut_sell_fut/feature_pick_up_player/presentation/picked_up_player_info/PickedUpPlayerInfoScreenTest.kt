@@ -2,7 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import android.content.Context
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -11,24 +10,48 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMinPrice
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateSecretKey
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateTakeAfter
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.text.DecimalFormat
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -45,46 +68,117 @@ class PickedUpPlayerInfoScreenTest {
     @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    @Inject
+    lateinit var decimalFormat: DecimalFormat
+
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val testPlayer = Player(
-        id = 1,
-        tradeID = 1,
-        assetID = 1,
-        resourceID = 1,
-        transactionID = 1,
-        name = "Test Player",
-        rating = "88",
-        position = "ST",
-        startPrice = "50000",
-        buyNowPrice = "200000",
-        owners = 5,
-        contracts = 4,
-        chemistryStyle = "Basic",
-        chemistryStyleID = 1,
-        platform = Platform.PC,
-        pickUpTimeInMs = 1720521991000, // Jul 9, 2024 - 10:45:00
-        expiryTimeInMs = 1720522080000 // Jul 9, 2024 - 10:48:00
-    )
+    private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
+    private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
+    private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
+
+    private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
 
     @Before
     fun setUp() {
         hiltRule.inject()
 
-        composeTestRule.activity.setContent {
-            FutSaleTheme {
-                val testNavController = rememberNavController()
+        val observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
+            pickUpPlayerRepository = fakePickUpPlayerRepository
+        )
+        val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
+            pickUpPlayerRepository = fakePickUpPlayerRepository
+        )
+        val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
+        )
+        val getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
+        )
+        val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
+        )
+        val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
+        )
+        val pickUpPlayerUseCase = PickUpPlayerUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
+            pickUpPlayerRepository = fakePickUpPlayerRepository,
+            validatePartnerId = ValidatePartnerId(),
+            validateSecretKey = ValidateSecretKey(),
+            validateMinPrice = ValidateMinPrice(),
+            validateMaxPrice = ValidateMaxPrice(),
+            validateTakeAfter = ValidateTakeAfter()
+        )
+        val startCountDownTimerUseCase = StartCountDownTimerUseCase(
+            pickUpPlayerRepository = fakePickUpPlayerRepository
+        )
 
-                SetupHomeNavGraph(
-                    homeNavController = testNavController,
-                    bottomPadding = 0.dp
-                )
+        val pickUpPlayerUseCases = PickUpPlayerUseCases(
+            { observeLatestPickedPlayersUseCaseUseCase },
+            { observePickedUpPlayerUseCase },
+            { getIsNotificationSoundEnabledUseCase },
+            { getIsNotificationVibrateEnabledUseCase },
+            { getSelectedPlatformUseCase },
+            { storeSelectedPlatformUseCase },
+            { pickUpPlayerUseCase },
+            { startCountDownTimerUseCase }
+        )
 
-                LaunchedEffect(key1 = Unit) {
-                    testNavController.navigate(
-                        Screen.PickedUpPlayerInfoScreen(player = testPlayer)
-                    )
+        runBlocking {
+            fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+            fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        }
+
+        composeTestRule.apply {
+            activity.setContent {
+                FutSaleTheme {
+                    val testNavController = rememberNavController()
+
+                    NavHost(
+                        navController = testNavController,
+                        startDestination = PickUpPlayerScreen
+                    ) {
+                        composable<PickUpPlayerScreen> { backStackEntry ->
+                            PickUpPlayerScreen(
+                                viewModel = PickUpPlayerViewModel(
+                                    pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                    decimalFormat = decimalFormat,
+                                    savedStateHandle = backStackEntry.savedStateHandle
+                                ),
+                                bottomPadding = 0.dp,
+                                onNavigateToProfileScreen = {
+                                    testNavController.navigate(ProfileScreen) {
+                                        launchSingleTop = true
+                                        popUpTo(testNavController.graph.startDestinationId)
+                                    }
+                                },
+                                onNavigateToPickedUpPlayerInfoScreen = { playerId ->
+                                    testNavController.navigate(PickedUpPlayerInfoScreen(playerId))
+                                }
+                            )
+                        }
+
+                        composable<PickedUpPlayerInfoScreen> { backStackEntry ->
+                            backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                                .toRoute<PickedUpPlayerInfoScreen>().playerId
+
+                            PickedUpPlayerInfoScreen(
+                                viewModel = PickedUpPlayerInfoViewModel(
+                                    pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                    decimalFormat = decimalFormat,
+                                    savedStateHandle = backStackEntry.savedStateHandle
+                                ),
+                                onNavigateUp = testNavController::navigateUp
+                            )
+                        }
+                    }
                 }
+            }
+
+            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+                performScrollTo()
+                performClick()
             }
         }
     }

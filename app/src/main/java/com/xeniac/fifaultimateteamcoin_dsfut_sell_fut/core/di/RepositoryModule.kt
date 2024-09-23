@@ -25,12 +25,12 @@ abstract class RepositoryModule {
     @Binds
     @ViewModelScoped
     abstract fun bindPickUpPlayerRepository(
-        pickUpPlayerRepositoryImp: PickUpPlayerRepositoryImpl
+        pickUpPlayerRepositoryImpl: PickUpPlayerRepositoryImpl
     ): PickUpPlayerRepository
 
     @Binds
     @ViewModelScoped
     abstract fun bindHistoryRepository(
-        historyRepositoryImp: HistoryRepositoryImpl
+        historyRepositoryImpl: HistoryRepositoryImpl
     ): HistoryRepository
 }

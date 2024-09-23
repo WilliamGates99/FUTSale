@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.u
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,20 +22,20 @@ class GetCurrentAppLocaleUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     private lateinit var getCurrentAppLocaleUseCase: GetCurrentAppLocaleUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
         getCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
     }
 
     @Test
     fun getCurrentAppTheme_returnsCurrentAppTheme() = runTest {
         val currentAppLocale = getCurrentAppLocaleUseCase()
-        assertThat(currentAppLocale).isEqualTo(fakePreferencesRepository.currentLocale)
+        assertThat(currentAppLocale).isEqualTo(fakeSettingsDataStoreRepositoryImpl.currentLocale)
     }
 }

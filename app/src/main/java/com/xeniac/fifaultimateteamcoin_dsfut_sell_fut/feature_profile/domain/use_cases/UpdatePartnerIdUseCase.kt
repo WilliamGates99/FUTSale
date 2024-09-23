@@ -1,13 +1,13 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.models.UpdatePartnerIdResult
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.PartnerIdError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId
 
 class UpdatePartnerIdUseCase(
-    private val preferencesRepository: PreferencesRepository,
+    private val dsfutDataStoreRepository: DsfutDataStoreRepository,
     private val validatePartnerId: ValidatePartnerId
 ) {
     suspend operator fun invoke(partnerId: String): UpdatePartnerIdResult {
@@ -24,7 +24,7 @@ class UpdatePartnerIdUseCase(
                 )
             }
 
-            preferencesRepository.storePartnerId(partnerId = partnerId)
+            dsfutDataStoreRepository.storePartnerId(partnerId = partnerId)
 
             return UpdatePartnerIdResult(
                 result = Result.Success(Unit)

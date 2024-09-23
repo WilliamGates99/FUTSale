@@ -4,8 +4,12 @@ import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,15 +19,17 @@ import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoViewModel
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags.TEST_TAG_SCREEN_HISTORY_PLAYER_INFO
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +37,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -50,7 +55,7 @@ class HistoryScreenTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val fakeHistoryRepository = FakeHistoryRepositoryImpl()
+    private lateinit var fakeHistoryRepository: FakeHistoryRepositoryImpl
 
     private lateinit var testNavController: NavHostController
 
@@ -58,7 +63,11 @@ class HistoryScreenTest {
     fun setUp() {
         hiltRule.inject()
 
+        fakeHistoryRepository = FakeHistoryRepositoryImpl()
         val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
+            historyRepository = fakeHistoryRepository
+        )
+        val observePlayerUseCase = ObservePlayerUseCase(
             historyRepository = fakeHistoryRepository
         )
 
@@ -68,29 +77,29 @@ class HistoryScreenTest {
 
                 NavHost(
                     navController = testNavController,
-                    startDestination = Screen.HistoryScreen
+                    startDestination = HistoryScreen
                 ) {
-                    composable<Screen.HistoryScreen> {
+                    composable<HistoryScreen> {
                         HistoryScreen(
                             viewModel = HistoryViewModel(
                                 observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
                             ),
                             bottomPadding = 0.dp,
-                            onNavigateToPlayerInfoScreen = { player ->
-                                testNavController.navigate(
-                                    Screen.HistoryPlayerInfoScreen(player = player)
-                                )
+                            onNavigateToPlayerInfoScreen = { playerId ->
+                                testNavController.navigate(HistoryPlayerInfoScreen(playerId))
                             }
                         )
                     }
 
-                    composable<Screen.HistoryPlayerInfoScreen>(
-                        typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-                    ) { backStackEntry ->
-                        val args = backStackEntry.toRoute<Screen.HistoryPlayerInfoScreen>()
+                    composable<HistoryPlayerInfoScreen> { backStackEntry ->
+                        backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                            .toRoute<HistoryPlayerInfoScreen>().playerId
 
                         HistoryPlayerInfoScreen(
-                            player = args.player,
+                            viewModel = HistoryPlayerInfoViewModel(
+                                observePlayerUseCase = { observePlayerUseCase },
+                                savedStateHandle = backStackEntry.savedStateHandle
+                            ),
                             onNavigateUp = testNavController::navigateUp
                         )
                     }
@@ -111,11 +120,32 @@ class HistoryScreenTest {
 
     @Test
     fun launchingHistoryScreenWithPlayersHistoryList_showsPlayersList() = runTest {
-        fakeHistoryRepository.addDummyPlayersToLatestPlayers()
+        fakeHistoryRepository.addDummyPlayersToHistory()
 
         composeTestRule.onNodeWithTag(TestTags.HISTORY_LAZY_COLUMN).apply {
             assertExists()
             assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun clickOnPlayerCard_NavigatesToHistoryPlayerInfoScreen() = runTest {
+        fakeHistoryRepository.addDummyPlayerToHistory()
+
+        composeTestRule.apply {
+            onNodeWithTag(TestTags.HISTORY_LAZY_COLUMN).apply {
+                assertExists()
+                assertIsDisplayed()
+            }
+
+            onAllNodesWithTag(TestTags.HISTORY_LAZY_COLUMN_ITEM).onFirst().apply {
+                assertExists()
+                performScrollTo()
+                assertIsDisplayed()
+                performClick()
+            }
+
+            onNodeWithTag(testTag = TEST_TAG_SCREEN_HISTORY_PLAYER_INFO).assertIsDisplayed()
         }
     }
 }

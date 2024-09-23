@@ -25,28 +25,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PickUpDate
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.components.PlayerInfo
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryPlayerInfoScreen(
-    player: Player,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    viewModel: HistoryPlayerInfoViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val verticalPadding by remember { derivedStateOf { 16.dp } }
+
+    val player by viewModel.player.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(player.name) },
+                title = { Text(text = player?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -61,6 +66,7 @@ fun HistoryPlayerInfoScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .testTag(tag = TestTags.TEST_TAG_SCREEN_HISTORY_PLAYER_INFO)
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,7 +93,7 @@ fun HistoryPlayerInfoScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             PickUpDate(
-                pickUpTimeInMs = player.pickUpTimeInMs,
+                pickUpTimeInMs = player?.pickUpTimeInMs,
                 modifier = Modifier.fillMaxWidth()
             )
         }

@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 
@@ -9,5 +9,10 @@ fun isAppInstalledFromPlayStore() = when (BuildConfig.FLAVOR_market) {
 
 fun isAppInstalledFromGitHub() = when (BuildConfig.FLAVOR_market) {
     "gitHub" -> true
+    else -> false
+}
+
+fun isAppInstalledFromMyket() = when (BuildConfig.FLAVOR_market) {
+    "myket" -> true
     else -> false
 }

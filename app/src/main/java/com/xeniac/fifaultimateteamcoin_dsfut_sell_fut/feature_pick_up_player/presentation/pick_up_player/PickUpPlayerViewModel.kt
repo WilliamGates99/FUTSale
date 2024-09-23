@@ -13,7 +13,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PlatformError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
@@ -25,8 +24,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -46,43 +46,16 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private val mutex: Mutex = Mutex()
 
-    private val _isNotificationSoundEnabled = pickUpPlayerUseCases
-        .getIsNotificationSoundEnabledUseCase.get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-
-    private val _isNotificationVibrateEnabled = pickUpPlayerUseCases
-        .getIsNotificationVibrateEnabledUseCase.get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-
-    private val _latestPickedPlayers = pickUpPlayerUseCases
-        .observeLatestPickedPlayersUseCase.get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList()
-    )
-
-    private val _selectedPlatform = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-
     private val _pickUpPlayerState = savedStateHandle.getStateFlow(
         key = "pickUpPlayerState",
         initialValue = PickUpPlayerState()
     )
     val pickUpPlayerState = combine(
         flow = _pickUpPlayerState,
-        flow2 = _isNotificationSoundEnabled,
-        flow3 = _isNotificationVibrateEnabled,
-        flow4 = _latestPickedPlayers,
-        flow5 = _selectedPlatform
+        flow2 = pickUpPlayerUseCases.getIsNotificationSoundEnabledUseCase.get()(),
+        flow3 = pickUpPlayerUseCases.getIsNotificationVibrateEnabledUseCase.get()(),
+        flow4 = pickUpPlayerUseCases.observeLatestPickedPlayersUseCase.get()(),
+        flow5 = pickUpPlayerUseCases.getSelectedPlatformUseCase.get()()
     ) { pickUpPlayerState, isNotificationSoundEnabled, isNotificationVibrateEnabled, latestPickedPlayers, selectedPlatform ->
         pickUpPlayerState.copy(
             isNotificationSoundEnabled = isNotificationSoundEnabled,
@@ -103,7 +76,15 @@ class PickUpPlayerViewModel @Inject constructor(
             decimalFormat.format(0)
         )
     )
-    val timerText = _timerText.asStateFlow()
+    val timerText = _timerText.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
+        initialValue = UiText.StringResource(
+            R.string.pick_up_player_latest_player_timer,
+            decimalFormat.format(0),
+            decimalFormat.format(0)
+        )
+    )
 
     private val _changePlatformEventChannel = Channel<Event>()
     val changePlatformEventChannel = _changePlatformEventChannel.receiveAsFlow()
@@ -117,17 +98,17 @@ class PickUpPlayerViewModel @Inject constructor(
     private var autoPickUpPlayerJob: Job? = null
     private var countDownTimerJob: Job? = null
 
-    fun onEvent(event: PickUpPlayerEvent) {
-        when (event) {
-            is PickUpPlayerEvent.PlatformChanged -> setSelectedPlatform(platform = event.platform)
-            is PickUpPlayerEvent.MinPriceChanged -> minPriceChanged(event.minPrice)
-            is PickUpPlayerEvent.MaxPriceChanged -> maxPriceChanged(event.maxPrice)
-            is PickUpPlayerEvent.TakeAfterCheckedChanged -> takeAfterCheckedChanged(event.isChecked)
-            is PickUpPlayerEvent.TakeAfterSliderChanged -> takeAfterSliderChanged(event.delayInSeconds)
-            PickUpPlayerEvent.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
-            PickUpPlayerEvent.AutoPickUpPlayer -> autoPickUpPlayer()
-            PickUpPlayerEvent.PickUpPlayerOnce -> pickUpPlayerOnce()
-            is PickUpPlayerEvent.StartCountDownTimer -> startCountDownTimer(event.expiryTimeInMs)
+    fun onAction(action: PickUpPlayerAction) {
+        when (action) {
+            is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(platform = action.platform)
+            is PickUpPlayerAction.MinPriceChanged -> minPriceChanged(action.minPrice)
+            is PickUpPlayerAction.MaxPriceChanged -> maxPriceChanged(action.maxPrice)
+            is PickUpPlayerAction.TakeAfterCheckedChanged -> takeAfterCheckedChanged(action.isChecked)
+            is PickUpPlayerAction.TakeAfterSliderChanged -> takeAfterSliderChanged(action.delayInSeconds)
+            PickUpPlayerAction.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
+            PickUpPlayerAction.AutoPickUpPlayer -> autoPickUpPlayer()
+            PickUpPlayerAction.PickUpPlayerOnce -> pickUpPlayerOnce()
+            is PickUpPlayerAction.StartCountDownTimer -> startCountDownTimer(action.expiryTimeInMs)
         }
     }
 
@@ -135,13 +116,7 @@ class PickUpPlayerViewModel @Inject constructor(
         when (val result = pickUpPlayerUseCases.storeSelectedPlatformUseCase.get()(platform)) {
             is Result.Success -> Unit
             is Result.Error -> {
-                when (result.error) {
-                    PlatformError.SomethingWentWrong -> {
-                        _changePlatformEventChannel.send(
-                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                        )
-                    }
-                }
+                _changePlatformEventChannel.send(UiEvent.ShowShortSnackbar(result.error.asUiText()))
             }
         }
     }
@@ -236,10 +211,9 @@ class PickUpPlayerViewModel @Inject constructor(
                 if (pickUpPlayerResult.minPriceError != null) {
                     when (val error = pickUpPlayerResult.minPriceError) {
                         PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
-                                    minPriceErrorText = error.asUiText()
-                                )
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                minPriceErrorText = error.asUiText()
+                            )
                         }
                         else -> Unit
                     }
@@ -248,10 +222,9 @@ class PickUpPlayerViewModel @Inject constructor(
                 if (pickUpPlayerResult.maxPriceError != null) {
                     when (val error = pickUpPlayerResult.maxPriceError) {
                         PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
-                                    maxPriceErrorText = error.asUiText()
-                                )
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                maxPriceErrorText = error.asUiText()
+                            )
                         }
                         else -> Unit
                     }
@@ -260,10 +233,9 @@ class PickUpPlayerViewModel @Inject constructor(
                 if (pickUpPlayerResult.takeAfterError != null) {
                     when (val error = pickUpPlayerResult.takeAfterError) {
                         PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
-                                    takeAfterErrorText = error.asUiText()
-                                )
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                takeAfterErrorText = error.asUiText()
+                            )
                         }
                         else -> Unit
                     }
@@ -272,17 +244,16 @@ class PickUpPlayerViewModel @Inject constructor(
                 when (val result = pickUpPlayerResult.result) {
                     is Result.Success -> result.data.let { player ->
                         mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
-                                    isAutoPickUpLoading = false
-                                )
+                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                                isAutoPickUpLoading = false
+                            )
                         }
 
                         _autoPickUpPlayerEventChannel.send(
                             PickUpPlayerUiEvent.ShowSuccessNotification(player.name)
                         )
                         _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
+                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
                         )
                     }
                     is Result.Error -> {
@@ -417,7 +388,7 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
 
                     _pickUpPlayerOnceEventChannel.send(
-                        PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player)
+                        PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
                     )
                 }
                 is Result.Error -> {
@@ -465,24 +436,24 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun startCountDownTimer(expiryTimeInMs: Long) {
         countDownTimerJob?.cancel()
-        countDownTimerJob = viewModelScope.launch {
-            pickUpPlayerUseCases.startCountDownTimerUseCase.get()(expiryTimeInMs).collect { timerValueInSeconds ->
-                _timerText.update {
-                    val isTimerFinished = timerValueInSeconds == 0
-                    if (isTimerFinished) {
-                        UiText.StringResource(R.string.pick_up_player_latest_player_timer_expired)
-                    } else {
-                        val minutes = decimalFormat.format(timerValueInSeconds / 60)
-                        val seconds = decimalFormat.format(timerValueInSeconds % 60)
+        countDownTimerJob = pickUpPlayerUseCases.startCountDownTimerUseCase.get()(
+            expiryTimeInMs = expiryTimeInMs
+        ).onEach { timerValueInSeconds ->
+            _timerText.update {
+                val isTimerFinished = timerValueInSeconds == 0
+                if (isTimerFinished) {
+                    UiText.StringResource(R.string.pick_up_player_latest_player_timer_expired)
+                } else {
+                    val minutes = decimalFormat.format(timerValueInSeconds / 60)
+                    val seconds = decimalFormat.format(timerValueInSeconds % 60)
 
-                        UiText.StringResource(
-                            R.string.pick_up_player_latest_player_timer,
-                            minutes,
-                            seconds
-                        )
-                    }
+                    UiText.StringResource(
+                        R.string.pick_up_player_latest_player_timer,
+                        minutes,
+                        seconds
+                    )
                 }
             }
-        }
+        }.launchIn(scope = viewModelScope)
     }
 }

@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import android.content.Context
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
@@ -12,7 +13,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,19 +22,23 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.historyNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils.PlayerCustomNavType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
@@ -47,6 +51,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetProfileUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdatePartnerIdUseCase
@@ -65,7 +70,6 @@ import org.junit.Rule
 import org.junit.Test
 import java.text.DecimalFormat
 import javax.inject.Inject
-import kotlin.reflect.typeOf
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -83,16 +87,18 @@ class PickUpPlayerEndToEndTest {
     @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    private val context: Context = ApplicationProvider.getApplicationContext()
-
     @Inject
     lateinit var decimalFormat: DecimalFormat
 
-    private val fakePreferencesRepository = FakePreferencesRepositoryImpl()
+    private val context: Context = ApplicationProvider.getApplicationContext()
+
+    private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
+    private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
     private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
 
     private val testPartnerId = "123"
     private val testSecretKey = "abc123"
+    private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
 
     private lateinit var testNavController: NavHostController
 
@@ -103,20 +109,23 @@ class PickUpPlayerEndToEndTest {
         val observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
+        val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
+            pickUpPlayerRepository = fakePickUpPlayerRepository
+        )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getIsNotificationVibrateEnabledUseCase = GetIsNotificationVibrateEnabledUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         val getSelectedPlatformUseCase = GetSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val storeSelectedPlatformUseCase = StoreSelectedPlatformUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val pickUpPlayerUseCase = PickUpPlayerUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             pickUpPlayerRepository = fakePickUpPlayerRepository,
             validatePartnerId = ValidatePartnerId(),
             validateSecretKey = ValidateSecretKey(),
@@ -130,6 +139,7 @@ class PickUpPlayerEndToEndTest {
 
         val pickUpPlayerUseCases = PickUpPlayerUseCases(
             { observeLatestPickedPlayersUseCaseUseCase },
+            { observePickedUpPlayerUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
@@ -138,13 +148,15 @@ class PickUpPlayerEndToEndTest {
             { startCountDownTimerUseCase }
         )
 
-        val getProfileUseCase = GetProfileUseCase(preferencesRepository = fakePreferencesRepository)
+        val getProfileUseCase = GetProfileUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
+        )
         val updatePartnerIdUseCase = UpdatePartnerIdUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validatePartnerId = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId()
         )
         val updateSecretKeyUseCase = UpdateSecretKeyUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validateSecretKey = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey()
         )
 
@@ -160,53 +172,54 @@ class PickUpPlayerEndToEndTest {
 
                 NavHost(
                     navController = rememberNavController(),
-                    startDestination = Screen.HomeScreen
+                    startDestination = HomeScreen
                 ) {
-                    composable<Screen.HomeScreen> {
+                    composable<HomeScreen> {
                         NavHost(
                             navController = testNavController,
-                            startDestination = Screen.PickUpPlayerScreen
+                            startDestination = PickUpPlayerScreen
                         ) {
-                            composable<Screen.PickUpPlayerScreen> {
+                            composable<PickUpPlayerScreen> { backStackEntry ->
                                 PickUpPlayerScreen(
                                     viewModel = PickUpPlayerViewModel(
                                         pickUpPlayerUseCases = pickUpPlayerUseCases,
                                         decimalFormat = decimalFormat,
-                                        savedStateHandle = SavedStateHandle()
+                                        savedStateHandle = backStackEntry.savedStateHandle
                                     ),
                                     bottomPadding = 0.dp,
                                     onNavigateToProfileScreen = {
-                                        testNavController.navigate(Screen.ProfileScreen) {
+                                        testNavController.navigate(ProfileScreen) {
                                             launchSingleTop = true
                                             popUpTo(testNavController.graph.startDestinationId)
                                         }
                                     },
-                                    onNavigateToPickedUpPlayerInfoScreen = { player ->
+                                    onNavigateToPickedUpPlayerInfoScreen = { playerId ->
                                         testNavController.navigate(
-                                            Screen.PickedUpPlayerInfoScreen(
-                                                player = player
-                                            )
+                                            PickedUpPlayerInfoScreen(playerId)
                                         )
                                     }
                                 )
                             }
 
-                            composable<Screen.PickedUpPlayerInfoScreen>(
-                                typeMap = mapOf(typeOf<Player>() to PlayerCustomNavType)
-                            ) { backStackEntry ->
-                                val args = backStackEntry.toRoute<Screen.PickedUpPlayerInfoScreen>()
+                            composable<PickedUpPlayerInfoScreen> { backStackEntry ->
+                                backStackEntry.savedStateHandle["playerId"] = backStackEntry
+                                    .toRoute<PickedUpPlayerInfoScreen>().playerId
 
                                 PickedUpPlayerInfoScreen(
-                                    player = args.player,
+                                    viewModel = PickedUpPlayerInfoViewModel(
+                                        pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                        decimalFormat = decimalFormat,
+                                        savedStateHandle = backStackEntry.savedStateHandle
+                                    ),
                                     onNavigateUp = testNavController::navigateUp
                                 )
                             }
 
-                            composable<Screen.ProfileScreen> {
+                            composable<ProfileScreen> { backStackEntry ->
                                 ProfileScreen(
                                     viewModel = ProfileViewModel(
                                         profileUseCases = profileUseCases,
-                                        savedStateHandle = SavedStateHandle()
+                                        savedStateHandle = backStackEntry.savedStateHandle
                                     ),
                                     bottomPadding = 0.dp
                                 )
@@ -217,7 +230,7 @@ class PickUpPlayerEndToEndTest {
                                 bottomPadding = 0.dp
                             )
 
-                            composable<Screen.SettingsScreen> {
+                            composable<SettingsScreen> {
                                 SettingsScreen(bottomPadding = 0.dp)
                             }
                         }
@@ -284,7 +297,7 @@ class PickUpPlayerEndToEndTest {
             onNodeWithText(
                 text = context.getString(
                     R.string.picked_up_player_info_message,
-                    "Test Player"
+                    testPlayer.name
                 )
             ).apply {
                 assertExists()
@@ -355,6 +368,7 @@ class PickUpPlayerEndToEndTest {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun openProfileScreen_setPartnerIdAndSecretKey_returnToPickUpPlayerScreen_autoPickUpPlayerSuccessfully() {
         composeTestRule.apply {
@@ -411,10 +425,20 @@ class PickUpPlayerEndToEndTest {
             fakePickUpPlayerRepository.setIsPlayersQueueEmpty(isEmpty = false)
 
             // Check if successfully navigated to Picked Up Player Info screen
+            waitUntilAtLeastOneExists(
+                timeoutMillis = 10000,
+                matcher = hasText(
+                    text = context.getString(
+                        R.string.picked_up_player_info_message,
+                        testPlayer.name
+                    )
+                )
+            )
+
             onNodeWithText(
                 text = context.getString(
                     R.string.picked_up_player_info_message,
-                    "Test Player"
+                    testPlayer.name
                 )
             ).apply {
                 assertExists()

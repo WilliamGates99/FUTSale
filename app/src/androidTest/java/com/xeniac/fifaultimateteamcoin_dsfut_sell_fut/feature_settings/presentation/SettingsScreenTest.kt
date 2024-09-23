@@ -22,7 +22,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.URL_PRIVACY_POLICY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.NAVIGATION_BAR_ITEM_SETTINGS
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
@@ -47,10 +47,10 @@ class SettingsScreenTest {
         android.Manifest.permission.POST_NOTIFICATIONS
     )
 
-    @get:Rule(order = 3)
+    @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @get:Rule(order = 4)
+    @get:Rule(order = 3)
     val intentsTestRule = IntentsRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -66,7 +66,7 @@ class SettingsScreenTest {
 
                     SetupRootNavGraph(
                         rootNavController = testNavController,
-                        startDestination = Screen.HomeScreen
+                        startDestination = HomeScreen
                     )
                 }
             }

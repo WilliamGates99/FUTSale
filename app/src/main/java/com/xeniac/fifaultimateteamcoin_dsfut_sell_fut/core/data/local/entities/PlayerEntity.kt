@@ -3,9 +3,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import java.text.DecimalFormat
@@ -36,7 +36,7 @@ data class PlayerEntity(
     @ColumnInfo(name = "chemistry_style_id")
     val chemistryStyleID: Int,
     @ColumnInfo(name = "platform")
-    val platformDto: PlatformDto,
+    val platform: Platform,
     @ColumnInfo(name = "pick_up_time_in_seconds")
     val pickUpTimeInSeconds: Long = DateHelper.getCurrentTimeInSeconds(),
     @ColumnInfo(name = "expiry_time_in_seconds")
@@ -57,11 +57,11 @@ data class PlayerEntity(
             position = position,
             startPrice = formatNumber(startPrice),
             buyNowPrice = formatNumber(buyNowPrice),
-            owners = owners,
-            contracts = contracts,
+            owners = owners.toString(),
+            contracts = contracts.toString(),
             chemistryStyle = chemistryStyle,
             chemistryStyleID = chemistryStyleID,
-            platform = platformDto.toPlatform(),
+            platform = platform,
             pickUpTimeInMs = pickUpTimeInSeconds * 1000,
             expiryTimeInMs = expiryTimeInSeconds * 1000,
             id = id

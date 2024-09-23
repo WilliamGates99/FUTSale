@@ -67,8 +67,6 @@ fun SettingsScreen(
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
-    var isLocaleBottomSheetVisible by remember { mutableStateOf(false) }
-    var isThemeDialogVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -177,28 +175,19 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    horizontal = horizontalPadding,
+                    vertical = verticalPadding
                 )
         ) {
             SettingsCard(
                 settingsState = settingsState,
-                onLanguageClick = {
-                    isLocaleBottomSheetVisible = true
-                },
-                onThemeClick = {
-                    isThemeDialogVisible = true
-                },
-                onNotificationSoundChange = { isChecked ->
-                    viewModel.onEvent(SettingsEvent.SetNotificationSoundSwitch(isChecked))
-                },
-                onNotificationVibrateChange = { isChecked ->
-                    viewModel.onEvent(SettingsEvent.SetNotificationVibrateSwitch(isChecked))
-                },
+                onAction = viewModel::onAction,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -209,7 +198,7 @@ fun SettingsScreen(
                 },
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
+                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
                             context = context,
                             urlString = url
                         )
@@ -228,24 +217,14 @@ fun SettingsScreen(
     }
 
     LocaleBottomSheet(
-        isVisible = isLocaleBottomSheetVisible,
+        isVisible = settingsState.isLocaleBottomSheetVisible,
         currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
-        onDismissRequest = {
-            isLocaleBottomSheetVisible = false
-        },
-        onLocaleSelected = { newAppLocale ->
-            viewModel.onEvent(SettingsEvent.SetCurrentAppLocale(newAppLocale))
-        }
+        onAction = viewModel::onAction
     )
 
     ThemeBottomSheet(
-        isVisible = isThemeDialogVisible,
+        isVisible = settingsState.isThemeBottomSheetVisible,
         currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
-        onDismissRequest = {
-            isThemeDialogVisible = false
-        },
-        onThemeSelected = { newAppTheme ->
-            viewModel.onEvent(SettingsEvent.SetCurrentAppTheme(newAppTheme))
-        }
+        onAction = viewModel::onAction
     )
 }

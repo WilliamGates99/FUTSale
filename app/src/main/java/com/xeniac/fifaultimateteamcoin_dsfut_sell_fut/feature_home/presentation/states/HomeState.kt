@@ -12,6 +12,7 @@ data class HomeState(
     val notificationPermissionCount: Int = 0,
     val permissionDialogQueue: List<String> = emptyList(),
     val isPermissionDialogVisible: Boolean = false,
+    val isAppReviewDialogVisible: Boolean = false,
     val selectedRateAppOption: RateAppOption? = null,
     val previousRateAppRequestTimeInMs: PreviousRateAppRequestTimeInMs? = null,
     val inAppReviewInfo: ReviewInfo? = null,

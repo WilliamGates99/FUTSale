@@ -4,24 +4,25 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.OnboardingScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingScreen
 
 @Composable
 fun SetupRootNavGraph(
     rootNavController: NavHostController,
-    startDestination: Screen
+    startDestination: Any
 ) {
     NavHost(
         navController = rootNavController,
         startDestination = startDestination
     ) {
-        composable<Screen.OnboardingScreen> {
+        composable<OnboardingScreen> {
             OnboardingScreen(
                 onNavigateToHomeScreen = {
-                    rootNavController.navigate(Screen.HomeScreen) {
-                        popUpTo(Screen.OnboardingScreen) {
+                    rootNavController.navigate(HomeScreen) {
+                        popUpTo(OnboardingScreen) {
                             inclusive = true
                         }
                     }
@@ -29,7 +30,7 @@ fun SetupRootNavGraph(
             )
         }
 
-        composable<Screen.HomeScreen> {
+        composable<HomeScreen> {
             HomeScreen()
         }
     }

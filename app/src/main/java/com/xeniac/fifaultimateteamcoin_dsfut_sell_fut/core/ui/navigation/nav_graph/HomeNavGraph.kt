@@ -5,7 +5,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsScreen
 
@@ -16,14 +18,14 @@ fun SetupHomeNavGraph(
 ) {
     NavHost(
         navController = homeNavController,
-        startDestination = Screen.PickUpPlayerScreen
+        startDestination = PickUpPlayerScreen
     ) {
         pickUpPlayerNavGraph(
             homeNavController = homeNavController,
             bottomPadding = bottomPadding
         )
 
-        composable<Screen.ProfileScreen> {
+        composable<ProfileScreen> {
             ProfileScreen(bottomPadding = bottomPadding)
         }
 
@@ -32,7 +34,7 @@ fun SetupHomeNavGraph(
             bottomPadding = bottomPadding
         )
 
-        composable<Screen.SettingsScreen> {
+        composable<SettingsScreen> {
             SettingsScreen(bottomPadding = bottomPadding)
         }
     }

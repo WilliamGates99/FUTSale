@@ -139,22 +139,19 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    horizontal = horizontalPadding,
+                    vertical = verticalPadding
                 )
         ) {
             ProfileTextFields(
                 profileState = profileState,
-                onPartnerIdChange = { newPartnerId ->
-                    viewModel.onEvent(ProfileEvent.PartnerIdChanged(newPartnerId))
-                },
-                onSecretKeyChange = { newSecretKey ->
-                    viewModel.onEvent(ProfileEvent.SecretKeyChanged(newSecretKey))
-                },
+                onAction = viewModel::onAction,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -173,7 +170,7 @@ fun ProfileScreen(
             OtherLinks(
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
+                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
                             context = context,
                             urlString = url
                         )

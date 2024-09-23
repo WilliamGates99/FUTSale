@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.us
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,14 +25,14 @@ class UpdateSecretKeyUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private val validateSecretKey: ValidateSecretKey = ValidateSecretKey()
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
     private lateinit var updateSecretKeyUseCase: UpdateSecretKeyUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
         updateSecretKeyUseCase = UpdateSecretKeyUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validateSecretKey = validateSecretKey
         )
     }

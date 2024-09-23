@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,10 @@ internal object OnboardingModule {
     @Provides
     @ViewModelScoped
     fun provideCompleteOnboardingUseCase(
-        preferencesRepository: PreferencesRepository
-    ): CompleteOnboardingUseCase = CompleteOnboardingUseCase(preferencesRepository)
+        settingsDataStoreRepository: SettingsDataStoreRepository,
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): CompleteOnboardingUseCase = CompleteOnboardingUseCase(
+        settingsDataStoreRepository,
+        dsfutDataStoreRepository
+    )
 }

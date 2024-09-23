@@ -21,12 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
@@ -41,14 +42,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.isAppInstalledFromPlayStore
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -56,18 +56,19 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
-    val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
+    val homeState by viewModel.homeState.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
-    var isAppReviewDialogVisible by remember { mutableStateOf(false) }
-    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
 
-    LaunchedEffect(backStackEntry?.destination) {
-        val currentRoute = backStackEntry?.destination?.route
-        isBottomAppBarVisible = NavigationBarItems.entries.find { navigationBarItem ->
-            currentRoute?.contains(navigationBarItem.screen.toString()) == true
+    LaunchedEffect(currentDestination) {
+        isBottomAppBarVisible = NavigationBarItems.entries.find { navItem ->
+            currentDestination?.hierarchy?.any {
+                it.hasRoute(route = navItem.screen::class)
+            } ?: false
         } != null
     }
 
@@ -80,13 +81,13 @@ fun HomeScreen(
         }
     )
 
-    ObserverAsEvent(flow = homeViewModel.inAppUpdatesEventChannel) { event ->
+    ObserverAsEvent(flow = viewModel.inAppUpdatesEventChannel) { event ->
         when (event) {
             is HomeUiEvent.StartAppUpdateFlow -> {
-                homeViewModel.appUpdateManager.get().startUpdateFlowForResult(
+                viewModel.appUpdateManager.get().startUpdateFlowForResult(
                     event.appUpdateInfo,
                     appUpdateResultLauncher,
-                    homeViewModel.appUpdateOptions.get()
+                    viewModel.appUpdateOptions.get()
                 )
             }
             HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
@@ -100,26 +101,23 @@ fun HomeScreen(
 
                     when (result) {
                         SnackbarResult.ActionPerformed -> {
-                            homeViewModel.appUpdateManager.get().completeUpdate()
+                            viewModel.appUpdateManager.get().completeUpdate()
                         }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
             }
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
-                homeViewModel.appUpdateManager.get().completeUpdate()
+                viewModel.appUpdateManager.get().completeUpdate()
             }
         }
     }
 
-    ObserverAsEvent(flow = homeViewModel.inAppReviewEventChannel) { event ->
+    ObserverAsEvent(flow = viewModel.inAppReviewEventChannel) { event ->
         when (event) {
-            HomeUiEvent.ShowAppReviewDialog -> {
-                isAppReviewDialogVisible = true
-            }
             HomeUiEvent.LaunchInAppReview -> {
                 homeState.inAppReviewInfo?.let { reviewInfo ->
-                    homeViewModel.reviewManager.get().launchReviewFlow(
+                    viewModel.reviewManager.get().launchReviewFlow(
                         activity,
                         reviewInfo
                     ).addOnCompleteListener {
@@ -161,17 +159,7 @@ fun HomeScreen(
 
     PostNotificationPermissionHandler(
         homeState = homeState,
-        onPermissionResult = { permission, isGranted ->
-            homeViewModel.onEvent(
-                HomeEvent.OnPermissionResult(
-                    permission = permission,
-                    isGranted = isGranted
-                )
-            )
-        },
-        onDismiss = { permission ->
-            homeViewModel.onEvent(HomeEvent.DismissPermissionDialog(permission))
-        }
+        onAction = viewModel::onAction
     )
 
     Scaffold(
@@ -184,7 +172,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CustomNavigationBar(
-                    backStackEntry = backStackEntry,
+                    currentDestination = currentDestination,
                     onItemClick = { screen ->
                         homeNavController.navigate(screen) {
                             // Avoid multiple copies of the same destination when re-selecting the same item
@@ -212,32 +200,17 @@ fun HomeScreen(
 
     AppUpdateBottomSheet(
         appUpdateInfo = homeState.latestAppUpdateInfo,
+        onAction = viewModel::onAction,
         openAppUpdatePageInStore = {
             isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
-        },
-        onDismissRequest = {
-            homeViewModel.onEvent(HomeEvent.DismissAppUpdateSheet)
         }
     )
 
     AppReviewDialog(
-        isVisible = isAppReviewDialogVisible,
-        onRateNowClick = {
-            if (isAppInstalledFromPlayStore()) {
-                homeViewModel.onEvent(HomeEvent.LaunchInAppReview)
-            } else {
-                isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-            }
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
-        },
-        onRemindLaterClick = {
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToRemindLater)
-        },
-        onNeverClick = {
-            homeViewModel.onEvent(HomeEvent.SetSelectedRateAppOptionToNever)
-        },
-        onDismiss = {
-            isAppReviewDialogVisible = false
+        isVisible = homeState.isAppReviewDialogVisible,
+        onAction = viewModel::onAction,
+        openAppPageInStore = {
+            isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
         }
     )
 }

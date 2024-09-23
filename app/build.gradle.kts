@@ -28,8 +28,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
-        versionCode = 26
-        versionName = "2.0.5"
+        versionCode = 27
+        versionName = "2.1.0"
 
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))

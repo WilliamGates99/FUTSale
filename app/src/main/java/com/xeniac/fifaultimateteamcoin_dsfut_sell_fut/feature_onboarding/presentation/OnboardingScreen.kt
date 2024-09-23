@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,7 +40,7 @@ fun OnboardingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
-    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
+    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
@@ -85,15 +84,7 @@ fun OnboardingScreen(
         OnboardingPager(
             bottomPadding = innerPadding.calculateBottomPadding(),
             onboardingState = onboardingState,
-            onPartnerIdChange = { newPartnerId ->
-                viewModel.onEvent(OnboardingEvent.PartnerIdChanged(newPartnerId))
-            },
-            onSecretKeyChange = { newSecretKey ->
-                viewModel.onEvent(OnboardingEvent.SecretKeyChanged(newSecretKey))
-            },
-            onStartBtnClick = {
-                viewModel.onEvent(OnboardingEvent.SaveUserData)
-            },
+            onAction = viewModel::onAction,
             onRegisterBtnClick = {
                 isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
                     context = context,
@@ -101,7 +92,7 @@ fun OnboardingScreen(
                 )
             },
             onPrivacyPolicyBtnClick = {
-                IntentHelper.openLinkInInAppBrowser(
+                isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
                     context = context,
                     urlString = Constants.URL_PRIVACY_POLICY
                 )

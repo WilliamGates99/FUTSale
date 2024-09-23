@@ -7,6 +7,5 @@ sealed class HomeUiEvent : Event() {
     data class StartAppUpdateFlow(val appUpdateInfo: AppUpdateInfo) : HomeUiEvent()
     data object ShowCompleteAppUpdateSnackbar : HomeUiEvent()
     data object CompleteFlexibleAppUpdate : HomeUiEvent()
-    data object ShowAppReviewDialog : HomeUiEvent()
     data object LaunchInAppReview : HomeUiEvent()
 }

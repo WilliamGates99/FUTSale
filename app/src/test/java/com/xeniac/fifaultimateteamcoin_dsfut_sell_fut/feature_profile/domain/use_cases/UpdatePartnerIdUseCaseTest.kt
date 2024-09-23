@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.us
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.PartnerIdError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId
@@ -26,14 +26,14 @@ class UpdatePartnerIdUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private val validatePartnerId: ValidatePartnerId = ValidatePartnerId()
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
     private lateinit var updatePartnerIdUseCase: UpdatePartnerIdUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
         updatePartnerIdUseCase = UpdatePartnerIdUseCase(
-            preferencesRepository = fakePreferencesRepository,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             validatePartnerId = validatePartnerId
         )
     }

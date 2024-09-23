@@ -2,9 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
@@ -39,10 +39,30 @@ import kotlin.random.Random
 
 class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerRepository {
 
+    companion object {
+        val dummyPlayerDto = PlayerDto(
+            tradeID = 1,
+            assetID = 1,
+            resourceID = 1,
+            transactionID = 1,
+            name = "Test Player",
+            rating = 88,
+            position = "GK",
+            startPrice = 10000,
+            buyNowPrice = 15000,
+            owners = 1,
+            contracts = 1,
+            chemistryStyle = "Basic",
+            chemistryStyleID = 1,
+            expires = 0
+        )
+    }
+
     private var isNetworkAvailable = true
     private var pickUpPlayerHttpStatusCode = HttpStatusCode.OK
     private var isPlayersQueueEmpty = false
 
+    private var pickedUpPlayerId = 0L
     private var latestPlayerEntities = SnapshotStateList<PlayerEntity>()
 
     fun isNetworkAvailable(isAvailable: Boolean) {
@@ -63,6 +83,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         ('a'..'z').forEachIndexed { index, char ->
             playersToInsert.add(
                 PlayerEntity(
+                    id = index.toLong(),
                     tradeID = index.toString(),
                     assetID = index,
                     resourceID = index,
@@ -76,9 +97,9 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                     contracts = 1,
                     chemistryStyle = "Basic",
                     chemistryStyleID = index,
-                    platformDto = when (Random.nextBoolean()) {
-                        true -> PlatformDto.CONSOLE
-                        false -> PlatformDto.PC
+                    platform = when (Random.nextBoolean()) {
+                        true -> Platform.CONSOLE
+                        false -> Platform.PC
                     },
                     pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
                         Random.nextLong(
@@ -106,6 +127,14 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
         sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
 
         sortedLatestPlayerEntities.map { it.toPlayer() }
+    }
+
+    override fun observePickedUpPlayer(playerId: Long): Flow<Player> = flow {
+        val player = latestPlayerEntities.find { playerEntity ->
+            playerEntity.id == playerId
+        }?.toPlayer()
+
+        player?.let { emit(it) }
     }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = flow {
@@ -150,22 +179,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
                     PickUpPlayerResponseDto(
                         error = "",
                         message = "1 player popped",
-                        playerDto = PlayerDto(
-                            tradeID = 1,
-                            assetID = 1,
-                            resourceID = 1,
-                            transactionID = 1,
-                            name = "Test Player",
-                            rating = 88,
-                            position = "GK",
-                            startPrice = 10000,
-                            buyNowPrice = 15000,
-                            owners = 1,
-                            contracts = 1,
-                            chemistryStyle = "Basic",
-                            chemistryStyleID = 1,
-                            expires = 0
-                        )
+                        playerDto = dummyPlayerDto
                     )
                 }
             } else {
@@ -207,7 +221,7 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
 
         val response = testClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = PlatformDto.CONSOLE.value,
+                platform = Platform.CONSOLE.value,
                 partnerId = partnerId,
                 timestamp = timestampInSeconds,
                 signature = signature
@@ -225,7 +239,10 @@ class FakePickUpPlayerRepositoryImpl @Inject constructor() : PickUpPlayerReposit
 
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
-                    val playerEntity = playerDto!!.toPlayerEntity()
+                    pickedUpPlayerId += 1
+                    val playerEntity = playerDto!!.toPlayerEntity().copy(
+                        id = pickedUpPlayerId * 100
+                    )
                     latestPlayerEntities.add(playerEntity)
                     Result.Success(playerEntity.toPlayer())
                 } else {

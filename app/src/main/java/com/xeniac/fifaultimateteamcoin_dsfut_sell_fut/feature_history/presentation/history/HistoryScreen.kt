@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.EmptyListAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.PlayersLazyColumn
@@ -34,7 +33,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentati
 @Composable
 fun HistoryScreen(
     bottomPadding: Dp,
-    onNavigateToPlayerInfoScreen: (player: Player) -> Unit,
+    onNavigateToPlayerInfoScreen: (playerId: Long) -> Unit,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -87,13 +86,16 @@ fun HistoryScreen(
                 PlayersLazyColumn(
                     pickedPlayersHistory = pickedPlayersHistory,
                     contentPadding = PaddingValues(
-                        start = horizontalPadding,
-                        end = horizontalPadding,
-                        top = innerPadding.calculateTopPadding() + verticalPadding,
-                        bottom = bottomPadding + verticalPadding
+                        horizontal = horizontalPadding,
+                        vertical = verticalPadding
                     ),
                     onClick = onNavigateToPlayerInfoScreen,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = bottomPadding
+                        )
                 )
             }
         }

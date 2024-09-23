@@ -25,6 +25,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.openAppSettings
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.PermissionDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.states.HomeState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
 
@@ -35,8 +36,7 @@ fun PostNotificationPermissionHandler(
     isRunningAndroid13OrNewer: Boolean = remember {
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
     }.value,
-    onPermissionResult: (permission: String, isGranted: Boolean) -> Unit,
-    onDismiss: (permission: String) -> Unit
+    onAction: (action: HomeAction) -> Unit
 ) {
     @SuppressLint("InlinedApi")
     if (isRunningAndroid13OrNewer) {
@@ -46,9 +46,11 @@ fun PostNotificationPermissionHandler(
         val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
         ) { isGranted ->
-            onPermissionResult(
-                Manifest.permission.POST_NOTIFICATIONS,
-                isGranted
+            onAction(
+                HomeAction.OnPermissionResult(
+                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    isGranted = isGranted
+                )
             )
         }
 
@@ -65,7 +67,9 @@ fun PostNotificationPermissionHandler(
                     Manifest.permission.POST_NOTIFICATIONS
                 )
             },
-            onDismiss = onDismiss,
+            onDismiss = { permission ->
+                onAction(HomeAction.DismissPermissionDialog(permission))
+            },
             modifier = modifier
         )
     }

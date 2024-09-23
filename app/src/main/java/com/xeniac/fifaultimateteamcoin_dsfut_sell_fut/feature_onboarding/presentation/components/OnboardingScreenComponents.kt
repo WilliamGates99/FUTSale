@@ -15,6 +15,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.Dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.BouncingDotIndicator
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlinx.coroutines.launch
@@ -25,9 +26,7 @@ fun OnboardingPager(
     bottomPadding: Dp,
     onboardingState: OnboardingState,
     modifier: Modifier = Modifier,
-    onPartnerIdChange: (newPartnerId: String) -> Unit,
-    onSecretKeyChange: (newSecretKey: String) -> Unit,
-    onStartBtnClick: () -> Unit,
+    onAction: (action: OnboardingAction) -> Unit,
     onRegisterBtnClick: () -> Unit,
     onPrivacyPolicyBtnClick: () -> Unit
 ) {
@@ -102,9 +101,7 @@ fun OnboardingPager(
                 3 -> OnboardingPageFour(
                     bottomPadding = bottomPadding,
                     onboardingState = onboardingState,
-                    onPartnerIdChange = onPartnerIdChange,
-                    onSecretKeyChange = onSecretKeyChange,
-                    onStartBtnClick = onStartBtnClick,
+                    onAction = onAction,
                     onRegisterBtnClick = onRegisterBtnClick,
                     onPrivacyPolicyBtnClick = onPrivacyPolicyBtnClick
                 )

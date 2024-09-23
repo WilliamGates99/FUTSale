@@ -8,10 +8,9 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
@@ -19,7 +18,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_3_TO_4
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -33,7 +38,9 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -48,6 +55,7 @@ import kotlinx.serialization.json.Json
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -97,6 +105,7 @@ internal object AppModule {
         expectSuccess = true
 
         install(Logging) {
+            logger = Logger.ANDROID
             level = LogLevel.INFO
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
@@ -146,20 +155,52 @@ internal object AppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
+    @SettingsDataStoreQualifier
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> = synchronized(lock = SynchronizedObject()) {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "settings") }
+    ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = SettingsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Settings.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @DsfutDataStoreQualifier
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.dataStoreFile(fileName = "Dsfut.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    @MiscellaneousDataStoreQualifier
+    fun provideMiscellaneousDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = MiscellaneousPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous.pb") }
         )
     }
 
     @Provides
-    fun provideAppThemeIndex(
-        preferencesRepository: PreferencesRepository
-    ): AppTheme = preferencesRepository.getCurrentAppThemeSynchronously()
+    fun provideAppTheme(
+        settingsDataStoreRepository: SettingsDataStoreRepository
+    ): AppTheme = settingsDataStoreRepository.getCurrentAppThemeSynchronously()
 
     @Provides
     @Singleton
@@ -168,3 +209,15 @@ internal object AppModule {
         /* symbols = */ DecimalFormatSymbols(Locale.US)
     )
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class SettingsDataStoreQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DsfutDataStoreQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MiscellaneousDataStoreQualifier

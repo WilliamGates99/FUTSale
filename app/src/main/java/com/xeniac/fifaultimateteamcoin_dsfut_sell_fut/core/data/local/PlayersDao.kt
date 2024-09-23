@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlayersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlayer(playerEntity: PlayerEntity)
+    suspend fun insertPlayer(playerEntity: PlayerEntity): Long
 
     @Query("DELETE FROM players")
     suspend fun clearPlayers()
@@ -37,5 +37,5 @@ interface PlayersDao {
     fun pagingSource(): PagingSource<Int, PlayerEntity>
 
     @Query("SELECT * FROM players WHERE id = :id")
-    fun getPlayer(id: Long): Flow<PlayerEntity>
+    fun observerPlayer(id: Long): Flow<PlayerEntity>
 }

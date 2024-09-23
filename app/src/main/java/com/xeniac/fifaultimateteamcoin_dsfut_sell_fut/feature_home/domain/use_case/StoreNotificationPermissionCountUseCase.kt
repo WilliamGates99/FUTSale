@@ -1,11 +1,11 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 
 class StoreNotificationPermissionCountUseCase(
-    private val preferencesRepository: PreferencesRepository
+    private val settingsDataStoreRepository: SettingsDataStoreRepository
 ) {
     suspend operator fun invoke(
         count: Int
-    ) = preferencesRepository.storeNotificationPermissionCount(count)
+    ) = settingsDataStoreRepository.storeNotificationPermissionCount(count)
 }

@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
@@ -32,7 +32,7 @@ class PickUpPlayerUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepositoryImpl: FakePreferencesRepositoryImpl
+    private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
     private lateinit var fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
     private lateinit var pickUpPlayerUseCase: PickUpPlayerUseCase
     private val validatePartnerId: ValidatePartnerId = ValidatePartnerId()
@@ -43,11 +43,11 @@ class PickUpPlayerUseCaseTest {
 
     @Before
     fun setUp() {
-        fakePreferencesRepositoryImpl = FakePreferencesRepositoryImpl()
+        fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
         fakePickUpPlayerRepositoryImpl = FakePickUpPlayerRepositoryImpl()
 
         pickUpPlayerUseCase = PickUpPlayerUseCase(
-            preferencesRepository = fakePreferencesRepositoryImpl,
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl,
             pickUpPlayerRepository = fakePickUpPlayerRepositoryImpl,
             validatePartnerId = validatePartnerId,
             validateSecretKey = validateSecretKey,
@@ -59,7 +59,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNullPartnerId_returnsBlankPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.storePartnerId(null)
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(null)
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.BlankPartnerId::class.java)
@@ -67,7 +67,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithBlankPartnerId_returnsBlankPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.storePartnerId("")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.BlankPartnerId::class.java)
@@ -75,7 +75,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNonDigitPartnerId_returnsInvalidPartnerIdError() = runTest {
-        fakePreferencesRepositoryImpl.storePartnerId("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.partnerIdError).isInstanceOf(PickUpPlayerError.InvalidPartnerId::class.java)
@@ -83,7 +83,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithNullSecretKey_returnsBlankSecretKeyError() = runTest {
-        fakePreferencesRepositoryImpl.storeSecretKey(null)
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(null)
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.secretKeyError).isInstanceOf(PickUpPlayerError.BlankSecretKey::class.java)
@@ -91,7 +91,7 @@ class PickUpPlayerUseCaseTest {
 
     @Test
     fun pickUpPlayerWithBlankSecretKey_returnsBlankSecretKeyError() = runTest {
-        fakePreferencesRepositoryImpl.storeSecretKey("")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
         assertThat(pickUpPlayerResult.secretKeyError).isInstanceOf(PickUpPlayerError.BlankSecretKey::class.java)
@@ -114,8 +114,8 @@ class PickUpPlayerUseCaseTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.OK)
         fakePickUpPlayerRepositoryImpl.setIsPlayersQueueEmpty(false)
 
-        fakePreferencesRepositoryImpl.storePartnerId("123")
-        fakePreferencesRepositoryImpl.storeSecretKey("secretKey")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("secretKey")
 
         val pickUpPlayerResult = pickUpPlayerUseCase(
             minPrice = "10000",
@@ -132,8 +132,8 @@ class PickUpPlayerUseCaseTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.OK)
         fakePickUpPlayerRepositoryImpl.setIsPlayersQueueEmpty(true)
 
-        fakePreferencesRepositoryImpl.storePartnerId("123")
-        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
 
@@ -145,8 +145,8 @@ class PickUpPlayerUseCaseTest {
     fun pickUpPlayerWithValidInputsAndUnavailableNetwork_returnsError() = runTest {
         fakePickUpPlayerRepositoryImpl.isNetworkAvailable(isAvailable = false)
 
-        fakePreferencesRepositoryImpl.storePartnerId("123")
-        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
 
@@ -157,8 +157,8 @@ class PickUpPlayerUseCaseTest {
     fun pickUpPlayerWithValidInputsAndBadNetwork_returnsError() = runTest {
         fakePickUpPlayerRepositoryImpl.setPickUpPlayerHttpStatusCode(HttpStatusCode.RequestTimeout)
 
-        fakePreferencesRepositoryImpl.storePartnerId("123")
-        fakePreferencesRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
 
         val pickUpPlayerResult = pickUpPlayerUseCase()
 

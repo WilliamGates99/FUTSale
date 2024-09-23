@@ -4,7 +4,7 @@ import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
@@ -35,22 +35,26 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import timber.log.Timber
-import java.util.Locale
+import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
-    private val httpClient: HttpClient,
-    private val preferencesRepository: Lazy<PreferencesRepository>,
-    private val playerDao: Lazy<PlayersDao>
+    private val httpClient: Lazy<HttpClient>,
+    private val dsfutDataStoreRepository: Lazy<DsfutDataStoreRepository>,
+    private val playersDao: Lazy<PlayersDao>
 ) : PickUpPlayerRepository {
 
-    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playerDao.get()
+    override fun observeLatestPickedPlayers(): Flow<List<Player>> = playersDao.get()
         .observeLatestPickedPlayers(
             currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
         ).map { playerEntities ->
             playerEntities.map { it.toPlayer() }
         }
+
+    override fun observePickedUpPlayer(playerId: Long): Flow<Player> = playersDao.get()
+        .observerPlayer(id = playerId)
+        .map { it.toPlayer() }
 
     override fun observeCountDownTimer(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
         callbackFlow {
@@ -87,7 +91,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         maxPrice: String?,
         takeAfterDelayInSeconds: Int?
     ): Result<Player, PickUpPlayerError> = try {
-        val platform = preferencesRepository.get().getSelectedPlatform().first()
+        val selectedPlatform = dsfutDataStoreRepository.get().getSelectedPlatform().first()
         val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
             partnerId = partnerId,
@@ -95,9 +99,9 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             timestamp = timestampInSeconds
         )
 
-        val response = httpClient.get(
+        val response = httpClient.get().get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
-                platform = platform.value,
+                platform = selectedPlatform.value,
                 partnerId = partnerId,
                 timestamp = timestampInSeconds,
                 signature = signature
@@ -118,10 +122,15 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
                 val isPlayerPickedUpSuccessfully = playerDto != null
                 if (isPlayerPickedUpSuccessfully) {
                     val playerEntity = playerDto!!.copy(
-                        platformDto = platform.toPlatformDto()
+                        platform = selectedPlatform
                     ).toPlayerEntity()
-                    playerDao.get().insertPlayer(playerEntity)
-                    Result.Success(playerEntity.toPlayer())
+                    val playerId = playersDao.get().insertPlayer(playerEntity)
+
+                    val player = playerEntity.copy(
+                        id = playerId
+                    ).toPlayer()
+
+                    Result.Success(player)
                 } else {
                     val pickUpPlayerError = when (pickUpPlayerResponseDto.error) {
                         Constants.ERROR_DSFUT_BLOCK -> PickUpPlayerError.Network.DsfutBlock(message = pickUpPlayerResponseDto.message)
@@ -142,7 +151,11 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
             else -> Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
         }
     } catch (e: UnresolvedAddressException) { // When device is offline
-        Timber.e("Pick up player UnresolvedAddressException:}")
+        Timber.e("Pick up player UnresolvedAddressException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.Offline)
+    } catch (e: UnknownHostException) { // When device is offline
+        Timber.e("Pick up player UnknownHostException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.Offline)
     } catch (e: ConnectTimeoutException) {
@@ -178,8 +191,6 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
 
         Timber.e("Pick up player Exception:")
         e.printStackTrace()
-        if (e.message?.lowercase(Locale.US)?.contains("unable to resolve host") == true) {
-            Result.Error(PickUpPlayerError.Network.Offline)
-        } else Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
+        Result.Error(PickUpPlayerError.Network.SomethingWentWrong)
     }
 }

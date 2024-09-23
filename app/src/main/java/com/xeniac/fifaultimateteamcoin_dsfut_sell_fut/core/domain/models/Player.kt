@@ -18,8 +18,8 @@ data class Player(
     val position: String,
     val startPrice: String,
     val buyNowPrice: String,
-    val owners: Int,
-    val contracts: Int,
+    val owners: String,
+    val contracts: String,
     val chemistryStyle: String,
     val chemistryStyleID: Int,
     val platform: Platform,
@@ -37,12 +37,12 @@ data class Player(
         position = position,
         startPrice = startPrice.toInt(),
         buyNowPrice = buyNowPrice.toInt(),
-        owners = owners,
-        contracts = contracts,
+        owners = owners.toInt(),
+        contracts = contracts.toInt(),
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
         expires = 0,
-        platformDto = platform.toPlatformDto()
+        platform = platform
     )
 
     fun toPlayerEntity(): PlayerEntity = PlayerEntity(
@@ -55,11 +55,11 @@ data class Player(
         position = position,
         startPrice = startPrice.toInt(),
         buyNowPrice = buyNowPrice.toInt(),
-        owners = owners,
-        contracts = contracts,
+        owners = owners.toInt(),
+        contracts = contracts.toInt(),
         chemistryStyle = chemistryStyle,
         chemistryStyleID = chemistryStyleID,
-        platformDto = platform.toPlatformDto(),
+        platform = platform,
         pickUpTimeInSeconds = pickUpTimeInMs / 1000,
         expiryTimeInSeconds = expiryTimeInMs / 1000,
         id = id

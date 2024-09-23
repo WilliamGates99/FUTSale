@@ -16,7 +16,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentati
 
 @Composable
 fun PickUpDate(
-    pickUpTimeInMs: Long,
+    pickUpTimeInMs: Long?,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 12.sp,
     lineHeight: TextUnit = 12.sp,
@@ -26,7 +26,7 @@ fun PickUpDate(
     color: Color = Neutral60
 ) {
     Text(
-        text = pickUpTimeInMs.asDateTime(),
+        text = pickUpTimeInMs?.asDateTime() ?: "",
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = fontWeight,

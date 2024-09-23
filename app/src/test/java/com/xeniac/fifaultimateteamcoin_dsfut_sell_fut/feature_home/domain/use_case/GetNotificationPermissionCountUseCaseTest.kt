@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_c
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -23,20 +23,22 @@ class GetNotificationPermissionCountUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     private lateinit var getNotificationPermissionCountUseCase: GetNotificationPermissionCountUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
         getNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
     }
 
     @Test
     fun getNotificationPermissionCount_returnsCurrentNotificationPermissionCountValue() = runTest {
         val currentNotificationPermissionCount = getNotificationPermissionCountUseCase().first()
-        assertThat(currentNotificationPermissionCount).isEqualTo(fakePreferencesRepository.notificationPermissionCount)
+        assertThat(currentNotificationPermissionCount).isEqualTo(
+            fakeSettingsDataStoreRepositoryImpl.notificationPermissionCount
+        )
     }
 }

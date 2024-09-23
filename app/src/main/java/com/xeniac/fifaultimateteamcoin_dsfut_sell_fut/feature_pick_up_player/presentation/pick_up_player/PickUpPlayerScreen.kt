@@ -2,11 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -36,20 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.AutoPickUpButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.InstructionTexts
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpOnceButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PlatformSelector
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PriceTextFields
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.TakeAfterSlider
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpPlayerSection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
 import kotlinx.coroutines.launch
@@ -59,7 +51,7 @@ import kotlinx.coroutines.launch
 fun PickUpPlayerScreen(
     bottomPadding: Dp,
     onNavigateToProfileScreen: () -> Unit,
-    onNavigateToPickedUpPlayerInfoScreen: (player: Player) -> Unit,
+    onNavigateToPickedUpPlayerInfoScreen: (playerId: Long) -> Unit,
     viewModel: PickUpPlayerViewModel = hiltViewModel(),
     notificationService: PickUpPlayerNotificationService = requirePickUpPlayerNotificationService()
 ) {
@@ -184,7 +176,7 @@ fun PickUpPlayerScreen(
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
-                onNavigateToPickedUpPlayerInfoScreen(event.player)
+                onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
             is UiEvent.ShowLongSnackbar -> {
                 scope.launch {
@@ -207,7 +199,9 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> autoPickUpPlayer(viewModel)
+                        SnackbarResult.ActionPerformed -> {
+                            viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
+                        }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -282,7 +276,7 @@ fun PickUpPlayerScreen(
                 }
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
-                onNavigateToPickedUpPlayerInfoScreen(event.player)
+                onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
             is UiEvent.ShowLongSnackbar -> {
                 scope.launch {
@@ -305,7 +299,9 @@ fun PickUpPlayerScreen(
                     )
 
                     when (result) {
-                        SnackbarResult.ActionPerformed -> pickUpPlayerOnce(viewModel)
+                        SnackbarResult.ActionPerformed -> {
+                            viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
+                        }
                         SnackbarResult.Dismissed -> Unit
                     }
                 }
@@ -337,94 +333,28 @@ fun PickUpPlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
-                .verticalScroll(rememberScrollState())
                 .padding(
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = bottomPadding + verticalPadding
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
                 )
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = verticalPadding)
         ) {
             LatestPlayersPagers(
                 latestPickedPlayers = pickUpPlayerState.latestPickedPlayers,
                 timerText = timerText.asString(),
+                onAction = viewModel::onAction,
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
-                onCountDownStart = { expiryTimeInMillis ->
-                    viewModel.onEvent(PickUpPlayerEvent.StartCountDownTimer(expiryTimeInMillis))
-                },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Column(
+            PickUpPlayerSection(
+                pickUpPlayerState = pickUpPlayerState,
+                onAction = viewModel::onAction,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = horizontalPadding)
-            ) {
-                InstructionTexts(modifier = Modifier.fillMaxWidth())
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                PlatformSelector(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onPlatformClick = { newPlatform ->
-                        viewModel.onEvent(PickUpPlayerEvent.PlatformChanged(newPlatform))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                PriceTextFields(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onMinPriceChange = { newPrice ->
-                        viewModel.onEvent(PickUpPlayerEvent.MinPriceChanged(newPrice))
-                    },
-                    onMaxPriceChange = { newPrice ->
-                        viewModel.onEvent(PickUpPlayerEvent.MaxPriceChanged(newPrice))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                TakeAfterSlider(
-                    pickUpPlayerState = pickUpPlayerState,
-                    modifier = Modifier.fillMaxWidth(),
-                    onCheckedChange = { isChecked ->
-                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterCheckedChanged(isChecked))
-                    },
-                    onSliderValueChangeFinished = { sliderPosition ->
-                        viewModel.onEvent(PickUpPlayerEvent.TakeAfterSliderChanged(sliderPosition))
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                AutoPickUpButton(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onAutoPickUpClick = { autoPickUpPlayer(viewModel) },
-                    onCancelClick = { viewModel.onEvent(PickUpPlayerEvent.CancelAutoPickUpPlayer) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PickUpOnceButton(
-                    pickUpPlayerState = pickUpPlayerState,
-                    onClick = { pickUpPlayerOnce(viewModel) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp)
-                )
-            }
+            )
         }
     }
-}
-
-private fun autoPickUpPlayer(viewModel: PickUpPlayerViewModel) {
-    viewModel.onEvent(PickUpPlayerEvent.AutoPickUpPlayer)
-}
-
-private fun pickUpPlayerOnce(viewModel: PickUpPlayerViewModel) {
-    viewModel.onEvent(PickUpPlayerEvent.PickUpPlayerOnce)
 }

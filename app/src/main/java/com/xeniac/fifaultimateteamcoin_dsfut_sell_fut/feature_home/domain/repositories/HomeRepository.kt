@@ -23,7 +23,7 @@ interface HomeRepository {
 
     fun requestInAppReviews(): Flow<ReviewInfo?>
 
-    suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError>
+    fun getLatestAppVersion(): Flow<Result<LatestAppUpdateInfo?, GetLatestAppVersionError>>
 
     sealed class EndPoints(val url: String) {
         data object GetLatestAppVersion : EndPoints(

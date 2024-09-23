@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class StartCountDownTimerUseCase(
     private val pickUpPlayerRepository: PickUpPlayerRepository
 ) {
-    operator fun invoke(expiryTimeInMs: Long): Flow<TimerValueInSeconds> =
-        pickUpPlayerRepository.observeCountDownTimer(expiryTimeInMs)
+    operator fun invoke(expiryTimeInMs: Long): Flow<TimerValueInSeconds> = pickUpPlayerRepository
+        .observeCountDownTimer(expiryTimeInMs)
 }

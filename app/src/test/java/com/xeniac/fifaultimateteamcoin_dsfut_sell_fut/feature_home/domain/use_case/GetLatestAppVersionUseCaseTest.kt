@@ -4,12 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -27,15 +28,15 @@ class GetLatestAppVersionUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepositoryImpl: FakePreferencesRepositoryImpl
+    private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
     private lateinit var fakeHomeRepositoryImpl: FakeHomeRepositoryImpl
     private lateinit var getLatestAppVersionUseCase: GetLatestAppVersionUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepositoryImpl = FakePreferencesRepositoryImpl()
+        fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepositoryImpl = FakeHomeRepositoryImpl(
-            preferencesRepository = { fakePreferencesRepositoryImpl }
+            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         getLatestAppVersionUseCase = GetLatestAppVersionUseCase(
@@ -47,7 +48,7 @@ class GetLatestAppVersionUseCaseTest {
     fun getLatestAppVersionWithUnavailableNetwork_returnsError() = runBlocking {
         fakeHomeRepositoryImpl.isNetworkAvailable(isAvailable = false)
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Error::class.java)
     }
@@ -56,14 +57,14 @@ class GetLatestAppVersionUseCaseTest {
     fun getLatestAppVersionWithNoneOkStatusCode_returnsError() = runBlocking {
         fakeHomeRepositoryImpl.setGetLatestAppVersionHttpStatusCode(HttpStatusCode.RequestTimeout)
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Error::class.java)
     }
 
     @Test
     fun getLatestAppVersionWhenAppIsUpdated_returnsNull() = runBlocking {
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
         assertThat((getLatestAppVersionResult as Result.Success).data).isNull()
@@ -80,7 +81,7 @@ class GetLatestAppVersionUseCaseTest {
             latestAppUpdateInfo = latestAppUpdateInfo
         )
 
-        val getLatestAppVersionResult = getLatestAppVersionUseCase()
+        val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
         assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
         assertThat((getLatestAppVersionResult as Result.Success).data).isEqualTo(latestAppUpdateInfo)
@@ -89,9 +90,9 @@ class GetLatestAppVersionUseCaseTest {
     @Test
     fun getLatestAppVersionWhenAppIsOutdatedAndUpdateDialogIsShownMoreThan2TimesToday_returnsNull() =
         runBlocking {
-            fakePreferencesRepositoryImpl.setShouldStoreTodayDate(true)
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
+            fakeMiscellaneousDataStoreRepositoryImpl.setShouldStoreTodayDate(true)
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowEpochDays()
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
@@ -102,7 +103,7 @@ class GetLatestAppVersionUseCaseTest {
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 
-            val getLatestAppVersionResult = getLatestAppVersionUseCase()
+            val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
             assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
             assertThat((getLatestAppVersionResult as Result.Success).data).isNull()
@@ -111,9 +112,9 @@ class GetLatestAppVersionUseCaseTest {
     @Test
     fun getLatestAppVersionWhenAppIsOutdatedAndUpdateDialogIsShownMoreThan2TimesYesterday_returnsNewVersionName() =
         runBlocking {
-            fakePreferencesRepositoryImpl.setShouldStoreTodayDate(false)
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
+            fakeMiscellaneousDataStoreRepositoryImpl.setShouldStoreTodayDate(false)
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowEpochDays()
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
@@ -124,7 +125,7 @@ class GetLatestAppVersionUseCaseTest {
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 
-            val getLatestAppVersionResult = getLatestAppVersionUseCase()
+            val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
             assertThat(getLatestAppVersionResult).isInstanceOf(Result.Success::class.java)
             assertThat((getLatestAppVersionResult as Result.Success).data)

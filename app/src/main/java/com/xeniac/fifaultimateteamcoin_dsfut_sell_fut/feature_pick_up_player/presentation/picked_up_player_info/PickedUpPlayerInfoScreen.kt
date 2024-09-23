@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,14 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components.InstructionCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.components.PickedUpPlayerInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickedUpPlayerInfoScreen(
-    player: Player,
     onNavigateUp: () -> Unit,
     viewModel: PickedUpPlayerInfoViewModel = hiltViewModel()
 ) {
@@ -45,17 +42,14 @@ fun PickedUpPlayerInfoScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
+    val player by viewModel.player.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onEvent(PickedUpPlayerInfoEvent.StartCountDownTimer(player.expiryTimeInMs))
-    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(player.name) },
+                title = { Text(text = player?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -77,7 +71,7 @@ fun PickedUpPlayerInfoScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(
                     top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = verticalPadding
+                    bottom = innerPadding.calculateBottomPadding() + verticalPadding
                 )
         ) {
             PickedUpPlayerInfo(

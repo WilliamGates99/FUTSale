@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.GradientButton
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 
 @Composable
@@ -33,12 +34,13 @@ fun AutoPickUpButton(
     textFontSize: TextUnit = 16.sp,
     textLineHeight: TextUnit = 20.sp,
     textFontWeight: FontWeight = FontWeight.Bold,
-    onAutoPickUpClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onAction: (action: PickUpPlayerAction) -> Unit
 ) {
     if (pickUpPlayerState.isAutoPickUpLoading) {
         GradientButton(
-            onClick = onCancelClick,
+            onClick = {
+                onAction(PickUpPlayerAction.CancelAutoPickUpPlayer)
+            },
             gradientColors = listOf(
                 MaterialTheme.colorScheme.secondaryContainer,
                 MaterialTheme.colorScheme.secondaryContainer,
@@ -57,7 +59,9 @@ fun AutoPickUpButton(
         }
     } else {
         Button(
-            onClick = onAutoPickUpClick,
+            onClick = {
+                onAction(PickUpPlayerAction.AutoPickUpPlayer)
+            },
             enabled = isEnabled,
             contentPadding = contentPadding,
             modifier = modifier

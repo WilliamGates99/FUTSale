@@ -30,7 +30,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.EspressoUtils
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.Screen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.OnboardingScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
@@ -69,7 +70,7 @@ class OnboardingScreenTest {
 
                 SetupRootNavGraph(
                     rootNavController = testNavController,
-                    startDestination = Screen.OnboardingScreen
+                    startDestination = OnboardingScreen
                 )
             }
         }
@@ -368,7 +369,7 @@ class OnboardingScreenTest {
 
         val backStackEntry = testNavController.currentBackStackEntry
         val isNavigatedToHomeScreen = backStackEntry?.destination?.hierarchy?.any {
-            it.hasRoute(Screen.HomeScreen::class)
+            it.hasRoute(HomeScreen::class)
         } ?: false
         assertThat(isNavigatedToHomeScreen).isTrue()
     }

@@ -5,10 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.google.common.truth.Truth.assertThat
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.dto.PlatformDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -65,7 +65,7 @@ class PlayersDaoTest {
             contracts = 1,
             chemistryStyle = "Basic",
             chemistryStyleID = 1,
-            platformDto = PlatformDto.CONSOLE
+            platform = Platform.CONSOLE
         )
         dao.insertPlayer(playerEntity)
 
@@ -92,7 +92,7 @@ class PlayersDaoTest {
                 contracts = index,
                 chemistryStyle = "Basic",
                 chemistryStyleID = index,
-                platformDto = PlatformDto.CONSOLE
+                platform = Platform.CONSOLE
             )
 
             dummyPlayers.add(playerEntity)
@@ -126,7 +126,7 @@ class PlayersDaoTest {
             contracts = 1,
             chemistryStyle = "Basic",
             chemistryStyleID = 1,
-            platformDto = PlatformDto.CONSOLE
+            platform = Platform.CONSOLE
         )
         dao.insertPlayer(playerEntity)
 
@@ -158,7 +158,7 @@ class PlayersDaoTest {
                 contracts = index,
                 chemistryStyle = "Basic",
                 chemistryStyleID = index,
-                platformDto = PlatformDto.CONSOLE
+                platform = Platform.CONSOLE
             )
 
             dummyPlayers.add(playerEntity)
@@ -190,7 +190,7 @@ class PlayersDaoTest {
                 contracts = index,
                 chemistryStyle = "Basic",
                 chemistryStyleID = index,
-                platformDto = PlatformDto.CONSOLE
+                platform = Platform.CONSOLE
             )
 
             dummyPlayers.add(playerEntity)
@@ -211,7 +211,7 @@ class PlayersDaoTest {
     }
 
     @Test
-    fun getPlayer() = runTest {
+    fun observerPlayer() = runTest {
         val playerEntity = PlayerEntity(
             id = 1,
             tradeID = "1",
@@ -227,11 +227,11 @@ class PlayersDaoTest {
             contracts = 1,
             chemistryStyle = "Basic",
             chemistryStyleID = 1,
-            platformDto = PlatformDto.CONSOLE
+            platform = Platform.CONSOLE
         )
         dao.insertPlayer(playerEntity)
 
-        val player = dao.getPlayer(playerEntity.id!!).first()
+        val player = dao.observerPlayer(playerEntity.id!!).first()
         assertThat(player).isEqualTo(playerEntity)
     }
 
@@ -254,7 +254,7 @@ class PlayersDaoTest {
                 contracts = index,
                 chemistryStyle = "Basic",
                 chemistryStyleID = index,
-                platformDto = PlatformDto.CONSOLE
+                platform = Platform.CONSOLE
             )
 
             dummyPlayers.add(playerEntity)

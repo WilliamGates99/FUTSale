@@ -1,9 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 
 class GetIsOnboardingCompletedUseCase(
-    private val preferencesRepository: PreferencesRepository
+    private val settingsDataStoreRepository: SettingsDataStoreRepository
 ) {
-    suspend operator fun invoke(): Boolean = preferencesRepository.isOnBoardingCompleted()
+    suspend operator fun invoke(): Boolean = settingsDataStoreRepository.isOnboardingCompleted()
 }
