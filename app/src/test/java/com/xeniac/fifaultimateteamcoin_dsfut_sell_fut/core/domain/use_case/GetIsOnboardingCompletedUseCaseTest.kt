@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,20 +22,22 @@ class GetIsOnboardingCompletedUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     private lateinit var getIsOnboardingCompletedUseCase: GetIsOnboardingCompletedUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
         getIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
     }
 
     @Test
     fun getIsOnboardingCompleted_returnsCurrentIsOnboardingCompletedValue() = runTest {
         val currentIsOnboardingCompleted = getIsOnboardingCompletedUseCase()
-        assertThat(currentIsOnboardingCompleted).isEqualTo(fakePreferencesRepository.isOnBoardingCompleted)
+        assertThat(currentIsOnboardingCompleted).isEqualTo(
+            fakeSettingsDataStoreRepositoryImpl.isOnBoardingCompleted
+        )
     }
 }

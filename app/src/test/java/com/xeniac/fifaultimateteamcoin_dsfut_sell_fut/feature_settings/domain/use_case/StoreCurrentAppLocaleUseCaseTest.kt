@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.u
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -23,18 +23,18 @@ class StoreCurrentAppLocaleUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     private lateinit var storeCurrentAppLocaleUseCase: StoreCurrentAppLocaleUseCase
     private lateinit var getCurrentAppLocaleUseCase: GetCurrentAppLocaleUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
         storeCurrentAppLocaleUseCase = StoreCurrentAppLocaleUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
         getCurrentAppLocaleUseCase = GetCurrentAppLocaleUseCase(
-            preferencesRepository = fakePreferencesRepository
+            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
         )
     }
 
@@ -42,7 +42,7 @@ class StoreCurrentAppLocaleUseCaseTest {
     fun storeCurrentAppLocale_returnsIsActivityRestartNeeded() = runTest {
         val testValue = AppLocale.FarsiIR
 
-        val isActivityRestartNeeded = fakePreferencesRepository.isActivityRestartNeeded(
+        val isActivityRestartNeeded = fakeSettingsDataStoreRepositoryImpl.isActivityRestartNeeded(
             newLocale = testValue
         )
 

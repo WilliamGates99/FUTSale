@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.review.ReviewInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreferencesRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
@@ -31,7 +31,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class FakeHomeRepositoryImpl(
-    private val preferencesRepository: Lazy<PreferencesRepository>
+    private val miscellaneousDataStoreRepository: Lazy<MiscellaneousDataStoreRepository>
 ) : HomeRepository {
 
     private var isFlexibleUpdateDownloaded = false
@@ -160,9 +160,9 @@ class FakeHomeRepositoryImpl(
 
                 val isAppOutdated = currentVersionCode < latestVersionCode
                 if (isAppOutdated) {
-                    val updateDialogShowCount = preferencesRepository.get()
+                    val updateDialogShowCount = miscellaneousDataStoreRepository.get()
                         .getAppUpdateDialogShowCount().first()
-                    val isAppUpdateDialogShownToday = preferencesRepository.get()
+                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository.get()
                         .isAppUpdateDialogShownToday().first()
 
                     val shouldShowAppUpdateDialog = when {
@@ -172,7 +172,7 @@ class FakeHomeRepositoryImpl(
                     }
 
                     if (shouldShowAppUpdateDialog) {
-                        preferencesRepository.get().apply {
+                        miscellaneousDataStoreRepository.get().apply {
                             storeAppUpdateDialogShowCount(
                                 if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
                                 else 0
@@ -190,7 +190,7 @@ class FakeHomeRepositoryImpl(
                         )
                     } else emit(Result.Success(null))
                 } else {
-                    preferencesRepository.get().apply {
+                    miscellaneousDataStoreRepository.get().apply {
                         storeAppUpdateDialogShowCount(0)
                         removeAppUpdateDialogShowEpochDays()
                     }

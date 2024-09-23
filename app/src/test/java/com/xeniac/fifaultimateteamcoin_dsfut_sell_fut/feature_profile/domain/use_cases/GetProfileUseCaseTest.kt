@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.us
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,21 +22,21 @@ class GetProfileUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepository: FakePreferencesRepositoryImpl
+    private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
     private lateinit var getProfileUseCase: GetProfileUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepository = FakePreferencesRepositoryImpl()
+        fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
         getProfileUseCase = GetProfileUseCase(
-            preferencesRepository = fakePreferencesRepository
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
     }
 
     @Test
     fun getProfileWithNullValues_returnsEmptyPartnerIdSecretKey() = runTest {
-        fakePreferencesRepository.changePartnerId(newPartnerId = null)
-        fakePreferencesRepository.changeSecretKey(newSecretKey = null)
+        fakeDsfutDataStoreRepositoryImpl.changePartnerId(newPartnerId = null)
+        fakeDsfutDataStoreRepositoryImpl.changeSecretKey(newSecretKey = null)
 
         val currentProfileState = getProfileUseCase()
 
@@ -48,33 +48,41 @@ class GetProfileUseCaseTest {
 
     @Test
     fun getProfileWithNonNullPartnerId_returnsPartnerIdAndTrueIsPartnerIdSaved() = runTest {
-        fakePreferencesRepository.changePartnerId(newPartnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.changePartnerId(newPartnerId = "123")
 
         val currentProfileState = getProfileUseCase()
 
-        assertThat(currentProfileState.partnerId).isEqualTo(fakePreferencesRepository.storedPartnerId)
+        assertThat(currentProfileState.partnerId).isEqualTo(
+            fakeDsfutDataStoreRepositoryImpl.storedPartnerId
+        )
         assertThat(currentProfileState.isPartnerIdSaved).isTrue()
     }
 
     @Test
     fun getProfileWithNonNullSecretKey_returnsPartnerIdAndTrueIsSecretKeySaved() = runTest {
-        fakePreferencesRepository.changeSecretKey(newSecretKey = "abc123")
+        fakeDsfutDataStoreRepositoryImpl.changeSecretKey(newSecretKey = "abc123")
 
         val currentProfileState = getProfileUseCase()
 
-        assertThat(currentProfileState.secretKey).isEqualTo(fakePreferencesRepository.storedSecretKey)
+        assertThat(currentProfileState.secretKey).isEqualTo(
+            fakeDsfutDataStoreRepositoryImpl.storedSecretKey
+        )
         assertThat(currentProfileState.isSecretKeySaved).isTrue()
     }
 
     @Test
     fun getProfileWithNonNullValues_returnsPartnerIdAndSecretKey() = runTest {
-        fakePreferencesRepository.changePartnerId(newPartnerId = "123")
-        fakePreferencesRepository.changeSecretKey(newSecretKey = "abc123")
+        fakeDsfutDataStoreRepositoryImpl.changePartnerId(newPartnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.changeSecretKey(newSecretKey = "abc123")
 
         val currentProfileState = getProfileUseCase()
 
-        assertThat(currentProfileState.partnerId).isEqualTo(fakePreferencesRepository.storedPartnerId)
-        assertThat(currentProfileState.secretKey).isEqualTo(fakePreferencesRepository.storedSecretKey)
+        assertThat(currentProfileState.partnerId).isEqualTo(
+            fakeDsfutDataStoreRepositoryImpl.storedPartnerId
+        )
+        assertThat(currentProfileState.secretKey).isEqualTo(
+            fakeDsfutDataStoreRepositoryImpl.storedSecretKey
+        )
         assertThat(currentProfileState.isPartnerIdSaved).isTrue()
         assertThat(currentProfileState.isSecretKeySaved).isTrue()
     }

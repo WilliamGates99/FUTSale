@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePreferencesRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
@@ -28,15 +28,15 @@ class GetLatestAppVersionUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePreferencesRepositoryImpl: FakePreferencesRepositoryImpl
+    private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
     private lateinit var fakeHomeRepositoryImpl: FakeHomeRepositoryImpl
     private lateinit var getLatestAppVersionUseCase: GetLatestAppVersionUseCase
 
     @Before
     fun setUp() {
-        fakePreferencesRepositoryImpl = FakePreferencesRepositoryImpl()
+        fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
         fakeHomeRepositoryImpl = FakeHomeRepositoryImpl(
-            preferencesRepository = { fakePreferencesRepositoryImpl }
+            miscellaneousDataStoreRepository = { fakeMiscellaneousDataStoreRepositoryImpl }
         )
 
         getLatestAppVersionUseCase = GetLatestAppVersionUseCase(
@@ -90,9 +90,9 @@ class GetLatestAppVersionUseCaseTest {
     @Test
     fun getLatestAppVersionWhenAppIsOutdatedAndUpdateDialogIsShownMoreThan2TimesToday_returnsNull() =
         runBlocking {
-            fakePreferencesRepositoryImpl.setShouldStoreTodayDate(true)
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
+            fakeMiscellaneousDataStoreRepositoryImpl.setShouldStoreTodayDate(true)
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowEpochDays()
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
@@ -112,9 +112,9 @@ class GetLatestAppVersionUseCaseTest {
     @Test
     fun getLatestAppVersionWhenAppIsOutdatedAndUpdateDialogIsShownMoreThan2TimesYesterday_returnsNewVersionName() =
         runBlocking {
-            fakePreferencesRepositoryImpl.setShouldStoreTodayDate(false)
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowEpochDays()
-            fakePreferencesRepositoryImpl.storeAppUpdateDialogShowCount(3)
+            fakeMiscellaneousDataStoreRepositoryImpl.setShouldStoreTodayDate(false)
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowEpochDays()
+            fakeMiscellaneousDataStoreRepositoryImpl.storeAppUpdateDialogShowCount(3)
 
             val latestAppUpdateInfo = LatestAppUpdateInfo(
                 versionCode = BuildConfig.VERSION_CODE + 1,
