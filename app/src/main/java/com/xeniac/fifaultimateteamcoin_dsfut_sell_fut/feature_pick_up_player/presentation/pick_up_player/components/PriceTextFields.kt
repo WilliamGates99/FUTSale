@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -25,6 +26,8 @@ fun PriceTextFields(
     supportingText: String = stringResource(id = R.string.pick_up_player_helper_optional),
     onAction: (action: PickUpPlayerAction) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(
             space = 16.dp,
@@ -63,6 +66,7 @@ fun PriceTextFields(
             errorText = pickUpPlayerState.maxPriceErrorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
+            keyboardAction = { focusManager.clearFocus() },
             testTag = TestTags.MAX_PRICE_TEXT_FIELD,
             modifier = Modifier.weight(1f)
         )

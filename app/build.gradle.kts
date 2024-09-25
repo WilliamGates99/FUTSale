@@ -28,8 +28,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
-        versionCode = 27
-        versionName = "2.1.0"
+        versionCode = 28
+        versionName = "2.1.1"
 
         // Keeps language resources for only the locales specified below.
         resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
@@ -53,9 +53,8 @@ android {
         )
     }
 
-    sourceSets {
-        // Adds room exported schema location as test app assets
-        getByName("androidTest").assets.srcDirs("$projectDir/roomSchemas")
+    androidResources {
+        generateLocaleConfig = true
     }
 
     signingConfigs {
@@ -203,6 +202,11 @@ android {
 
     room {
         schemaDirectory(path = "$projectDir/roomSchemas")
+    }
+
+    sourceSets {
+        // Adds room exported schema location as test app assets
+        getByName("androidTest").assets.srcDirs("$projectDir/roomSchemas")
     }
 
     packaging {

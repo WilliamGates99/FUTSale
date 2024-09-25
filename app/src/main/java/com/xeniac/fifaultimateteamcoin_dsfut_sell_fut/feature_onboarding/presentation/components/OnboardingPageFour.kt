@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -42,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -60,10 +62,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.present
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
-@OptIn(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingPageFour(
-    bottomPadding: Dp,
     onboardingState: OnboardingState,
     modifier: Modifier = Modifier,
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -86,6 +87,8 @@ fun OnboardingPageFour(
     onRegisterBtnClick: () -> Unit,
     onPrivacyPolicyBtnClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
     val columnHeightDp = LocalDensity.current.run { columnHeight.toDp() }
 
@@ -96,11 +99,11 @@ fun OnboardingPageFour(
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.ime)
             .verticalScroll(rememberScrollState())
+            .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
             .padding(
                 start = 16.dp,
                 end = 16.dp,
-                top = 20.dp,
-                bottom = bottomPadding
+                top = 20.dp
             )
             .onSizeChanged { columnHeight = it.height }
     ) {
@@ -190,6 +193,7 @@ fun OnboardingPageFour(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = {
+                focusManager.clearFocus()
                 onAction(OnboardingAction.SaveUserData)
             },
             testTag = TestTags.SECRET_KEY_TEXT_FIELD,

@@ -2,14 +2,18 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -32,7 +36,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -45,9 +48,9 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingPageOne(
-    bottomPadding: Dp,
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     title: String = stringResource(id = R.string.onboarding_first_title),
@@ -73,11 +76,12 @@ fun OnboardingPageOne(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
             .padding(
                 start = 24.dp,
                 end = 24.dp,
                 top = 20.dp,
-                bottom = bottomPadding + 12.dp
+                bottom = 12.dp
             )
             .onSizeChanged { columnHeight = it.height }
     ) {
