@@ -333,9 +333,11 @@ fun PickUpPlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = bottomPadding
+                .windowInsetsPadding(
+                    WindowInsets(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = bottomPadding
+                    )
                 )
                 .verticalScroll(rememberScrollState())
                 .padding(vertical = verticalPadding)

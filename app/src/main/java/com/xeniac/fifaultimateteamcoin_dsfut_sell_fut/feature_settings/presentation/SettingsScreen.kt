@@ -2,9 +2,11 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presenta
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -175,9 +177,11 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = bottomPadding
+                .windowInsetsPadding(
+                    WindowInsets(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = bottomPadding
+                    )
                 )
                 .verticalScroll(rememberScrollState())
                 .padding(

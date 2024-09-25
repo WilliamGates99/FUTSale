@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -29,7 +29,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.present
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     onNavigateToHomeScreen: () -> Unit,
@@ -99,7 +98,7 @@ fun OnboardingScreen(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
+                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
         )
     }
 }

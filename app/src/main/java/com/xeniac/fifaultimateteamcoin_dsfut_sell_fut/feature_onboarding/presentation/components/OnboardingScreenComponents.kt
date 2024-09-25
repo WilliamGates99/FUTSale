@@ -60,7 +60,6 @@ fun OnboardingPager(
         ) { scrollPosition ->
             when (scrollPosition) {
                 0 -> OnboardingPageOne(
-                    bottomPadding = bottomPadding,
                     onSkipBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.pageCount - 1)
@@ -73,7 +72,6 @@ fun OnboardingPager(
                     }
                 )
                 1 -> OnboardingPageTwo(
-                    bottomPadding = bottomPadding,
                     onBackBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.settledPage - 1)
@@ -86,7 +84,6 @@ fun OnboardingPager(
                     }
                 )
                 2 -> OnboardingPageThree(
-                    bottomPadding = bottomPadding,
                     onBackBtnClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(page = pagerState.settledPage - 1)
@@ -99,7 +96,6 @@ fun OnboardingPager(
                     }
                 )
                 3 -> OnboardingPageFour(
-                    bottomPadding = bottomPadding,
                     onboardingState = onboardingState,
                     onAction = onAction,
                     onRegisterBtnClick = onRegisterBtnClick,
