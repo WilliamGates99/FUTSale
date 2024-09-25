@@ -53,9 +53,8 @@ android {
         )
     }
 
-    sourceSets {
-        // Adds room exported schema location as test app assets
-        getByName("androidTest").assets.srcDirs("$projectDir/roomSchemas")
+    androidResources {
+        generateLocaleConfig = true
     }
 
     signingConfigs {
@@ -203,6 +202,11 @@ android {
 
     room {
         schemaDirectory(path = "$projectDir/roomSchemas")
+    }
+
+    sourceSets {
+        // Adds room exported schema location as test app assets
+        getByName("androidTest").assets.srcDirs("$projectDir/roomSchemas")
     }
 
     packaging {
