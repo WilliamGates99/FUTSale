@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -86,6 +87,8 @@ fun OnboardingPageFour(
     onRegisterBtnClick: () -> Unit,
     onPrivacyPolicyBtnClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
     val columnHeightDp = LocalDensity.current.run { columnHeight.toDp() }
 
@@ -190,6 +193,7 @@ fun OnboardingPageFour(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = {
+                focusManager.clearFocus()
                 onAction(OnboardingAction.SaveUserData)
             },
             testTag = TestTags.SECRET_KEY_TEXT_FIELD,

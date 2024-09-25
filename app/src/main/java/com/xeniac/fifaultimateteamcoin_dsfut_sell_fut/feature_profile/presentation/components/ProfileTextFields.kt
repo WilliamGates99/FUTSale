@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +37,8 @@ fun ProfileTextFields(
     modifier: Modifier = Modifier,
     onAction: (action: ProfileAction) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -47,6 +50,7 @@ fun ProfileTextFields(
         PartnerIdTextField(
             profileState = profileState,
             onAction = onAction,
+            keyboardAction = { focusManager.clearFocus() },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -55,6 +59,7 @@ fun ProfileTextFields(
         SecretKeyTextField(
             profileState = profileState,
             onAction = onAction,
+            keyboardAction = { focusManager.clearFocus() },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -124,6 +129,7 @@ fun PartnerIdTextField(
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Number,
     imeAction: ImeAction = ImeAction.Done,
+    keyboardAction: () -> Unit,
     onAction: (action: ProfileAction) -> Unit
 ) {
     CustomOutlinedTextField(
@@ -151,6 +157,7 @@ fun PartnerIdTextField(
         },
         keyboardType = keyboardType,
         imeAction = imeAction,
+        keyboardAction = keyboardAction,
         testTag = TestTags.PARTNER_ID_TEXT_FIELD,
         modifier = modifier
     )
@@ -189,6 +196,7 @@ fun SecretKeyTextField(
     trailingAnimationSize: Dp = 24.dp,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
+    keyboardAction: () -> Unit,
     onAction: (action: ProfileAction) -> Unit
 ) {
     CustomOutlinedTextField(
@@ -216,6 +224,7 @@ fun SecretKeyTextField(
         },
         keyboardType = keyboardType,
         imeAction = imeAction,
+        keyboardAction = keyboardAction,
         testTag = TestTags.SECRET_KEY_TEXT_FIELD,
         modifier = modifier
     )
