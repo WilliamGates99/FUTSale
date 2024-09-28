@@ -225,8 +225,8 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
             parameter(key = "take_after", value = takeAfterDelayInSeconds)
         }
 
-        return when (response.status.value) {
-            HttpStatusCode.OK.value -> { // Code: 200
+        return when (response.status) {
+            HttpStatusCode.OK -> { // Code: 200
                 val pickUpPlayerResponseDto = response.body<PickUpPlayerResponseDto>()
                 val playerDto = pickUpPlayerResponseDto.playerDto
 
