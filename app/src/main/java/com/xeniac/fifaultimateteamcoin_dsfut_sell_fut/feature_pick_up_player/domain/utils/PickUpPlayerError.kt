@@ -33,6 +33,6 @@ sealed class PickUpPlayerError : Error() {
     }
 
     sealed class Local : PickUpPlayerError() {
-        data object SomethingWentWrong : PickUpPlayerError()
+        data object SomethingWentWrong : Local()
     }
 }
