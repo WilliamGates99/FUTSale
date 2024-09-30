@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,15 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components.OnboardingPager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
-import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
@@ -44,35 +42,25 @@ fun OnboardingScreen(
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
             is OnboardingUiEvent.NavigateToHomeScreen -> onNavigateToHomeScreen()
-            is UiEvent.ShowShortSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
+            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
         }
     }
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.currentSnackbarData?.dismiss()
-
-            val result = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.error_intent_app_not_found),
-                duration = SnackbarDuration.Short
-            )
-
-            when (result) {
-                SnackbarResult.ActionPerformed -> Unit
-                SnackbarResult.Dismissed -> {
-                    isIntentAppNotFoundErrorVisible = false
-                }
+        showIntentAppNotFoundSnackbar(
+            isVisible = isIntentAppNotFoundErrorVisible,
+            context = context,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            onDismiss = {
+                isIntentAppNotFoundErrorVisible = false
             }
-        }
+        )
     }
 
     Scaffold(

@@ -298,11 +298,7 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
                 }
             } else {
-                _autoPickUpPlayerEventChannel.send(
-                    UiEvent.ShowOfflineSnackbar(
-                        UiText.StringResource(R.string.error_network_connection_unavailable)
-                    )
-                )
+                _autoPickUpPlayerEventChannel.send(UiEvent.ShowOfflineSnackbar())
             }
         }
     }
@@ -426,11 +422,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 }
             }
         } else {
-            _pickUpPlayerOnceEventChannel.send(
-                UiEvent.ShowOfflineSnackbar(
-                    UiText.StringResource(R.string.error_network_connection_unavailable)
-                )
-            )
+            _pickUpPlayerOnceEventChannel.send(UiEvent.ShowOfflineSnackbar())
         }
     }
 

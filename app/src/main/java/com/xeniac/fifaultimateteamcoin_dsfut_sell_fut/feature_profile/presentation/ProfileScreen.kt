@@ -13,9 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -42,10 +40,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ob
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.ProfileTextFields
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,52 +65,38 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
+            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
             else -> Unit
         }
     }
 
     ObserverAsEvent(flow = viewModel.updateSecretKeyEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
+            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
             else -> Unit
         }
     }
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.currentSnackbarData?.dismiss()
-
-            val result = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.error_intent_app_not_found),
-                duration = SnackbarDuration.Short
-            )
-
-            when (result) {
-                SnackbarResult.ActionPerformed -> Unit
-                SnackbarResult.Dismissed -> {
-                    isIntentAppNotFoundErrorVisible = false
-                }
+        showIntentAppNotFoundSnackbar(
+            isVisible = isIntentAppNotFoundErrorVisible,
+            context = context,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            onDismiss = {
+                isIntentAppNotFoundErrorVisible = false
             }
-        }
+        )
     }
 
     Scaffold(

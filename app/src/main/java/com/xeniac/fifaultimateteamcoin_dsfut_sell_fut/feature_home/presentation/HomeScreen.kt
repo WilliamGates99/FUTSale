@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,8 +31,11 @@ import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
@@ -42,7 +43,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,23 +90,16 @@ fun HomeScreen(
                     viewModel.appUpdateOptions.get()
                 )
             }
-            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.home_app_update_message),
-                        actionLabel = context.getString(R.string.home_app_update_action)
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            viewModel.appUpdateManager.get().completeUpdate()
-                        }
-                        SnackbarResult.Dismissed -> Unit
-                    }
+            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.home_app_update_message),
+                actionLabel = UiText.StringResource(R.string.home_app_update_action),
+                scope = scope,
+                context = context,
+                snackbarHostState = snackbarHostState,
+                onAction = {
+                    viewModel.appUpdateManager.get().completeUpdate()
                 }
-            }
+            )
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
                 viewModel.appUpdateManager.get().completeUpdate()
             }
@@ -140,21 +133,15 @@ fun HomeScreen(
     }
 
     LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.currentSnackbarData?.dismiss()
-
-            val result = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.error_intent_app_not_found),
-                duration = SnackbarDuration.Short
-            )
-
-            when (result) {
-                SnackbarResult.ActionPerformed -> Unit
-                SnackbarResult.Dismissed -> {
-                    isIntentAppNotFoundErrorVisible = false
-                }
+        showIntentAppNotFoundSnackbar(
+            isVisible = isIntentAppNotFoundErrorVisible,
+            context = context,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            onDismiss = {
+                isIntentAppNotFoundErrorVisible = false
             }
-        }
+        )
     }
 
     PostNotificationPermissionHandler(

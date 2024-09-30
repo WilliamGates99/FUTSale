@@ -13,9 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -37,14 +35,18 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showLongSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showOfflineSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpPlayerSection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,86 +79,50 @@ fun PickUpPlayerScreen(
 
     ObserverAsEvent(flow = viewModel.changePlatformEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
+            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
             else -> Unit
         }
     }
 
     ObserverAsEvent(flow = viewModel.autoPickUpPlayerEventChannel) { event ->
         when (event) {
-            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
+            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> showActionSnackbar(
+                message = event.message,
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> showActionSnackbar(
+                message = event.message,
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
             is PickUpPlayerUiEvent.ShowErrorNotification -> {
                 notificationService.showFailedPickUpPlayerNotification(
                     message = event.message.asString(context),
@@ -178,134 +144,76 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
-            is UiEvent.ShowLongSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Long
-                    )
+            is UiEvent.ShowLongSnackbar -> showLongSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
+            is UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = {
+                    viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
                 }
-            }
-            is UiEvent.ShowOfflineSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.error_btn_retry),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
-                        }
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
+            )
         }
     }
 
     ObserverAsEvent(flow = viewModel.pickUpPlayerOnceEventChannel) { event ->
         when (event) {
-            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
-            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.pick_up_player_error_btn_open_profile),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> onNavigateToProfileScreen()
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
+            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> showActionSnackbar(
+                message = event.message,
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> showActionSnackbar(
+                message = event.message,
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = onNavigateToProfileScreen
+            )
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
-            is UiEvent.ShowLongSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        duration = SnackbarDuration.Long
-                    )
+            is UiEvent.ShowLongSnackbar -> showLongSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
+            is UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
+                message = event.message,
+                context = context,
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onAction = {
+                    viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
                 }
-            }
-            is UiEvent.ShowOfflineSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.error_btn_retry),
-                        duration = SnackbarDuration.Indefinite
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
-                        }
-                        SnackbarResult.Dismissed -> Unit
-                    }
-                }
-            }
+            )
         }
     }
 
