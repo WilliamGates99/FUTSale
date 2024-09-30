@@ -298,7 +298,7 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
                 }
             } else {
-                _autoPickUpPlayerEventChannel.send(UiEvent.ShowOfflineSnackbar())
+                _autoPickUpPlayerEventChannel.send(UiEvent.ShowOfflineSnackbar)
             }
         }
     }
@@ -422,7 +422,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 }
             }
         } else {
-            _pickUpPlayerOnceEventChannel.send(UiEvent.ShowOfflineSnackbar())
+            _pickUpPlayerOnceEventChannel.send(UiEvent.ShowOfflineSnackbar)
         }
     }
 

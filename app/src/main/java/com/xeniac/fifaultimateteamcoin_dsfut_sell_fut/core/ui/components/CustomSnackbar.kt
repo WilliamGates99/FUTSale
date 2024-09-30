@@ -55,10 +55,10 @@ fun SwipeableSnackbar(
 }
 
 fun showOfflineSnackbar(
-    message: UiText,
     context: Context,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
+    message: UiText = UiText.StringResource(R.string.error_network_connection_unavailable),
     actionLabel: UiText = UiText.StringResource(R.string.error_btn_retry),
     onAction: () -> Unit,
     onDismiss: () -> Unit = {}

@@ -150,8 +150,7 @@ fun PickUpPlayerScreen(
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
-            is UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
-                message = event.message,
+            UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
                 context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
@@ -205,8 +204,7 @@ fun PickUpPlayerScreen(
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
-            is UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
-                message = event.message,
+            UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
                 context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
