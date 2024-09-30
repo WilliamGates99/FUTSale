@@ -65,10 +65,8 @@ fun CustomOutlinedTextField(
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     shape: Shape = RoundedCornerShape(12.dp),
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors().copy(
         errorSupportingTextColor = MaterialTheme.colorScheme.error,
-        focusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
         disabledSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant
     ),
     titleFontSize: TextUnit = 14.sp,
