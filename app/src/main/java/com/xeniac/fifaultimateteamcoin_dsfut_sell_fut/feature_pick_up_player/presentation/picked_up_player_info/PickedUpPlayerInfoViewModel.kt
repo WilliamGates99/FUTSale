@@ -57,6 +57,11 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
 
     private var countDownTimerJob: Job? = null
 
+    override fun onCleared() {
+        countDownTimerJob?.cancel()
+        super.onCleared()
+    }
+
     fun onAction(action: PickedUpPlayerInfoAction) {
         when (action) {
             is PickedUpPlayerInfoAction.StartCountDownTimer -> startCountDownTimer(action.expiryTimeInMs)

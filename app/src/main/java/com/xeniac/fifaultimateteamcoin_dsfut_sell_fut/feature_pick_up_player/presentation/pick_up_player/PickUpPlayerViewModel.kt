@@ -98,6 +98,11 @@ class PickUpPlayerViewModel @Inject constructor(
     private var autoPickUpPlayerJob: Job? = null
     private var countDownTimerJob: Job? = null
 
+    override fun onCleared() {
+        countDownTimerJob?.cancel()
+        super.onCleared()
+    }
+
     fun onAction(action: PickUpPlayerAction) {
         when (action) {
             is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(platform = action.platform)
