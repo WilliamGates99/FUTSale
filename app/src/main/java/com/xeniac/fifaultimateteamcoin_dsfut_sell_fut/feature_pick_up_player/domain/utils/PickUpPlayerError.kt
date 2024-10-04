@@ -20,6 +20,7 @@ sealed class PickUpPlayerError : Error() {
         data object ServerResponseException : Network()
         data object SerializationException : Network()
         data object SSLHandshakeException : Network()
+        data object CertPathValidatorException : Network()
 
         data class DsfutBlock(val message: String) : Network()
         data object DsfutEmpty : Network()

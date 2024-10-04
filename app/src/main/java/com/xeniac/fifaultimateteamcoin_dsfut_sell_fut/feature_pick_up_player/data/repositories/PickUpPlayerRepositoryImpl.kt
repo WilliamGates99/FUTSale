@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import timber.log.Timber
 import java.net.UnknownHostException
+import java.security.cert.CertPathValidatorException
 import javax.inject.Inject
 import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.coroutineContext
@@ -189,6 +190,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         Result.Error(PickUpPlayerError.Network.SerializationException)
     } catch (e: SSLHandshakeException) {
         Timber.e("Pick up player SSLHandshakeException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.SSLHandshakeException)
+    } catch (e: CertPathValidatorException) {
+        Timber.e("Pick up player CertPathValidatorException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.SSLHandshakeException)
     } catch (e: Exception) {

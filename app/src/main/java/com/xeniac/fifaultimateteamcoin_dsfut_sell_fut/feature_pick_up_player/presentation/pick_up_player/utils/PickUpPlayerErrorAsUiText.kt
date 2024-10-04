@@ -21,6 +21,7 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.Network.ServerResponseException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.SerializationException -> UiText.StringResource(R.string.error_network_serialization)
     PickUpPlayerError.Network.SSLHandshakeException -> UiText.StringResource(R.string.error_network_ssl_handshake)
+    PickUpPlayerError.Network.CertPathValidatorException -> UiText.StringResource(R.string.error_network_cert_path_validator)
 
     is PickUpPlayerError.Network.DsfutBlock -> UiText.PluralStringResource(
         R.plurals.pick_up_player_error_dsfut_block,
