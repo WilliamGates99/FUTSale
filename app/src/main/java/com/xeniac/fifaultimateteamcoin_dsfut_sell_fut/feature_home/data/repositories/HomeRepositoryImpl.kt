@@ -48,6 +48,7 @@ import kotlinx.serialization.json.Json
 import timber.log.Timber
 import java.net.UnknownHostException
 import javax.inject.Inject
+import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.coroutineContext
 
 class HomeRepositoryImpl @Inject constructor(
@@ -253,6 +254,10 @@ class HomeRepositoryImpl @Inject constructor(
             Timber.e("Get latest app version SerializationException:")
             e.printStackTrace()
             emit(Result.Error(GetLatestAppVersionError.Network.SerializationException))
+        } catch (e: SSLHandshakeException) {
+            Timber.e("Pick up player SSLHandshakeException:")
+            e.printStackTrace()
+            emit(Result.Error(GetLatestAppVersionError.Network.SSLHandshakeException))
         } catch (e: Exception) {
             coroutineContext.ensureActive()
 

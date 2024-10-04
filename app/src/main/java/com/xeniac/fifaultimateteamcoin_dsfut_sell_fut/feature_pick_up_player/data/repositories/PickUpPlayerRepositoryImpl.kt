@@ -37,6 +37,7 @@ import kotlinx.serialization.SerializationException
 import timber.log.Timber
 import java.net.UnknownHostException
 import javax.inject.Inject
+import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.coroutineContext
 
 class PickUpPlayerRepositoryImpl @Inject constructor(
@@ -186,6 +187,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         Timber.e("Pick up player SerializationException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.SerializationException)
+    } catch (e: SSLHandshakeException) {
+        Timber.e("Pick up player SSLHandshakeException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.SSLHandshakeException)
     } catch (e: Exception) {
         coroutineContext.ensureActive()
 
