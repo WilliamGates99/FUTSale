@@ -69,7 +69,6 @@ fun OnboardingScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         OnboardingPager(
-            bottomPadding = innerPadding.calculateBottomPadding(),
             onboardingState = onboardingState,
             onAction = viewModel::onAction,
             onRegisterBtnClick = {
