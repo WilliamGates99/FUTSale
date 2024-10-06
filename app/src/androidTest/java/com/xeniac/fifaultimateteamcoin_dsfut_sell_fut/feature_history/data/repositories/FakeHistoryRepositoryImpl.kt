@@ -44,42 +44,36 @@ class FakeHistoryRepositoryImpl @Inject constructor() : HistoryRepository {
     }
 
     fun addDummyPlayersToHistory() {
-        val playersToInsert = mutableListOf<PlayerEntity>()
-
-        ('a'..'z').forEachIndexed { index, char ->
-            playersToInsert.add(
-                PlayerEntity(
-                    id = index.toLong(),
-                    tradeID = index.toString(),
-                    assetID = index,
-                    resourceID = index,
-                    transactionID = index,
-                    name = "Test Player $char",
-                    rating = Random.nextInt(from = 10, until = 99),
-                    position = "CDM",
-                    startPrice = 1000,
-                    buyNowPrice = 2000,
-                    owners = 1,
-                    contracts = 1,
-                    chemistryStyle = "Basic",
-                    chemistryStyleID = index,
-                    platform = when (Random.nextBoolean()) {
-                        true -> Platform.CONSOLE
-                        false -> Platform.PC
-                    },
-                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
-                        Random.nextLong(
-                            from = -600, // 10 minutes ago
-                            until = 0 // Now
-                        )
+        val playersToInsert = ('a'..'z').mapIndexed { index, char ->
+            PlayerEntity(
+                id = index.toLong(),
+                tradeID = index.toString(),
+                assetID = index,
+                resourceID = index,
+                transactionID = index,
+                name = "Test Player $char",
+                rating = Random.nextInt(from = 10, until = 99),
+                position = "CDM",
+                startPrice = 1000,
+                buyNowPrice = 2000,
+                owners = 1,
+                contracts = 1,
+                chemistryStyle = "Basic",
+                chemistryStyleID = index,
+                platform = when (Random.nextBoolean()) {
+                    true -> Platform.CONSOLE
+                    false -> Platform.PC
+                },
+                pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
+                    Random.nextLong(
+                        from = -600, // 10 minutes ago
+                        until = 0 // Now
                     )
                 )
             )
         }
 
-        playersToInsert.shuffle()
-
-        playersToInsert.forEach { playerEntitiesHistory.add(it) }
+        playersToInsert.shuffled().forEach { playerEntitiesHistory.add(it) }
     }
 
     override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {
