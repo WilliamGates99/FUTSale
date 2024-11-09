@@ -22,6 +22,8 @@ sealed class PickUpPlayerError : Error() {
         data object SSLHandshakeException : Network()
         data object CertPathValidatorException : Network()
 
+        data object TooManyRequests : Network()
+
         data class DsfutBlock(val message: String) : Network()
         data object DsfutEmpty : Network()
         data object DsfutLimit : Network()

@@ -246,7 +246,10 @@ class HomeRepositoryImpl @Inject constructor(
         } catch (e: ClientRequestException) { // 4xx responses
             Timber.e("Get latest app version ClientRequestException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.ClientRequestException))
+            when (e.response.status) {
+                HttpStatusCode.TooManyRequests -> emit(Result.Error(GetLatestAppVersionError.Network.TooManyRequests))
+                else -> emit(Result.Error(GetLatestAppVersionError.Network.ClientRequestException))
+            }
         } catch (e: ServerResponseException) { // 5xx responses
             Timber.e("Get latest app version ServerResponseException:")
             e.printStackTrace()

@@ -179,7 +179,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     } catch (e: ClientRequestException) { // 4xx responses
         Timber.e("Pick up player ClientRequestException:")
         e.printStackTrace()
-        Result.Error(PickUpPlayerError.Network.ClientRequestException)
+        when (e.response.status) {
+            HttpStatusCode.TooManyRequests -> Result.Error(PickUpPlayerError.Network.TooManyRequests)
+            else -> Result.Error(PickUpPlayerError.Network.ClientRequestException)
+        }
     } catch (e: ServerResponseException) { // 5xx responses
         Timber.e("Pick up player ServerResponseException:")
         e.printStackTrace()

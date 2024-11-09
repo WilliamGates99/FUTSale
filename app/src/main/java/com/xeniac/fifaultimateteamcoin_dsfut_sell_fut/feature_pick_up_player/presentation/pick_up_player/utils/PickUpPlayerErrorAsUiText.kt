@@ -23,6 +23,8 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.Network.SSLHandshakeException -> UiText.StringResource(R.string.error_network_ssl_handshake)
     PickUpPlayerError.Network.CertPathValidatorException -> UiText.StringResource(R.string.error_network_cert_path_validator)
 
+    PickUpPlayerError.Network.TooManyRequests -> UiText.StringResource(R.string.error_network_too_many_requests)
+
     is PickUpPlayerError.Network.DsfutBlock -> UiText.PluralStringResource(
         R.plurals.pick_up_player_error_dsfut_block,
         message.filter { char -> char.isDigit() }.toInt(),

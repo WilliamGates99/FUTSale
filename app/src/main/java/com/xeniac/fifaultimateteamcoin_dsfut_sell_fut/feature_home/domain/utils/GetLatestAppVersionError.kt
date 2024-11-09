@@ -15,6 +15,8 @@ sealed class GetLatestAppVersionError : Error() {
         data object SSLHandshakeException : Network()
         data object CertPathValidatorException : Network()
 
+        data object TooManyRequests : Network()
+
         data object SomethingWentWrong : Network()
     }
 }
