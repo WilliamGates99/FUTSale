@@ -26,6 +26,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.JsonConvertException
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.ensureActive
@@ -191,6 +192,10 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         Timber.e("Pick up player SerializationException:")
         e.printStackTrace()
         Result.Error(PickUpPlayerError.Network.SerializationException)
+    } catch (e: JsonConvertException) {
+        Timber.e("Pick up player JsonConvertException:")
+        e.printStackTrace()
+        Result.Error(PickUpPlayerError.Network.JsonConvertException)
     } catch (e: SSLHandshakeException) {
         Timber.e("Pick up player SSLHandshakeException:")
         e.printStackTrace()

@@ -36,6 +36,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.JsonConvertException
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.ensureActive
@@ -258,6 +259,10 @@ class HomeRepositoryImpl @Inject constructor(
             Timber.e("Get latest app version SerializationException:")
             e.printStackTrace()
             emit(Result.Error(GetLatestAppVersionError.Network.SerializationException))
+        } catch (e: JsonConvertException) {
+            Timber.e("Get latest app version JsonConvertException:")
+            e.printStackTrace()
+            emit(Result.Error(GetLatestAppVersionError.Network.JsonConvertException))
         } catch (e: SSLHandshakeException) {
             Timber.e("Get latest app version SSLHandshakeException:")
             e.printStackTrace()

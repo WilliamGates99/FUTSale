@@ -12,6 +12,7 @@ sealed class GetLatestAppVersionError : Error() {
         data object ClientRequestException : Network()
         data object ServerResponseException : Network()
         data object SerializationException : Network()
+        data object JsonConvertException : Network()
         data object SSLHandshakeException : Network()
         data object CertPathValidatorException : Network()
 

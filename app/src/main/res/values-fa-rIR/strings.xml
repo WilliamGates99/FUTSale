@@ -29,6 +29,7 @@
     <string name="error_network_too_many_requests">در مدت زمان کوتاهی درخواست‌های زیادی ارسال کرده‌اید. لطفاً قبل از تلاش مجدد صبر کنید.</string>
     <string name="error_network_failure">مشکلی برای شبکه رخ داده است. لطفا بعدا دوباره امتحان کنید.</string>
     <string name="error_network_serialization">مشکلی در هنگام پردازش داده‌ها پیش آمده.</string>
+    <string name="error_network_json_conversion">مشکلی در هنگام پردازش داده‌ها پیش آمده.</string>
     <string name="error_network_ssl_handshake">برقراری ارتباط امن ممکن نیست. لطفاً مطمئن شوید که تاریخ و ساعت دستگاهتان به درستی تنظیم شده و دوباره امتحان کنید.</string>
     <string name="error_network_cert_path_validator">به دلیل مشکل سرور، اتصال امن برقرار نشد.</string>
     <string name="error_intent_app_not_found">هیچ برنامه‌ای برای انجام این دستور در گوشی وجود ندارد.</string>
