@@ -69,7 +69,7 @@ android {
     buildTypes {
         debug {
             versionNameSuffix = " - Debug"
-            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".dev.debug"
 
             resValue(
                 type = "color",
@@ -78,27 +78,19 @@ android {
             )
         }
 
-        release {
+        create("dev") {
+            versionNameSuffix = " - Developer Preview"
+            applicationIdSuffix = ".dev"
+
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            ndk.debugSymbolLevel = "FULL" // Include native debug symbols file in app bundle
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-            signingConfig = signingConfigs.getByName("release")
-
-            ndk.debugSymbolLevel = "FULL" // Include native debug symbols file in app bundle
-        }
-    }
-
-    flavorDimensions += listOf("build", "market")
-    productFlavors {
-        create("dev") {
-            dimension = "build"
-            versionNameSuffix = " - Developer Preview"
-            applicationIdSuffix = ".dev"
-            isDefault = true
 
             resValue(
                 type = "color",
@@ -107,8 +99,16 @@ android {
             )
         }
 
-        create("prod") {
-            dimension = "build"
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            ndk.debugSymbolLevel = "FULL" // Include native debug symbols file in app bundle
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
 
             resValue(
                 type = "color",
@@ -116,7 +116,10 @@ android {
                 value = "#FF0C160D" // Dark Green
             )
         }
+    }
 
+    flavorDimensions += listOf("market")
+    productFlavors {
         create("playStore") {
             dimension = "market"
             isDefault = true
@@ -232,47 +235,48 @@ hilt {
 
 androidComponents {
     beforeVariants { variantBuilder ->
-        // Gradle ignores any variants that satisfy the conditions below.
-        if (variantBuilder.buildType == "nonMinifiedRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev")) -> false
-                    else -> true
+        variantBuilder.apply {
+            // Gradle ignores any variants that satisfy the conditions below.
+            if (buildType == "nonMinifiedDev") {
+                enable = false
+            }
+
+            if (buildType == "benchmarkDev") {
+                enable = false
+            }
+
+            if (buildType == "nonMinifiedRelease") {
+                enable = true
+            }
+
+            if (buildType == "benchmarkRelease") {
+                enable = true
+            }
+
+            if (buildType == "debug") {
+                productFlavors.let {
+                    enable = when {
+                        it.containsAll(listOf("market" to "gitHub")) -> false
+                        it.containsAll(listOf("market" to "cafeBazaar")) -> false
+                        it.containsAll(listOf("market" to "myket")) -> false
+                        else -> true
+                    }
                 }
             }
-        }
 
-        if (variantBuilder.buildType == "benchmarkRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    else -> true
+            if (buildType == "dev") {
+                productFlavors.let {
+                    enable = when {
+                        it.containsAll(listOf("market" to "playStore")) -> false
+                        it.containsAll(listOf("market" to "cafeBazaar")) -> false
+                        it.containsAll(listOf("market" to "myket")) -> false
+                        else -> true
+                    }
                 }
             }
-        }
 
-        if (variantBuilder.buildType == "debug") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    it.containsAll(listOf("build" to "prod")) -> false
-                    else -> true
-                }
-            }
-        }
-
-        if (variantBuilder.buildType == "release") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "dev", "market" to "myket")) -> false
-                    else -> true
-                }
+            if (buildType == "release") {
+                enable = true
             }
         }
     }

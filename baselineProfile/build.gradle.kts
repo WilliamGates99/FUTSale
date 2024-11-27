@@ -13,14 +13,11 @@ android {
     defaultConfig {
         minSdk = 28
         targetSdk = 35
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    flavorDimensions += listOf("build", "market")
+    flavorDimensions += listOf("market")
     productFlavors {
-        create("dev") { dimension = "build" }
-        create("prod") { dimension = "build" }
         create("playStore") { dimension = "market" }
         create("gitHub") { dimension = "market" }
         create("cafeBazaar") { dimension = "market" }
@@ -45,24 +42,22 @@ baselineProfile {
 
 androidComponents {
     beforeVariants { variantBuilder ->
-        // Gradle ignores any variants that satisfy the conditions below.
-        if (variantBuilder.buildType == "nonMinifiedRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev")) -> false
-                    else -> true
+        variantBuilder.apply {
+            // Gradle ignores any variants that satisfy the conditions below.
+            if (buildType == "nonMinifiedRelease") {
+                productFlavors.let {
+                    enable = true
                 }
             }
-        }
 
-        if (variantBuilder.buildType == "benchmarkRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
-                    else -> true
+            if (buildType == "benchmarkRelease") {
+                productFlavors.let {
+                    enable = when {
+                        it.containsAll(listOf("market" to "gitHub")) -> false
+                        it.containsAll(listOf("market" to "cafeBazaar")) -> false
+                        it.containsAll(listOf("market" to "myket")) -> false
+                        else -> true
+                    }
                 }
             }
         }
