@@ -9,11 +9,12 @@
 .externalNativeBuild
 .cxx
 /app/release
-/app/prodPlayStore
-/app/prodGitHub
-/app/prodCafeBazaar
-/app/prodMyket
-/app/devPlayStore
+/app/dev
+/app/debug
+/app/playStore
+/app/gitHub
+/app/cafeBazaar
+/app/myket
 /app/obfuscation
 google-services.json
 .safedk
