@@ -24,15 +24,17 @@ android {
     compileSdk = 35
     buildToolsVersion = "35.0.0"
 
+    androidResources {
+        // Keeps language resources for only the locales specified below.
+        localeFilters.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
+    }
+
     defaultConfig {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
         targetSdk = 35
         versionCode = 28
         versionName = "2.1.1"
-
-        // Keeps language resources for only the locales specified below.
-        resourceConfigurations.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
 
         testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
 
