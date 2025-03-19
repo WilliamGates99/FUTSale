@@ -6,13 +6,13 @@ plugins {
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.baselineprofile"
-    compileSdk = 35
+    compileSdk = 36
 
     targetProjectPath = ":app"
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,12 +25,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_22
-        targetCompatibility = JavaVersion.VERSION_22
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
 
     kotlinOptions {
-        jvmTarget = "22"
+        jvmTarget = "23"
     }
 }
 
