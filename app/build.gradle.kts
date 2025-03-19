@@ -21,8 +21,8 @@ val properties = gradleLocalProperties(rootDir, providers)
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     androidResources {
         // Keeps language resources for only the locales specified below.
@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 28
         versionName = "2.1.1"
 
@@ -197,12 +197,12 @@ android {
         // Java 8+ API Desugaring Support
         isCoreLibraryDesugaringEnabled = true
 
-        sourceCompatibility = JavaVersion.VERSION_22
-        targetCompatibility = JavaVersion.VERSION_22
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
 
     kotlinOptions {
-        jvmTarget = "22"
+        jvmTarget = "23"
     }
 
     room {
