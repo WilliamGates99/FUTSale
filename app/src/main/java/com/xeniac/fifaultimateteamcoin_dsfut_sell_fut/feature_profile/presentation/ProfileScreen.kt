@@ -17,14 +17,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +36,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ob
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
@@ -60,8 +55,6 @@ fun ProfileScreen(
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
-
-    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
@@ -85,18 +78,6 @@ fun ProfileScreen(
             )
             else -> Unit
         }
-    }
-
-    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        showIntentAppNotFoundSnackbar(
-            isVisible = isIntentAppNotFoundErrorVisible,
-            context = context,
-            scope = scope,
-            snackbarHostState = snackbarHostState,
-            onDismiss = {
-                isIntentAppNotFoundErrorVisible = false
-            }
-        )
     }
 
     Scaffold(
@@ -145,7 +126,7 @@ fun ProfileScreen(
             AccountLinks(
                 openUrlInBrowser = { url ->
                     url?.let {
-                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
+                        IntentHelper.openLinkInExternalBrowser(
                             context = context,
                             urlString = url
                         )
@@ -157,7 +138,7 @@ fun ProfileScreen(
             OtherLinks(
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
+                        IntentHelper.openLinkInInAppBrowser(
                             context = context,
                             urlString = url
                         )

@@ -9,7 +9,6 @@ import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 @Composable
 internal fun Context.findActivity(): Activity {
@@ -32,10 +31,7 @@ fun Activity.openAppSettings() {
             )
         ).also(::startActivity)
     } catch (e: Exception) {
-        showLongToast(
-            message = UiText.StringResource(R.string.error_intent_app_not_found),
-            context = this
-        )
+        showIntentAppNotFoundToast(context = this)
     }
 }
 

@@ -7,12 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +19,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.In
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components.OnboardingPager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
@@ -37,7 +33,6 @@ fun OnboardingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
-    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
@@ -51,18 +46,6 @@ fun OnboardingScreen(
         }
     }
 
-    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        showIntentAppNotFoundSnackbar(
-            isVisible = isIntentAppNotFoundErrorVisible,
-            context = context,
-            scope = scope,
-            snackbarHostState = snackbarHostState,
-            onDismiss = {
-                isIntentAppNotFoundErrorVisible = false
-            }
-        )
-    }
-
     Scaffold(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -72,13 +55,13 @@ fun OnboardingScreen(
             onboardingState = onboardingState,
             onAction = viewModel::onAction,
             onRegisterBtnClick = {
-                isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
+                IntentHelper.openLinkInExternalBrowser(
                     context = context,
                     urlString = Constants.URL_DSFUT
                 )
             },
             onPrivacyPolicyBtnClick = {
-                isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
+                IntentHelper.openLinkInInAppBrowser(
                     context = context,
                     urlString = Constants.URL_PRIVACY_POLICY
                 )

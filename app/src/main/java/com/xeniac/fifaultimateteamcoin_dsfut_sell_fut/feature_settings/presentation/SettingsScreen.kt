@@ -17,14 +17,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -44,7 +40,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showShortSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
@@ -67,8 +62,6 @@ fun SettingsScreen(
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
-
-    var isIntentAppNotFoundErrorVisible by rememberSaveable { mutableStateOf(false) }
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -119,18 +112,6 @@ fun SettingsScreen(
         }
     }
 
-    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        showIntentAppNotFoundSnackbar(
-            isVisible = isIntentAppNotFoundErrorVisible,
-            context = context,
-            scope = scope,
-            snackbarHostState = snackbarHostState,
-            onDismiss = {
-                isIntentAppNotFoundErrorVisible = false
-            }
-        )
-    }
-
     Scaffold(
         snackbarHost = {
             SwipeableSnackbar(
@@ -175,12 +156,10 @@ fun SettingsScreen(
 
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),
-                openAppPageInStore = {
-                    isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-                },
+                openAppPageInStore = { IntentHelper.openAppPageInStore(context) },
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInInAppBrowser(
+                        IntentHelper.openLinkInInAppBrowser(
                             context = context,
                             urlString = url
                         )
@@ -188,7 +167,7 @@ fun SettingsScreen(
                 },
                 openUrlInBrowser = { url ->
                     url?.let {
-                        isIntentAppNotFoundErrorVisible = IntentHelper.openLinkInBrowser(
+                        IntentHelper.openLinkInExternalBrowser(
                             context = context,
                             urlString = url
                         )

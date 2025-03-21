@@ -36,7 +36,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Ui
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showActionSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
@@ -60,7 +59,6 @@ fun HomeScreen(
     val homeState by viewModel.homeState.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
-    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
@@ -133,18 +131,6 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        showIntentAppNotFoundSnackbar(
-            isVisible = isIntentAppNotFoundErrorVisible,
-            context = context,
-            scope = scope,
-            snackbarHostState = snackbarHostState,
-            onDismiss = {
-                isIntentAppNotFoundErrorVisible = false
-            }
-        )
-    }
-
     PostNotificationPermissionHandler(
         homeState = homeState,
         onAction = viewModel::onAction
@@ -189,16 +175,12 @@ fun HomeScreen(
     AppUpdateBottomSheet(
         appUpdateInfo = homeState.latestAppUpdateInfo,
         onAction = viewModel::onAction,
-        openAppUpdatePageInStore = {
-            isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
-        }
+        openAppUpdatePageInStore = { IntentHelper.openAppUpdatePageInStore(context) }
     )
 
     AppReviewDialog(
         isVisible = homeState.isAppReviewDialogVisible,
         onAction = viewModel::onAction,
-        openAppPageInStore = {
-            isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-        }
+        openAppPageInStore = { IntentHelper.openAppPageInStore(context) }
     )
 }
