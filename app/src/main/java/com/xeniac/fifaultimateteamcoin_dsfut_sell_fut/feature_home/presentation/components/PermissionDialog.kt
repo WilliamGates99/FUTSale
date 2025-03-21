@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -41,7 +42,7 @@ fun PostNotificationPermissionHandler(
     @SuppressLint("InlinedApi")
     if (isRunningAndroid13OrNewer) {
         val context = LocalContext.current
-        val activity = context.findActivity()
+        val activity = LocalActivity.current ?: context.findActivity()
 
         val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()

@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 @Composable
 internal fun Context.findActivity(): Activity {
@@ -21,14 +22,21 @@ internal fun Context.findActivity(): Activity {
 }
 
 fun Activity.openAppSettings() {
-    Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts(
-            /* scheme = */ "package",
-            /* ssp = */ packageName,
-            /* fragment = */ null
+    try {
+        Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts(
+                /* scheme = */ "package",
+                /* ssp = */ packageName,
+                /* fragment = */ null
+            )
+        ).also(::startActivity)
+    } catch (e: Exception) {
+        showLongToast(
+            message = UiText.StringResource(R.string.error_intent_app_not_found),
+            context = this
         )
-    ).also(::startActivity)
+    }
 }
 
 fun Activity.restartActivity() {

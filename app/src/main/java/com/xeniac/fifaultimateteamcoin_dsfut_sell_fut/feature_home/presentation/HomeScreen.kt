@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
@@ -51,7 +52,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val activity = context.findActivity()
+    val activity = LocalActivity.current ?: context.findActivity()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()

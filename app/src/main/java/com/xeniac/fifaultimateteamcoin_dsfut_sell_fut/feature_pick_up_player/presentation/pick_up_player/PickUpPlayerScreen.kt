@@ -1,6 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player
 
 import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,7 +59,7 @@ fun PickUpPlayerScreen(
     notificationService: PickUpPlayerNotificationService = requirePickUpPlayerNotificationService()
 ) {
     val context = LocalContext.current
-    val activity = context.findActivity()
+    val activity = LocalActivity.current ?: context.findActivity()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
