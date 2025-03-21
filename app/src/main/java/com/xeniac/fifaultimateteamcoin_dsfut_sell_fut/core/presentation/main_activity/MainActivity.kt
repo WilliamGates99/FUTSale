@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity
 
 import android.os.Build
 import android.os.Bundle
@@ -16,20 +16,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.MainActivityState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.observeNetworkConnection
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.states.MainActivityState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.utils.enableEdgeToEdgeWindow
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var connectivityObserver: ConnectivityObserver
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -37,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         splashScreen()
         enableEdgeToEdgeWindow()
-        observeNetworkConnection(connectivityObserver)
 
         setContent {
             val mainState by viewModel.mainState.collectAsStateWithLifecycle()

@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.states
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 
