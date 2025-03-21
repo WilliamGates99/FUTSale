@@ -7,10 +7,9 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.hasNetworkConnection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
@@ -147,7 +146,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLatestAppVersion() {
-        if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
+        if (hasNetworkConnection()) {
             homeUseCases.getLatestAppVersionUseCase.get()().onEach { result ->
                 when (result) {
                     is Result.Success -> result.data?.let { latestAppUpdateInfo ->

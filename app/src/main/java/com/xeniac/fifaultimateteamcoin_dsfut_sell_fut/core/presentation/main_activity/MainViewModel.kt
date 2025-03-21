@@ -1,9 +1,11 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.MainUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.MainActivityState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.states.MainActivityState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.OnboardingScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +21,13 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val mainUseCases: MainUseCases
+    private val mainUseCases: MainUseCases,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _mainState = MutableStateFlow(MainActivityState())
     val mainState = _mainState.onStart {
+        NetworkObserverHelper.observeNetworkConnection(connectivityObserver)
         getMainState()
     }.stateIn(
         scope = viewModelScope,

@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.hasNetworkConnection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
@@ -175,144 +174,17 @@ class PickUpPlayerViewModel @Inject constructor(
     private fun autoPickUpPlayer() {
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
-            if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
-                mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                        isAutoPickUpLoading = true
-                    )
-                }
-
-                val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-                    minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
-                    maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
-                    takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
+            if (!hasNetworkConnection()) {
+                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    isAutoPickUpLoading = false
                 )
-
-                val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null
-                val hasSecretKeyError = pickUpPlayerResult.secretKeyError != null
-                val hasPartnerIdAndSecretKeyError = hasPartnerIdError && hasSecretKeyError
-                when {
-                    hasPartnerIdAndSecretKeyError -> {
-                        _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar
-                        )
-                    }
-                    hasPartnerIdError -> {
-                        _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.ShowPartnerIdSnackbar(
-                                pickUpPlayerResult.partnerIdError!!.asUiText()
-                            )
-                        )
-                    }
-                    hasSecretKeyError -> {
-                        _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.ShowSecretKeySnackbar(
-                                pickUpPlayerResult.secretKeyError!!.asUiText()
-                            )
-                        )
-                    }
-                }
-
-                if (pickUpPlayerResult.minPriceError != null) {
-                    when (val error = pickUpPlayerResult.minPriceError) {
-                        PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                                minPriceErrorText = error.asUiText()
-                            )
-                        }
-                        else -> Unit
-                    }
-                }
-
-                if (pickUpPlayerResult.maxPriceError != null) {
-                    when (val error = pickUpPlayerResult.maxPriceError) {
-                        PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                                maxPriceErrorText = error.asUiText()
-                            )
-                        }
-                        else -> Unit
-                    }
-                }
-
-                if (pickUpPlayerResult.takeAfterError != null) {
-                    when (val error = pickUpPlayerResult.takeAfterError) {
-                        PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                                takeAfterErrorText = error.asUiText()
-                            )
-                        }
-                        else -> Unit
-                    }
-                }
-
-                when (val result = pickUpPlayerResult.result) {
-                    is Result.Success -> result.data.let { player ->
-                        mutex.withLock {
-                            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                                isAutoPickUpLoading = false
-                            )
-                        }
-
-                        _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.ShowSuccessNotification(player.name)
-                        )
-                        _autoPickUpPlayerEventChannel.send(
-                            PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
-                        )
-                    }
-                    is Result.Error -> {
-                        when (val error = result.error) {
-                            PickUpPlayerError.Network.DsfutEmpty -> {
-                                delay(Constants.AUTO_PICK_UP_DELAY_IN_MILLIS)
-                                autoPickUpPlayer()
-                            }
-                            PickUpPlayerError.Network.DsfutSignature -> {
-                                _autoPickUpPlayerEventChannel.send(
-                                    PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())
-                                )
-
-                                mutex.withLock {
-                                    savedStateHandle["pickUpPlayerState"] =
-                                        pickUpPlayerState.value.copy(
-                                            isAutoPickUpLoading = false
-                                        )
-                                }
-                            }
-                            else -> {
-                                _autoPickUpPlayerEventChannel.send(
-                                    PickUpPlayerUiEvent.ShowErrorNotification(error.asUiText())
-                                )
-                                _autoPickUpPlayerEventChannel.send(
-                                    UiEvent.ShowLongSnackbar(error.asUiText())
-                                )
-
-                                mutex.withLock {
-                                    savedStateHandle["pickUpPlayerState"] =
-                                        pickUpPlayerState.value.copy(
-                                            isAutoPickUpLoading = false
-                                        )
-                                }
-                            }
-                        }
-                    }
-                    null -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            isAutoPickUpLoading = false
-                        )
-                    }
-                }
-            } else {
                 _autoPickUpPlayerEventChannel.send(UiEvent.ShowOfflineSnackbar)
+                return@launch
             }
-        }
-    }
 
-    private fun pickUpPlayerOnce() = viewModelScope.launch {
-        if (NetworkObserverHelper.networkStatus.value == ConnectivityObserver.Status.AVAILABLE) {
             mutex.withLock {
                 savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                    isPickUpOnceLoading = true
+                    isAutoPickUpLoading = true
                 )
             }
 
@@ -327,19 +199,19 @@ class PickUpPlayerViewModel @Inject constructor(
             val hasPartnerIdAndSecretKeyError = hasPartnerIdError && hasSecretKeyError
             when {
                 hasPartnerIdAndSecretKeyError -> {
-                    _pickUpPlayerOnceEventChannel.send(
+                    _autoPickUpPlayerEventChannel.send(
                         PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar
                     )
                 }
                 hasPartnerIdError -> {
-                    _pickUpPlayerOnceEventChannel.send(
+                    _autoPickUpPlayerEventChannel.send(
                         PickUpPlayerUiEvent.ShowPartnerIdSnackbar(
                             pickUpPlayerResult.partnerIdError!!.asUiText()
                         )
                     )
                 }
                 hasSecretKeyError -> {
-                    _pickUpPlayerOnceEventChannel.send(
+                    _autoPickUpPlayerEventChannel.send(
                         PickUpPlayerUiEvent.ShowSecretKeySnackbar(
                             pickUpPlayerResult.secretKeyError!!.asUiText()
                         )
@@ -350,9 +222,10 @@ class PickUpPlayerViewModel @Inject constructor(
             if (pickUpPlayerResult.minPriceError != null) {
                 when (val error = pickUpPlayerResult.minPriceError) {
                     PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            minPriceErrorText = error.asUiText()
-                        )
+                        savedStateHandle["pickUpPlayerState"] =
+                            pickUpPlayerState.value.copy(
+                                minPriceErrorText = error.asUiText()
+                            )
                     }
                     else -> Unit
                 }
@@ -361,9 +234,10 @@ class PickUpPlayerViewModel @Inject constructor(
             if (pickUpPlayerResult.maxPriceError != null) {
                 when (val error = pickUpPlayerResult.maxPriceError) {
                     PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            maxPriceErrorText = error.asUiText()
-                        )
+                        savedStateHandle["pickUpPlayerState"] =
+                            pickUpPlayerState.value.copy(
+                                maxPriceErrorText = error.asUiText()
+                            )
                     }
                     else -> Unit
                 }
@@ -372,9 +246,10 @@ class PickUpPlayerViewModel @Inject constructor(
             if (pickUpPlayerResult.takeAfterError != null) {
                 when (val error = pickUpPlayerResult.takeAfterError) {
                     PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            takeAfterErrorText = error.asUiText()
-                        )
+                        savedStateHandle["pickUpPlayerState"] =
+                            pickUpPlayerState.value.copy(
+                                takeAfterErrorText = error.asUiText()
+                            )
                     }
                     else -> Unit
                 }
@@ -383,38 +258,49 @@ class PickUpPlayerViewModel @Inject constructor(
             when (val result = pickUpPlayerResult.result) {
                 is Result.Success -> result.data.let { player ->
                     mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                            isPickUpOnceLoading = false
-                        )
+                        savedStateHandle["pickUpPlayerState"] =
+                            pickUpPlayerState.value.copy(
+                                isAutoPickUpLoading = false
+                            )
                     }
 
-                    _pickUpPlayerOnceEventChannel.send(
+                    _autoPickUpPlayerEventChannel.send(
+                        PickUpPlayerUiEvent.ShowSuccessNotification(player.name)
+                    )
+                    _autoPickUpPlayerEventChannel.send(
                         PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
                     )
                 }
                 is Result.Error -> {
                     when (val error = result.error) {
+                        PickUpPlayerError.Network.DsfutEmpty -> {
+                            delay(Constants.AUTO_PICK_UP_DELAY_IN_MILLIS)
+                            autoPickUpPlayer()
+                        }
                         PickUpPlayerError.Network.DsfutSignature -> {
-                            _pickUpPlayerOnceEventChannel.send(
+                            _autoPickUpPlayerEventChannel.send(
                                 PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())
                             )
 
                             mutex.withLock {
                                 savedStateHandle["pickUpPlayerState"] =
                                     pickUpPlayerState.value.copy(
-                                        isPickUpOnceLoading = false
+                                        isAutoPickUpLoading = false
                                     )
                             }
                         }
                         else -> {
-                            _pickUpPlayerOnceEventChannel.send(
+                            _autoPickUpPlayerEventChannel.send(
+                                PickUpPlayerUiEvent.ShowErrorNotification(error.asUiText())
+                            )
+                            _autoPickUpPlayerEventChannel.send(
                                 UiEvent.ShowLongSnackbar(error.asUiText())
                             )
 
                             mutex.withLock {
                                 savedStateHandle["pickUpPlayerState"] =
                                     pickUpPlayerState.value.copy(
-                                        isPickUpOnceLoading = false
+                                        isAutoPickUpLoading = false
                                     )
                             }
                         }
@@ -422,12 +308,134 @@ class PickUpPlayerViewModel @Inject constructor(
                 }
                 null -> mutex.withLock {
                     savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
-                        isPickUpOnceLoading = false
+                        isAutoPickUpLoading = false
                     )
                 }
             }
-        } else {
+        }
+    }
+
+    private fun pickUpPlayerOnce() = viewModelScope.launch {
+        if (!hasNetworkConnection()) {
             _pickUpPlayerOnceEventChannel.send(UiEvent.ShowOfflineSnackbar)
+            return@launch
+        }
+
+        mutex.withLock {
+            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                isPickUpOnceLoading = true
+            )
+        }
+
+        val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
+            minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
+            maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
+            takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
+        )
+
+        val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null
+        val hasSecretKeyError = pickUpPlayerResult.secretKeyError != null
+        val hasPartnerIdAndSecretKeyError = hasPartnerIdError && hasSecretKeyError
+        when {
+            hasPartnerIdAndSecretKeyError -> {
+                _pickUpPlayerOnceEventChannel.send(
+                    PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar
+                )
+            }
+            hasPartnerIdError -> {
+                _pickUpPlayerOnceEventChannel.send(
+                    PickUpPlayerUiEvent.ShowPartnerIdSnackbar(
+                        pickUpPlayerResult.partnerIdError!!.asUiText()
+                    )
+                )
+            }
+            hasSecretKeyError -> {
+                _pickUpPlayerOnceEventChannel.send(
+                    PickUpPlayerUiEvent.ShowSecretKeySnackbar(
+                        pickUpPlayerResult.secretKeyError!!.asUiText()
+                    )
+                )
+            }
+        }
+
+        if (pickUpPlayerResult.minPriceError != null) {
+            when (val error = pickUpPlayerResult.minPriceError) {
+                PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
+                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                        minPriceErrorText = error.asUiText()
+                    )
+                }
+                else -> Unit
+            }
+        }
+
+        if (pickUpPlayerResult.maxPriceError != null) {
+            when (val error = pickUpPlayerResult.maxPriceError) {
+                PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
+                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                        maxPriceErrorText = error.asUiText()
+                    )
+                }
+                else -> Unit
+            }
+        }
+
+        if (pickUpPlayerResult.takeAfterError != null) {
+            when (val error = pickUpPlayerResult.takeAfterError) {
+                PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
+                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                        takeAfterErrorText = error.asUiText()
+                    )
+                }
+                else -> Unit
+            }
+        }
+
+        when (val result = pickUpPlayerResult.result) {
+            is Result.Success -> result.data.let { player ->
+                mutex.withLock {
+                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                        isPickUpOnceLoading = false
+                    )
+                }
+
+                _pickUpPlayerOnceEventChannel.send(
+                    PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen(player.id!!)
+                )
+            }
+            is Result.Error -> {
+                when (val error = result.error) {
+                    PickUpPlayerError.Network.DsfutSignature -> {
+                        _pickUpPlayerOnceEventChannel.send(
+                            PickUpPlayerUiEvent.ShowSignatureSnackbar(error.asUiText())
+                        )
+
+                        mutex.withLock {
+                            savedStateHandle["pickUpPlayerState"] =
+                                pickUpPlayerState.value.copy(
+                                    isPickUpOnceLoading = false
+                                )
+                        }
+                    }
+                    else -> {
+                        _pickUpPlayerOnceEventChannel.send(
+                            UiEvent.ShowLongSnackbar(error.asUiText())
+                        )
+
+                        mutex.withLock {
+                            savedStateHandle["pickUpPlayerState"] =
+                                pickUpPlayerState.value.copy(
+                                    isPickUpOnceLoading = false
+                                )
+                        }
+                    }
+                }
+            }
+            null -> mutex.withLock {
+                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    isPickUpOnceLoading = false
+                )
+            }
         }
     }
 
