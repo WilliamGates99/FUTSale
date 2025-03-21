@@ -80,7 +80,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun updatePartnerId(partnerId: String): Job = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["profileState"] = profileState.value.copy(
+            savedStateHandle["profileState"] = _profileState.value.copy(
                 partnerId = partnerId,
                 partnerIdErrorText = null,
                 isPartnerIdLoading = true
@@ -98,7 +98,7 @@ class ProfileViewModel @Inject constructor(
 
             when (updatePartnerIdResult.result) {
                 is Result.Success -> {
-                    savedStateHandle["profileState"] = profileState.value.copy(
+                    savedStateHandle["profileState"] = _profileState.value.copy(
                         isPartnerIdSaved = true,
                         isPartnerIdLoading = false
                     )
@@ -107,7 +107,7 @@ class ProfileViewModel @Inject constructor(
                     checkPartnerIdError(updatePartnerIdResult.result.error)
                 }
                 null -> {
-                    savedStateHandle["profileState"] = profileState.value.copy(
+                    savedStateHandle["profileState"] = _profileState.value.copy(
                         isPartnerIdLoading = false
                     )
                 }
@@ -118,14 +118,14 @@ class ProfileViewModel @Inject constructor(
     private suspend fun checkPartnerIdError(partnerIdError: PartnerIdError) {
         when (partnerIdError) {
             PartnerIdError.InvalidPartnerId -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
+                savedStateHandle["profileState"] = _profileState.value.copy(
                     partnerIdErrorText = UiText.StringResource(R.string.profile_textfield_partner_id_error_invalid),
                     isPartnerIdSaved = false,
                     isPartnerIdLoading = false
                 )
             }
             PartnerIdError.SomethingWentWrong -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
+                savedStateHandle["profileState"] = _profileState.value.copy(
                     isPartnerIdSaved = false,
                     isPartnerIdLoading = false
                 )
@@ -139,7 +139,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun updateSecretKey(secretKey: String): Job = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["profileState"] = profileState.value.copy(
+            savedStateHandle["profileState"] = _profileState.value.copy(
                 secretKey = secretKey,
                 secretKeyErrorText = null,
                 isSecretKeyLoading = true
@@ -157,7 +157,7 @@ class ProfileViewModel @Inject constructor(
 
             when (updateSecretKeyResult.result) {
                 is Result.Success -> {
-                    savedStateHandle["profileState"] = profileState.value.copy(
+                    savedStateHandle["profileState"] = _profileState.value.copy(
                         isSecretKeySaved = true,
                         isSecretKeyLoading = false
                     )
@@ -166,7 +166,7 @@ class ProfileViewModel @Inject constructor(
                     checkSecretKeyError(updateSecretKeyResult.result.error)
                 }
                 null -> {
-                    savedStateHandle["profileState"] = profileState.value.copy(
+                    savedStateHandle["profileState"] = _profileState.value.copy(
                         isSecretKeyLoading = false
                     )
                 }
@@ -177,14 +177,14 @@ class ProfileViewModel @Inject constructor(
     private suspend fun checkSecretKeyError(secretKeyError: SecretKeyError) {
         when (secretKeyError) {
             SecretKeyError.InvalidSecretKey -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
+                savedStateHandle["profileState"] = _profileState.value.copy(
                     secretKeyErrorText = UiText.StringResource(R.string.profile_textfield_secret_key_error_invalid),
                     isSecretKeySaved = false,
                     isSecretKeyLoading = false
                 )
             }
             SecretKeyError.SomethingWentWrong -> {
-                savedStateHandle["profileState"] = profileState.value.copy(
+                savedStateHandle["profileState"] = _profileState.value.copy(
                     isSecretKeySaved = false,
                     isSecretKeyLoading = false
                 )

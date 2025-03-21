@@ -58,7 +58,7 @@ class OnboardingViewModel @Inject constructor(
 
     private fun partnerIdChanged(partnerId: String) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["onboardingState"] = onboardingState.value.copy(
+            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
                 partnerId = partnerId.filter { it.isDigit() }.trim(),
                 partnerIdErrorText = null
             )
@@ -67,7 +67,7 @@ class OnboardingViewModel @Inject constructor(
 
     private fun secretKeyChanged(secretKey: String) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["onboardingState"] = onboardingState.value.copy(
+            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
                 secretKey = secretKey.trim(),
                 secretKeyErrorText = null
             )
@@ -76,11 +76,11 @@ class OnboardingViewModel @Inject constructor(
 
     private fun saveUserData() {
         completeOnboardingUseCase.get()(
-            partnerId = onboardingState.value.partnerId,
-            secretKey = onboardingState.value.secretKey
+            partnerId = _onboardingState.value.partnerId,
+            secretKey = _onboardingState.value.secretKey
         ).onStart {
             mutex.withLock {
-                savedStateHandle["secretKeyState"] = onboardingState.value.copy(
+                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
                     isCompleteLoading = true
                 )
             }
@@ -97,7 +97,7 @@ class OnboardingViewModel @Inject constructor(
             }
         }.onCompletion {
             mutex.withLock {
-                savedStateHandle["secretKeyState"] = onboardingState.value.copy(
+                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
                     isCompleteLoading = false
                 )
             }

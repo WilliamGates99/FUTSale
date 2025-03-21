@@ -127,7 +127,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun minPriceChanged(minPrice: String) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 minPrice = minPrice.filter { it.isDigit() }.trim(),
                 minPriceErrorText = null
             )
@@ -136,7 +136,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun maxPriceChanged(maxPrice: String) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 maxPrice = maxPrice.filter { it.isDigit() }.trim(),
                 maxPriceErrorText = null
             )
@@ -145,9 +145,9 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun takeAfterCheckedChanged(isChecked: Boolean) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 isTakeAfterChecked = isChecked,
-                takeAfterDelayInSeconds = if (isChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else 0,
+                takeAfterDelayInSeconds = if (isChecked) _pickUpPlayerState.value.takeAfterDelayInSeconds else 0,
                 takeAfterErrorText = null
             )
         }
@@ -155,7 +155,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     private fun takeAfterSliderChanged(delayInSeconds: Int) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 takeAfterDelayInSeconds = delayInSeconds,
                 takeAfterErrorText = null
             )
@@ -165,7 +165,7 @@ class PickUpPlayerViewModel @Inject constructor(
     private fun cancelAutoPickUpPlayer() = viewModelScope.launch {
         autoPickUpPlayerJob?.cancel()
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 isAutoPickUpLoading = false
             )
         }
@@ -175,7 +175,7 @@ class PickUpPlayerViewModel @Inject constructor(
         autoPickUpPlayerJob?.cancel()
         autoPickUpPlayerJob = viewModelScope.launch {
             if (!hasNetworkConnection()) {
-                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                     isAutoPickUpLoading = false
                 )
                 _autoPickUpPlayerEventChannel.send(UiEvent.ShowOfflineSnackbar)
@@ -183,15 +183,17 @@ class PickUpPlayerViewModel @Inject constructor(
             }
 
             mutex.withLock {
-                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                     isAutoPickUpLoading = true
                 )
             }
 
             val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-                minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
-                maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
-                takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
+                minPrice = _pickUpPlayerState.value.minPrice.ifBlank { null },
+                maxPrice = _pickUpPlayerState.value.maxPrice.ifBlank { null },
+                takeAfterDelayInSeconds = with(_pickUpPlayerState.value) {
+                    if (isTakeAfterChecked) takeAfterDelayInSeconds else null
+                }
             )
 
             val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null
@@ -223,7 +225,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 when (val error = pickUpPlayerResult.minPriceError) {
                     PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
                         savedStateHandle["pickUpPlayerState"] =
-                            pickUpPlayerState.value.copy(
+                            _pickUpPlayerState.value.copy(
                                 minPriceErrorText = error.asUiText()
                             )
                     }
@@ -235,7 +237,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 when (val error = pickUpPlayerResult.maxPriceError) {
                     PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
                         savedStateHandle["pickUpPlayerState"] =
-                            pickUpPlayerState.value.copy(
+                            _pickUpPlayerState.value.copy(
                                 maxPriceErrorText = error.asUiText()
                             )
                     }
@@ -247,7 +249,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 when (val error = pickUpPlayerResult.takeAfterError) {
                     PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
                         savedStateHandle["pickUpPlayerState"] =
-                            pickUpPlayerState.value.copy(
+                            _pickUpPlayerState.value.copy(
                                 takeAfterErrorText = error.asUiText()
                             )
                     }
@@ -259,7 +261,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 is Result.Success -> result.data.let { player ->
                     mutex.withLock {
                         savedStateHandle["pickUpPlayerState"] =
-                            pickUpPlayerState.value.copy(
+                            _pickUpPlayerState.value.copy(
                                 isAutoPickUpLoading = false
                             )
                     }
@@ -284,7 +286,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
                             mutex.withLock {
                                 savedStateHandle["pickUpPlayerState"] =
-                                    pickUpPlayerState.value.copy(
+                                    _pickUpPlayerState.value.copy(
                                         isAutoPickUpLoading = false
                                     )
                             }
@@ -299,7 +301,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
                             mutex.withLock {
                                 savedStateHandle["pickUpPlayerState"] =
-                                    pickUpPlayerState.value.copy(
+                                    _pickUpPlayerState.value.copy(
                                         isAutoPickUpLoading = false
                                     )
                             }
@@ -307,7 +309,7 @@ class PickUpPlayerViewModel @Inject constructor(
                     }
                 }
                 null -> mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                         isAutoPickUpLoading = false
                     )
                 }
@@ -322,15 +324,17 @@ class PickUpPlayerViewModel @Inject constructor(
         }
 
         mutex.withLock {
-            savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+            savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                 isPickUpOnceLoading = true
             )
         }
 
         val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-            minPrice = pickUpPlayerState.value.minPrice.ifBlank { null },
-            maxPrice = pickUpPlayerState.value.maxPrice.ifBlank { null },
-            takeAfterDelayInSeconds = if (pickUpPlayerState.value.isTakeAfterChecked) pickUpPlayerState.value.takeAfterDelayInSeconds else null
+            minPrice = _pickUpPlayerState.value.minPrice.ifBlank { null },
+            maxPrice = _pickUpPlayerState.value.maxPrice.ifBlank { null },
+            takeAfterDelayInSeconds = with(_pickUpPlayerState.value) {
+                if (isTakeAfterChecked) takeAfterDelayInSeconds else null
+            }
         )
 
         val hasPartnerIdError = pickUpPlayerResult.partnerIdError != null
@@ -361,7 +365,7 @@ class PickUpPlayerViewModel @Inject constructor(
         if (pickUpPlayerResult.minPriceError != null) {
             when (val error = pickUpPlayerResult.minPriceError) {
                 PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                         minPriceErrorText = error.asUiText()
                     )
                 }
@@ -372,7 +376,7 @@ class PickUpPlayerViewModel @Inject constructor(
         if (pickUpPlayerResult.maxPriceError != null) {
             when (val error = pickUpPlayerResult.maxPriceError) {
                 PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                         maxPriceErrorText = error.asUiText()
                     )
                 }
@@ -383,7 +387,7 @@ class PickUpPlayerViewModel @Inject constructor(
         if (pickUpPlayerResult.takeAfterError != null) {
             when (val error = pickUpPlayerResult.takeAfterError) {
                 PickUpPlayerError.InvalidTakeAfter -> mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                         takeAfterErrorText = error.asUiText()
                     )
                 }
@@ -394,7 +398,7 @@ class PickUpPlayerViewModel @Inject constructor(
         when (val result = pickUpPlayerResult.result) {
             is Result.Success -> result.data.let { player ->
                 mutex.withLock {
-                    savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                    savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                         isPickUpOnceLoading = false
                     )
                 }
@@ -412,7 +416,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
                         mutex.withLock {
                             savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
+                                _pickUpPlayerState.value.copy(
                                     isPickUpOnceLoading = false
                                 )
                         }
@@ -424,7 +428,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
                         mutex.withLock {
                             savedStateHandle["pickUpPlayerState"] =
-                                pickUpPlayerState.value.copy(
+                                _pickUpPlayerState.value.copy(
                                     isPickUpOnceLoading = false
                                 )
                         }
@@ -432,7 +436,7 @@ class PickUpPlayerViewModel @Inject constructor(
                 }
             }
             null -> mutex.withLock {
-                savedStateHandle["pickUpPlayerState"] = pickUpPlayerState.value.copy(
+                savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
                     isPickUpOnceLoading = false
                 )
             }
