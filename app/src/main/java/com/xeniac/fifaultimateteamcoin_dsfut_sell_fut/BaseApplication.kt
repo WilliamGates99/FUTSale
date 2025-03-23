@@ -18,6 +18,8 @@ import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.GreenNotificationLight
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.Dispatcher
@@ -43,11 +45,15 @@ class BaseApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
+
     override fun onCreate() {
         super.onCreate()
 
         setupTimber()
         setAppTheme()
+        observeNetworkConnection()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createFcmNotificationChannelGroup()
@@ -62,6 +68,10 @@ class BaseApplication : Application(), ImageLoaderFactory {
     private fun setupTimber() = Timber.plant(Timber.DebugTree())
 
     private fun setAppTheme() = currentAppTheme.setAppTheme()
+
+    private fun observeNetworkConnection() {
+        NetworkObserverHelper.observeNetworkConnection(connectivityObserver)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createFcmNotificationChannelGroup() {
