@@ -21,7 +21,7 @@ firebase-bom = "33.11.0"
 inAppBrowser = "1.8.0"
 timber = "5.0.1"
 lottieCompose = "6.6.3"
-coil-bom = "2.7.0"
+coil-bom = "3.1.0"
 playReview = "2.0.2"
 playAppUpdate = "2.1.0"
 profileinstaller = "1.4.1"
@@ -118,10 +118,12 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 
 # Coil Library
-coil-bom = { module = "io.coil-kt:coil-bom", version.ref = "coil-bom" }
-coil-compose = { group = "io.coil-kt", name = "coil-compose" }
-coil-svg = { group = "io.coil-kt", name = "coil-svg" }
-coil-gif = { group = "io.coil-kt", name = "coil-gif" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version.ref = "coil-bom" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose" }
+coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg" }
+coil-gif = { group = "io.coil-kt.coil3", name = "coil-gif" }
+coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3" }
+coil-network-cache-control = { group = "io.coil-kt.coil3", name = "coil-network-cache-control" }
 
 # Google Play In-App Reviews API
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
@@ -165,7 +167,7 @@ ktor = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-content-negotiati
 room = ["room-runtime", "room-ktx", "room-paging"]
 paging = ["paging-runtime", "paging-compose"]
 firebase = ["firebase-analytics-ktx", "firebase-messaging-ktx", "firebase-crashlytics-ktx", "firebase-perf-ktx"]
-coil = ["coil-compose", "coil-svg", "coil-gif"]
+coil = ["coil-compose", "coil-svg", "coil-gif", "coil-network-ktor", "coil-network-cache-control"]
 
 local-unit-tests = ["truth", "junit", "arch-core-testing", "kotlinx-coroutines-test", "ktor-client-mock"]
 instrumentation-tests = ["truth", "junit", "test-ext-junit", "arch-core-testing", "kotlinx-coroutines-test", "test-core", "test-runner", "test-rules", "ktor-client-mock", "room-testing", "paging-testing-android", "hilt-android-testing"]
