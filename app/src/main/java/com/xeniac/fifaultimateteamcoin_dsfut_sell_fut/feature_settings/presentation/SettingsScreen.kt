@@ -45,7 +45,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeBottomSheet
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.SettingsUiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

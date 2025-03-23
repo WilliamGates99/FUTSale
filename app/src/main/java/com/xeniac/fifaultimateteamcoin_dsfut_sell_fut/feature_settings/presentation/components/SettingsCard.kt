@@ -39,7 +39,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppThem
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.addTestTag
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant60
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 

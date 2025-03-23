@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 

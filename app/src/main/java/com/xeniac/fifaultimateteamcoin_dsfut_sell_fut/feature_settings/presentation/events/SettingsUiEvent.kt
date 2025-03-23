@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event

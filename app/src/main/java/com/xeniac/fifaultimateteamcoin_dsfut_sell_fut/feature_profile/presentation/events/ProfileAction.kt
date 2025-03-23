@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events
 
 sealed interface ProfileAction {
     data object GetProfile : ProfileAction
