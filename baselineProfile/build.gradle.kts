@@ -74,8 +74,5 @@ androidComponents {
 }
 
 dependencies {
-    implementation(libs.test.ext.junit) // JUnit Extension
-    implementation(libs.espresso.core)
-    implementation(libs.uiautomator)
-    implementation(libs.benchmark.macro.junit4) // JUnit Macro Benchmark
+    implementation(libs.bundles.baseline.profile)
 }

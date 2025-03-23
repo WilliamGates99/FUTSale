@@ -52,46 +52,46 @@ desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" } # Kotlin JSON Serialization Library
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" } # Kotlin DateTime
 
 # Jetpack Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" } # Material Design 3
+compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" } # Compose Integration with LiveData
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" } # Android Studio Compose Preview Support
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" } # Android Studio Compose Preview Support
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" } # Compose Integration with Activities
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" } # Compose Constraint Layout
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" } # Compose Navigation
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" } # Compose Navigation Integration with Hilt
+
+# Architectural Components
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidLifecycle" } # ViewModel
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidLifecycle" } # ViewModel Utilities for Compose
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycle" } # Lifecycles Only (without ViewModel or LiveData)
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidLifecycle" } # Lifecycle Utilities for Compose
 
 # Dagger - Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
-# Architectural Components
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidLifecycle" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidLifecycle" }
-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycle" }
-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidLifecycle" }
-
 # Coroutines
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" } # Coroutines Support for Firebase
 
 # Ktor Client Library
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" } # Ktor OkHttp Engine
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
 # Room Library
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" } # Kotlin Extensions and Coroutines support for Room
+room-paging = { module = "androidx.room:room-paging", version.ref = "room" } # Paging 3 Integration
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # Paging 3 Library
@@ -103,10 +103,10 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" } # Analytics
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx" } # Cloud Messaging
+firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" } # Crashlytics
+firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx" } # Performance Monitor
 
 # In-App Browser
 browser = { module = "androidx.browser:browser", version.ref = "inAppBrowser" }
@@ -135,12 +135,12 @@ profileinstaller = { module = "androidx.profileinstaller:profileinstaller", vers
 # Test Libraries
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 junit = { module = "junit:junit", version.ref = "junit" }
-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "testExtJunit" }
-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" }
+test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "testExtJunit" } # JUnit Extension for Android Test
+arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" } # Test Helpers for Architectural Components
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 test-core = { module = "androidx.test:core", version.ref = "testCore" }
-test-runner = { module = "androidx.test:runner", version.ref = "testRunner" }
-test-rules = { module = "androidx.test:rules", version.ref = "testRules" }
+test-runner = { module = "androidx.test:runner", version.ref = "testRunner" } # Android JUnit4 Test Runner
+test-rules = { module = "androidx.test:rules", version.ref = "testRules" } # Android JUnit Test Rules
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 paging-testing-android = { module = "androidx.paging:paging-testing-android", version.ref = "paging" }
@@ -154,7 +154,24 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 
 # Baseline Profiles Libraries
 uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
+benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" } # JUnit Macro Benchmark
+
+[bundles]
+essentials = ["core-ktx", "appcompat", "core-splashscreen", "kotlinx-serialization-json", "kotlinx-datetime"]
+compose = ["compose-ui", "compose-material3", "compose-runtime-livedata", "compose-ui-tooling-preview", "compose-ui-tooling", "activity-compose", "constraintlayout-compose", "navigation-compose", "hilt-navigation-compose"]
+architectural-components = ["lifecycle-viewmodel-ktx", "lifecycle-viewmodel-compose", "lifecycle-runtime-ktx", "lifecycle-runtime-compose"]
+coroutines = ["kotlinx-coroutines-android", "kotlinx-coroutines-play-services"]
+ktor = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json", "ktor-client-logging"]
+room = ["room-runtime", "room-ktx", "room-paging"]
+paging = ["paging-runtime", "paging-compose"]
+firebase = ["firebase-analytics-ktx", "firebase-messaging-ktx", "firebase-crashlytics-ktx", "firebase-perf-ktx"]
+coil = ["coil-compose", "coil-svg", "coil-gif"]
+
+local-unit-tests = ["truth", "junit", "arch-core-testing", "kotlinx-coroutines-test", "ktor-client-mock"]
+instrumentation-tests = ["truth", "junit", "test-ext-junit", "arch-core-testing", "kotlinx-coroutines-test", "test-core", "test-runner", "test-rules", "ktor-client-mock", "room-testing", "paging-testing-android", "hilt-android-testing"]
+ui-tests = ["espresso-core", "espresso-intents", "compose-ui-test-junit4"]
+
+baseline-profile = ["test-ext-junit", "espresso-core", "uiautomator", "benchmark-macro-junit4"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

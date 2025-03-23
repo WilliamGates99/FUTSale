@@ -290,70 +290,38 @@ dependencies {
     // Java 8+ API Desugaring Support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.core.splashscreen)
-    implementation(libs.kotlinx.serialization.json) // Kotlin JSON Serialization Library
-    implementation(libs.kotlinx.datetime) // Kotlin DateTime
+    implementation(libs.bundles.essentials)
 
     // Jetpack Compose
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.material3) // Material Design 3
-    implementation(libs.compose.runtime.livedata) // Compose Integration with LiveData
-    implementation(libs.compose.ui.tooling.preview) // Android Studio Compose Preview Support
-    debugImplementation(libs.compose.ui.tooling) // Android Studio Compose Preview Support
-    implementation(libs.activity.compose) // Compose Integration with Activities
-    implementation(libs.constraintlayout.compose) // Compose Constraint Layout
-    implementation(libs.navigation.compose) // Compose Navigation
-    implementation(libs.hilt.navigation.compose) // Compose Navigation Integration with Hilt
+    implementation(libs.bundles.compose)
+
+    // Architectural Components
+    implementation(libs.bundles.architectural.components)
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    // Architectural Components
-    implementation(libs.lifecycle.viewmodel.ktx) // ViewModel
-    implementation(libs.lifecycle.viewmodel.compose) // ViewModel Utilities for Compose
-    implementation(libs.lifecycle.runtime.ktx) // Lifecycles Only (without ViewModel or LiveData)
-    implementation(libs.lifecycle.runtime.compose) // Lifecycle Utilities for Compose
-
     // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Coroutines Support for Firebase
-    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.bundles.coroutines)
 
     // Ktor Client Library
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.okhttp) // Ktor OkHttp Engine
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.client.logging)
+    implementation(libs.bundles.ktor)
 
     // Room Library
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx) // Kotlin Extensions and Coroutines support for Room
-    implementation(libs.room.paging) // Paging 3 Integration
+    implementation(libs.bundles.room)
     ksp(libs.room.compiler)
 
     // Paging 3 Library
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
+    implementation(libs.bundles.paging)
 
     // Preferences DataStore
     implementation(libs.datastore.preferences)
 
-    // Firebase BoM and Analytics
+    // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-
-    // Firebase Cloud Messaging
-    implementation(libs.firebase.messaging.ktx)
-
-    // Firebase Release & Monitor
-    implementation(libs.firebase.crashlytics.ktx)
-    implementation(libs.firebase.perf.ktx)
+    implementation(libs.bundles.firebase)
 
     // In-App Browser
     implementation(libs.browser)
@@ -366,9 +334,7 @@ dependencies {
 
     // Coil Library
     implementation(platform(libs.coil.bom))
-    implementation(libs.coil.compose)
-    implementation(libs.coil.svg)
-    implementation(libs.coil.gif)
+    implementation(libs.bundles.coil)
 
     // Google Play In-App Reviews API
     implementation(libs.play.review.ktx)
@@ -383,32 +349,15 @@ dependencies {
     implementation(libs.profileinstaller)
 
     // Local Unit Test Libraries
-    testImplementation(libs.truth)
-    testImplementation(libs.junit)
-    testImplementation(libs.arch.core.testing) // Test Helpers for Architectural Components
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.bundles.local.unit.tests)
 
     // Instrumentation Test Libraries
-    androidTestImplementation(libs.truth)
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.test.ext.junit) // JUnit Extension for Android Test
-    androidTestImplementation(libs.arch.core.testing) // Test Helpers for Architectural Components
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.test.core)
-    androidTestImplementation(libs.test.runner) // Android JUnit4 Test Runner
-    androidTestImplementation(libs.test.rules) // Android JUnit Test Rules
-    androidTestImplementation(libs.ktor.client.mock)
-    androidTestImplementation(libs.room.testing)
-    androidTestImplementation(libs.paging.testing.android)
-    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.bundles.instrumentation.tests)
     kspAndroidTest(libs.hilt.android.compiler)
 
     // UI Test Libraries
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.espresso.intents)
+    androidTestImplementation(libs.bundles.ui.tests)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
 }
 
