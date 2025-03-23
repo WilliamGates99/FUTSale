@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
@@ -62,12 +64,14 @@ class ProfileViewModel @Inject constructor(
             is ProfileAction.PartnerIdChanged -> {
                 updatePartnerIdJob?.cancel()
                 updatePartnerIdJob = updatePartnerId(
-                    partnerId = action.partnerId.filter { it.isDigit() }.trim()
+                    partnerId = action.partnerId.toEnglishDigits()
                 )
             }
             is ProfileAction.SecretKeyChanged -> {
                 updateSecretKeyJob?.cancel()
-                updateSecretKeyJob = updateSecretKey(secretKey = action.secretKey.trim())
+                updateSecretKeyJob = updateSecretKey(
+                    secretKey = action.secretKey.convertDigitsToEnglish()
+                )
             }
         }
     }

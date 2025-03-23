@@ -1,9 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
@@ -200,15 +200,15 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
 
         val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
-            partnerId = partnerId,
-            secretKey = secretKey,
+            partnerId = partnerId.trim(),
+            secretKey = secretKey.trim(),
             timestamp = timestampInSeconds
         )
 
         val response = testClient.get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = Platform.CONSOLE.value,
-                partnerId = partnerId,
+                partnerId = partnerId.trim(),
                 timestamp = timestampInSeconds,
                 signature = signature
             ).url

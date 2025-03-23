@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
@@ -59,7 +61,7 @@ class OnboardingViewModel @Inject constructor(
     private fun partnerIdChanged(partnerId: String) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                partnerId = partnerId.filter { it.isDigit() }.trim(),
+                partnerId = partnerId.toEnglishDigits(),
                 partnerIdErrorText = null
             )
         }
@@ -68,7 +70,7 @@ class OnboardingViewModel @Inject constructor(
     private fun secretKeyChanged(secretKey: String) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                secretKey = secretKey.trim(),
+                secretKey = secretKey.convertDigitsToEnglish(),
                 secretKeyErrorText = null
             )
         }

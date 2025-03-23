@@ -2,9 +2,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 
 import android.os.CountDownTimer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.Constants
@@ -97,15 +97,15 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         val selectedPlatform = dsfutDataStoreRepository.get().getSelectedPlatform().first()
         val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
-            partnerId = partnerId,
-            secretKey = secretKey,
+            partnerId = partnerId.trim(),
+            secretKey = secretKey.trim(),
             timestamp = timestampInSeconds
         )
 
         val response = httpClient.get().get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = selectedPlatform.value,
-                partnerId = partnerId,
+                partnerId = partnerId.trim(),
                 timestamp = timestampInSeconds,
                 signature = signature
             ).url

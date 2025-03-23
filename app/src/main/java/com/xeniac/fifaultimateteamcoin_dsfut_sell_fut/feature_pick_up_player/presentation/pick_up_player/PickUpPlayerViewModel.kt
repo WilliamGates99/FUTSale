@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.hasNetworkConnection
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
@@ -104,7 +105,7 @@ class PickUpPlayerViewModel @Inject constructor(
 
     fun onAction(action: PickUpPlayerAction) {
         when (action) {
-            is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(platform = action.platform)
+            is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(action.platform)
             is PickUpPlayerAction.MinPriceChanged -> minPriceChanged(action.minPrice)
             is PickUpPlayerAction.MaxPriceChanged -> maxPriceChanged(action.maxPrice)
             is PickUpPlayerAction.TakeAfterCheckedChanged -> takeAfterCheckedChanged(action.isChecked)
@@ -128,7 +129,7 @@ class PickUpPlayerViewModel @Inject constructor(
     private fun minPriceChanged(minPrice: String) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                minPrice = minPrice.filter { it.isDigit() }.trim(),
+                minPrice = minPrice.toEnglishDigits(),
                 minPriceErrorText = null
             )
         }
@@ -137,7 +138,7 @@ class PickUpPlayerViewModel @Inject constructor(
     private fun maxPriceChanged(maxPrice: String) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                maxPrice = maxPrice.filter { it.isDigit() }.trim(),
+                maxPrice = maxPrice.toEnglishDigits(),
                 maxPriceErrorText = null
             )
         }
