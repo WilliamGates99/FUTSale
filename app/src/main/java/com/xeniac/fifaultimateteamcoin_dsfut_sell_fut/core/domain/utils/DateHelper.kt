@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils
 
 import kotlinx.datetime.Clock
 

@@ -1,8 +1,9 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components
 
 import android.content.Context
 import android.widget.Toast
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 
 fun showShortToast(
     message: UiText,

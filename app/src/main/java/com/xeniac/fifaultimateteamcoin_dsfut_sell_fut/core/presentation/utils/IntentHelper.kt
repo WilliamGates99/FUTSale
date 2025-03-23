@@ -6,6 +6,8 @@ import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundToast
+import timber.log.Timber
 
 object IntentHelper {
 
@@ -23,6 +25,9 @@ object IntentHelper {
                 /* url = */ urlString.toUri()
             )
         } catch (e: ActivityNotFoundException) {
+            Timber.e("Open link in in-app browser Exception:")
+            e.printStackTrace()
+
             openLinkInExternalBrowser(context, urlString)
         }
     }
@@ -38,6 +43,9 @@ object IntentHelper {
                 context.startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {
+            Timber.e("Open link in external browser Exception:")
+            e.printStackTrace()
+
             showIntentAppNotFoundToast(context = context)
         }
     }
@@ -51,6 +59,9 @@ object IntentHelper {
                 context.startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {
+            Timber.e("Open app page in store Exception:")
+            e.printStackTrace()
+
             openLinkInExternalBrowser(
                 context = context,
                 urlString = BuildConfig.URL_APP_STORE
@@ -71,6 +82,9 @@ object IntentHelper {
                 context.startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {
+            Timber.e("Open app update page in store Exception:")
+            e.printStackTrace()
+
             openLinkInExternalBrowser(
                 context = context,
                 urlString = appStoreUrl

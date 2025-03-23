@@ -12,7 +12,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
@@ -43,7 +42,7 @@ fun PriceTextFields(
                 onAction(PickUpPlayerAction.MinPriceChanged(newPrice))
             },
             title = stringResource(id = R.string.pick_up_player_title_min_price),
-            placeholder = formatNumber(stringResource(id = R.string.pick_up_player_hint_min_price).toInt()),
+            placeholder = stringResource(id = R.string.pick_up_player_hint_min_price),
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_min_price),
             supportingText = supportingText,
             errorText = pickUpPlayerState.minPriceErrorText?.asString(),
@@ -60,7 +59,7 @@ fun PriceTextFields(
                 onAction(PickUpPlayerAction.MaxPriceChanged(newPrice))
             },
             title = stringResource(id = R.string.pick_up_player_title_max_price),
-            placeholder = formatNumber(stringResource(id = R.string.pick_up_player_hint_max_price).toInt()),
+            placeholder = stringResource(id = R.string.pick_up_player_hint_max_price),
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_max_price),
             supportingText = supportingText,
             errorText = pickUpPlayerState.maxPriceErrorText?.asString(),

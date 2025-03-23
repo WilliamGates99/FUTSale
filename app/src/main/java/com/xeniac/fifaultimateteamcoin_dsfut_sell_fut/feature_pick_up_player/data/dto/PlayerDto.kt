@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.da
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.formatToString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.text.DecimalFormat
@@ -70,8 +70,8 @@ data class PlayerDto(
             /* symbols = */ DecimalFormatSymbols(Locale.US)
         ).format(rating),
         position = position,
-        startPrice = formatNumber(startPrice),
-        buyNowPrice = formatNumber(buyNowPrice),
+        startPrice = startPrice.formatToString(),
+        buyNowPrice = buyNowPrice.formatToString(),
         owners = owners.toString(),
         contracts = contracts.toString(),
         chemistryStyle = chemistryStyle,
