@@ -47,10 +47,10 @@ fun Number.formatToString(
 fun String.unformatNumber(
     pattern: String = "#,###",
     symbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault())
-): String? = DecimalFormat(
+): String = DecimalFormat(
     /* pattern = */ pattern,
     /* symbols = */ symbols
-).parse(this)?.toString()
+).parse(this)?.toString().orEmpty()
 
 /**
  * Limits the decimal places of a Float to the specified number of digits.
