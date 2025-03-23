@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.utils
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -9,7 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.utils.EnableEdgeToEdgeWindow
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.utils.EnableEdgeToEdgeWindow
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

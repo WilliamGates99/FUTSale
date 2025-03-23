@@ -3,7 +3,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonColors
@@ -47,7 +46,6 @@ enum class PlatformItems(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlatformSelector(
     pickUpPlayerState: PickUpPlayerState,

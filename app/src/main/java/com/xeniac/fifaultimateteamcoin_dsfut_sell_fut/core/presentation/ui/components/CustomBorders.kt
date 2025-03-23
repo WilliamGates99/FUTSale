@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed

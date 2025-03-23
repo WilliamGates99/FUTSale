@@ -1,4 +1,4 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.utils
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.utils
 
 import android.net.Uri
 import android.os.Bundle
@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
