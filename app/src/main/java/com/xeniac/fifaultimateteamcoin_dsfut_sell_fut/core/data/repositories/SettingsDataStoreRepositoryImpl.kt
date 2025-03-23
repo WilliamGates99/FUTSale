@@ -78,7 +78,6 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
             Timber.i("Current app locale string is $localeString")
 
             when (localeString) {
-                AppLocale.Default.localeString -> AppLocale.Default
                 AppLocale.EnglishUS.localeString -> AppLocale.EnglishUS
                 AppLocale.EnglishGB.localeString -> AppLocale.EnglishGB
                 AppLocale.FarsiIR.localeString -> AppLocale.FarsiIR
