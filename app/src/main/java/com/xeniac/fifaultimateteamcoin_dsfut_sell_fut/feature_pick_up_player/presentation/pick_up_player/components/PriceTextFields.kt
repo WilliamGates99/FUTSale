@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.NumberSeparatorVisualTransformation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
@@ -46,6 +47,7 @@ fun PriceTextFields(
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_min_price),
             supportingText = supportingText,
             errorText = pickUpPlayerState.minPriceErrorText?.asString(),
+            visualTransformation = NumberSeparatorVisualTransformation(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.MIN_PRICE_TEXT_FIELD,
@@ -63,6 +65,7 @@ fun PriceTextFields(
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_max_price),
             supportingText = supportingText,
             errorText = pickUpPlayerState.maxPriceErrorText?.asString(),
+            visualTransformation = NumberSeparatorVisualTransformation(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
             keyboardAction = { focusManager.clearFocus() },

@@ -100,6 +100,7 @@ fun CustomOutlinedTextField(
     trailingIconPainter: Painter? = null,
     trailingIconContentDescription: String? = null,
     trailingIconSize: Dp = 24.dp,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     autoCorrectEnabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
@@ -232,7 +233,7 @@ fun CustomOutlinedTextField(
                 }
                 else -> trailingIcon
             },
-            visualTransformation = if (isPasswordTextField && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = if (isPasswordTextField && !isPasswordVisible) PasswordVisualTransformation() else visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = KeyboardActions {
                 defaultKeyboardAction(imeAction)
