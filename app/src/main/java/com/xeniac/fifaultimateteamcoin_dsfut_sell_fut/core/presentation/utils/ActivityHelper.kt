@@ -41,5 +41,11 @@ fun Activity.openAppSettings() {
 }
 
 fun Activity.restartActivity() {
-    this.recreate()
+    Intent(
+        /* packageContext = */ this,
+        /* cls = */ this::class.java
+    ).also {
+        finish()
+        startActivity(it)
+    }
 }
