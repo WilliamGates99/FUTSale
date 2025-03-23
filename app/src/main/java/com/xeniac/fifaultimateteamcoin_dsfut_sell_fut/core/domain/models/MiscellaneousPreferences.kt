@@ -26,7 +26,7 @@ object MiscellaneousPreferencesSerializer : Serializer<MiscellaneousPreferences>
         try {
             return Json.decodeFromString(
                 deserializer = MiscellaneousPreferences.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.use { it.readBytes() }.decodeToString()
             )
         } catch (e: SerializationException) {
             throw CorruptionException(
@@ -36,14 +36,19 @@ object MiscellaneousPreferencesSerializer : Serializer<MiscellaneousPreferences>
         }
     }
 
-    override suspend fun writeTo(t: MiscellaneousPreferences, output: OutputStream) {
+    override suspend fun writeTo(
+        t: MiscellaneousPreferences,
+        output: OutputStream
+    ) {
         withContext(Dispatchers.IO) {
-            output.write(
-                Json.encodeToString(
-                    serializer = MiscellaneousPreferences.serializer(),
-                    value = t
-                ).encodeToByteArray()
-            )
+            output.use {
+                it.write(
+                    Json.encodeToString(
+                        serializer = MiscellaneousPreferences.serializer(),
+                        value = t
+                    ).encodeToByteArray()
+                )
+            }
         }
     }
 }

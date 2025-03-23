@@ -27,7 +27,7 @@ object SettingsPreferencesSerializer : Serializer<SettingsPreferences> {
         try {
             return Json.decodeFromString(
                 deserializer = SettingsPreferences.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.use { it.readBytes() }.decodeToString()
             )
         } catch (e: SerializationException) {
             throw CorruptionException(
@@ -37,14 +37,19 @@ object SettingsPreferencesSerializer : Serializer<SettingsPreferences> {
         }
     }
 
-    override suspend fun writeTo(t: SettingsPreferences, output: OutputStream) {
+    override suspend fun writeTo(
+        t: SettingsPreferences,
+        output: OutputStream
+    ) {
         withContext(Dispatchers.IO) {
-            output.write(
-                Json.encodeToString(
-                    serializer = SettingsPreferences.serializer(),
-                    value = t
-                ).encodeToByteArray()
-            )
+            output.use {
+                it.write(
+                    Json.encodeToString(
+                        serializer = SettingsPreferences.serializer(),
+                        value = t
+                    ).encodeToByteArray()
+                )
+            }
         }
     }
 }
