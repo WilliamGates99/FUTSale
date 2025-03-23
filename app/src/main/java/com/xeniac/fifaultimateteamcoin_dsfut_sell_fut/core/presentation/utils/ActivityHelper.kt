@@ -9,6 +9,8 @@ import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundToast
+import timber.log.Timber
 
 @Composable
 internal fun Context.findActivity(): Activity {
@@ -31,16 +33,13 @@ fun Activity.openAppSettings() {
             )
         ).also(::startActivity)
     } catch (e: Exception) {
+        Timber.e("Open app settings Exception:")
+        e.printStackTrace()
+
         showIntentAppNotFoundToast(context = this)
     }
 }
 
 fun Activity.restartActivity() {
-    Intent(
-        /* packageContext = */ this,
-        /* cls = */ this::class.java
-    ).also {
-        finish()
-        startActivity(it)
-    }
+    this.recreate()
 }
