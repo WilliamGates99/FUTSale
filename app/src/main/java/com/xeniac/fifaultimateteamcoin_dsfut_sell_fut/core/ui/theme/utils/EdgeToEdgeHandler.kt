@@ -56,34 +56,22 @@ fun EnableEdgeToEdgeWindow(
     }
 }
 
-private interface EdgeToEdgeHandler {
+private abstract class EdgeToEdgeHandler {
 
-    val systemBarsColorV21Light: Color
-    val navigationBarColorV23: Color
-    val navigationBarColorV26Light: Color
-    val navigationBarColorV26Dark: Color
+    val systemBarsColorV21Light: Color = Color(0x331B1B1B)
+    val navigationBarColorV23: Color = Color(0x331B1B1B)
+    val navigationBarColorV26Light: Color = Color(0xE6FFFFFF)
+    val navigationBarColorV26Dark: Color = Color(0x801B1B1B)
 
-    fun setUp(
+    abstract fun setUp(
         window: Window,
         isDarkTheme: Boolean
     )
 
-    fun adjustLayoutInDisplayCutoutMode(window: Window)
+    abstract fun adjustLayoutInDisplayCutoutMode(window: Window)
 }
 
-private open class EdgeToEdgeHandlerBaseImpl : EdgeToEdgeHandler {
-
-    override val systemBarsColorV21Light: Color
-        get() = Color(0x331B1B1B)
-
-    override val navigationBarColorV23: Color
-        get() = Color(0x331B1B1B)
-
-    override val navigationBarColorV26Light: Color
-        get() = Color(0xE6FFFFFF)
-
-    override val navigationBarColorV26Dark: Color
-        get() = Color(0x801B1B1B)
+private open class EdgeToEdgeHandlerBaseImpl : EdgeToEdgeHandler() {
 
     override fun setUp(
         window: Window,
