@@ -20,6 +20,12 @@ abstract class RepositorySingletonModule {
 
     @Binds
     @Singleton
+    abstract fun bindConnectivityObserver(
+        connectivityObserverImpl: ConnectivityObserverImpl
+    ): ConnectivityObserver
+
+    @Binds
+    @Singleton
     abstract fun bindSettingsDataStoreRepository(
         settingsDataStoreRepositoryImpl: SettingsDataStoreRepositoryImpl
     ): SettingsDataStoreRepository
@@ -35,10 +41,4 @@ abstract class RepositorySingletonModule {
     abstract fun bindMiscellaneousDataStoreRepository(
         miscellaneousDataStoreRepositoryImpl: MiscellaneousDataStoreRepositoryImpl
     ): MiscellaneousDataStoreRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindConnectivityObserver(
-        connectivityObserverImpl: ConnectivityObserverImpl
-    ): ConnectivityObserver
 }
