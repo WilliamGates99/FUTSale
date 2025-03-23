@@ -37,6 +37,7 @@ import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
@@ -101,7 +102,18 @@ internal object AppModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): HttpClient = HttpClient(engineFactory = OkHttp) {
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        prettyPrint = true
+        coerceInputValues = true
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(
+        @ApplicationContext context: Context,
+        json: Json
+    ): HttpClient = HttpClient(engineFactory = OkHttp) {
         expectSuccess = true
 
         install(Logging) {
@@ -109,22 +121,21 @@ internal object AppModule {
             level = LogLevel.INFO
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
-        install(HttpCache)
+        install(HttpCache) {
+            val cacheDir = context.cacheDir.resolve(relative = "ktor_cache")
+            privateStorage(FileStorage(cacheDir))
+        }
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                prettyPrint = true
-                coerceInputValues = true
-            })
+            json(json)
         }
         install(HttpRequestRetry) {
             retryOnExceptionOrServerErrors(maxRetries = 3)
             exponentialDelay()
         }
         install(HttpTimeout) {
-            connectTimeoutMillis = 20000 // 20 seconds
-            requestTimeoutMillis = 20000 // 20 seconds
-            socketTimeoutMillis = 20000 // 20 seconds
+            connectTimeoutMillis = 20_000 // 20 seconds
+            requestTimeoutMillis = 20_000 // 20 seconds
+            socketTimeoutMillis = 20_000 // 20 seconds
         }
         install(DefaultRequest) {
             contentType(ContentType.Application.Json)
