@@ -9,7 +9,7 @@ import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundToast
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showIntentAppNotFoundToast
 import timber.log.Timber
 
 @Composable

@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.showIntentAppNotFoundToast
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showIntentAppNotFoundToast
 import timber.log.Timber
 
 object IntentHelper {
