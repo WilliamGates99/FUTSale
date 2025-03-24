@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 class ObservePickedPlayersHistoryUseCase(
     private val historyRepository: HistoryRepository
 ) {
-    operator fun invoke(): Flow<PagingData<Player>> = historyRepository
-        .observePickedPlayersHistory()
+    operator fun invoke(): Flow<PagingData<Player>> =
+        historyRepository.observePickedPlayersHistory()
 }

@@ -42,7 +42,7 @@ class StoreSelectedRateAppOptionUseCaseTest {
     @Test
     fun storeNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
         val testValue = RateAppOption.RATE_NOW
-        storeSelectedRateAppOptionUseCase(testValue)
+        storeSelectedRateAppOptionUseCase(testValue).first()
 
         val selectedRateAppOption = getSelectedRateAppOptionUseCase().first()
         assertThat(selectedRateAppOption).isEqualTo(testValue)

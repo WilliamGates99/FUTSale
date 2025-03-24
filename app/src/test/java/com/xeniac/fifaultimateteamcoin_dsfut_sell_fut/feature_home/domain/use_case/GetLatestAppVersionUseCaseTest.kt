@@ -6,7 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppUpdateRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,24 +29,24 @@ class GetLatestAppVersionUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    private lateinit var fakeHomeRepositoryImpl: FakeHomeRepositoryImpl
+    private lateinit var fakeAppUpdateRepository: FakeAppUpdateRepositoryImpl
     private lateinit var getLatestAppVersionUseCase: GetLatestAppVersionUseCase
 
     @Before
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
-        fakeHomeRepositoryImpl = FakeHomeRepositoryImpl(
+        fakeAppUpdateRepository = FakeAppUpdateRepositoryImpl(
             miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
 
         getLatestAppVersionUseCase = GetLatestAppVersionUseCase(
-            homeRepository = fakeHomeRepositoryImpl
+            appUpdateRepository = fakeAppUpdateRepository
         )
     }
 
     @Test
     fun getLatestAppVersionWithUnavailableNetwork_returnsError() = runBlocking {
-        fakeHomeRepositoryImpl.isNetworkAvailable(isAvailable = false)
+        fakeAppUpdateRepository.isNetworkAvailable(isAvailable = false)
 
         val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
@@ -55,7 +55,7 @@ class GetLatestAppVersionUseCaseTest {
 
     @Test
     fun getLatestAppVersionWithNoneOkStatusCode_returnsError() = runBlocking {
-        fakeHomeRepositoryImpl.setGetLatestAppVersionHttpStatusCode(HttpStatusCode.RequestTimeout)
+        fakeAppUpdateRepository.setGetLatestAppVersionHttpStatusCode(HttpStatusCode.RequestTimeout)
 
         val getLatestAppVersionResult = getLatestAppVersionUseCase().first()
 
@@ -77,7 +77,7 @@ class GetLatestAppVersionUseCaseTest {
             versionName = BuildConfig.VERSION_NAME + "-test"
         )
 
-        fakeHomeRepositoryImpl.setLatestAppVersion(
+        fakeAppUpdateRepository.setLatestAppVersion(
             latestAppUpdateInfo = latestAppUpdateInfo
         )
 
@@ -99,7 +99,7 @@ class GetLatestAppVersionUseCaseTest {
                 versionName = BuildConfig.VERSION_NAME + "-test"
             )
 
-            fakeHomeRepositoryImpl.setLatestAppVersion(
+            fakeAppUpdateRepository.setLatestAppVersion(
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 
@@ -121,7 +121,7 @@ class GetLatestAppVersionUseCaseTest {
                 versionName = BuildConfig.VERSION_NAME + "-test"
             )
 
-            fakeHomeRepositoryImpl.setLatestAppVersion(
+            fakeAppUpdateRepository.setLatestAppVersion(
                 latestAppUpdateInfo = latestAppUpdateInfo
             )
 

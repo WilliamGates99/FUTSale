@@ -12,15 +12,13 @@ import com.google.android.play.core.ktx.installStatus
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.google.android.play.core.ktx.totalBytesToDownload
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
@@ -43,7 +41,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import timber.log.Timber
@@ -53,37 +51,39 @@ import javax.inject.Inject
 import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.coroutineContext
 
-class HomeRepositoryImpl @Inject constructor(
+class AppUpdateRepositoryImpl @Inject constructor(
     private val appUpdateType: Lazy<UpdateType>,
     private val appUpdateManager: Lazy<AppUpdateManager>,
-    private val reviewManager: Lazy<ReviewManager>,
     private val httpClient: Lazy<HttpClient>,
     private val miscellaneousDataStoreRepository: Lazy<MiscellaneousDataStoreRepository>
-) : HomeRepository {
+) : AppUpdateRepository {
 
     override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = callbackFlow {
-        if (appUpdateType.get() == AppUpdateType.FLEXIBLE) {
-            val installStateUpdatedListener = InstallStateUpdatedListener { state ->
-                val isUpdateDownloading = state.installStatus == InstallStatus.DOWNLOADING
-                val isUpdateDownloaded = state.installStatus == InstallStatus.DOWNLOADED
+        when (appUpdateType.get()) {
+            AppUpdateType.FLEXIBLE -> {
+                val installStateUpdatedListener = InstallStateUpdatedListener { state ->
+                    val isUpdateDownloading = state.installStatus == InstallStatus.DOWNLOADING
+                    val isUpdateDownloaded = state.installStatus == InstallStatus.DOWNLOADED
 
-                when {
-                    isUpdateDownloading -> {
-                        val bytesDownloaded = state.bytesDownloaded
-                        val totalBytesToDownload = state.totalBytesToDownload
-                        Timber.i("$bytesDownloaded/$totalBytesToDownload downloaded.")
+                    when {
+                        isUpdateDownloading -> {
+                            val bytesDownloaded = state.bytesDownloaded
+                            val totalBytesToDownload = state.totalBytesToDownload
+                            Timber.i("$bytesDownloaded/$totalBytesToDownload downloaded.")
+                        }
+                        isUpdateDownloaded -> launch { send(true) }
                     }
-                    isUpdateDownloaded -> trySend(true)
+                }
+
+                appUpdateManager.get().registerListener(installStateUpdatedListener)
+
+                awaitClose {
+                    appUpdateManager.get().unregisterListener(installStateUpdatedListener)
                 }
             }
-
-            appUpdateManager.get().registerListener(installStateUpdatedListener)
-
-            awaitClose {
-                appUpdateManager.get().unregisterListener(installStateUpdatedListener)
+            else -> {
+                awaitClose { }
             }
-        } else {
-            awaitClose { }
         }
     }
 
@@ -92,8 +92,11 @@ class HomeRepositoryImpl @Inject constructor(
             val isUpdateDownloadedButNotInstalled =
                 updateInfo.installStatus == InstallStatus.DOWNLOADED
 
-            if (isUpdateDownloadedButNotInstalled) trySend(true)
-            else trySend(false)
+            launch {
+                if (isUpdateDownloadedButNotInstalled) {
+                    send(true)
+                } else send(false)
+            }
         }
 
         awaitClose {}
@@ -104,8 +107,11 @@ class HomeRepositoryImpl @Inject constructor(
             val isUpdateStalled =
                 updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
 
-            if (isUpdateStalled) trySend(updateInfo)
-            else trySend(null)
+            launch {
+                if (isUpdateStalled) {
+                    send(updateInfo)
+                } else send(null)
+            }
         }
 
         awaitClose {}
@@ -133,43 +139,30 @@ class HomeRepositoryImpl @Inject constructor(
                 val shouldStartUpdateFlow = isUpdateAvailable &&
                         isUpdateAllowed && hasUpdateStalenessDaysReached
 
-                if (shouldStartUpdateFlow) trySend(updateInfo)
-                else trySend(null)
+                launch {
+                    if (shouldStartUpdateFlow) {
+                        send(updateInfo)
+                    } else send(null)
+                }
             } else {
                 Timber.e("Check for in-app update was not successful:")
                 task.exception?.printStackTrace()
-                trySend(null)
+                launch { send(null) }
             }
         }
 
         awaitClose { }
     }
 
-    override fun requestInAppReviews(): Flow<ReviewInfo?> = callbackFlow {
-        reviewManager.get().requestReviewFlow().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Timber.i("In-App Reviews request was successful.")
-                trySend(task.result)
-            } else {
-                Timber.e("In-App Reviews request was not successful:")
-                task.exception?.printStackTrace()
-                trySend(null)
-            }
-        }
-
-        awaitClose { }
-    }
-
-    override fun getLatestAppVersion(
-    ): Flow<Result<LatestAppUpdateInfo?, GetLatestAppVersionError>> = flow {
-        try {
+    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
+        return try {
             val response = httpClient.get().get(
-                urlString = HomeRepository.EndPoints.GetLatestAppVersion.url
+                urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
             )
 
             Timber.i("Get latest app version response call = ${response.request.call}")
 
-            when (response.status) {
+            return when (response.status) {
                 HttpStatusCode.OK -> { // Code: 200
                     val getLatestAppVersionResponse = Json
                         .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
@@ -200,83 +193,81 @@ class HomeRepositoryImpl @Inject constructor(
                                 storeAppUpdateDialogShowEpochDays()
                             }
 
-                            emit(
-                                Result.Success(
-                                    LatestAppUpdateInfo(
-                                        versionCode = latestVersionCode,
-                                        versionName = getLatestAppVersionResponse.versionName
-                                    )
+                            Result.Success(
+                                LatestAppUpdateInfo(
+                                    versionCode = latestVersionCode,
+                                    versionName = getLatestAppVersionResponse.versionName
                                 )
                             )
-                        } else emit(Result.Success(null))
+                        } else Result.Success(null)
                     } else {
                         miscellaneousDataStoreRepository.get().apply {
                             storeAppUpdateDialogShowCount(0)
                             removeAppUpdateDialogShowEpochDays()
                         }
 
-                        emit(Result.Success(null))
+                        Result.Success(null)
                     }
                 }
-                else -> emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
+                else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
             }
         } catch (e: UnresolvedAddressException) { // When device is offline
             Timber.e("Get latest app version UnresolvedAddressException:}")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.Offline))
+            Result.Error(GetLatestAppVersionError.Network.Offline)
         } catch (e: UnknownHostException) { // When device is offline
             Timber.e("Get latest app version UnknownHostException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.Offline))
+            Result.Error(GetLatestAppVersionError.Network.Offline)
         } catch (e: ConnectTimeoutException) {
             Timber.e("Get latest app version ConnectTimeoutException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.ConnectTimeoutException))
+            Result.Error(GetLatestAppVersionError.Network.ConnectTimeoutException)
         } catch (e: HttpRequestTimeoutException) {
             Timber.e("Get latest app version HttpRequestTimeoutException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.HttpRequestTimeoutException))
+            Result.Error(GetLatestAppVersionError.Network.HttpRequestTimeoutException)
         } catch (e: SocketTimeoutException) {
             Timber.e("Get latest app version SocketTimeoutException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.SocketTimeoutException))
+            Result.Error(GetLatestAppVersionError.Network.SocketTimeoutException)
         } catch (e: RedirectResponseException) { // 3xx responses
             Timber.e("Get latest app version RedirectResponseException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.RedirectResponseException))
+            Result.Error(GetLatestAppVersionError.Network.RedirectResponseException)
         } catch (e: ClientRequestException) { // 4xx responses
             Timber.e("Get latest app version ClientRequestException:")
             e.printStackTrace()
             when (e.response.status) {
-                HttpStatusCode.TooManyRequests -> emit(Result.Error(GetLatestAppVersionError.Network.TooManyRequests))
-                else -> emit(Result.Error(GetLatestAppVersionError.Network.ClientRequestException))
+                HttpStatusCode.TooManyRequests -> Result.Error(GetLatestAppVersionError.Network.TooManyRequests)
+                else -> Result.Error(GetLatestAppVersionError.Network.ClientRequestException)
             }
         } catch (e: ServerResponseException) { // 5xx responses
             Timber.e("Get latest app version ServerResponseException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.ServerResponseException))
+            Result.Error(GetLatestAppVersionError.Network.ServerResponseException)
         } catch (e: SerializationException) {
             Timber.e("Get latest app version SerializationException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.SerializationException))
+            Result.Error(GetLatestAppVersionError.Network.SerializationException)
         } catch (e: JsonConvertException) {
             Timber.e("Get latest app version JsonConvertException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.JsonConvertException))
+            Result.Error(GetLatestAppVersionError.Network.JsonConvertException)
         } catch (e: SSLHandshakeException) {
             Timber.e("Get latest app version SSLHandshakeException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.SSLHandshakeException))
+            Result.Error(GetLatestAppVersionError.Network.SSLHandshakeException)
         } catch (e: CertPathValidatorException) {
             Timber.e("Get latest app version CertPathValidatorException:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.CertPathValidatorException))
+            Result.Error(GetLatestAppVersionError.Network.CertPathValidatorException)
         } catch (e: Exception) {
             coroutineContext.ensureActive()
 
             Timber.e("Get latest app version Exception:")
             e.printStackTrace()
-            emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
+            Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
         }
     }
 }

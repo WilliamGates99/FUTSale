@@ -12,5 +12,7 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     observePickedPlayersHistoryUseCase: Lazy<ObservePickedPlayersHistoryUseCase>
 ) : ViewModel() {
-    val pickedPlayersHistory = observePickedPlayersHistoryUseCase.get()().cachedIn(viewModelScope)
+    val pickedPlayersHistory = observePickedPlayersHistoryUseCase.get()().cachedIn(
+        scope = viewModelScope
+    )
 }

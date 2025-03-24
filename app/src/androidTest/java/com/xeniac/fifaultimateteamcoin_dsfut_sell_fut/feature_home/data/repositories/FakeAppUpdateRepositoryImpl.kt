@@ -1,15 +1,15 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.review.ReviewInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
+import dagger.Lazy
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -26,18 +26,17 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-class FakeHomeRepositoryImpl(
-    private val miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
-) : HomeRepository {
+class FakeAppUpdateRepositoryImpl @Inject constructor(
+    private val miscellaneousDataStoreRepository: Lazy<MiscellaneousDataStoreRepository>
+) : AppUpdateRepository {
 
     private var isFlexibleUpdateDownloaded = false
     private var isFlexibleUpdateStalled = false
     private var isImmediateUpdateStalled = false
     private var isAppUpdateAvailable = false
-    private var isInAppReviewsAvailable = false
 
     private var isNetworkAvailable = true
     private var latestAppVersionCode = BuildConfig.VERSION_CODE
@@ -60,10 +59,6 @@ class FakeHomeRepositoryImpl(
         isAppUpdateAvailable = isAvailable
     }
 
-    fun isInAppReviewsAvailable(isAvailable: Boolean) {
-        isInAppReviewsAvailable = isAvailable
-    }
-
     fun isNetworkAvailable(isAvailable: Boolean) {
         isNetworkAvailable = isAvailable
     }
@@ -72,9 +67,12 @@ class FakeHomeRepositoryImpl(
         getLatestAppVersionHttpStatusCode = httpStatusCode
     }
 
-    fun setLatestAppVersion(latestAppUpdateInfo: LatestAppUpdateInfo) {
-        latestAppVersionCode = latestAppUpdateInfo.versionCode
-        latestAppVersionName = latestAppUpdateInfo.versionName
+    fun setLatestAppVersion(
+        versionCode: Int,
+        versionName: String
+    ) {
+        latestAppVersionCode = versionCode
+        latestAppVersionName = versionName
     }
 
     override fun checkFlexibleUpdateDownloadState(): Flow<IsUpdateDownloaded> = flow {
@@ -105,16 +103,9 @@ class FakeHomeRepositoryImpl(
         } else emit(null)
     }
 
-    override fun requestInAppReviews(): Flow<ReviewInfo?> = flow {
-        if (isInAppReviewsAvailable) {
-            emit(null)
-        } else emit(null)
-    }
-
-    override fun getLatestAppVersion(
-    ): Flow<Result<LatestAppUpdateInfo?, GetLatestAppVersionError>> = flow {
+    override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
         if (!isNetworkAvailable) {
-            return@flow emit(Result.Error(GetLatestAppVersionError.Network.Offline))
+            return Result.Error(GetLatestAppVersionError.Network.Offline)
         }
 
         val mockEngine = MockEngine {
@@ -146,9 +137,11 @@ class FakeHomeRepositoryImpl(
             }
         }
 
-        val response = testClient.get(urlString = HomeRepository.EndPoints.GetLatestAppVersion.url)
+        val response = testClient.get(
+            urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
+        )
 
-        when (response.status) {
+        return when (response.status) {
             HttpStatusCode.OK -> {
                 val getLatestAppVersionResponse = Json
                     .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
@@ -159,9 +152,9 @@ class FakeHomeRepositoryImpl(
 
                 val isAppOutdated = currentVersionCode < latestVersionCode
                 if (isAppOutdated) {
-                    val updateDialogShowCount = miscellaneousDataStoreRepository
+                    val updateDialogShowCount = miscellaneousDataStoreRepository.get()
                         .getAppUpdateDialogShowCount().first()
-                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository
+                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository.get()
                         .isAppUpdateDialogShownToday().first()
 
                     val shouldShowAppUpdateDialog = when {
@@ -171,7 +164,7 @@ class FakeHomeRepositoryImpl(
                     }
 
                     if (shouldShowAppUpdateDialog) {
-                        miscellaneousDataStoreRepository.apply {
+                        miscellaneousDataStoreRepository.get().apply {
                             storeAppUpdateDialogShowCount(
                                 if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
                                 else 0
@@ -179,25 +172,23 @@ class FakeHomeRepositoryImpl(
                             storeAppUpdateDialogShowEpochDays()
                         }
 
-                        emit(
-                            Result.Success(
-                                LatestAppUpdateInfo(
-                                    versionCode = latestAppVersionCode,
-                                    versionName = getLatestAppVersionResponse.versionName
-                                )
+                        Result.Success(
+                            LatestAppUpdateInfo(
+                                versionCode = latestAppVersionCode,
+                                versionName = getLatestAppVersionResponse.versionName
                             )
                         )
-                    } else emit(Result.Success(null))
+                    } else Result.Success(null)
                 } else {
-                    miscellaneousDataStoreRepository.apply {
+                    miscellaneousDataStoreRepository.get().apply {
                         storeAppUpdateDialogShowCount(0)
                         removeAppUpdateDialogShowEpochDays()
                     }
 
-                    emit(Result.Success(null))
+                    Result.Success(null)
                 }
             }
-            else -> emit(Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong))
+            else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)
         }
     }
 }

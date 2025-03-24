@@ -1,7 +1,9 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppReviewRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppUpdateRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppReviewRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.android.components.ViewModelComponent
@@ -17,7 +19,13 @@ abstract class FakeRepositoryModule {
 
     @Binds
     @ViewModelScoped
+    abstract fun bindAppUpdateRepository(
+        fakeAppUpdateRepositoryImpl: FakeAppUpdateRepositoryImpl
+    ): AppUpdateRepository
+
+    @Binds
+    @ViewModelScoped
     abstract fun bindHomeRepository(
-        fakeHomeRepositoryImpl: FakeHomeRepositoryImpl
-    ): HomeRepository
+        fakeAppReviewRepositoryImpl: FakeAppReviewRepositoryImpl
+    ): AppReviewRepository
 }
