@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -39,7 +40,7 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val horizontalPadding by remember { derivedStateOf { 16.dp } }
+
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val pickedPlayersHistory = viewModel.pickedPlayersHistory.collectAsLazyPagingItems()
@@ -55,52 +56,53 @@ fun HistoryScreen(
         },
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets(bottom = bottomPadding))
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .testTag(TestTags.TEST_TAG_SCREEN_HISTORY)
     ) { innerPadding ->
-        if (pickedPlayersHistory.loadState.refresh is LoadState.Loading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        top = innerPadding.calculateTopPadding() + verticalPadding,
-                        bottom = bottomPadding + verticalPadding
-                    )
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            if (pickedPlayersHistory.itemCount == 0) {
-                EmptyListAnimation(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            top = innerPadding.calculateTopPadding() + verticalPadding,
-                            bottom = bottomPadding + verticalPadding
-                        )
-                )
-            } else {
-                PlayersLazyColumn(
-                    pickedPlayersHistory = pickedPlayersHistory,
-                    contentPadding = PaddingValues(
-                        horizontal = horizontalPadding,
-                        vertical = verticalPadding
-                    ),
-                    onClick = onNavigateToPlayerInfoScreen,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(
-                            WindowInsets(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = bottomPadding
+        AnimatedContent(
+            targetState = pickedPlayersHistory.loadState.refresh
+        ) { loadState ->
+            when (loadState) {
+                is LoadState.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                            .padding(
+                                horizontal = 24.dp,
+                                vertical = verticalPadding
                             )
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                else -> {
+                    if (pickedPlayersHistory.itemCount == 0) {
+                        EmptyListAnimation(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                                .padding(
+                                    horizontal = 24.dp,
+                                    vertical = verticalPadding
+                                )
                         )
-                )
+                    } else {
+                        PlayersLazyColumn(
+                            pickedPlayersHistory = pickedPlayersHistory,
+                            contentPadding = PaddingValues(
+                                horizontal = 16.dp,
+                                vertical = verticalPadding
+                            ),
+                            onClick = onNavigateToPlayerInfoScreen,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                        )
+                    }
+                }
             }
         }
     }

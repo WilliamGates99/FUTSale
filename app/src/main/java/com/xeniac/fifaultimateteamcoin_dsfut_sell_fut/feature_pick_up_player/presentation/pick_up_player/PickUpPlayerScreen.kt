@@ -234,6 +234,7 @@ fun PickUpPlayerScreen(
         },
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets(bottom = bottomPadding))
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .testTag(TestTags.TEST_TAG_SCREEN_PICK_UP_PLAYER)
     ) { innerPadding ->
@@ -241,12 +242,7 @@ fun PickUpPlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
-                .windowInsetsPadding(
-                    WindowInsets(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = bottomPadding
-                    )
-                )
+                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                 .verticalScroll(rememberScrollState())
                 .padding(vertical = verticalPadding)
         ) {

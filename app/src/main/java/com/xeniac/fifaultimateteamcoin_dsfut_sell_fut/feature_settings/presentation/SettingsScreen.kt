@@ -129,6 +129,7 @@ fun SettingsScreen(
         },
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets(bottom = bottomPadding))
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .testTag(TestTags.TEST_TAG_SCREEN_SETTINGS)
     ) { innerPadding ->
@@ -136,12 +137,7 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(
-                    WindowInsets(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = bottomPadding
-                    )
-                )
+                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                 .verticalScroll(rememberScrollState())
                 .padding(
                     horizontal = horizontalPadding,
