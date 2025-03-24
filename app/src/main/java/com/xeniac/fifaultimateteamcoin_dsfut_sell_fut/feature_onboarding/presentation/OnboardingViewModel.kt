@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -53,34 +54,38 @@ class OnboardingViewModel @Inject constructor(
 
     fun onAction(action: OnboardingAction) {
         when (action) {
-            is OnboardingAction.PartnerIdChanged -> partnerIdChanged(action.partnerId)
-            is OnboardingAction.SecretKeyChanged -> secretKeyChanged(action.secretKey)
+            is OnboardingAction.PartnerIdChanged -> partnerIdChanged(action.newValue)
+            is OnboardingAction.SecretKeyChanged -> secretKeyChanged(action.newValue)
             OnboardingAction.SaveUserData -> saveUserData()
         }
     }
 
-    private fun partnerIdChanged(partnerId: String) = viewModelScope.launch {
+    private fun partnerIdChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                partnerId = partnerId.toEnglishDigits(),
-                partnerIdErrorText = null
+                partnerIdState = _onboardingState.value.partnerIdState.copy(
+                    value = newValue.copy(text = newValue.text.toEnglishDigits()),
+                    errorText = null
+                )
             )
         }
     }
 
-    private fun secretKeyChanged(secretKey: String) = viewModelScope.launch {
+    private fun secretKeyChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                secretKey = secretKey.convertDigitsToEnglish(),
-                secretKeyErrorText = null
+                secretKeyState = _onboardingState.value.secretKeyState.copy(
+                    value = newValue.copy(text = newValue.text.convertDigitsToEnglish()),
+                    errorText = null
+                )
             )
         }
     }
 
     private fun saveUserData() {
         completeOnboardingUseCase.get()(
-            partnerId = _onboardingState.value.partnerId,
-            secretKey = _onboardingState.value.secretKey
+            partnerId = _onboardingState.value.partnerIdState.value.text,
+            secretKey = _onboardingState.value.secretKeyState.value.text
         ).onStart {
             mutex.withLock {
                 savedStateHandle["secretKeyState"] = _onboardingState.value.copy(

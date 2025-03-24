@@ -38,15 +38,15 @@ fun PriceTextFields(
     ) {
         CustomOutlinedTextField(
             isLoading = isLoading,
-            value = pickUpPlayerState.minPrice,
-            onValueChange = { newPrice ->
-                onAction(PickUpPlayerAction.MinPriceChanged(newPrice))
+            value = pickUpPlayerState.minPriceState.value,
+            onValueChange = { newValue ->
+                onAction(PickUpPlayerAction.MinPriceChanged(newValue))
             },
             title = stringResource(id = R.string.pick_up_player_title_min_price),
             placeholder = stringResource(id = R.string.pick_up_player_hint_min_price),
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_min_price),
             supportingText = supportingText,
-            errorText = pickUpPlayerState.minPriceErrorText?.asString(),
+            errorText = pickUpPlayerState.minPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
@@ -56,15 +56,15 @@ fun PriceTextFields(
 
         CustomOutlinedTextField(
             isLoading = isLoading,
-            value = pickUpPlayerState.maxPrice,
-            onValueChange = { newPrice ->
-                onAction(PickUpPlayerAction.MaxPriceChanged(newPrice))
+            value = pickUpPlayerState.maxPriceState.value,
+            onValueChange = { newValue ->
+                onAction(PickUpPlayerAction.MaxPriceChanged(newValue))
             },
             title = stringResource(id = R.string.pick_up_player_title_max_price),
             placeholder = stringResource(id = R.string.pick_up_player_hint_max_price),
             leadingIcon = painterResource(id = R.drawable.ic_pick_up_player_max_price),
             supportingText = supportingText,
-            errorText = pickUpPlayerState.maxPriceErrorText?.asString(),
+            errorText = pickUpPlayerState.maxPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,

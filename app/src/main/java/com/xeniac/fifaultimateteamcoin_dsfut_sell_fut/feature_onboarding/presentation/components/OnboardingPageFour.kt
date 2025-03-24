@@ -162,14 +162,14 @@ fun OnboardingPageFour(
 
         CustomOutlinedTextField(
             isLoading = false,
-            value = onboardingState.partnerId,
-            onValueChange = { newPartnerId ->
-                onAction(OnboardingAction.PartnerIdChanged(newPartnerId))
+            value = onboardingState.partnerIdState.value,
+            onValueChange = { newValue ->
+                onAction(OnboardingAction.PartnerIdChanged(newValue))
             },
             title = stringResource(id = R.string.onboarding_fourth_title_partner_id),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_partner_id),
-            errorText = onboardingState.partnerIdErrorText?.asString(),
+            errorText = onboardingState.partnerIdState.errorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.PARTNER_ID_TEXT_FIELD,
@@ -182,14 +182,14 @@ fun OnboardingPageFour(
 
         CustomOutlinedTextField(
             isLoading = false,
-            value = onboardingState.secretKey,
-            onValueChange = { newSecretKey ->
-                onAction(OnboardingAction.SecretKeyChanged(newSecretKey))
+            value = onboardingState.secretKeyState.value,
+            onValueChange = { newValue ->
+                onAction(OnboardingAction.SecretKeyChanged(newValue))
             },
             title = stringResource(id = R.string.onboarding_fourth_title_secret_key),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_secret_key),
-            errorText = onboardingState.secretKeyErrorText?.asString(),
+            errorText = onboardingState.secretKeyState.errorText?.asString(),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = {

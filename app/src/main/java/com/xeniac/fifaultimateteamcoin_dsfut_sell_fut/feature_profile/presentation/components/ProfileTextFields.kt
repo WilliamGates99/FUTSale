@@ -106,7 +106,7 @@ fun PartnerIdTextField(
     trailingAnimationComposition: LottieComposition? = rememberLottieComposition(
         when {
             profileState.isPartnerIdLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
-            profileState.partnerIdErrorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            profileState.partnerIdState.errorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             profileState.isPartnerIdSaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
             profileState.isPartnerIdSaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             else -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
@@ -114,14 +114,14 @@ fun PartnerIdTextField(
     ).value,
     trailingAnimationIteration: Int = when {
         profileState.isPartnerIdLoading -> LottieConstants.IterateForever
-        profileState.partnerIdErrorText != null -> 1
+        profileState.partnerIdState.errorText != null -> 1
         profileState.isPartnerIdSaved == true -> 1
         profileState.isPartnerIdSaved == false -> 1
         else -> LottieConstants.IterateForever
     },
     trailingAnimationSpeed: Float = when {
         profileState.isPartnerIdLoading -> 0.7f
-        profileState.partnerIdErrorText != null -> 1f
+        profileState.partnerIdState.errorText != null -> 1f
         profileState.isPartnerIdSaved == true -> 1f
         profileState.isPartnerIdSaved == false -> 1f
         else -> 1f
@@ -134,8 +134,8 @@ fun PartnerIdTextField(
 ) {
     CustomOutlinedTextField(
         isLoading = false,
-        value = profileState.partnerId,
-        errorText = profileState.partnerIdErrorText?.asString(),
+        value = profileState.partnerIdState.value,
+        errorText = profileState.partnerIdState.errorText?.asString(),
         onValueChange = { newPartnerId ->
             onAction(ProfileAction.PartnerIdChanged(newPartnerId))
         },
@@ -173,7 +173,7 @@ fun SecretKeyTextField(
     trailingAnimationComposition: LottieComposition? = rememberLottieComposition(
         when {
             profileState.isSecretKeyLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
-            profileState.secretKeyErrorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            profileState.secretKeyState.errorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             profileState.isSecretKeySaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
             profileState.isSecretKeySaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             else -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
@@ -181,14 +181,14 @@ fun SecretKeyTextField(
     ).value,
     trailingAnimationIteration: Int = when {
         profileState.isSecretKeyLoading -> LottieConstants.IterateForever
-        profileState.secretKeyErrorText != null -> 1
+        profileState.secretKeyState.errorText != null -> 1
         profileState.isSecretKeySaved == true -> 1
         profileState.isSecretKeySaved == false -> 1
         else -> LottieConstants.IterateForever
     },
     trailingAnimationSpeed: Float = when {
         profileState.isSecretKeyLoading -> 0.7f
-        profileState.secretKeyErrorText != null -> 1f
+        profileState.secretKeyState.errorText != null -> 1f
         profileState.isSecretKeySaved == true -> 1f
         profileState.isSecretKeySaved == false -> 1f
         else -> 1f
@@ -201,8 +201,8 @@ fun SecretKeyTextField(
 ) {
     CustomOutlinedTextField(
         isLoading = false,
-        value = profileState.secretKey,
-        errorText = profileState.secretKeyErrorText?.asString(),
+        value = profileState.secretKeyState.value,
+        errorText = profileState.secretKeyState.errorText?.asString(),
         onValueChange = { newSecretKey ->
             onAction(ProfileAction.SecretKeyChanged(newSecretKey))
         },

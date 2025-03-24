@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
@@ -49,7 +50,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 @Composable
 fun CustomOutlinedTextField(
     isLoading: Boolean,
-    value: String,
+    value: TextFieldValue,
     title: String?,
     placeholder: String?,
     errorText: String?,
@@ -112,7 +113,7 @@ fun CustomOutlinedTextField(
     spaceBetweenTitleAndTextField: Dp = 4.dp,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
-    onValueChange: (newValue: String) -> Unit,
+    onValueChange: (newValue: TextFieldValue) -> Unit,
     keyboardAction: () -> Unit = {}
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }

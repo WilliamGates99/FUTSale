@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,8 +108,8 @@ class PickUpPlayerViewModel @Inject constructor(
     fun onAction(action: PickUpPlayerAction) {
         when (action) {
             is PickUpPlayerAction.PlatformChanged -> setSelectedPlatform(action.platform)
-            is PickUpPlayerAction.MinPriceChanged -> minPriceChanged(action.minPrice)
-            is PickUpPlayerAction.MaxPriceChanged -> maxPriceChanged(action.maxPrice)
+            is PickUpPlayerAction.MinPriceChanged -> minPriceChanged(action.newValue)
+            is PickUpPlayerAction.MaxPriceChanged -> maxPriceChanged(action.newValue)
             is PickUpPlayerAction.TakeAfterCheckedChanged -> takeAfterCheckedChanged(action.isChecked)
             is PickUpPlayerAction.TakeAfterSliderChanged -> takeAfterSliderChanged(action.delayInSeconds)
             PickUpPlayerAction.CancelAutoPickUpPlayer -> cancelAutoPickUpPlayer()
@@ -127,20 +128,24 @@ class PickUpPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun minPriceChanged(minPrice: String) = viewModelScope.launch {
+    private fun minPriceChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                minPrice = minPrice.toEnglishDigits(),
-                minPriceErrorText = null
+                minPriceState = _pickUpPlayerState.value.minPriceState.copy(
+                    value = newValue.copy(text = newValue.text.toEnglishDigits()),
+                    errorText = null
+                )
             )
         }
     }
 
-    private fun maxPriceChanged(maxPrice: String) = viewModelScope.launch {
+    private fun maxPriceChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
             savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                maxPrice = maxPrice.toEnglishDigits(),
-                maxPriceErrorText = null
+                maxPriceState = _pickUpPlayerState.value.maxPriceState.copy(
+                    value = newValue.copy(text = newValue.text.toEnglishDigits()),
+                    errorText = null
+                )
             )
         }
     }
@@ -191,8 +196,8 @@ class PickUpPlayerViewModel @Inject constructor(
             }
 
             val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-                minPrice = _pickUpPlayerState.value.minPrice.ifBlank { null },
-                maxPrice = _pickUpPlayerState.value.maxPrice.ifBlank { null },
+                minPrice = _pickUpPlayerState.value.minPriceState.value.text.ifBlank { null },
+                maxPrice = _pickUpPlayerState.value.maxPriceState.value.text.ifBlank { null },
                 takeAfterDelayInSeconds = with(_pickUpPlayerState.value) {
                     if (isTakeAfterChecked) takeAfterDelayInSeconds else null
                 }
@@ -226,10 +231,11 @@ class PickUpPlayerViewModel @Inject constructor(
             if (pickUpPlayerResult.minPriceError != null) {
                 when (val error = pickUpPlayerResult.minPriceError) {
                     PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] =
-                            _pickUpPlayerState.value.copy(
-                                minPriceErrorText = error.asUiText()
+                        savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
+                            minPriceState = _pickUpPlayerState.value.minPriceState.copy(
+                                errorText = error.asUiText()
                             )
+                        )
                     }
                     else -> Unit
                 }
@@ -238,10 +244,11 @@ class PickUpPlayerViewModel @Inject constructor(
             if (pickUpPlayerResult.maxPriceError != null) {
                 when (val error = pickUpPlayerResult.maxPriceError) {
                     PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
-                        savedStateHandle["pickUpPlayerState"] =
-                            _pickUpPlayerState.value.copy(
-                                maxPriceErrorText = error.asUiText()
+                        savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
+                            maxPriceState = _pickUpPlayerState.value.maxPriceState.copy(
+                                errorText = error.asUiText()
                             )
+                        )
                     }
                     else -> Unit
                 }
@@ -332,8 +339,8 @@ class PickUpPlayerViewModel @Inject constructor(
         }
 
         val pickUpPlayerResult = pickUpPlayerUseCases.pickUpPlayerUseCase.get()(
-            minPrice = _pickUpPlayerState.value.minPrice.ifBlank { null },
-            maxPrice = _pickUpPlayerState.value.maxPrice.ifBlank { null },
+            minPrice = _pickUpPlayerState.value.minPriceState.value.text.ifBlank { null },
+            maxPrice = _pickUpPlayerState.value.maxPriceState.value.text.ifBlank { null },
             takeAfterDelayInSeconds = with(_pickUpPlayerState.value) {
                 if (isTakeAfterChecked) takeAfterDelayInSeconds else null
             }
@@ -368,7 +375,9 @@ class PickUpPlayerViewModel @Inject constructor(
             when (val error = pickUpPlayerResult.minPriceError) {
                 PickUpPlayerError.InvalidMinPrice -> mutex.withLock {
                     savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                        minPriceErrorText = error.asUiText()
+                        minPriceState = _pickUpPlayerState.value.minPriceState.copy(
+                            errorText = error.asUiText()
+                        )
                     )
                 }
                 else -> Unit
@@ -379,7 +388,9 @@ class PickUpPlayerViewModel @Inject constructor(
             when (val error = pickUpPlayerResult.maxPriceError) {
                 PickUpPlayerError.InvalidMaxPrice -> mutex.withLock {
                     savedStateHandle["pickUpPlayerState"] = _pickUpPlayerState.value.copy(
-                        maxPriceErrorText = error.asUiText()
+                        maxPriceState = _pickUpPlayerState.value.maxPriceState.copy(
+                            errorText = error.asUiText()
+                        )
                     )
                 }
                 else -> Unit

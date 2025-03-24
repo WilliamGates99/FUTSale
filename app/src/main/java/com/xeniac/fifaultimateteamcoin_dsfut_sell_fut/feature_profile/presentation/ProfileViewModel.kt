@@ -1,19 +1,19 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.PartnerIdError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.SecretKeyError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -62,18 +62,8 @@ class ProfileViewModel @Inject constructor(
     fun onAction(action: ProfileAction) {
         when (action) {
             ProfileAction.GetProfile -> getProfile()
-            is ProfileAction.PartnerIdChanged -> {
-                updatePartnerIdJob?.cancel()
-                updatePartnerIdJob = updatePartnerId(
-                    partnerId = action.partnerId.toEnglishDigits()
-                )
-            }
-            is ProfileAction.SecretKeyChanged -> {
-                updateSecretKeyJob?.cancel()
-                updateSecretKeyJob = updateSecretKey(
-                    secretKey = action.secretKey.convertDigitsToEnglish()
-                )
-            }
+            is ProfileAction.PartnerIdChanged -> updatePartnerId(action.newValue)
+            is ProfileAction.SecretKeyChanged -> updateSecretKey(action.newValue)
         }
     }
 
@@ -83,38 +73,45 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun updatePartnerId(partnerId: String): Job = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["profileState"] = _profileState.value.copy(
-                partnerId = partnerId,
-                partnerIdErrorText = null,
-                isPartnerIdLoading = true
-            )
+    private fun updatePartnerId(newValue: TextFieldValue) {
+        updatePartnerIdJob?.cancel()
+        updatePartnerIdJob = viewModelScope.launch {
+            val newPartnerIdValue = newValue.copy(text = newValue.text.toEnglishDigits())
 
-            delay(500.milliseconds)
+            mutex.withLock {
+                savedStateHandle["profileState"] = _profileState.value.copy(
+                    partnerIdState = _profileState.value.partnerIdState.copy(
+                        value = newPartnerIdValue,
+                        errorText = null
+                    ),
+                    isPartnerIdLoading = true
+                )
 
-            val updatePartnerIdResult = profileUseCases.updatePartnerIdUseCase.get()(
-                partnerId = partnerId
-            )
+                delay(500.milliseconds)
 
-            if (updatePartnerIdResult.partnerIdError != null) {
-                checkPartnerIdError(updatePartnerIdResult.partnerIdError)
-            }
+                val updatePartnerIdResult = profileUseCases.updatePartnerIdUseCase.get()(
+                    partnerId = newPartnerIdValue.text
+                )
 
-            when (updatePartnerIdResult.result) {
-                is Result.Success -> {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isPartnerIdSaved = true,
-                        isPartnerIdLoading = false
-                    )
+                if (updatePartnerIdResult.partnerIdError != null) {
+                    checkPartnerIdError(updatePartnerIdResult.partnerIdError)
                 }
-                is Result.Error -> {
-                    checkPartnerIdError(updatePartnerIdResult.result.error)
-                }
-                null -> {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isPartnerIdLoading = false
-                    )
+
+                when (updatePartnerIdResult.result) {
+                    is Result.Success -> {
+                        savedStateHandle["profileState"] = _profileState.value.copy(
+                            isPartnerIdSaved = true,
+                            isPartnerIdLoading = false
+                        )
+                    }
+                    is Result.Error -> {
+                        checkPartnerIdError(updatePartnerIdResult.result.error)
+                    }
+                    null -> {
+                        savedStateHandle["profileState"] = _profileState.value.copy(
+                            isPartnerIdLoading = false
+                        )
+                    }
                 }
             }
         }
@@ -124,7 +121,9 @@ class ProfileViewModel @Inject constructor(
         when (partnerIdError) {
             PartnerIdError.InvalidPartnerId -> {
                 savedStateHandle["profileState"] = _profileState.value.copy(
-                    partnerIdErrorText = UiText.StringResource(R.string.profile_textfield_partner_id_error_invalid),
+                    partnerIdState = _profileState.value.partnerIdState.copy(
+                        errorText = partnerIdError.asUiText()
+                    ),
                     isPartnerIdSaved = false,
                     isPartnerIdLoading = false
                 )
@@ -136,44 +135,51 @@ class ProfileViewModel @Inject constructor(
                 )
 
                 _updatePartnerIdEventChannel.send(
-                    UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                    UiEvent.ShowShortSnackbar(partnerIdError.asUiText())
                 )
             }
         }
     }
 
-    private fun updateSecretKey(secretKey: String): Job = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["profileState"] = _profileState.value.copy(
-                secretKey = secretKey,
-                secretKeyErrorText = null,
-                isSecretKeyLoading = true
-            )
+    private fun updateSecretKey(newValue: TextFieldValue) {
+        updateSecretKeyJob?.cancel()
+        updateSecretKeyJob = viewModelScope.launch {
+            val newSecretKeyValue = newValue.copy(text = newValue.text.convertDigitsToEnglish())
 
-            delay(500.milliseconds)
+            mutex.withLock {
+                savedStateHandle["profileState"] = _profileState.value.copy(
+                    secretKeyState = _profileState.value.secretKeyState.copy(
+                        value = newSecretKeyValue,
+                        errorText = null
+                    ),
+                    isSecretKeyLoading = true
+                )
 
-            val updateSecretKeyResult = profileUseCases.updateSecretKeyUseCase.get()(
-                secretKey = secretKey
-            )
+                delay(500.milliseconds)
 
-            if (updateSecretKeyResult.secretKeyError != null) {
-                checkSecretKeyError(updateSecretKeyResult.secretKeyError)
-            }
+                val updateSecretKeyResult = profileUseCases.updateSecretKeyUseCase.get()(
+                    secretKey = newSecretKeyValue.text
+                )
 
-            when (updateSecretKeyResult.result) {
-                is Result.Success -> {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isSecretKeySaved = true,
-                        isSecretKeyLoading = false
-                    )
+                if (updateSecretKeyResult.secretKeyError != null) {
+                    checkSecretKeyError(updateSecretKeyResult.secretKeyError)
                 }
-                is Result.Error -> {
-                    checkSecretKeyError(updateSecretKeyResult.result.error)
-                }
-                null -> {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isSecretKeyLoading = false
-                    )
+
+                when (updateSecretKeyResult.result) {
+                    is Result.Success -> {
+                        savedStateHandle["profileState"] = _profileState.value.copy(
+                            isSecretKeySaved = true,
+                            isSecretKeyLoading = false
+                        )
+                    }
+                    is Result.Error -> {
+                        checkSecretKeyError(updateSecretKeyResult.result.error)
+                    }
+                    null -> {
+                        savedStateHandle["profileState"] = _profileState.value.copy(
+                            isSecretKeyLoading = false
+                        )
+                    }
                 }
             }
         }
@@ -183,7 +189,9 @@ class ProfileViewModel @Inject constructor(
         when (secretKeyError) {
             SecretKeyError.InvalidSecretKey -> {
                 savedStateHandle["profileState"] = _profileState.value.copy(
-                    secretKeyErrorText = UiText.StringResource(R.string.profile_textfield_secret_key_error_invalid),
+                    secretKeyState = _profileState.value.secretKeyState.copy(
+                        errorText = secretKeyError.asUiText()
+                    ),
                     isSecretKeySaved = false,
                     isSecretKeyLoading = false
                 )
@@ -195,7 +203,7 @@ class ProfileViewModel @Inject constructor(
                 )
 
                 _updateSecretKeyEventChannel.send(
-                    UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                    UiEvent.ShowShortSnackbar(secretKeyError.asUiText())
                 )
             }
         }
