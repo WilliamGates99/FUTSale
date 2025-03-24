@@ -1,10 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -50,8 +45,6 @@ fun AppUpdateBottomSheet(
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     isVisible: Boolean = appUpdateInfo != null,
-    enterTransition: EnterTransition = expandVertically(),
-    exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
     sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
@@ -87,18 +80,14 @@ fun AppUpdateBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = enterTransition,
-        exit = exitTransition,
-        modifier = modifier
-    ) {
+    if (isVisible) {
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
             onDismissRequest = {
                 onAction(HomeAction.DismissAppUpdateSheet)
-            }
+            },
+            modifier = modifier
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

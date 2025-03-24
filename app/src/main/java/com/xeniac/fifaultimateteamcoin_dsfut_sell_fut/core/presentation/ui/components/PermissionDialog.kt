@@ -55,7 +55,6 @@ fun PermissionDialog(
     onDismiss: () -> Unit
 ) {
     AlertDialog(
-        modifier = modifier,
         properties = dialogProperties,
         containerColor = containerColor,
         iconContentColor = iconContentColor,
@@ -122,6 +121,7 @@ fun PermissionDialog(
                     )
                 }
             }
-        }
+        },
+        modifier = modifier
     )
 }
