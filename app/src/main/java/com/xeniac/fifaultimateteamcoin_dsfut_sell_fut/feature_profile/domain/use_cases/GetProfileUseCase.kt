@@ -11,11 +11,13 @@ class GetProfileUseCase(
         val partnerId = dsfutDataStoreRepository.getPartnerId().first()
         val secretKey = dsfutDataStoreRepository.getSecretKey().first()
 
-        return ProfileState(
-            partnerId = partnerId ?: "",
-            secretKey = secretKey ?: "",
-            isPartnerIdSaved = partnerId != null,
-            isSecretKeySaved = secretKey != null
-        )
+        // TODO: UPDATE RETURN TYPE
+//        return ProfileState(
+//            partnerId = partnerId ?: "",
+//            secretKey = secretKey ?: "",
+//            isPartnerIdSaved = partnerId != null,
+//            isSecretKeySaved = secretKey != null
+//        )
+        return ProfileState()
     }
 }
