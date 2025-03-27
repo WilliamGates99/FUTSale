@@ -16,7 +16,6 @@ class StoreIsNotificationVibrateEnabledUseCase(
             settingsDataStoreRepository.isNotificationVibrateEnabled(isEnabled)
             emit(Result.Success(Unit))
         } catch (e: Exception) {
-            e.printStackTrace()
             emit(Result.Error(StoreNotificationVibrateError.SomethingWentWrong))
         }
     }

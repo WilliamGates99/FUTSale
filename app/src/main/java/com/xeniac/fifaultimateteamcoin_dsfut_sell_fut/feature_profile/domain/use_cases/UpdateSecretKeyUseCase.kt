@@ -3,15 +3,23 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.us
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.models.UpdateSecretKeyResult
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.SecretKeyError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.UpdateSecretKeyError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class UpdateSecretKeyUseCase(
     private val dsfutDataStoreRepository: DsfutDataStoreRepository,
     private val validateSecretKey: ValidateSecretKey
 ) {
-    suspend operator fun invoke(secretKey: String): UpdateSecretKeyResult {
-        try {
+    operator fun invoke(
+        secretKey: String,
+        delayTimeInMillis: Long = 500
+    ): Flow<UpdateSecretKeyResult> = flow {
+        return@flow try {
+            delay(timeMillis = delayTimeInMillis)
+
             val secretKeyError = validateSecretKey(secretKey)
 
             val hasError = listOf(
@@ -19,20 +27,21 @@ class UpdateSecretKeyUseCase(
             ).any { it != null }
 
             if (hasError) {
-                return UpdateSecretKeyResult(
-                    secretKeyError = secretKeyError
+                return@flow emit(
+                    UpdateSecretKeyResult(
+                        updateSecretKeyError = secretKeyError
+                    )
                 )
             }
 
             dsfutDataStoreRepository.storeSecretKey(secretKey = secretKey)
 
-            return UpdateSecretKeyResult(
-                result = Result.Success(Unit)
-            )
+            emit(UpdateSecretKeyResult(result = Result.Success(Unit)))
         } catch (e: Exception) {
-            e.printStackTrace()
-            return UpdateSecretKeyResult(
-                result = Result.Error(SecretKeyError.SomethingWentWrong)
+            emit(
+                UpdateSecretKeyResult(
+                    result = Result.Error(UpdateSecretKeyError.SomethingWentWrong)
+                )
             )
         }
     }

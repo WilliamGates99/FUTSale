@@ -16,7 +16,6 @@ class StoreIsNotificationSoundEnabledUseCase(
             settingsDataStoreRepository.isNotificationSoundEnabled(isEnabled)
             emit(Result.Success(Unit))
         } catch (e: Exception) {
-            e.printStackTrace()
             emit(Result.Error(StoreNotificationSoundError.SomethingWentWrong))
         }
     }

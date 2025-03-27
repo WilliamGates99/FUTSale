@@ -2,6 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Error
 
-sealed class OnboardingError : Error() {
-    data object SomethingWentWrong : OnboardingError()
+sealed class CompleteOnboardingError : Error() {
+    data object SomethingWentWrong : CompleteOnboardingError()
 }

@@ -17,7 +17,6 @@ class StoreSelectedPlatformUseCase(
             dsfutDataStoreRepository.storeSelectedPlatform(platform)
             emit(Result.Success(Unit))
         } catch (e: Exception) {
-            e.printStackTrace()
             emit(Result.Error(StoreSelectedPlatformError.SomethingWentWrong))
         }
     }

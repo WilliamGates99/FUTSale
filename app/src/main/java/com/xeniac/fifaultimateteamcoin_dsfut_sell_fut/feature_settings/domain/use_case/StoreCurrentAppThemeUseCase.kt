@@ -17,7 +17,6 @@ class StoreCurrentAppThemeUseCase(
             settingsDataStoreRepository.storeCurrentAppTheme(newAppTheme)
             emit(Result.Success(Unit))
         } catch (e: Exception) {
-            e.printStackTrace()
             emit(Result.Error(StoreAppThemeError.SomethingWentWrong))
         }
     }
