@@ -77,17 +77,17 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
             _timerText.update {
                 val isTimerFinished = timerValueInSeconds == 0
                 if (isTimerFinished) {
-                    UiText.StringResource(R.string.picked_up_player_info_timer_expired)
-                } else {
-                    val minutes = decimalFormat.format(timerValueInSeconds / 60)
-                    val seconds = decimalFormat.format(timerValueInSeconds % 60)
-
-                    UiText.StringResource(
-                        R.string.picked_up_player_info_timer,
-                        minutes,
-                        seconds
-                    )
+                    return@update UiText.StringResource(R.string.picked_up_player_info_timer_expired)
                 }
+
+                val minutes = decimalFormat.format(timerValueInSeconds / 60)
+                val seconds = decimalFormat.format(timerValueInSeconds % 60)
+
+                UiText.StringResource(
+                    R.string.picked_up_player_info_timer,
+                    minutes,
+                    seconds
+                )
             }
         }.launchIn(scope = viewModelScope)
     }

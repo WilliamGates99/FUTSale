@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class PickUpPlayerState(
     val isNotificationSoundEnabled: Boolean? = null,
     val isNotificationVibrateEnabled: Boolean? = null,
-    val latestPickedPlayers: List<Player> = emptyList(),
+    val latestPickedUpPlayers: List<Player> = emptyList(),
     val selectedPlatform: Platform? = null,
     val minPriceState: CustomTextFieldState = CustomTextFieldState(),
     val maxPriceState: CustomTextFieldState = CustomTextFieldState(),

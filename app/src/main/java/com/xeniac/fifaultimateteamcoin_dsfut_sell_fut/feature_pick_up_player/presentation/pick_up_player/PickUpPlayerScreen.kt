@@ -118,7 +118,7 @@ fun PickUpPlayerScreen(
                 onAction = onNavigateToProfileScreen
             )
             is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
-                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
                 context = context,
                 scope = scope,
@@ -190,7 +190,7 @@ fun PickUpPlayerScreen(
                 onAction = onNavigateToProfileScreen
             )
             is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
-                message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
+                message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
                 context = context,
                 scope = scope,
@@ -247,7 +247,7 @@ fun PickUpPlayerScreen(
                 .padding(vertical = verticalPadding)
         ) {
             LatestPlayersPagers(
-                latestPickedPlayers = pickUpPlayerState.latestPickedPlayers,
+                latestPickedPlayers = pickUpPlayerState.latestPickedUpPlayers,
                 timerText = timerText.asString(),
                 onAction = viewModel::onAction,
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
