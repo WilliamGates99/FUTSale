@@ -2,6 +2,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.u
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Error
 
-sealed class NotificationSoundError : Error() {
-    data object SomethingWentWrong : NotificationSoundError()
+sealed class StoreNotificationSoundError : Error() {
+    data object SomethingWentWrong : StoreNotificationSoundError()
 }

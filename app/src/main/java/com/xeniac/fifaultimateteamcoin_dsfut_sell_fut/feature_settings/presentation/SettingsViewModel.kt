@@ -2,27 +2,24 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presenta
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SettingsUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.AppThemeError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.NotificationSoundError
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.NotificationVibrateError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -38,24 +35,20 @@ class SettingsViewModel @Inject constructor(
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState = combine(
         flow = _settingsState,
-        flow2 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
-        flow3 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
-        flow4 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
-    ) { settingsState, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
+        flow2 = settingsUseCases.getCurrentAppLocaleUseCase.get()(),
+        flow3 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
+        flow4 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
+        flow5 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
+    ) { settingsState, appLocale, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
         _settingsState.update {
             settingsState.copy(
+                currentAppLocale = appLocale,
                 currentAppTheme = appTheme,
                 isNotificationSoundEnabled = isNotificationSoundEnabled,
                 isNotificationVibrateEnabled = isNotificationVibrateEnabled
             )
         }
         _settingsState.value
-    }.onStart {
-        _settingsState.update { state ->
-            state.copy(
-                currentAppLocale = settingsUseCases.getCurrentAppLocaleUseCase.get()()
-            )
-        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
@@ -111,73 +104,79 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun setCurrentAppLocale(newAppLocale: AppLocale) = viewModelScope.launch {
+    private fun setCurrentAppLocale(newAppLocale: AppLocale) {
         val shouldUpdateAppLocale = newAppLocale != _settingsState.value.currentAppLocale
         if (shouldUpdateAppLocale) {
-            val isActivityRestartNeeded = settingsUseCases.storeCurrentAppLocaleUseCase.get()(
+            settingsUseCases.storeCurrentAppLocaleUseCase.get()(
                 newAppLocale = newAppLocale
-            )
+            ).onEach { result ->
+                when (result) {
+                    is Result.Success -> result.data.let { isActivityRestartNeeded ->
+                        _settingsState.update { state ->
+                            state.copy(currentAppLocale = newAppLocale)
+                        }
 
-            _settingsState.update { state ->
-                state.copy(currentAppLocale = newAppLocale)
-            }
-
-            when (isActivityRestartNeeded) {
-                true -> _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
-                false -> Unit
-            }
-        }
-    }
-
-    private fun setCurrentAppTheme(newAppTheme: AppTheme) = viewModelScope.launch {
-        val shouldUpdateAppTheme = newAppTheme != _settingsState.value.currentAppTheme
-        if (shouldUpdateAppTheme) {
-            when (val result = settingsUseCases.storeCurrentAppThemeUseCase.get()(newAppTheme)) {
-                is Result.Success -> {
-                    _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
-                }
-                is Result.Error -> {
-                    when (result.error) {
-                        is AppThemeError.SomethingWentWrong -> {
-                            _setAppThemeEventChannel.send(
-                                UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
-                            )
+                        if (isActivityRestartNeeded) {
+                            _setAppLocaleEventChannel.send(SettingsUiEvent.RestartActivity)
                         }
                     }
-                }
-            }
-        }
-    }
-
-    private fun setNotificationSoundSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        when (val result =
-            settingsUseCases.storeIsNotificationSoundEnabledUseCase.get()(isEnabled)) {
-            is Result.Success -> Unit
-            is Result.Error -> {
-                when (result.error) {
-                    NotificationSoundError.SomethingWentWrong -> {
-                        _setNotificationSoundEventChannel.send(
-                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+                    is Result.Error -> {
+                        _setAppLocaleEventChannel.send(
+                            UiEvent.ShowShortSnackbar(result.error.asUiText())
                         )
                     }
                 }
-            }
+            }.launchIn(scope = viewModelScope)
         }
     }
 
-    private fun setNotificationVibrateSwitch(isEnabled: Boolean) = viewModelScope.launch {
-        when (val result = settingsUseCases
-            .storeIsNotificationVibrateEnabledUseCase.get()(isEnabled)) {
-            is Result.Success -> Unit
-            is Result.Error -> {
-                when (result.error) {
-                    NotificationVibrateError.SomethingWentWrong -> {
-                        _setNotificationVibrateEventChannel.send(
-                            UiEvent.ShowShortSnackbar(UiText.StringResource(R.string.error_something_went_wrong))
+    private fun setCurrentAppTheme(newAppTheme: AppTheme) {
+        val shouldUpdateAppTheme = newAppTheme != _settingsState.value.currentAppTheme
+        if (shouldUpdateAppTheme) {
+            settingsUseCases.storeCurrentAppThemeUseCase.get()(
+                newAppTheme = newAppTheme
+            ).onEach { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _setAppThemeEventChannel.send(SettingsUiEvent.UpdateAppTheme(newAppTheme))
+                    }
+                    is Result.Error -> {
+                        _setAppThemeEventChannel.send(
+                            UiEvent.ShowShortSnackbar(result.error.asUiText())
                         )
                     }
                 }
-            }
+            }.launchIn(scope = viewModelScope)
         }
+    }
+
+    private fun setNotificationSoundSwitch(isEnabled: Boolean) {
+        settingsUseCases.storeIsNotificationSoundEnabledUseCase.get()(
+            isEnabled = isEnabled
+        ).onEach { result ->
+            when (result) {
+                is Result.Success -> Unit
+                is Result.Error -> {
+                    _setNotificationSoundEventChannel.send(
+                        UiEvent.ShowShortSnackbar(result.error.asUiText())
+                    )
+                }
+            }
+        }.launchIn(scope = viewModelScope)
+    }
+
+    private fun setNotificationVibrateSwitch(isEnabled: Boolean) {
+        settingsUseCases.storeIsNotificationVibrateEnabledUseCase.get()(
+            isEnabled = isEnabled
+        ).onEach { result ->
+            when (result) {
+                is Result.Success -> Unit
+                is Result.Error -> {
+                    _setNotificationVibrateEventChannel.send(
+                        UiEvent.ShowShortSnackbar(result.error.asUiText())
+                    )
+                }
+            }
+        }.launchIn(scope = viewModelScope)
     }
 }
