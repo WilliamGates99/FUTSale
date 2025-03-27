@@ -15,7 +15,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class ObserveLatestPickedPlayersUseCaseTest {
+class ObserveLatestPickedUpPlayersUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -24,19 +24,19 @@ class ObserveLatestPickedPlayersUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
-    private lateinit var observeLatestPickedPlayersUseCase: ObserveLatestPickedPlayersUseCase
+    private lateinit var observeLatestPickedUpPlayersUseCase: ObserveLatestPickedUpPlayersUseCase
 
     @Before
     fun setUp() {
         fakePickUpPlayerRepositoryImpl = FakePickUpPlayerRepositoryImpl()
-        observeLatestPickedPlayersUseCase = ObserveLatestPickedPlayersUseCase(
+        observeLatestPickedUpPlayersUseCase = ObserveLatestPickedUpPlayersUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepositoryImpl
         )
     }
 
     @Test
     fun observeLatestPickedPlayersWithNoPlayers_returnsEmptyPlayersList() = runTest {
-        val latestPickedPlayers = observeLatestPickedPlayersUseCase().first()
+        val latestPickedPlayers = observeLatestPickedUpPlayersUseCase().first()
         assertThat(latestPickedPlayers).isEmpty()
     }
 
@@ -44,7 +44,7 @@ class ObserveLatestPickedPlayersUseCaseTest {
     fun observeLatestPickedPlayers_returnsPlayersListInDescendingOrder() = runTest {
         fakePickUpPlayerRepositoryImpl.addDummyPlayersToLatestPlayers()
 
-        val latestPickedPlayers = observeLatestPickedPlayersUseCase().first()
+        val latestPickedPlayers = observeLatestPickedUpPlayersUseCase().first()
 
         assertThat(latestPickedPlayers).isNotEmpty()
 

@@ -30,7 +30,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedUpPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
@@ -83,7 +83,7 @@ class PickedUpPlayerInfoScreenTest {
     fun setUp() {
         hiltRule.inject()
 
-        val observeLatestPickedPlayersUseCaseUseCase = ObserveLatestPickedPlayersUseCase(
+        val observeLatestPickedUpPlayersUseCaseUseCase = ObserveLatestPickedUpPlayersUseCase(
             pickUpPlayerRepository = fakePickUpPlayerRepository
         )
         val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
@@ -115,7 +115,7 @@ class PickedUpPlayerInfoScreenTest {
         )
 
         val pickUpPlayerUseCases = PickUpPlayerUseCases(
-            { observeLatestPickedPlayersUseCaseUseCase },
+            { observeLatestPickedUpPlayersUseCaseUseCase },
             { observePickedUpPlayerUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
