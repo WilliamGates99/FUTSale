@@ -9,7 +9,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateSecretKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateTakeAfter
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class PickUpPlayerUseCase(
@@ -26,8 +25,8 @@ class PickUpPlayerUseCase(
         maxPrice: String? = null,
         takeAfterDelayInSeconds: Int? = null
     ): Flow<PickUpPlayerResult> = flow {
-        val partnerId = dsfutDataStoreRepository.getPartnerId().first()
-        val secretKey = dsfutDataStoreRepository.getSecretKey().first()
+        val partnerId = dsfutDataStoreRepository.getPartnerId()
+        val secretKey = dsfutDataStoreRepository.getSecretKey()
 
         val partnerIdError = validatePartnerId(partnerId)
         val secretKeyError = validateSecretKey(secretKey)

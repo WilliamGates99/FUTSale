@@ -84,7 +84,9 @@ class ProfileViewModel @Inject constructor(
                         ),
                         secretKeyState = CustomTextFieldState(
                             value = TextFieldValue(text = secretKey.orEmpty())
-                        )
+                        ),
+                        isPartnerIdSaved = !partnerId.isNullOrBlank(),
+                        isSecretKeySaved = !secretKey.isNullOrBlank()
                     )
                 }
             }
@@ -116,8 +118,7 @@ class ProfileViewModel @Inject constructor(
                         partnerIdState = _profileState.value.partnerIdState.copy(
                             errorText = updatePartnerIdResult.updatePartnerIdError!!.asUiText()
                         ),
-                        isPartnerIdSaved = false,
-                        isPartnerIdLoading = false
+                        isPartnerIdSaved = false
                     )
                 }
             }
@@ -175,8 +176,7 @@ class ProfileViewModel @Inject constructor(
                         secretKeyState = _profileState.value.secretKeyState.copy(
                             errorText = updateSecretKeyResult.updateSecretKeyError!!.asUiText()
                         ),
-                        isSecretKeySaved = false,
-                        isSecretKeyLoading = false
+                        isSecretKeySaved = false
                     )
                 }
             }

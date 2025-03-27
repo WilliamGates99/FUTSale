@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface DsfutDataStoreRepository {
 
-    fun getPartnerId(): Flow<String?>
+    suspend fun getPartnerId(): String?
 
-    fun getSecretKey(): Flow<String?>
+    suspend fun getSecretKey(): String?
 
     fun getSelectedPlatform(): Flow<Platform>
 
