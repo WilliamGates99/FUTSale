@@ -22,7 +22,9 @@ class HistoryRepositoryImpl @Inject constructor(
             pagingData.map { it.toPlayer() }
         }
 
-    override fun observePlayer(playerId: Long): Flow<Player> = playersDao.get().observerPlayer(
+    override fun observerPickedUpPlayer(
+        playerId: Long
+    ): Flow<Player> = playersDao.get().observerPickedUpPlayer(
         id = playerId
     ).map { it.toPlayer() }
 }

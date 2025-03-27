@@ -16,7 +16,7 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class ObservePlayerUseCaseTest {
+class ObserverPickedUpPlayerUseCaseTest {
 
     @get:Rule
     var instanceTaskExecutorRule = InstantTaskExecutorRule()
@@ -25,19 +25,19 @@ class ObservePlayerUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakeHistoryRepositoryImpl: FakeHistoryRepositoryImpl
-    private lateinit var observePlayerUseCase: ObservePlayerUseCase
+    private lateinit var observerPickedUpPlayerUseCase: ObserverPickedUpPlayerUseCase
 
     @Before
     fun setUp() {
         fakeHistoryRepositoryImpl = FakeHistoryRepositoryImpl()
-        observePlayerUseCase = ObservePlayerUseCase(
+        observerPickedUpPlayerUseCase = ObserverPickedUpPlayerUseCase(
             historyRepository = fakeHistoryRepositoryImpl
         )
     }
 
     @Test
     fun observePlayerUseCaseWithNoPlayersInHistory_returnsNull() = runTest {
-        val player = observePlayerUseCase(playerId = 5).firstOrNull()
+        val player = observerPickedUpPlayerUseCase(playerId = 5).firstOrNull()
         assertThat(player).isNull()
     }
 
@@ -46,7 +46,7 @@ class ObservePlayerUseCaseTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
 
         val playerId = 5L
-        val player = observePlayerUseCase(playerId).first()
+        val player = observerPickedUpPlayerUseCase(playerId).first()
 
         assertThat(player.id).isEqualTo(playerId)
     }
@@ -54,7 +54,7 @@ class ObservePlayerUseCaseTest {
     @Test
     fun observePickedUpPlayerWithInvalidId_returnsNull() = runTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
-        val player = observePlayerUseCase(playerId = 100L).firstOrNull()
+        val player = observerPickedUpPlayerUseCase(playerId = 100L).firstOrNull()
         assertThat(player).isNull()
     }
 }

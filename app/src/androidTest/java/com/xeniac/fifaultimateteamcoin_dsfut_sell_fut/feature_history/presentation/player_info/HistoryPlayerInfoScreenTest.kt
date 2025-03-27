@@ -25,7 +25,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_HISTORY
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
@@ -67,7 +67,7 @@ class HistoryPlayerInfoScreenTest {
         val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepository
         )
-        val observePlayerUseCase = ObservePlayerUseCase(
+        val observerPickedUpPlayerUseCase = ObserverPickedUpPlayerUseCase(
             historyRepository = fakeHistoryRepository
         )
 
@@ -98,7 +98,7 @@ class HistoryPlayerInfoScreenTest {
 
                             HistoryPlayerInfoScreen(
                                 viewModel = HistoryPlayerInfoViewModel(
-                                    observePlayerUseCase = { observePlayerUseCase },
+                                    observerPickedUpPlayerUseCase = { observerPickedUpPlayerUseCase },
                                     savedStateHandle = backStackEntry.savedStateHandle
                                 ),
                                 onNavigateUp = testNavController::navigateUp

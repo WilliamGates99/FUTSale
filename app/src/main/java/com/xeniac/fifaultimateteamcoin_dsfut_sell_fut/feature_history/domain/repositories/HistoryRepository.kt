@@ -8,5 +8,5 @@ interface HistoryRepository {
 
     fun observePickedPlayersHistory(): Flow<PagingData<Player>>
 
-    fun observePlayer(playerId: Long): Flow<Player>
+    fun observerPickedUpPlayer(playerId: Long): Flow<Player>
 }
