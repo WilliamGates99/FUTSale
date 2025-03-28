@@ -71,7 +71,7 @@ fun ProfileTextFields(
 }
 
 @Composable
-fun ProfileHeaderAnimation(
+private fun ProfileHeaderAnimation(
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     animationComposition: LottieComposition? = rememberLottieComposition(
@@ -102,7 +102,7 @@ fun ProfileHeaderAnimation(
 }
 
 @Composable
-fun PartnerIdTextField(
+private fun PartnerIdTextField(
     partnerIdState: CustomTextFieldState,
     isPartnerIdSaved: Boolean?,
     isPartnerIdLoading: Boolean,
@@ -171,7 +171,7 @@ fun PartnerIdTextField(
 }
 
 @Composable
-fun SecretKeyTextField(
+private fun SecretKeyTextField(
     secretKeyState: CustomTextFieldState,
     isSecretKeySaved: Boolean?,
     isSecretKeyLoading: Boolean,

@@ -132,7 +132,7 @@ fun SettingsCard(
 }
 
 @Composable
-fun CardTextRowItem(
+private fun CardTextRowItem(
     icon: Painter,
     title: String,
     currentValue: String?,
@@ -195,7 +195,7 @@ fun CardTextRowItem(
 }
 
 @Composable
-fun CardSwitchRowItem(
+private fun CardSwitchRowItem(
     icon: Painter,
     title: String,
     isChecked: Boolean?,

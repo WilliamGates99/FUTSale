@@ -125,7 +125,7 @@ fun MiscellaneousCard(
 }
 
 @Composable
-fun CardClickableLinkRowItem(
+private fun CardClickableLinkRowItem(
     icon: Painter,
     title: String,
     modifier: Modifier = Modifier,
