@@ -23,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -106,6 +107,7 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    @PickUpPlayerQualifier
     fun provideStartCountDownTimerUseCase(
         countDownTimerRepository: CountDownTimerRepository
     ): StartCountDownTimerUseCase = StartCountDownTimerUseCase(countDownTimerRepository)
@@ -119,7 +121,7 @@ object PickUpPlayerModule {
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
         storeSelectedPlatformUseCase: StoreSelectedPlatformUseCase,
         pickUpPlayerUseCase: PickUpPlayerUseCase,
-        startCountDownTimerUseCase: StartCountDownTimerUseCase
+        @PickUpPlayerQualifier startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeLatestPickedUpPlayersUseCase },
         { getIsNotificationSoundEnabledUseCase },
@@ -130,3 +132,7 @@ object PickUpPlayerModule {
         { startCountDownTimerUseCase }
     )
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PickUpPlayerQualifier

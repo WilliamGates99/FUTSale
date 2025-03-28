@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -23,6 +24,7 @@ object PickedUpPlayerInfoModule {
 
     @Provides
     @ViewModelScoped
+    @PickedUpPlayerInfoQualifier
     fun provideStartCountDownTimerUseCase(
         countDownTimerRepository: CountDownTimerRepository
     ): StartCountDownTimerUseCase = StartCountDownTimerUseCase(countDownTimerRepository)
@@ -31,9 +33,13 @@ object PickedUpPlayerInfoModule {
     @ViewModelScoped
     fun providePickedUpPlayerInfoUseCases(
         observePickedUpPlayerUseCase: ObservePickedUpPlayerUseCase,
-        startCountDownTimerUseCase: StartCountDownTimerUseCase
+        @PickedUpPlayerInfoQualifier startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickedUpPlayerInfoUseCases = PickedUpPlayerInfoUseCases(
         { observePickedUpPlayerUseCase },
         { startCountDownTimerUseCase }
     )
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PickedUpPlayerInfoQualifier
