@@ -128,7 +128,7 @@ fun PlayerInfo(
 }
 
 @Composable
-fun PlayerInfoText(
+private fun PlayerInfoText(
     title: String,
     value: String?,
     modifier: Modifier = Modifier,

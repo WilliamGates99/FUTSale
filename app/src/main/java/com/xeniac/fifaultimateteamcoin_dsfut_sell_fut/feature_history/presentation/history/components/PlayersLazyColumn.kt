@@ -82,7 +82,7 @@ fun PlayersLazyColumn(
 }
 
 @Composable
-fun PlayerCard(
+private fun PlayerCard(
     player: Player,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(12.dp),
@@ -132,7 +132,7 @@ fun PlayerCard(
 }
 
 @Composable
-fun RatingAndPosition(
+private fun RatingAndPosition(
     rating: String,
     position: String,
     modifier: Modifier = Modifier,
@@ -185,7 +185,7 @@ fun RatingAndPosition(
 }
 
 @Composable
-fun PlayerName(
+private fun PlayerName(
     name: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
@@ -204,7 +204,7 @@ fun PlayerName(
 }
 
 @Composable
-fun PlatformIcon(
+private fun PlatformIcon(
     platform: Platform,
     modifier: Modifier = Modifier,
     icon: Painter = painterResource(
