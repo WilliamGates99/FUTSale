@@ -60,7 +60,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.as
 @Composable
 fun PickedUpPlayerInfo(
     player: Player?,
-    timerText: String,
+    timerText: UiText,
     horizontalPadding: Dp,
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
@@ -86,8 +86,8 @@ fun PickedUpPlayerInfo(
 
             ExpiryTimer(
                 timerText = when (layoutDirection) {
-                    LayoutDirection.Ltr -> timerText
-                    LayoutDirection.Rtl -> timerText.reversed()
+                    LayoutDirection.Ltr -> timerText.asString()
+                    LayoutDirection.Rtl -> timerText.asString().reversed()
                 },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -117,7 +117,7 @@ fun PickedUpPlayerInfo(
 }
 
 @Composable
-fun ExpiryTimer(
+private fun ExpiryTimer(
     timerText: String,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
@@ -200,7 +200,7 @@ fun ExpiryTimer(
 }
 
 @Composable
-fun PickUpMessage(
+private fun PickUpMessage(
     message: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
@@ -221,7 +221,7 @@ fun PickUpMessage(
 }
 
 @Composable
-fun PlayerInfo(
+private fun PlayerInfo(
     player: Player?,
     modifier: Modifier = Modifier,
 ) {
@@ -311,7 +311,7 @@ fun PlayerInfo(
 }
 
 @Composable
-fun PlayerInfoText(
+private fun PlayerInfoText(
     title: String,
     value: String?,
     modifier: Modifier = Modifier,

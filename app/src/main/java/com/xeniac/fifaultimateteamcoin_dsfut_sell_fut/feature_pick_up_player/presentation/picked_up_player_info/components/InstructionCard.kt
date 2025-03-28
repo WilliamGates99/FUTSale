@@ -48,7 +48,7 @@ fun InstructionCard(
 }
 
 @Composable
-fun InstructionText(
+private fun InstructionText(
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.picked_up_player_info_instruction_title),
     titleFontSize: TextUnit = 14.sp,
@@ -86,7 +86,7 @@ fun InstructionText(
 }
 
 @Composable
-fun AttentionText(
+private fun AttentionText(
     modifier: Modifier = Modifier,
     attention: String = stringResource(id = R.string.picked_up_player_info_attention),
     fontSize: TextUnit = 12.sp,

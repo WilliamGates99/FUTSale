@@ -76,7 +76,7 @@ fun PickedUpPlayerInfoScreen(
         ) {
             PickedUpPlayerInfo(
                 player = player,
-                timerText = timerText.asString(),
+                timerText = timerText,
                 horizontalPadding = horizontalPadding,
                 modifier = Modifier.fillMaxWidth()
             )
