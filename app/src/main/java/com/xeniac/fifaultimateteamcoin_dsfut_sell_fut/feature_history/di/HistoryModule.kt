@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedUpPlayersHistoryUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
 import dagger.Module
 import dagger.Provides
@@ -28,9 +28,11 @@ object HistoryModule {
 
     @Provides
     @ViewModelScoped
-    fun provideObservePickedPlayersHistoryUseCase(
+    fun provideObservePickedUpPlayersHistoryUseCase(
         historyRepository: HistoryRepository
-    ): ObservePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(historyRepository)
+    ): ObservePickedUpPlayersHistoryUseCase = ObservePickedUpPlayersHistoryUseCase(
+        historyRepository
+    )
 
     @Provides
     @ViewModelScoped

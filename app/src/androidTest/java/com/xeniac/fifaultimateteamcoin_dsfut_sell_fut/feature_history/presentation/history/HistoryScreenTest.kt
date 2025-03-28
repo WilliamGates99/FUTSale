@@ -24,7 +24,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedUpPlayersHistoryUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.HistoryPlayerInfoScreen
@@ -64,7 +64,7 @@ class HistoryScreenTest {
         hiltRule.inject()
 
         fakeHistoryRepository = FakeHistoryRepositoryImpl()
-        val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
+        val observePickedUpPlayersHistoryUseCase = ObservePickedUpPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepository
         )
         val observerPickedUpPlayerUseCase = ObserverPickedUpPlayerUseCase(
@@ -82,7 +82,7 @@ class HistoryScreenTest {
                     composable<HistoryScreen> {
                         HistoryScreen(
                             viewModel = HistoryViewModel(
-                                observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
+                                observePickedUpPlayersHistoryUseCase = { observePickedUpPlayersHistoryUseCase }
                             ),
                             bottomPadding = 0.dp,
                             onNavigateToPlayerInfoScreen = { playerId ->

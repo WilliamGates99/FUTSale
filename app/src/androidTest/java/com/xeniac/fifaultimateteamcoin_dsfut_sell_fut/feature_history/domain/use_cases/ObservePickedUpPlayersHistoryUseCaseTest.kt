@@ -17,7 +17,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @UninstallModules(AppModule::class)
-class ObservePickedPlayersHistoryUseCaseTest {
+class ObservePickedUpPlayersHistoryUseCaseTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(/* testInstance = */ this)
@@ -26,14 +26,14 @@ class ObservePickedPlayersHistoryUseCaseTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var fakeHistoryRepositoryImpl: FakeHistoryRepositoryImpl
-    private lateinit var observePickedPlayersHistoryUseCase: ObservePickedPlayersHistoryUseCase
+    private lateinit var observePickedUpPlayersHistoryUseCase: ObservePickedUpPlayersHistoryUseCase
 
     @Before
     fun setUp() {
         hiltRule.inject()
 
         fakeHistoryRepositoryImpl = FakeHistoryRepositoryImpl()
-        observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
+        observePickedUpPlayersHistoryUseCase = ObservePickedUpPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepositoryImpl
         )
     }
