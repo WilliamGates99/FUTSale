@@ -77,7 +77,7 @@ fun PostNotificationPermissionHandler(
 }
 
 @Composable
-fun NotificationPermissionDialog(
+private fun NotificationPermissionDialog(
     activity: Activity,
     isVisible: Boolean,
     permissionQueue: List<String>,

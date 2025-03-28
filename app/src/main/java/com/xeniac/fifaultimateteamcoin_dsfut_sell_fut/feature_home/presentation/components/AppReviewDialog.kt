@@ -165,7 +165,7 @@ fun AppReviewDialog(
 }
 
 @Composable
-fun DialogTitle(
+private fun DialogTitle(
     title: String,
     color: Color,
     modifier: Modifier = Modifier
@@ -182,7 +182,7 @@ fun DialogTitle(
 }
 
 @Composable
-fun DialogMessage(
+private fun DialogMessage(
     message: String,
     color: Color,
     modifier: Modifier = Modifier
@@ -199,7 +199,7 @@ fun DialogMessage(
 }
 
 @Composable
-fun DialogButtons(
+private fun DialogButtons(
     color: Color,
     modifier: Modifier = Modifier,
     confirmButton: @Composable () -> Unit,

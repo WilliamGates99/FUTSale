@@ -161,7 +161,7 @@ fun AppUpdateBottomSheet(
 }
 
 @Composable
-fun UpdateButton(
+private fun UpdateButton(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 14.dp),
     text: String = stringResource(id = R.string.home_app_update_sheet_btn_update),
@@ -185,7 +185,7 @@ fun UpdateButton(
 }
 
 @Composable
-fun DismissButton(
+private fun DismissButton(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 12.dp),
     text: String = stringResource(id = R.string.home_app_update_sheet_btn_dismiss),
