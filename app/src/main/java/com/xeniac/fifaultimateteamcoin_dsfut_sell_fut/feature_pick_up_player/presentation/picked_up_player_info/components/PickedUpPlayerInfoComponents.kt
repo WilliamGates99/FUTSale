@@ -100,7 +100,7 @@ fun PickedUpPlayerInfo(
         PickUpMessage(
             message = stringResource(
                 id = R.string.picked_up_player_info_message,
-                player?.name ?: ""
+                player?.name.orEmpty()
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -347,7 +347,7 @@ fun PlayerInfoText(
         )
 
         Text(
-            text = value ?: "",
+            text = value.orEmpty(),
             fontSize = valueFontSize,
             lineHeight = valueLineHeight,
             fontWeight = valueFontWeight,

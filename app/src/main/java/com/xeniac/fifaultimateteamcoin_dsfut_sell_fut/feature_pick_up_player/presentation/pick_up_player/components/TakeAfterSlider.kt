@@ -217,7 +217,7 @@ fun TakeAfterSlider(
             exit = slideOutVertically() + fadeOut()
         ) {
             Text(
-                text = pickUpPlayerState.takeAfterErrorText?.asString() ?: "",
+                text = pickUpPlayerState.takeAfterErrorText?.asString().orEmpty(),
                 fontSize = errorTextFontSize,
                 fontWeight = errorTextFontWeight,
                 color = errorTextColor,

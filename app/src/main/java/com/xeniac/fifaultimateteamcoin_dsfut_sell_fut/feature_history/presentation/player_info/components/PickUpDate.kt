@@ -26,7 +26,7 @@ fun PickUpDate(
     color: Color = Neutral60
 ) {
     Text(
-        text = pickUpTimeInMs?.asDateTime() ?: "",
+        text = pickUpTimeInMs?.asDateTime().orEmpty(),
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = fontWeight,

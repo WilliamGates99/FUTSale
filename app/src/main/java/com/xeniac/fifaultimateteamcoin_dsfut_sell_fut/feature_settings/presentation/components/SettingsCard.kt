@@ -186,7 +186,7 @@ fun CardTextRowItem(
         )
 
         Text(
-            text = currentValue ?: "",
+            text = currentValue.orEmpty(),
             fontSize = currentValueFontSize,
             fontWeight = currentValueFontWeight,
             color = currentValueColor

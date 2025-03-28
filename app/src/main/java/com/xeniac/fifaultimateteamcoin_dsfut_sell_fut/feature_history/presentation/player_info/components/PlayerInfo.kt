@@ -164,7 +164,7 @@ fun PlayerInfoText(
         )
 
         Text(
-            text = value ?: "",
+            text = value.orEmpty(),
             fontSize = valueFontSize,
             lineHeight = valueLineHeight,
             fontWeight = valueFontWeight,

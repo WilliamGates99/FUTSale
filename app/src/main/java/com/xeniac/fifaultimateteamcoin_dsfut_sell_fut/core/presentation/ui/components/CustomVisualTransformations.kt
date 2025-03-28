@@ -8,6 +8,7 @@ import java.text.DecimalFormat
 import kotlin.math.min
 
 class NumberSeparatorVisualTransformation : VisualTransformation {
+    // TODO: SOLVE THE BUG WHERE LARGER INPUT OF MAX_LONG_VALUE CAUSES CRASH
     override fun filter(text: AnnotatedString): TransformedText {
         val formattedText = formatNumberWithSeparators(number = text.text)
         val offsetMapping = calculateOffsetMapping(

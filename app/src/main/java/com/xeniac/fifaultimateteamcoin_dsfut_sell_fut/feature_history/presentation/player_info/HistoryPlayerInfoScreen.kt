@@ -51,7 +51,7 @@ fun HistoryPlayerInfoScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = player?.name ?: "") },
+                title = { Text(text = player?.name.orEmpty()) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
