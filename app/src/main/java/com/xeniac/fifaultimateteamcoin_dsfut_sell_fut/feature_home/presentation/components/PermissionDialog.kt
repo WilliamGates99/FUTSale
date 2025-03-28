@@ -27,12 +27,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.compo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.openAppSettings
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.states.HomeState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
 
 @Composable
 fun PostNotificationPermissionHandler(
-    homeState: HomeState,
+    isPermissionDialogVisible: Boolean,
+    permissionDialogQueue: List<String>,
     modifier: Modifier = Modifier,
     isRunningAndroid13OrNewer: Boolean = remember {
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
@@ -61,8 +61,8 @@ fun PostNotificationPermissionHandler(
 
         NotificationPermissionDialog(
             activity = activity,
-            isVisible = homeState.isPermissionDialogVisible,
-            permissionQueue = homeState.permissionDialogQueue,
+            isVisible = isPermissionDialogVisible,
+            permissionQueue = permissionDialogQueue,
             onConfirmClick = {
                 postNotificationPermissionResultLauncher.launch(
                     Manifest.permission.POST_NOTIFICATIONS

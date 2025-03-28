@@ -132,7 +132,8 @@ fun HomeScreen(
     }
 
     PostNotificationPermissionHandler(
-        homeState = homeState,
+        isPermissionDialogVisible = homeState.isPermissionDialogVisible,
+        permissionDialogQueue = homeState.permissionDialogQueue,
         onAction = viewModel::onAction
     )
 
