@@ -13,16 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.BouncingDotIndicator
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OnboardingPager(
-    onboardingState: OnboardingState,
+    partnerIdState: CustomTextFieldState,
+    secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
     onAction: (action: OnboardingAction) -> Unit,
     onRegisterBtnClick: () -> Unit,
@@ -94,7 +95,8 @@ fun OnboardingPager(
                     }
                 )
                 3 -> OnboardingPageFour(
-                    onboardingState = onboardingState,
+                    partnerIdState = partnerIdState,
+                    secretKeyState = secretKeyState,
                     onAction = onAction,
                     onRegisterBtnClick = onRegisterBtnClick,
                     onPrivacyPolicyBtnClick = onPrivacyPolicyBtnClick

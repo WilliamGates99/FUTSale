@@ -55,17 +55,18 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral70
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
 @OptIn(ExperimentalStdlibApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingPageFour(
-    onboardingState: OnboardingState,
+    partnerIdState: CustomTextFieldState,
+    secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
@@ -162,14 +163,14 @@ fun OnboardingPageFour(
 
         CustomOutlinedTextField(
             isLoading = false,
-            value = onboardingState.partnerIdState.value,
+            value = partnerIdState.value,
             onValueChange = { newValue ->
                 onAction(OnboardingAction.PartnerIdChanged(newValue))
             },
             title = stringResource(id = R.string.onboarding_fourth_title_partner_id),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_partner_id),
-            errorText = onboardingState.partnerIdState.errorText?.asString(),
+            errorText = partnerIdState.errorText?.asString(),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.PARTNER_ID_TEXT_FIELD,
@@ -182,14 +183,14 @@ fun OnboardingPageFour(
 
         CustomOutlinedTextField(
             isLoading = false,
-            value = onboardingState.secretKeyState.value,
+            value = secretKeyState.value,
             onValueChange = { newValue ->
                 onAction(OnboardingAction.SecretKeyChanged(newValue))
             },
             title = stringResource(id = R.string.onboarding_fourth_title_secret_key),
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_secret_key),
-            errorText = onboardingState.secretKeyState.errorText?.asString(),
+            errorText = secretKeyState.errorText?.asString(),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = {

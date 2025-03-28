@@ -52,7 +52,8 @@ fun OnboardingScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         OnboardingPager(
-            onboardingState = onboardingState,
+            partnerIdState = onboardingState.partnerIdState,
+            secretKeyState = onboardingState.secretKeyState,
             onAction = viewModel::onAction,
             onRegisterBtnClick = {
                 IntentHelper.openLinkInExternalBrowser(
