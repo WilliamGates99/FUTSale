@@ -370,8 +370,8 @@ val versionName = "${android.defaultConfig.versionName}"
 val renamedFileName = "FUTSale $versionName"
 
 tasks.register<Copy>("copyDevPreviewBundle") {
-    val bundleFile = "app-dev-playStore-release.aab"
-    val bundleSourceDir = "${releaseRootDir}/devPlayStore/release/${bundleFile}"
+    val bundleFile = "app-playStore-dev.aab"
+    val bundleSourceDir = "${releaseRootDir}/playStore/dev/${bundleFile}"
 
     from(bundleSourceDir)
     into(bundleDestDir)
@@ -380,8 +380,8 @@ tasks.register<Copy>("copyDevPreviewBundle") {
 }
 
 tasks.register<Copy>("copyDevPreviewApk") {
-    val apkFile = "app-dev-playStore-release.apk"
-    val apkSourceDir = "${releaseRootDir}/devPlayStore/release/${apkFile}"
+    val apkFile = "app-playStore-dev.apk"
+    val apkSourceDir = "${releaseRootDir}/playStore/dev/${apkFile}"
 
     from(apkSourceDir)
     into(apkDestDir)
@@ -390,13 +390,13 @@ tasks.register<Copy>("copyDevPreviewApk") {
 }
 
 tasks.register<Copy>("copyReleaseApk") {
-    val gitHubApkFile = "app-prod-gitHub-release.apk"
-    val cafeBazaarApkFile = "app-prod-cafeBazaar-release.apk"
-    val myketApkFile = "app-prod-myket-release.apk"
+    val gitHubApkFile = "app-gitHub-release.apk"
+    val cafeBazaarApkFile = "app-cafeBazaar-release.apk"
+    val myketApkFile = "app-myket-release.apk"
 
-    val gitHubApkSourceDir = "${releaseRootDir}/prodGitHub/release/${gitHubApkFile}"
-    val cafeBazaarApkSourceDir = "${releaseRootDir}/prodCafeBazaar/release/${cafeBazaarApkFile}"
-    val myketApkSourceDir = "${releaseRootDir}/prodMyket/release/${myketApkFile}"
+    val gitHubApkSourceDir = "${releaseRootDir}/gitHub/release/${gitHubApkFile}"
+    val cafeBazaarApkSourceDir = "${releaseRootDir}/cafeBazaar/release/${cafeBazaarApkFile}"
+    val myketApkSourceDir = "${releaseRootDir}/myket/release/${myketApkFile}"
 
     from(gitHubApkSourceDir)
     into(apkDestDir)
@@ -413,8 +413,8 @@ tasks.register<Copy>("copyReleaseApk") {
 }
 
 tasks.register<Copy>("copyReleaseBundle") {
-    val playStoreBundleFile = "app-prod-playStore-release.aab"
-    val playStoreBundleSourceDir = "${releaseRootDir}/prodPlayStore/release/${playStoreBundleFile}"
+    val playStoreBundleFile = "app-playStore-release.aab"
+    val playStoreBundleSourceDir = "${releaseRootDir}/playStore/release/${playStoreBundleFile}"
 
     from(playStoreBundleSourceDir)
     into(bundleDestDir)
