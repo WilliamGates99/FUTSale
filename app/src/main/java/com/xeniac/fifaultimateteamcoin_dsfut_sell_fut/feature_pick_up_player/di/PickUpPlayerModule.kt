@@ -9,7 +9,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedUpPlayersUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
@@ -56,12 +55,6 @@ object PickUpPlayerModule {
     ): ObserveLatestPickedUpPlayersUseCase = ObserveLatestPickedUpPlayersUseCase(
         pickedUpPlayersRepository
     )
-
-    @Provides
-    @ViewModelScoped
-    fun provideObservePickedUpPlayerUseCase(
-        pickedUpPlayersRepository: PickedUpPlayersRepository
-    ): ObservePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(pickedUpPlayersRepository)
 
     @Provides
     @ViewModelScoped
@@ -119,9 +112,8 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetThreeLatestPlayersUseCase(
+    fun providePickUpPlayerUseCases(
         observeLatestPickedUpPlayersUseCase: ObserveLatestPickedUpPlayersUseCase,
-        observePickedUpPlayerUseCase: ObservePickedUpPlayerUseCase,
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
@@ -130,7 +122,6 @@ object PickUpPlayerModule {
         startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
         { observeLatestPickedUpPlayersUseCase },
-        { observePickedUpPlayerUseCase },
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
         { getSelectedPlatformUseCase },

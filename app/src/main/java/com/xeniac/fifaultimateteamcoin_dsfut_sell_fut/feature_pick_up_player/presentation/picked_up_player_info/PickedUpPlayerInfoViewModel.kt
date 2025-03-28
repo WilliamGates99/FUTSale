@@ -7,7 +7,7 @@ import androidx.navigation.toRoute
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickedUpPlayerInfoUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.events.PickedUpPlayerInfoAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -24,12 +24,12 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PickedUpPlayerInfoViewModel @Inject constructor(
-    private val pickUpPlayerUseCases: PickUpPlayerUseCases,
+    private val pickedUpPlayerInfoUseCases: PickedUpPlayerInfoUseCases,
     private val decimalFormat: DecimalFormat,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val player = pickUpPlayerUseCases.observePickedUpPlayerUseCase.get()(
+    val player = pickedUpPlayerInfoUseCases.observePickedUpPlayerUseCase.get()(
         playerId = savedStateHandle.toRoute<HistoryPlayerInfoScreen>().playerId
     ).onEach { player ->
         startCountDownTimer(player.expiryTimeInMs)
@@ -71,7 +71,7 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
 
     private fun startCountDownTimer(expiryTimeInMs: Long) {
         countDownTimerJob?.cancel()
-        countDownTimerJob = pickUpPlayerUseCases.startCountDownTimerUseCase.get()(
+        countDownTimerJob = pickedUpPlayerInfoUseCases.startCountDownTimerUseCase.get()(
             expiryTimeInMs = expiryTimeInMs
         ).onEach { timerValueInSeconds ->
             _timerText.update {
