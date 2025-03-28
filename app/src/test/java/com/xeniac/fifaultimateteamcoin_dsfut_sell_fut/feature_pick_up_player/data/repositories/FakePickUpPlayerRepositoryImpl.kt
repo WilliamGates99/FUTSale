@@ -1,9 +1,10 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.createKtorTestClient
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PickUpPlayerResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.dto.PlayerDto
@@ -13,24 +14,18 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.TimerValueInSeconds
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
 import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
@@ -56,42 +51,36 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
     }
 
     fun addDummyPlayersToLatestPlayers() {
-        val playersToInsert = mutableListOf<PlayerEntity>()
-
-        ('a'..'z').forEachIndexed { index, char ->
-            playersToInsert.add(
-                PlayerEntity(
-                    id = index.toLong(),
-                    tradeID = index.toString(),
-                    assetID = index,
-                    resourceID = index,
-                    transactionID = index,
-                    name = char.toString(),
-                    rating = Random.nextInt(from = 10, until = 99),
-                    position = "CDM",
-                    startPrice = 1000,
-                    buyNowPrice = 2000,
-                    owners = 1,
-                    contracts = 1,
-                    chemistryStyle = "Basic",
-                    chemistryStyleID = index,
-                    platform = when (Random.nextBoolean()) {
-                        true -> Platform.CONSOLE
-                        false -> Platform.PC
-                    },
-                    pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
-                        Random.nextLong(
-                            from = -600, // 10 minutes ago
-                            until = 0 // Now
-                        )
+        val playersToInsert = ('a'..'z').mapIndexed { index, char ->
+            PlayerEntity(
+                id = index.toLong(),
+                tradeID = index.toString(),
+                assetID = index,
+                resourceID = index,
+                transactionID = index,
+                name = char.toString(),
+                rating = Random.nextInt(from = 10, until = 99),
+                position = "CDM",
+                startPrice = 1000,
+                buyNowPrice = 2000,
+                owners = 1,
+                contracts = 1,
+                chemistryStyle = "Basic",
+                chemistryStyleID = index,
+                platform = when (Random.nextBoolean()) {
+                    true -> Platform.CONSOLE
+                    false -> Platform.PC
+                },
+                pickUpTimeInSeconds = DateHelper.getCurrentTimeInSeconds().plus(
+                    Random.nextLong(
+                        from = -600, // 10 minutes ago
+                        until = 0 // Now
                     )
                 )
             )
         }
 
-        playersToInsert.shuffle()
-
-        playersToInsert.forEach { latestPlayerEntities.add(it) }
+        playersToInsert.shuffled().forEach { latestPlayerEntities.add(it) }
     }
 
     override fun observeLatestPickedPlayers(): Flow<List<Player>> = flow {
@@ -192,30 +181,17 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
             )
         }
 
-        val testClient = HttpClient(engine = mockEngine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    coerceInputValues = true
-                })
-            }
-            install(DefaultRequest) {
-                contentType(ContentType.Application.Json)
-            }
-        }
-
         val timestampInSeconds = DateHelper.getCurrentTimeInSeconds()
         val signature = getMd5Signature(
-            partnerId = partnerId,
-            secretKey = secretKey,
+            partnerId = partnerId.trim(),
+            secretKey = secretKey.trim(),
             timestamp = timestampInSeconds
         )
 
-        val response = testClient.get(
+        val response = createKtorTestClient(mockEngine).get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = Platform.CONSOLE.value,
-                partnerId = partnerId,
+                partnerId = partnerId.trim(),
                 timestamp = timestampInSeconds,
                 signature = signature
             ).url
@@ -225,8 +201,8 @@ class FakePickUpPlayerRepositoryImpl : PickUpPlayerRepository {
             parameter(key = "take_after", value = takeAfterDelayInSeconds)
         }
 
-        return when (response.status.value) {
-            HttpStatusCode.OK.value -> { // Code: 200
+        return when (response.status) {
+            HttpStatusCode.OK -> { // Code: 200
                 val pickUpPlayerResponseDto = response.body<PickUpPlayerResponseDto>()
                 val playerDto = pickUpPlayerResponseDto.playerDto
 

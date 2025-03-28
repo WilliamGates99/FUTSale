@@ -11,13 +11,21 @@ import kotlinx.coroutines.launch
 
 object NetworkObserverHelper {
 
-    val networkStatus = MutableStateFlow<ConnectivityObserver.Status?>(null)
+    private val networkStatus = MutableStateFlow<ConnectivityObserver.Status?>(null)
 
-    fun observeNetworkConnection(connectivityObserver: ConnectivityObserver) {
+    fun observeNetworkConnection(
+        connectivityObserver: ConnectivityObserver
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
-            connectivityObserver.observe().onEach { status ->
-                networkStatus.update { status }
+            connectivityObserver.observeNetworkConnection().onEach { newStatus ->
+                networkStatus.update { newStatus }
             }.launchIn(scope = this)
         }
+    }
+
+    fun hasNetworkConnection(): Boolean = when (networkStatus.value) {
+        ConnectivityObserver.Status.VALIDATED -> true
+        ConnectivityObserver.Status.AVAILABLE -> true
+        else -> false
     }
 }

@@ -51,16 +51,16 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Red
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.RedAlpha20
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.asUiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Red
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.RedAlpha20
 
 @Composable
 fun PickedUpPlayerInfo(
     player: Player?,
-    timerText: String,
+    timerText: UiText,
     horizontalPadding: Dp,
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
@@ -86,8 +86,8 @@ fun PickedUpPlayerInfo(
 
             ExpiryTimer(
                 timerText = when (layoutDirection) {
-                    LayoutDirection.Ltr -> timerText
-                    LayoutDirection.Rtl -> timerText.reversed()
+                    LayoutDirection.Ltr -> timerText.asString()
+                    LayoutDirection.Rtl -> timerText.asString().reversed()
                 },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -100,7 +100,7 @@ fun PickedUpPlayerInfo(
         PickUpMessage(
             message = stringResource(
                 id = R.string.picked_up_player_info_message,
-                player?.name ?: ""
+                player?.name.orEmpty()
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,7 +117,7 @@ fun PickedUpPlayerInfo(
 }
 
 @Composable
-fun ExpiryTimer(
+private fun ExpiryTimer(
     timerText: String,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
@@ -200,7 +200,7 @@ fun ExpiryTimer(
 }
 
 @Composable
-fun PickUpMessage(
+private fun PickUpMessage(
     message: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
@@ -221,7 +221,7 @@ fun PickUpMessage(
 }
 
 @Composable
-fun PlayerInfo(
+private fun PlayerInfo(
     player: Player?,
     modifier: Modifier = Modifier,
 ) {
@@ -311,7 +311,7 @@ fun PlayerInfo(
 }
 
 @Composable
-fun PlayerInfoText(
+private fun PlayerInfoText(
     title: String,
     value: String?,
     modifier: Modifier = Modifier,
@@ -347,7 +347,7 @@ fun PlayerInfoText(
         )
 
         Text(
-            text = value ?: "",
+            text = value.orEmpty(),
             fontSize = valueFontSize,
             lineHeight = valueLineHeight,
             fontWeight = valueFontWeight,

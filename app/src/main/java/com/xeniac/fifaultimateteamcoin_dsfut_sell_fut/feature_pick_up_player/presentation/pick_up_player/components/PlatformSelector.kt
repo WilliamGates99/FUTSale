@@ -3,7 +3,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonColors
@@ -25,8 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 enum class PlatformItems(
@@ -47,12 +45,13 @@ enum class PlatformItems(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlatformSelector(
-    pickUpPlayerState: PickUpPlayerState,
+    isAutoPickUpLoading: Boolean,
+    isPickUpOnceLoading: Boolean,
+    selectedPlatform: Platform?,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = !(pickUpPlayerState.isAutoPickUpLoading || pickUpPlayerState.isPickUpOnceLoading),
+    isEnabled: Boolean = !(isAutoPickUpLoading || isPickUpOnceLoading),
     title: String = stringResource(id = R.string.pick_up_player_title_platform),
     titleFontSize: TextUnit = 14.sp,
     titleLineHeight: TextUnit = 14.sp,
@@ -97,7 +96,7 @@ fun PlatformSelector(
             modifier = Modifier.weight(1f)
         ) {
             PlatformItems.entries.forEachIndexed { index, platformItem ->
-                val isSelected = pickUpPlayerState.selectedPlatform == platformItem.platform
+                val isSelected = selectedPlatform == platformItem.platform
 
                 SegmentedButton(
                     selected = isSelected,

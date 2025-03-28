@@ -19,6 +19,11 @@ sealed class PickUpPlayerError : Error() {
         data object ClientRequestException : Network()
         data object ServerResponseException : Network()
         data object SerializationException : Network()
+        data object JsonConvertException : Network()
+        data object SSLHandshakeException : Network()
+        data object CertPathValidatorException : Network()
+
+        data object TooManyRequests : Network()
 
         data class DsfutBlock(val message: String) : Network()
         data object DsfutEmpty : Network()
@@ -29,10 +34,11 @@ sealed class PickUpPlayerError : Error() {
         data object DsfutAuthorization : Network()
         data object DsfutThrottle : Network()
         data object DsfutUnixTime : Network()
+
         data object SomethingWentWrong : Network()
     }
 
     sealed class Local : PickUpPlayerError() {
-        data object SomethingWentWrong : PickUpPlayerError()
+        data object SomethingWentWrong : Local()
     }
 }

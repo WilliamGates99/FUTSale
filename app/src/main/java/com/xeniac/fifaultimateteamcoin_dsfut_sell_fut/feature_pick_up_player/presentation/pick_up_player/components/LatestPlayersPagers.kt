@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -54,17 +56,19 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.calculateCurrentPageOffset
 
 @Composable
 fun LatestPlayersPagers(
     latestPickedPlayers: List<Player>,
-    timerText: String,
+    timerText: UiText,
     modifier: Modifier = Modifier,
+    enterTransition: EnterTransition = expandVertically() + fadeIn(),
+    exitTransition: ExitTransition = shrinkVertically() + fadeOut(),
     contentPadding: PaddingValues = PaddingValues(
         start = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,
         end = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,
@@ -77,8 +81,8 @@ fun LatestPlayersPagers(
 ) {
     AnimatedVisibility(
         visible = latestPickedPlayers.isNotEmpty(),
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut(),
+        enter = enterTransition,
+        exit = exitTransition,
         modifier = modifier
     ) {
         val pagerState = rememberPagerState(pageCount = { latestPickedPlayers.size })
@@ -133,9 +137,9 @@ fun LatestPlayersPagers(
 }
 
 @Composable
-fun PlayerCard(
+private fun PlayerCard(
     player: Player,
-    timerText: String,
+    timerText: UiText,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(12.dp),
     colors: CardColors = CardDefaults.elevatedCardColors(
@@ -171,8 +175,8 @@ fun PlayerCard(
 
                 ExpiryTimer(
                     timerText = when (layoutDirection) {
-                        LayoutDirection.Ltr -> timerText
-                        LayoutDirection.Rtl -> timerText.reversed()
+                        LayoutDirection.Ltr -> timerText.asString()
+                        LayoutDirection.Rtl -> timerText.asString().reversed()
                     }
                 )
             }
@@ -204,7 +208,7 @@ fun PlayerCard(
 }
 
 @Composable
-fun RatingAndPosition(
+private fun RatingAndPosition(
     rating: String,
     position: String,
     modifier: Modifier = Modifier,
@@ -257,7 +261,7 @@ fun RatingAndPosition(
 }
 
 @Composable
-fun PlayerName(
+private fun PlayerName(
     name: String,
     modifier: Modifier = Modifier,
     nameFontSize: TextUnit = 16.sp,
@@ -280,7 +284,7 @@ fun PlayerName(
 }
 
 @Composable
-fun ExpiryTimer(
+private fun ExpiryTimer(
     timerText: String,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
@@ -363,7 +367,7 @@ fun ExpiryTimer(
 }
 
 @Composable
-fun PlayerTextInfo(
+private fun PlayerTextInfo(
     title: String,
     value: String,
     modifier: Modifier = Modifier,

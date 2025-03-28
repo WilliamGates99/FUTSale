@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -37,18 +38,19 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.dashedBorder
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant20
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.dashedBorder
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant20
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun PlayersLazyColumn(
-    pickedPlayersHistory: LazyPagingItems<Player>,
+    pickedUpPlayersHistory: LazyPagingItems<Player>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onClick: (playerId: Long) -> Unit
@@ -59,13 +61,10 @@ fun PlayersLazyColumn(
         modifier = modifier.testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
     ) {
         items(
-            count = pickedPlayersHistory.itemCount,
-            key = pickedPlayersHistory.itemKey { it },
-            contentType = pickedPlayersHistory.itemContentType { it }
-        ) { index ->
-            val player = pickedPlayersHistory[index]
-
-            player?.let {
+            items = pickedUpPlayersHistory.itemSnapshotList,
+            key = { it?.id ?: Uuid.random().toHexString() }
+        ) { pickedUpPlayer ->
+            pickedUpPlayer?.let { player ->
                 PlayerCard(
                     player = player,
                     onClick = {
@@ -83,7 +82,7 @@ fun PlayersLazyColumn(
 }
 
 @Composable
-fun PlayerCard(
+private fun PlayerCard(
     player: Player,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(12.dp),
@@ -133,7 +132,7 @@ fun PlayerCard(
 }
 
 @Composable
-fun RatingAndPosition(
+private fun RatingAndPosition(
     rating: String,
     position: String,
     modifier: Modifier = Modifier,
@@ -186,7 +185,7 @@ fun RatingAndPosition(
 }
 
 @Composable
-fun PlayerName(
+private fun PlayerName(
     name: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
@@ -205,7 +204,7 @@ fun PlayerName(
 }
 
 @Composable
-fun PlatformIcon(
+private fun PlatformIcon(
     platform: Platform,
     modifier: Modifier = Modifier,
     icon: Painter = painterResource(

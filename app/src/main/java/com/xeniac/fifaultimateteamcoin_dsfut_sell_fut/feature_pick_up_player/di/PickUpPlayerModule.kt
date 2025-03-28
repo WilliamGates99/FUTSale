@@ -2,12 +2,13 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.CountDownTimerRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickUpPlayerRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickedUpPlayersRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedPlayersUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObserveLatestPickedUpPlayersUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
@@ -22,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -49,15 +51,11 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
-    fun provideObserveLatestPickedPlayersUseCase(
-        pickUpPlayerRepository: PickUpPlayerRepository
-    ): ObserveLatestPickedPlayersUseCase = ObserveLatestPickedPlayersUseCase(pickUpPlayerRepository)
-
-    @Provides
-    @ViewModelScoped
-    fun provideObservePickedUpPlayerUseCase(
-        pickUpPlayerRepository: PickUpPlayerRepository
-    ): ObservePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(pickUpPlayerRepository)
+    fun provideObserveLatestPickedUpPlayersUseCase(
+        pickedUpPlayersRepository: PickedUpPlayersRepository
+    ): ObserveLatestPickedUpPlayersUseCase = ObserveLatestPickedUpPlayersUseCase(
+        pickedUpPlayersRepository
+    )
 
     @Provides
     @ViewModelScoped
@@ -109,24 +107,23 @@ object PickUpPlayerModule {
 
     @Provides
     @ViewModelScoped
+    @PickUpPlayerQualifier
     fun provideStartCountDownTimerUseCase(
-        pickUpPlayerRepository: PickUpPlayerRepository
-    ): StartCountDownTimerUseCase = StartCountDownTimerUseCase(pickUpPlayerRepository)
+        countDownTimerRepository: CountDownTimerRepository
+    ): StartCountDownTimerUseCase = StartCountDownTimerUseCase(countDownTimerRepository)
 
     @Provides
     @ViewModelScoped
-    fun provideGetThreeLatestPlayersUseCase(
-        observeLatestPickedPlayersUseCase: ObserveLatestPickedPlayersUseCase,
-        observePickedUpPlayerUseCase: ObservePickedUpPlayerUseCase,
+    fun providePickUpPlayerUseCases(
+        observeLatestPickedUpPlayersUseCase: ObserveLatestPickedUpPlayersUseCase,
         getIsNotificationSoundEnabledUseCase: GetIsNotificationSoundEnabledUseCase,
         getIsNotificationVibrateEnabledUseCase: GetIsNotificationVibrateEnabledUseCase,
         getSelectedPlatformUseCase: GetSelectedPlatformUseCase,
         storeSelectedPlatformUseCase: StoreSelectedPlatformUseCase,
         pickUpPlayerUseCase: PickUpPlayerUseCase,
-        startCountDownTimerUseCase: StartCountDownTimerUseCase
+        @PickUpPlayerQualifier startCountDownTimerUseCase: StartCountDownTimerUseCase
     ): PickUpPlayerUseCases = PickUpPlayerUseCases(
-        { observeLatestPickedPlayersUseCase },
-        { observePickedUpPlayerUseCase },
+        { observeLatestPickedUpPlayersUseCase },
         { getIsNotificationSoundEnabledUseCase },
         { getIsNotificationVibrateEnabledUseCase },
         { getSelectedPlatformUseCase },
@@ -135,3 +132,7 @@ object PickUpPlayerModule {
         { startCountDownTimerUseCase }
     )
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PickUpPlayerQualifier

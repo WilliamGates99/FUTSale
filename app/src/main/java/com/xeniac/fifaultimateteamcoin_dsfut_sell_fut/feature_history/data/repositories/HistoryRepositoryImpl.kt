@@ -17,12 +17,14 @@ class HistoryRepositoryImpl @Inject constructor(
     private val playersDao: Lazy<PlayersDao>
 ) : HistoryRepository {
 
-    override fun observePickedPlayersHistory(): Flow<PagingData<Player>> =
+    override fun observePickedUpPlayersHistory(): Flow<PagingData<Player>> =
         pager.flow.map { pagingData ->
             pagingData.map { it.toPlayer() }
         }
 
-    override fun observePlayer(playerId: Long): Flow<Player> = playersDao.get().observerPlayer(
+    override fun observerPickedUpPlayer(
+        playerId: Long
+    ): Flow<Player> = playersDao.get().observerPickedUpPlayer(
         id = playerId
     ).map { it.toPlayer() }
 }

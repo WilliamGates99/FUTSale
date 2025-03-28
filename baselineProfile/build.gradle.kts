@@ -6,21 +6,18 @@ plugins {
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.baselineprofile"
-    compileSdk = 35
+    compileSdk = 36
 
     targetProjectPath = ":app"
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
-
+        targetSdk = 36
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    flavorDimensions += listOf("build", "market")
+    flavorDimensions += listOf("market")
     productFlavors {
-        create("dev") { dimension = "build" }
-        create("prod") { dimension = "build" }
         create("playStore") { dimension = "market" }
         create("gitHub") { dimension = "market" }
         create("cafeBazaar") { dimension = "market" }
@@ -28,12 +25,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_22
-        targetCompatibility = JavaVersion.VERSION_22
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
 
     kotlinOptions {
-        jvmTarget = "22"
+        jvmTarget = "23"
     }
 }
 
@@ -45,24 +42,22 @@ baselineProfile {
 
 androidComponents {
     beforeVariants { variantBuilder ->
-        // Gradle ignores any variants that satisfy the conditions below.
-        if (variantBuilder.buildType == "nonMinifiedRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev")) -> false
-                    else -> true
+        variantBuilder.apply {
+            // Gradle ignores any variants that satisfy the conditions below.
+            if (buildType == "nonMinifiedRelease") {
+                productFlavors.let {
+                    enable = true
                 }
             }
-        }
 
-        if (variantBuilder.buildType == "benchmarkRelease") {
-            variantBuilder.productFlavors.let {
-                variantBuilder.enable = when {
-                    it.containsAll(listOf("build" to "dev")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "gitHub")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "cafeBazaar")) -> false
-                    it.containsAll(listOf("build" to "prod", "market" to "myket")) -> false
-                    else -> true
+            if (buildType == "benchmarkRelease") {
+                productFlavors.let {
+                    enable = when {
+                        it.containsAll(listOf("market" to "gitHub")) -> false
+                        it.containsAll(listOf("market" to "cafeBazaar")) -> false
+                        it.containsAll(listOf("market" to "myket")) -> false
+                        else -> true
+                    }
                 }
             }
         }
@@ -79,8 +74,5 @@ androidComponents {
 }
 
 dependencies {
-    implementation(libs.test.ext.junit) // JUnit Extension
-    implementation(libs.espresso.core)
-    implementation(libs.uiautomator)
-    implementation(libs.benchmark.macro.junit4) // JUnit Macro Benchmark
+    implementation(libs.bundles.baseline.profile)
 }

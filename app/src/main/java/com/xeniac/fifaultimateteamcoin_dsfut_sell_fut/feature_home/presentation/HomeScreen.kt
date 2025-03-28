@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
@@ -12,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,18 +30,19 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.nav_graph.SetupHomeNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.HomeUiEvent
-import kotlinx.coroutines.launch
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeUiEvent
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val activity = context.findActivity()
+    val activity = LocalActivity.current ?: context.findActivity()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
@@ -59,7 +59,6 @@ fun HomeScreen(
     val homeState by viewModel.homeState.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
-    var isIntentAppNotFoundErrorVisible by remember { mutableStateOf(false) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
@@ -90,23 +89,16 @@ fun HomeScreen(
                     viewModel.appUpdateOptions.get()
                 )
             }
-            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> {
-                scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.home_app_update_message),
-                        actionLabel = context.getString(R.string.home_app_update_action)
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            viewModel.appUpdateManager.get().completeUpdate()
-                        }
-                        SnackbarResult.Dismissed -> Unit
-                    }
+            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> showActionSnackbar(
+                message = UiText.StringResource(R.string.home_app_update_message),
+                actionLabel = UiText.StringResource(R.string.home_app_update_action),
+                scope = scope,
+                context = context,
+                snackbarHostState = snackbarHostState,
+                onAction = {
+                    viewModel.appUpdateManager.get().completeUpdate()
                 }
-            }
+            )
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
                 viewModel.appUpdateManager.get().completeUpdate()
             }
@@ -139,26 +131,9 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(key1 = isIntentAppNotFoundErrorVisible) {
-        if (isIntentAppNotFoundErrorVisible) {
-            snackbarHostState.currentSnackbarData?.dismiss()
-
-            val result = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.error_intent_app_not_found),
-                duration = SnackbarDuration.Short
-            )
-
-            when (result) {
-                SnackbarResult.ActionPerformed -> Unit
-                SnackbarResult.Dismissed -> {
-                    isIntentAppNotFoundErrorVisible = false
-                }
-            }
-        }
-    }
-
     PostNotificationPermissionHandler(
-        homeState = homeState,
+        isPermissionDialogVisible = homeState.isPermissionDialogVisible,
+        permissionDialogQueue = homeState.permissionDialogQueue,
         onAction = viewModel::onAction
     )
 
@@ -201,16 +176,12 @@ fun HomeScreen(
     AppUpdateBottomSheet(
         appUpdateInfo = homeState.latestAppUpdateInfo,
         onAction = viewModel::onAction,
-        openAppUpdatePageInStore = {
-            isIntentAppNotFoundErrorVisible = IntentHelper.openAppUpdatePageInStore(context)
-        }
+        openAppUpdatePageInStore = { IntentHelper.openAppUpdatePageInStore(context) }
     )
 
     AppReviewDialog(
         isVisible = homeState.isAppReviewDialogVisible,
         onAction = viewModel::onAction,
-        openAppPageInStore = {
-            isIntentAppNotFoundErrorVisible = IntentHelper.openAppPageInStore(context)
-        }
+        openAppPageInStore = { IntentHelper.openAppPageInStore(context) }
     )
 }

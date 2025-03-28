@@ -26,8 +26,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.CustomOutlinedTextField
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 
@@ -48,7 +49,9 @@ fun ProfileTextFields(
         Spacer(modifier = Modifier.height(24.dp))
 
         PartnerIdTextField(
-            profileState = profileState,
+            partnerIdState = profileState.partnerIdState,
+            isPartnerIdSaved = profileState.isPartnerIdSaved,
+            isPartnerIdLoading = profileState.isPartnerIdLoading,
             onAction = onAction,
             keyboardAction = { focusManager.clearFocus() },
             modifier = Modifier.fillMaxWidth()
@@ -57,7 +60,9 @@ fun ProfileTextFields(
         Spacer(modifier = Modifier.height(16.dp))
 
         SecretKeyTextField(
-            profileState = profileState,
+            secretKeyState = profileState.secretKeyState,
+            isSecretKeySaved = profileState.isSecretKeySaved,
+            isSecretKeyLoading = profileState.isSecretKeyLoading,
             onAction = onAction,
             keyboardAction = { focusManager.clearFocus() },
             modifier = Modifier.fillMaxWidth()
@@ -66,7 +71,7 @@ fun ProfileTextFields(
 }
 
 @Composable
-fun ProfileHeaderAnimation(
+private fun ProfileHeaderAnimation(
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     animationComposition: LottieComposition? = rememberLottieComposition(
@@ -97,33 +102,35 @@ fun ProfileHeaderAnimation(
 }
 
 @Composable
-fun PartnerIdTextField(
-    profileState: ProfileState,
+private fun PartnerIdTextField(
+    partnerIdState: CustomTextFieldState,
+    isPartnerIdSaved: Boolean?,
+    isPartnerIdLoading: Boolean,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.profile_textfield_title_partner_id),
     placeholder: String = stringResource(id = R.string.profile_textfield_hint_partner_id),
     leadingIcon: Painter = painterResource(id = R.drawable.ic_core_textfield_partner_id),
     trailingAnimationComposition: LottieComposition? = rememberLottieComposition(
         when {
-            profileState.isPartnerIdLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
-            profileState.partnerIdErrorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
-            profileState.isPartnerIdSaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
-            profileState.isPartnerIdSaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            isPartnerIdLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
+            partnerIdState.errorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            isPartnerIdSaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
+            isPartnerIdSaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             else -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
         }
     ).value,
     trailingAnimationIteration: Int = when {
-        profileState.isPartnerIdLoading -> LottieConstants.IterateForever
-        profileState.partnerIdErrorText != null -> 1
-        profileState.isPartnerIdSaved == true -> 1
-        profileState.isPartnerIdSaved == false -> 1
+        isPartnerIdLoading -> LottieConstants.IterateForever
+        partnerIdState.errorText != null -> 1
+        isPartnerIdSaved == true -> 1
+        isPartnerIdSaved == false -> 1
         else -> LottieConstants.IterateForever
     },
     trailingAnimationSpeed: Float = when {
-        profileState.isPartnerIdLoading -> 0.7f
-        profileState.partnerIdErrorText != null -> 1f
-        profileState.isPartnerIdSaved == true -> 1f
-        profileState.isPartnerIdSaved == false -> 1f
+        isPartnerIdLoading -> 0.7f
+        partnerIdState.errorText != null -> 1f
+        isPartnerIdSaved == true -> 1f
+        isPartnerIdSaved == false -> 1f
         else -> 1f
     },
     trailingAnimationSize: Dp = 24.dp,
@@ -134,8 +141,8 @@ fun PartnerIdTextField(
 ) {
     CustomOutlinedTextField(
         isLoading = false,
-        value = profileState.partnerId,
-        errorText = profileState.partnerIdErrorText?.asString(),
+        value = partnerIdState.value,
+        errorText = partnerIdState.errorText?.asString(),
         onValueChange = { newPartnerId ->
             onAction(ProfileAction.PartnerIdChanged(newPartnerId))
         },
@@ -164,33 +171,35 @@ fun PartnerIdTextField(
 }
 
 @Composable
-fun SecretKeyTextField(
-    profileState: ProfileState,
+private fun SecretKeyTextField(
+    secretKeyState: CustomTextFieldState,
+    isSecretKeySaved: Boolean?,
+    isSecretKeyLoading: Boolean,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.profile_textfield_title_secret_key),
     placeholder: String = stringResource(id = R.string.profile_textfield_hint_secret_key),
     leadingIcon: Painter = painterResource(id = R.drawable.ic_core_textfield_secret_key),
     trailingAnimationComposition: LottieComposition? = rememberLottieComposition(
         when {
-            profileState.isSecretKeyLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
-            profileState.secretKeyErrorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
-            profileState.isSecretKeySaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
-            profileState.isSecretKeySaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            isSecretKeyLoading -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
+            secretKeyState.errorText != null -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
+            isSecretKeySaved == true -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_saved)
+            isSecretKeySaved == false -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_error)
             else -> LottieCompositionSpec.RawRes(R.raw.anim_profile_textfield_typing)
         }
     ).value,
     trailingAnimationIteration: Int = when {
-        profileState.isSecretKeyLoading -> LottieConstants.IterateForever
-        profileState.secretKeyErrorText != null -> 1
-        profileState.isSecretKeySaved == true -> 1
-        profileState.isSecretKeySaved == false -> 1
+        isSecretKeyLoading -> LottieConstants.IterateForever
+        secretKeyState.errorText != null -> 1
+        isSecretKeySaved == true -> 1
+        isSecretKeySaved == false -> 1
         else -> LottieConstants.IterateForever
     },
     trailingAnimationSpeed: Float = when {
-        profileState.isSecretKeyLoading -> 0.7f
-        profileState.secretKeyErrorText != null -> 1f
-        profileState.isSecretKeySaved == true -> 1f
-        profileState.isSecretKeySaved == false -> 1f
+        isSecretKeyLoading -> 0.7f
+        secretKeyState.errorText != null -> 1f
+        isSecretKeySaved == true -> 1f
+        isSecretKeySaved == false -> 1f
         else -> 1f
     },
     trailingAnimationSize: Dp = 24.dp,
@@ -201,8 +210,8 @@ fun SecretKeyTextField(
 ) {
     CustomOutlinedTextField(
         isLoading = false,
-        value = profileState.secretKey,
-        errorText = profileState.secretKeyErrorText?.asString(),
+        value = secretKeyState.value,
+        errorText = secretKeyState.errorText?.asString(),
         onValueChange = { newSecretKey ->
             onAction(ProfileAction.SecretKeyChanged(newSecretKey))
         },

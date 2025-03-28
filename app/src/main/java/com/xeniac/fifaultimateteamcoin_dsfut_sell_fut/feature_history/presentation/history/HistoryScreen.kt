@@ -1,13 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
@@ -27,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.LoadingAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.EmptyListAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.PlayersLazyColumn
@@ -39,10 +38,10 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val horizontalPadding by remember { derivedStateOf { 16.dp } }
+
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val pickedPlayersHistory = viewModel.pickedPlayersHistory.collectAsLazyPagingItems()
+    val pickedUpPlayersHistory = viewModel.pickedUpPlayersHistory.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -55,52 +54,51 @@ fun HistoryScreen(
         },
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets(bottom = bottomPadding))
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .testTag(TestTags.TEST_TAG_SCREEN_HISTORY)
     ) { innerPadding ->
-        if (pickedPlayersHistory.loadState.refresh is LoadState.Loading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        top = innerPadding.calculateTopPadding() + verticalPadding,
-                        bottom = bottomPadding + verticalPadding
+        AnimatedContent(
+            targetState = pickedUpPlayersHistory.loadState.refresh
+        ) { loadState ->
+            when (loadState) {
+                is LoadState.Loading -> {
+                    LoadingAnimation(
+                        isLoading = true,
+                        paddingValues = PaddingValues(
+                            horizontal = 24.dp,
+                            vertical = verticalPadding
+                        ),
+                        modifier = Modifier.windowInsetsPadding(
+                            insets = WindowInsets(top = innerPadding.calculateTopPadding())
+                        )
                     )
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            if (pickedPlayersHistory.itemCount == 0) {
-                EmptyListAnimation(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            top = innerPadding.calculateTopPadding() + verticalPadding,
-                            bottom = bottomPadding + verticalPadding
+                }
+                else -> {
+                    if (pickedUpPlayersHistory.itemCount == 0) {
+                        EmptyListAnimation(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                                .padding(
+                                    horizontal = 24.dp,
+                                    vertical = verticalPadding
+                                )
                         )
-                )
-            } else {
-                PlayersLazyColumn(
-                    pickedPlayersHistory = pickedPlayersHistory,
-                    contentPadding = PaddingValues(
-                        horizontal = horizontalPadding,
-                        vertical = verticalPadding
-                    ),
-                    onClick = onNavigateToPlayerInfoScreen,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(
-                            WindowInsets(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = bottomPadding
-                            )
+                    } else {
+                        PlayersLazyColumn(
+                            pickedUpPlayersHistory = pickedUpPlayersHistory,
+                            contentPadding = PaddingValues(
+                                horizontal = 16.dp,
+                                vertical = verticalPadding
+                            ),
+                            onClick = onNavigateToPlayerInfoScreen,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                         )
-                )
+                    }
+                }
             }
         }
     }

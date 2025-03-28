@@ -3,8 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import dagger.Lazy
 
 data class PickUpPlayerUseCases(
-    val observeLatestPickedPlayersUseCase: Lazy<ObserveLatestPickedPlayersUseCase>,
-    val observePickedUpPlayerUseCase: Lazy<ObservePickedUpPlayerUseCase>,
+    val observeLatestPickedUpPlayersUseCase: Lazy<ObserveLatestPickedUpPlayersUseCase>,
     val getIsNotificationSoundEnabledUseCase: Lazy<GetIsNotificationSoundEnabledUseCase>,
     val getIsNotificationVibrateEnabledUseCase: Lazy<GetIsNotificationVibrateEnabledUseCase>,
     val getSelectedPlatformUseCase: Lazy<GetSelectedPlatformUseCase>,

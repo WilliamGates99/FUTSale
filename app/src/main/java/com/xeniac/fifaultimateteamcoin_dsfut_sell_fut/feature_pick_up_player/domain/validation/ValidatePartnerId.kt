@@ -8,7 +8,8 @@ class ValidatePartnerId {
             return PickUpPlayerError.BlankPartnerId
         }
 
-        if (partnerId.any { !it.isDigit() }) {
+        val doesPartnerIdContainNonDigits = partnerId.any { !it.isDigit() }
+        if (doesPartnerIdContainNonDigits) {
             return PickUpPlayerError.InvalidPartnerId
         }
 

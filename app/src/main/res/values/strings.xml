@@ -26,8 +26,12 @@
 
     <string name="error_something_went_wrong">Something went wrong. Please try again later.</string>
     <string name="error_network_connection_unavailable">Unable to connect to the internet.</string>
+    <string name="error_network_too_many_requests">You\'ve sent too many requests in a short time. Please wait before trying again.</string>
     <string name="error_network_failure">You\'re having network issues. Please try again later.</string>
     <string name="error_network_serialization">Something went wrong while trying to process the data.</string>
+    <string name="error_network_json_conversion">Something went wrong while trying to process the data.</string>
+    <string name="error_network_ssl_handshake">Unable to establish a secure connection. Please ensure your device\'s date and time are set correctly and try again.</string>
+    <string name="error_network_cert_path_validator">Unable to establish a secure connection due to a server issue.</string>
     <string name="error_intent_app_not_found">There is no app on the phone to handle this action.</string>
     <string name="error_btn_retry">Retry</string>
     <string name="error_btn_confirm">Confirm</string>
@@ -108,9 +112,9 @@
     <string name="pick_up_player_segmented_btn_platform_console">Console</string>
     <string name="pick_up_player_segmented_btn_platform_pc">PC</string>
     <string name="pick_up_player_title_min_price">Min Price</string>
-    <string name="pick_up_player_hint_min_price" translatable="false">10000</string>
+    <string name="pick_up_player_hint_min_price">10,000</string>
     <string name="pick_up_player_title_max_price">Max Price</string>
-    <string name="pick_up_player_hint_max_price" translatable="false">50000</string>
+    <string name="pick_up_player_hint_max_price">50,000</string>
     <string name="pick_up_player_title_take_after">Pick up the player with delay?</string>
     <!--Placeholder is for the delay time-->
     <string name="pick_up_player_title_take_after_zero">Pick the player after %d seconds.</string>

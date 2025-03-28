@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.addTestTag
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.NeutralVariant60
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.addTestTag
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant60
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 
@@ -132,7 +132,7 @@ fun SettingsCard(
 }
 
 @Composable
-fun CardTextRowItem(
+private fun CardTextRowItem(
     icon: Painter,
     title: String,
     currentValue: String?,
@@ -186,7 +186,7 @@ fun CardTextRowItem(
         )
 
         Text(
-            text = currentValue ?: "",
+            text = currentValue.orEmpty(),
             fontSize = currentValueFontSize,
             fontWeight = currentValueFontWeight,
             color = currentValueColor
@@ -195,7 +195,7 @@ fun CardTextRowItem(
 }
 
 @Composable
-fun CardSwitchRowItem(
+private fun CardSwitchRowItem(
     icon: Painter,
     title: String,
     isChecked: Boolean?,

@@ -49,7 +49,7 @@ fun PickedUpPlayerInfoScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = player?.name ?: "") },
+                title = { Text(text = player?.name.orEmpty()) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -76,7 +76,7 @@ fun PickedUpPlayerInfoScreen(
         ) {
             PickedUpPlayerInfo(
                 player = player,
-                timerText = timerText.asString(),
+                timerText = timerText,
                 horizontalPadding = horizontalPadding,
                 modifier = Modifier.fillMaxWidth()
             )

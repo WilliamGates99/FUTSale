@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 class GetIsNotificationVibrateEnabledUseCase(
     private val settingsDataStoreRepository: SettingsDataStoreRepository
 ) {
-    operator fun invoke(): Flow<Boolean> = settingsDataStoreRepository
-        .isNotificationVibrateEnabled()
+    operator fun invoke(): Flow<Boolean> =
+        settingsDataStoreRepository.isNotificationVibrateEnabled()
 }

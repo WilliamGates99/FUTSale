@@ -27,7 +27,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -165,7 +165,7 @@ fun AppReviewDialog(
 }
 
 @Composable
-fun DialogTitle(
+private fun DialogTitle(
     title: String,
     color: Color,
     modifier: Modifier = Modifier
@@ -182,7 +182,7 @@ fun DialogTitle(
 }
 
 @Composable
-fun DialogMessage(
+private fun DialogMessage(
     message: String,
     color: Color,
     modifier: Modifier = Modifier
@@ -199,7 +199,7 @@ fun DialogMessage(
 }
 
 @Composable
-fun DialogButtons(
+private fun DialogButtons(
     color: Color,
     modifier: Modifier = Modifier,
     confirmButton: @Composable () -> Unit,

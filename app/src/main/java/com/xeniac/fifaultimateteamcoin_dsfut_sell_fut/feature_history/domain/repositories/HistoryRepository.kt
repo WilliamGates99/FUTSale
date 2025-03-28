@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
 
-    fun observePickedPlayersHistory(): Flow<PagingData<Player>>
+    fun observePickedUpPlayersHistory(): Flow<PagingData<Player>>
 
-    fun observePlayer(playerId: Long): Flow<Player>
+    fun observerPickedUpPlayer(playerId: Long): Flow<Player>
 }

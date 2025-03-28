@@ -21,22 +21,21 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.GradientButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.GradientButton
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
 
 @Composable
 fun AutoPickUpButton(
-    pickUpPlayerState: PickUpPlayerState,
+    isAutoPickUpLoading: Boolean,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = !pickUpPlayerState.isAutoPickUpLoading,
+    isEnabled: Boolean = !isAutoPickUpLoading,
     contentPadding: PaddingValues = PaddingValues(vertical = 14.dp),
     textFontSize: TextUnit = 16.sp,
     textLineHeight: TextUnit = 20.sp,
     textFontWeight: FontWeight = FontWeight.Bold,
     onAction: (action: PickUpPlayerAction) -> Unit
 ) {
-    if (pickUpPlayerState.isAutoPickUpLoading) {
+    if (isAutoPickUpLoading) {
         GradientButton(
             onClick = {
                 onAction(PickUpPlayerAction.CancelAutoPickUpPlayer)
@@ -78,7 +77,7 @@ fun AutoPickUpButton(
 
 @Composable
 fun PickUpOnceButton(
-    pickUpPlayerState: PickUpPlayerState,
+    isPickUpOnceLoading: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 12.dp),
     textFontSize: TextUnit = 14.sp,
@@ -88,12 +87,12 @@ fun PickUpOnceButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        enabled = !pickUpPlayerState.isPickUpOnceLoading,
+        enabled = !isPickUpOnceLoading,
         contentPadding = contentPadding,
         modifier = modifier
     ) {
         AnimatedContent(
-            targetState = pickUpPlayerState.isPickUpOnceLoading,
+            targetState = isPickUpOnceLoading,
             transitionSpec = { scaleIn().togetherWith(scaleOut()) },
             label = "PickUpOnceButton"
         ) { isLoading ->

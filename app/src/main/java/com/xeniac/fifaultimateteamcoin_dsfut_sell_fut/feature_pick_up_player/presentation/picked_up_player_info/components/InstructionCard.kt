@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Red
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Red
 
 @Composable
 fun InstructionCard(
@@ -48,7 +48,7 @@ fun InstructionCard(
 }
 
 @Composable
-fun InstructionText(
+private fun InstructionText(
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.picked_up_player_info_instruction_title),
     titleFontSize: TextUnit = 14.sp,
@@ -86,7 +86,7 @@ fun InstructionText(
 }
 
 @Composable
-fun AttentionText(
+private fun AttentionText(
     modifier: Modifier = Modifier,
     attention: String = stringResource(id = R.string.picked_up_player_info_attention),
     fontSize: TextUnit = 12.sp,

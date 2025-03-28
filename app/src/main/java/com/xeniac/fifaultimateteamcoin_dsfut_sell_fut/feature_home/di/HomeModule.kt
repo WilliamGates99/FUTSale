@@ -11,7 +11,8 @@ import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.HomeRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppReviewRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckFlexibleUpdateDownloadStateUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckForAppUpdatesUseCase
@@ -82,39 +83,44 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideCheckFlexibleUpdateDownloadStateUseCase(
-        homeRepository: HomeRepository
-    ): CheckFlexibleUpdateDownloadStateUseCase =
-        CheckFlexibleUpdateDownloadStateUseCase(homeRepository)
+        appUpdateRepository: AppUpdateRepository
+    ): CheckFlexibleUpdateDownloadStateUseCase = CheckFlexibleUpdateDownloadStateUseCase(
+        appUpdateRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideCheckIsFlexibleUpdateStalledUseCase(
-        homeRepository: HomeRepository
-    ): CheckIsFlexibleUpdateStalledUseCase = CheckIsFlexibleUpdateStalledUseCase(homeRepository)
+        appUpdateRepository: AppUpdateRepository
+    ): CheckIsFlexibleUpdateStalledUseCase = CheckIsFlexibleUpdateStalledUseCase(
+        appUpdateRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideCheckIsImmediateUpdateStalledUseCase(
-        homeRepository: HomeRepository
-    ): CheckIsImmediateUpdateStalledUseCase = CheckIsImmediateUpdateStalledUseCase(homeRepository)
+        appUpdateRepository: AppUpdateRepository
+    ): CheckIsImmediateUpdateStalledUseCase = CheckIsImmediateUpdateStalledUseCase(
+        appUpdateRepository
+    )
 
     @Provides
     @ViewModelScoped
     fun provideCheckForAppUpdatesUseCase(
-        homeRepository: HomeRepository
-    ): CheckForAppUpdatesUseCase = CheckForAppUpdatesUseCase(homeRepository)
+        appUpdateRepository: AppUpdateRepository
+    ): CheckForAppUpdatesUseCase = CheckForAppUpdatesUseCase(appUpdateRepository)
 
     @Provides
     @ViewModelScoped
     fun provideRequestInAppReviewsUseCase(
-        homeRepository: HomeRepository
-    ): RequestInAppReviewsUseCase = RequestInAppReviewsUseCase(homeRepository)
+        appReviewRepository: AppReviewRepository
+    ): RequestInAppReviewsUseCase = RequestInAppReviewsUseCase(appReviewRepository)
 
     @Provides
     @ViewModelScoped
     fun provideGetLatestAppVersionUseCase(
-        homeRepository: HomeRepository
-    ): GetLatestAppVersionUseCase = GetLatestAppVersionUseCase(homeRepository)
+        appUpdateRepository: AppUpdateRepository
+    ): GetLatestAppVersionUseCase = GetLatestAppVersionUseCase(appUpdateRepository)
 
     @Provides
     @ViewModelScoped

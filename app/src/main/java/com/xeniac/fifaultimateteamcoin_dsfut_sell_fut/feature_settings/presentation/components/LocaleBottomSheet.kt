@@ -1,11 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
 
 enum class LocaleItems(
     val locale: AppLocale,
@@ -66,8 +61,6 @@ fun LocaleBottomSheet(
     isVisible: Boolean,
     currentAppLocale: AppLocale,
     modifier: Modifier = Modifier,
-    enterTransition: EnterTransition = expandVertically(),
-    exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
     sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
@@ -89,18 +82,14 @@ fun LocaleBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = enterTransition,
-        exit = exitTransition,
-        modifier = modifier
-    ) {
+    if (isVisible) {
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
             onDismissRequest = {
                 onAction(SettingsAction.DismissLocaleBottomSheet)
-            }
+            },
+            modifier = modifier
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

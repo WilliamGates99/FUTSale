@@ -31,11 +31,11 @@ interface PlayersDao {
         ORDER BY pick_up_time_in_seconds DESC
         """
     )
-    fun observeLatestPickedPlayers(currentTimeInSeconds: Long): Flow<List<PlayerEntity>>
+    fun observeLatestPickedUpPlayers(currentTimeInSeconds: Long): Flow<List<PlayerEntity>>
 
     @Query("SELECT * FROM players ORDER BY pick_up_time_in_seconds DESC")
     fun pagingSource(): PagingSource<Int, PlayerEntity>
 
     @Query("SELECT * FROM players WHERE id = :id")
-    fun observerPlayer(id: Long): Flow<PlayerEntity>
+    fun observerPickedUpPlayer(id: Long): Flow<PlayerEntity>
 }

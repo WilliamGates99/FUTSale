@@ -8,7 +8,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidatePartnerId
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateSecretKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateTakeAfter
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class PickUpPlayerUseCase(
     private val dsfutDataStoreRepository: DsfutDataStoreRepository,
@@ -19,13 +20,13 @@ class PickUpPlayerUseCase(
     private val validateMaxPrice: ValidateMaxPrice,
     private val validateTakeAfter: ValidateTakeAfter
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         minPrice: String? = null,
         maxPrice: String? = null,
         takeAfterDelayInSeconds: Int? = null
-    ): PickUpPlayerResult {
-        val partnerId = dsfutDataStoreRepository.getPartnerId().first()
-        val secretKey = dsfutDataStoreRepository.getSecretKey().first()
+    ): Flow<PickUpPlayerResult> = flow {
+        val partnerId = dsfutDataStoreRepository.getPartnerId()
+        val secretKey = dsfutDataStoreRepository.getSecretKey()
 
         val partnerIdError = validatePartnerId(partnerId)
         val secretKeyError = validateSecretKey(secretKey)
@@ -42,22 +43,26 @@ class PickUpPlayerUseCase(
         ).any { it != null }
 
         if (hasError) {
-            return PickUpPlayerResult(
-                partnerIdError = partnerIdError,
-                secretKeyError = secretKeyError,
-                minPriceError = minPriceError,
-                maxPriceError = maxPriceError,
-                takeAfterError = takeAfterError
+            return@flow emit(
+                PickUpPlayerResult(
+                    partnerIdError = partnerIdError,
+                    secretKeyError = secretKeyError,
+                    minPriceError = minPriceError,
+                    maxPriceError = maxPriceError,
+                    takeAfterError = takeAfterError
+                )
             )
         }
 
-        return PickUpPlayerResult(
-            result = pickUpPlayerRepository.pickUpPlayer(
-                partnerId = partnerId ?: "",
-                secretKey = secretKey ?: "",
-                minPrice = minPrice,
-                maxPrice = maxPrice,
-                takeAfterDelayInSeconds = takeAfterDelayInSeconds,
+        return@flow emit(
+            PickUpPlayerResult(
+                result = pickUpPlayerRepository.pickUpPlayer(
+                    partnerId = partnerId.orEmpty(),
+                    secretKey = secretKey.orEmpty(),
+                    minPrice = minPrice,
+                    maxPrice = maxPrice,
+                    takeAfterDelayInSeconds = takeAfterDelayInSeconds,
+                )
             )
         )
     }

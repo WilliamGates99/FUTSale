@@ -7,6 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platfor
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,18 +16,20 @@ class DsfutDataStoreRepositoryImpl @Inject constructor(
     @DsfutDataStoreQualifier private val dataStore: DataStore<DsfutPreferences>
 ) : DsfutDataStoreRepository {
 
-    override fun getPartnerId(): Flow<String?> = dataStore.data.map {
-        it.partnerId
-    }.catch { e ->
+    override suspend fun getPartnerId(): String? = try {
+        dataStore.data.first().partnerId
+    } catch (e: Exception) {
         Timber.e("Get partner id failed:")
         e.printStackTrace()
+        null
     }
 
-    override fun getSecretKey(): Flow<String?> = dataStore.data.map {
-        it.secretKey
-    }.catch { e ->
+    override suspend fun getSecretKey(): String? = try {
+        dataStore.data.first().secretKey
+    } catch (e: Exception) {
         Timber.e("Get secret key failed:")
         e.printStackTrace()
+        null
     }
 
     override fun getSelectedPlatform(): Flow<Platform> = dataStore.data.map {

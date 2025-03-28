@@ -3,8 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_c
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeHomeRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppReviewRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -24,25 +23,21 @@ class RequestInAppReviewsUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    private lateinit var fakeHomeRepository: FakeHomeRepositoryImpl
+    private lateinit var fakeAppReviewRepositoryImpl: FakeAppReviewRepositoryImpl
     private lateinit var requestInAppReviewsUseCase: RequestInAppReviewsUseCase
 
     @Before
     fun setUp() {
-        fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
-        fakeHomeRepository = FakeHomeRepositoryImpl(
-            miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
-        )
+        fakeAppReviewRepositoryImpl = FakeAppReviewRepositoryImpl()
 
         requestInAppReviewsUseCase = RequestInAppReviewsUseCase(
-            homeRepository = fakeHomeRepository
+            appReviewRepository = fakeAppReviewRepositoryImpl
         )
     }
 
     @Test
     fun requestInAppReviewsWithNoReviewAvailable_returnsNull() = runTest {
-        fakeHomeRepository.isInAppReviewsAvailable(isAvailable = false)
+        fakeAppReviewRepositoryImpl.isInAppReviewsAvailable(isAvailable = false)
         val reviewInfo = requestInAppReviewsUseCase().first()
         assertThat(reviewInfo).isNull()
     }

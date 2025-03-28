@@ -25,7 +25,7 @@ object DsfutPreferencesSerializer : Serializer<DsfutPreferences> {
         try {
             return Json.decodeFromString(
                 deserializer = DsfutPreferences.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.use { it.readBytes() }.decodeToString()
             )
         } catch (e: SerializationException) {
             throw CorruptionException(
@@ -35,14 +35,19 @@ object DsfutPreferencesSerializer : Serializer<DsfutPreferences> {
         }
     }
 
-    override suspend fun writeTo(t: DsfutPreferences, output: OutputStream) {
+    override suspend fun writeTo(
+        t: DsfutPreferences,
+        output: OutputStream
+    ) {
         withContext(Dispatchers.IO) {
-            output.write(
-                Json.encodeToString(
-                    serializer = DsfutPreferences.serializer(),
-                    value = t
-                ).encodeToByteArray()
-            )
+            output.use {
+                it.write(
+                    Json.encodeToString(
+                        serializer = DsfutPreferences.serializer(),
+                        value = t
+                    ).encodeToByteArray()
+                )
+            }
         }
     }
 }

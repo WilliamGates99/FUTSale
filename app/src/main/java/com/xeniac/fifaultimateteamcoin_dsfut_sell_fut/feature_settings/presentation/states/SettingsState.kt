@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SettingsState(
-    val currentAppTheme: AppTheme? = null,
     val currentAppLocale: AppLocale? = null,
+    val currentAppTheme: AppTheme? = null,
     val isNotificationSoundEnabled: Boolean? = null,
     val isNotificationVibrateEnabled: Boolean? = null,
     val isLocaleBottomSheetVisible: Boolean = false,

@@ -1,7 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.di
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetProfileUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetPartnerIdUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetSecretKeyUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdatePartnerIdUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdateSecretKeyUseCase
@@ -27,9 +28,15 @@ object ProfileModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetProfileUseCase(
+    fun provideGetPartnerIdUseCase(
         dsfutDataStoreRepository: DsfutDataStoreRepository
-    ): GetProfileUseCase = GetProfileUseCase(dsfutDataStoreRepository)
+    ): GetPartnerIdUseCase = GetPartnerIdUseCase(dsfutDataStoreRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetSecretKeyUseCase(
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): GetSecretKeyUseCase = GetSecretKeyUseCase(dsfutDataStoreRepository)
 
     @Provides
     @ViewModelScoped
@@ -54,11 +61,13 @@ object ProfileModule {
     @Provides
     @ViewModelScoped
     fun provideCompleteOnboardingUseCase(
-        getProfileUseCase: GetProfileUseCase,
+        getPartnerIdUseCase: GetPartnerIdUseCase,
+        getSecretKeyUseCase: GetSecretKeyUseCase,
         updatePartnerIdUseCase: UpdatePartnerIdUseCase,
         updateSecretKeyUseCase: UpdateSecretKeyUseCase
     ): ProfileUseCases = ProfileUseCases(
-        { getProfileUseCase },
+        { getPartnerIdUseCase },
+        { getSecretKeyUseCase },
         { updatePartnerIdUseCase },
         { updateSecretKeyUseCase }
     )

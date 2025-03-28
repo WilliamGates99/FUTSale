@@ -1,14 +1,18 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.OnboardingUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.asUiText
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,37 +54,41 @@ class OnboardingViewModel @Inject constructor(
 
     fun onAction(action: OnboardingAction) {
         when (action) {
-            is OnboardingAction.PartnerIdChanged -> partnerIdChanged(action.partnerId)
-            is OnboardingAction.SecretKeyChanged -> secretKeyChanged(action.secretKey)
+            is OnboardingAction.PartnerIdChanged -> partnerIdChanged(action.newValue)
+            is OnboardingAction.SecretKeyChanged -> secretKeyChanged(action.newValue)
             OnboardingAction.SaveUserData -> saveUserData()
         }
     }
 
-    private fun partnerIdChanged(partnerId: String) = viewModelScope.launch {
+    private fun partnerIdChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["onboardingState"] = onboardingState.value.copy(
-                partnerId = partnerId.filter { it.isDigit() }.trim(),
-                partnerIdErrorText = null
+            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
+                partnerIdState = _onboardingState.value.partnerIdState.copy(
+                    value = newValue.copy(text = newValue.text.toEnglishDigits()),
+                    errorText = null
+                )
             )
         }
     }
 
-    private fun secretKeyChanged(secretKey: String) = viewModelScope.launch {
+    private fun secretKeyChanged(newValue: TextFieldValue) = viewModelScope.launch {
         mutex.withLock {
-            savedStateHandle["onboardingState"] = onboardingState.value.copy(
-                secretKey = secretKey.trim(),
-                secretKeyErrorText = null
+            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
+                secretKeyState = _onboardingState.value.secretKeyState.copy(
+                    value = newValue.copy(text = newValue.text.convertDigitsToEnglish()),
+                    errorText = null
+                )
             )
         }
     }
 
     private fun saveUserData() {
         completeOnboardingUseCase.get()(
-            partnerId = onboardingState.value.partnerId,
-            secretKey = onboardingState.value.secretKey
+            partnerId = _onboardingState.value.partnerIdState.value.text,
+            secretKey = _onboardingState.value.secretKeyState.value.text
         ).onStart {
             mutex.withLock {
-                savedStateHandle["secretKeyState"] = onboardingState.value.copy(
+                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
                     isCompleteLoading = true
                 )
             }
@@ -97,7 +105,7 @@ class OnboardingViewModel @Inject constructor(
             }
         }.onCompletion {
             mutex.withLock {
-                savedStateHandle["secretKeyState"] = onboardingState.value.copy(
+                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
                     isCompleteLoading = false
                 )
             }

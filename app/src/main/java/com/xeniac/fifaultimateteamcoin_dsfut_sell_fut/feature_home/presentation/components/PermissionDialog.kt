@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -22,16 +23,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.PermissionDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.openAppSettings
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.components.PermissionDialog
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.states.HomeState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
 
 @Composable
 fun PostNotificationPermissionHandler(
-    homeState: HomeState,
+    isPermissionDialogVisible: Boolean,
+    permissionDialogQueue: List<String>,
     modifier: Modifier = Modifier,
     isRunningAndroid13OrNewer: Boolean = remember {
         derivedStateOf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU }
@@ -41,7 +42,7 @@ fun PostNotificationPermissionHandler(
     @SuppressLint("InlinedApi")
     if (isRunningAndroid13OrNewer) {
         val context = LocalContext.current
-        val activity = context.findActivity()
+        val activity = LocalActivity.current ?: context.findActivity()
 
         val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
@@ -60,8 +61,8 @@ fun PostNotificationPermissionHandler(
 
         NotificationPermissionDialog(
             activity = activity,
-            isVisible = homeState.isPermissionDialogVisible,
-            permissionQueue = homeState.permissionDialogQueue,
+            isVisible = isPermissionDialogVisible,
+            permissionQueue = permissionDialogQueue,
             onConfirmClick = {
                 postNotificationPermissionResultLauncher.launch(
                     Manifest.permission.POST_NOTIFICATIONS
@@ -76,7 +77,7 @@ fun PostNotificationPermissionHandler(
 }
 
 @Composable
-fun NotificationPermissionDialog(
+private fun NotificationPermissionDialog(
     activity: Activity,
     isVisible: Boolean,
     permissionQueue: List<String>,

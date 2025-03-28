@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral60
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral60
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.asDateTime
 
@@ -26,7 +26,7 @@ fun PickUpDate(
     color: Color = Neutral60
 ) {
     Text(
-        text = pickUpTimeInMs?.asDateTime() ?: "",
+        text = pickUpTimeInMs?.asDateTime().orEmpty(),
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = fontWeight,

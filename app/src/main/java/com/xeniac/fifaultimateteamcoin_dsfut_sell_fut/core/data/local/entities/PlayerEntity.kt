@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.formatNumber
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.formatToString
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -55,8 +55,8 @@ data class PlayerEntity(
                 /* symbols = */ DecimalFormatSymbols(Locale.US)
             ).format(rating),
             position = position,
-            startPrice = formatNumber(startPrice),
-            buyNowPrice = formatNumber(buyNowPrice),
+            startPrice = startPrice.formatToString(),
+            buyNowPrice = buyNowPrice.formatToString(),
             owners = owners.toString(),
             contracts = contracts.toString(),
             chemistryStyle = chemistryStyle,

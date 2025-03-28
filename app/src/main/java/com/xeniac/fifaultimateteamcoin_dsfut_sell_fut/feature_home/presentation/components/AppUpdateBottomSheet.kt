@@ -1,10 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +36,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +45,6 @@ fun AppUpdateBottomSheet(
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     isVisible: Boolean = appUpdateInfo != null,
-    enterTransition: EnterTransition = expandVertically(),
-    exitTransition: ExitTransition = shrinkVertically(),
     dismissOnBackPress: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
     sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
@@ -87,18 +80,14 @@ fun AppUpdateBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = enterTransition,
-        exit = exitTransition,
-        modifier = modifier
-    ) {
+    if (isVisible) {
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
             onDismissRequest = {
                 onAction(HomeAction.DismissAppUpdateSheet)
-            }
+            },
+            modifier = modifier
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -172,7 +161,7 @@ fun AppUpdateBottomSheet(
 }
 
 @Composable
-fun UpdateButton(
+private fun UpdateButton(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 14.dp),
     text: String = stringResource(id = R.string.home_app_update_sheet_btn_update),
@@ -196,7 +185,7 @@ fun UpdateButton(
 }
 
 @Composable
-fun DismissButton(
+private fun DismissButton(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 12.dp),
     text: String = stringResource(id = R.string.home_app_update_sheet_btn_dismiss),

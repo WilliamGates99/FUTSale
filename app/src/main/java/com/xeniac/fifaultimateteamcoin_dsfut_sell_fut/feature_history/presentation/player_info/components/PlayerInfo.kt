@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.asUiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.Neutral40
 
 @Composable
 fun PlayerInfo(
@@ -128,7 +128,7 @@ fun PlayerInfo(
 }
 
 @Composable
-fun PlayerInfoText(
+private fun PlayerInfoText(
     title: String,
     value: String?,
     modifier: Modifier = Modifier,
@@ -164,7 +164,7 @@ fun PlayerInfoText(
         )
 
         Text(
-            text = value ?: "",
+            text = value.orEmpty(),
             fontSize = valueFontSize,
             lineHeight = valueLineHeight,
             fontWeight = valueFontWeight,

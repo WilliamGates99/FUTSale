@@ -1,11 +1,15 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class StoreNotificationPermissionCountUseCase(
     private val settingsDataStoreRepository: SettingsDataStoreRepository
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         count: Int
-    ) = settingsDataStoreRepository.storeNotificationPermissionCount(count)
+    ): Flow<Unit> = flow {
+        return@flow emit(settingsDataStoreRepository.storeNotificationPermissionCount(count))
+    }
 }

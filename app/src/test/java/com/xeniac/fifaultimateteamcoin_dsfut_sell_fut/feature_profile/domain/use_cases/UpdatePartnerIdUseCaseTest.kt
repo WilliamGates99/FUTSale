@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.PartnerIdError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.utils.UpdatePartnerIdError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidatePartnerId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -43,7 +43,7 @@ class UpdatePartnerIdUseCaseTest {
         val newPartnerId = "abc"
         val updatePartnerIdResult = updatePartnerIdUseCase(newPartnerId)
 
-        assertThat(updatePartnerIdResult.partnerIdError).isInstanceOf(PartnerIdError.InvalidPartnerId::class.java)
+        assertThat(updatePartnerIdResult.updatePartnerIdError).isInstanceOf(UpdatePartnerIdError.InvalidPartnerId::class.java)
     }
 
     @Test

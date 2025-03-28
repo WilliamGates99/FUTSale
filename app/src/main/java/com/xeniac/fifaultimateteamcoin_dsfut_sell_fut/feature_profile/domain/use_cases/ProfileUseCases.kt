@@ -3,7 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.us
 import dagger.Lazy
 
 data class ProfileUseCases(
-    val getProfileUseCase: Lazy<GetProfileUseCase>,
+    val getPartnerIdUseCase: Lazy<GetPartnerIdUseCase>,
+    val getSecretKeyUseCase: Lazy<GetSecretKeyUseCase>,
     val updatePartnerIdUseCase: Lazy<UpdatePartnerIdUseCase>,
     val updateSecretKeyUseCase: Lazy<UpdateSecretKeyUseCase>
 )

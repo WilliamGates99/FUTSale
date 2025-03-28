@@ -41,7 +41,7 @@ class StoreNotificationPermissionCountUseCaseTest {
     @Test
     fun storeNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
         val testValue = 2
-        storeNotificationPermissionCountUseCase(testValue)
+        storeNotificationPermissionCountUseCase(testValue).first()
 
         val notificationPermissionCount = getNotificationPermissionCountUseCase().first()
         assertThat(notificationPermissionCount).isEqualTo(testValue)

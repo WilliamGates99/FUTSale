@@ -18,14 +18,14 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.MainActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.TEST_TAG_SCREEN_HISTORY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.navigation.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedPlayersHistoryUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePlayerUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedUpPlayersHistoryUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.HistoryViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.player_info.utils.TestTags
@@ -64,10 +64,10 @@ class HistoryPlayerInfoScreenTest {
             addDummyPlayerToHistory()
         }
 
-        val observePickedPlayersHistoryUseCase = ObservePickedPlayersHistoryUseCase(
+        val observePickedUpPlayersHistoryUseCase = ObservePickedUpPlayersHistoryUseCase(
             historyRepository = fakeHistoryRepository
         )
-        val observePlayerUseCase = ObservePlayerUseCase(
+        val observerPickedUpPlayerUseCase = ObserverPickedUpPlayerUseCase(
             historyRepository = fakeHistoryRepository
         )
 
@@ -83,7 +83,7 @@ class HistoryPlayerInfoScreenTest {
                         composable<HistoryScreen> {
                             HistoryScreen(
                                 viewModel = HistoryViewModel(
-                                    observePickedPlayersHistoryUseCase = { observePickedPlayersHistoryUseCase }
+                                    observePickedUpPlayersHistoryUseCase = { observePickedUpPlayersHistoryUseCase }
                                 ),
                                 bottomPadding = 0.dp,
                                 onNavigateToPlayerInfoScreen = { playerId ->
@@ -98,7 +98,7 @@ class HistoryPlayerInfoScreenTest {
 
                             HistoryPlayerInfoScreen(
                                 viewModel = HistoryPlayerInfoViewModel(
-                                    observePlayerUseCase = { observePlayerUseCase },
+                                    observerPickedUpPlayerUseCase = { observerPickedUpPlayerUseCase },
                                     savedStateHandle = backStackEntry.savedStateHandle
                                 ),
                                 onNavigateUp = testNavController::navigateUp
