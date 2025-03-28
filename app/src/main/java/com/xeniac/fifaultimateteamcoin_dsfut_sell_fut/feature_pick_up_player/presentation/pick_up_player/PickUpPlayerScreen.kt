@@ -248,7 +248,7 @@ fun PickUpPlayerScreen(
         ) {
             LatestPlayersPagers(
                 latestPickedPlayers = pickUpPlayerState.latestPickedUpPlayers,
-                timerText = timerText.asString(),
+                timerText = timerText,
                 onAction = viewModel::onAction,
                 onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
                 modifier = Modifier.fillMaxWidth()

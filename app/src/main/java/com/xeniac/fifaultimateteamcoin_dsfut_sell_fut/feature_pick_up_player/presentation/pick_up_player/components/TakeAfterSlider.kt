@@ -52,21 +52,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomCheckbox
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TakeAfterSlider(
-    pickUpPlayerState: PickUpPlayerState,
+    isAutoPickUpLoading: Boolean,
+    isPickUpOnceLoading: Boolean,
+    isTakeAfterChecked: Boolean,
+    takeAfterDelayInSeconds: Int,
+    takeAfterErrorText: UiText?,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: SliderColors = SliderDefaults.colors(),
-    sliderInitialPosition: Float = pickUpPlayerState.takeAfterDelayInSeconds.toFloat(),
-    isLoading: Boolean = pickUpPlayerState.isAutoPickUpLoading || pickUpPlayerState.isPickUpOnceLoading,
-    isEnabled: Boolean = pickUpPlayerState.isTakeAfterChecked && !isLoading,
+    isLoading: Boolean = isAutoPickUpLoading || isPickUpOnceLoading,
+    isEnabled: Boolean = isTakeAfterChecked && !isLoading,
+    sliderInitialPosition: Float = takeAfterDelayInSeconds.toFloat(),
     sliderValueRange: ClosedFloatingPointRange<Float> = 1f..60f,
     sliderSteps: Int = 57, // 57 + 2 ends of the slider = 59 steps
     errorTextFontSize: TextUnit = 12.sp,
@@ -104,11 +108,11 @@ fun TakeAfterSlider(
     Column(modifier = modifier) {
         CustomCheckbox(
             isLoading = isLoading,
-            isChecked = pickUpPlayerState.isTakeAfterChecked,
+            isChecked = isTakeAfterChecked,
             onCheckedChange = { isChecked ->
                 onAction(PickUpPlayerAction.TakeAfterCheckedChanged(isChecked))
             },
-            text = if (!pickUpPlayerState.isTakeAfterChecked) stringResource(id = R.string.pick_up_player_title_take_after)
+            text = if (!isTakeAfterChecked) stringResource(id = R.string.pick_up_player_title_take_after)
             else pluralStringResource(
                 id = R.plurals.pick_up_player_title_take_after,
                 sliderPosition.roundToInt(),
@@ -212,12 +216,12 @@ fun TakeAfterSlider(
         )
 
         AnimatedVisibility(
-            visible = pickUpPlayerState.takeAfterErrorText != null,
+            visible = takeAfterErrorText != null,
             enter = slideInVertically() + fadeIn(),
             exit = slideOutVertically() + fadeOut()
         ) {
             Text(
-                text = pickUpPlayerState.takeAfterErrorText?.asString().orEmpty(),
+                text = takeAfterErrorText?.asString().orEmpty(),
                 fontSize = errorTextFontSize,
                 fontWeight = errorTextFontWeight,
                 color = errorTextColor,

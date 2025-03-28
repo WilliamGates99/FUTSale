@@ -23,7 +23,9 @@ fun PickUpPlayerSection(
         Spacer(modifier = Modifier.height(24.dp))
 
         PlatformSelector(
-            pickUpPlayerState = pickUpPlayerState,
+            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
+            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
+            selectedPlatform = pickUpPlayerState.selectedPlatform,
             onAction = onAction,
             modifier = Modifier.fillMaxWidth()
         )
@@ -31,7 +33,10 @@ fun PickUpPlayerSection(
         Spacer(modifier = Modifier.height(18.dp))
 
         PriceTextFields(
-            pickUpPlayerState = pickUpPlayerState,
+            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
+            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
+            minPriceState = pickUpPlayerState.minPriceState,
+            maxPriceState = pickUpPlayerState.maxPriceState,
             onAction = onAction,
             modifier = Modifier.fillMaxWidth()
         )
@@ -39,7 +44,11 @@ fun PickUpPlayerSection(
         Spacer(modifier = Modifier.height(14.dp))
 
         TakeAfterSlider(
-            pickUpPlayerState = pickUpPlayerState,
+            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
+            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
+            isTakeAfterChecked = pickUpPlayerState.isTakeAfterChecked,
+            takeAfterDelayInSeconds = pickUpPlayerState.takeAfterDelayInSeconds,
+            takeAfterErrorText = pickUpPlayerState.takeAfterErrorText,
             modifier = Modifier.fillMaxWidth(),
             onAction = onAction
         )
@@ -47,7 +56,7 @@ fun PickUpPlayerSection(
         Spacer(modifier = Modifier.height(40.dp))
 
         AutoPickUpButton(
-            pickUpPlayerState = pickUpPlayerState,
+            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
             onAction = onAction,
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,7 +66,7 @@ fun PickUpPlayerSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         PickUpOnceButton(
-            pickUpPlayerState = pickUpPlayerState,
+            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
             onClick = {
                 onAction(PickUpPlayerAction.PickUpPlayerOnce)
             },
