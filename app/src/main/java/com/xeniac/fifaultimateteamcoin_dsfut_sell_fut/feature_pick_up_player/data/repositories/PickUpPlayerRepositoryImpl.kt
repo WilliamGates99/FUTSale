@@ -158,7 +158,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
         } catch (e: CertPathValidatorException) {
             Timber.e("Pick up player CertPathValidatorException:")
             e.printStackTrace()
-            Result.Error(PickUpPlayerError.Network.SSLHandshakeException)
+            Result.Error(PickUpPlayerError.Network.CertPathValidatorException)
         } catch (e: Exception) {
             coroutineContext.ensureActive()
 
