@@ -5,12 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.formatToString
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
 
 @Entity(tableName = "players")
 data class PlayerEntity(
@@ -42,29 +37,4 @@ data class PlayerEntity(
     @ColumnInfo(name = "expiry_time_in_seconds")
     val expiryTimeInSeconds: Long = pickUpTimeInSeconds + Constants.PLAYER_EXPIRY_TIME_IN_SECONDS,
     @PrimaryKey(autoGenerate = true) val id: Long? = null
-) {
-    fun toPlayer(): Player {
-        return Player(
-            tradeID = tradeID.toLong(),
-            assetID = assetID,
-            resourceID = resourceID,
-            transactionID = transactionID,
-            name = name,
-            rating = DecimalFormat(
-                /* pattern = */ "00",
-                /* symbols = */ DecimalFormatSymbols(Locale.US)
-            ).format(rating),
-            position = position,
-            startPrice = startPrice.formatToString(),
-            buyNowPrice = buyNowPrice.formatToString(),
-            owners = owners.toString(),
-            contracts = contracts.toString(),
-            chemistryStyle = chemistryStyle,
-            chemistryStyleID = chemistryStyleID,
-            platform = platform,
-            pickUpTimeInMs = pickUpTimeInSeconds * 1000,
-            expiryTimeInMs = expiryTimeInSeconds * 1000,
-            id = id
-        )
-    }
-}
+)

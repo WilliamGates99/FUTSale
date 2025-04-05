@@ -156,20 +156,20 @@ class AppUpdateRepositoryImpl @Inject constructor(
 
     override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
         return try {
-            val response = httpClient.get().get(
+            val httpResponse = httpClient.get().get(
                 urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
             )
 
-            Timber.i("Get latest app version response call = ${response.request.call}")
+            Timber.i("Get latest app version response call = ${httpResponse.request.call}")
 
-            return when (response.status) {
+            return when (httpResponse.status) {
                 HttpStatusCode.OK -> { // Code: 200
-                    val getLatestAppVersionResponse = Json
-                        .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
-                        .toGetLatestAppVersionResponse()
+                    val responseDto = Json.decodeFromString<GetLatestAppVersionResponseDto>(
+                        httpResponse.bodyAsText()
+                    )
 
                     val currentVersionCode = BuildConfig.VERSION_CODE
-                    val latestVersionCode = getLatestAppVersionResponse.versionCode
+                    val latestVersionCode = responseDto.versionCode
 
                     val isAppOutdated = currentVersionCode < latestVersionCode
                     if (isAppOutdated) {
@@ -196,7 +196,7 @@ class AppUpdateRepositoryImpl @Inject constructor(
                             Result.Success(
                                 LatestAppUpdateInfo(
                                     versionCode = latestVersionCode,
-                                    versionName = getLatestAppVersionResponse.versionName
+                                    versionName = responseDto.versionName
                                 )
                             )
                         } else Result.Success(null)
