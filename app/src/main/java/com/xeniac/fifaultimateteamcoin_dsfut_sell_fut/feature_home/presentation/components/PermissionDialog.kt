@@ -82,7 +82,7 @@ private fun NotificationPermissionDialog(
     isVisible: Boolean,
     permissionQueue: List<String>,
     modifier: Modifier = Modifier,
-    enterAnimation: EnterTransition = scaleIn() + fadeIn(),
+    enterAnimation: EnterTransition = fadeIn() + scaleIn(),
     exitAnimation: ExitTransition = scaleOut() + fadeOut(),
     onConfirmClick: () -> Unit,
     onDismiss: (permission: String) -> Unit

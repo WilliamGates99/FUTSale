@@ -142,7 +142,7 @@ fun HomeScreen(
         bottomBar = {
             AnimatedVisibility(
                 visible = isBottomAppBarVisible,
-                enter = expandVertically() + fadeIn(),
+                enter = fadeIn() + expandVertically(),
                 exit = shrinkVertically() + fadeOut(),
                 modifier = Modifier.fillMaxWidth()
             ) {

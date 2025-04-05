@@ -67,7 +67,7 @@ fun LatestPlayersPagers(
     latestPickedPlayers: List<Player>,
     timerText: UiText,
     modifier: Modifier = Modifier,
-    enterTransition: EnterTransition = expandVertically() + fadeIn(),
+    enterTransition: EnterTransition = fadeIn() + expandVertically(),
     exitTransition: ExitTransition = shrinkVertically() + fadeOut(),
     contentPadding: PaddingValues = PaddingValues(
         start = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,

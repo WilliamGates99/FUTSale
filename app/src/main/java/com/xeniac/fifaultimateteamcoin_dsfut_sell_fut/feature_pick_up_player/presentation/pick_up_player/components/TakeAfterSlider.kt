@@ -217,7 +217,7 @@ fun TakeAfterSlider(
 
         AnimatedVisibility(
             visible = takeAfterErrorText != null,
-            enter = slideInVertically() + fadeIn(),
+            enter = fadeIn() + slideInVertically(),
             exit = slideOutVertically() + fadeOut()
         ) {
             Text(
