@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HistoryPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ class HistoryPlayerInfoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val player = observerPickedUpPlayerUseCase.get()(
-        playerId = savedStateHandle.toRoute<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen>().playerId
+        playerId = savedStateHandle.toRoute<HistoryPlayerInfoScreen>().playerId
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),

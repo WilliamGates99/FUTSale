@@ -3,6 +3,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +14,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -27,43 +28,43 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR
 
 enum class NavigationBarItems(
-    val screen: Any,
+    val destinationScreen: Any,
     @StringRes val title: Int,
     @DrawableRes val inactiveIconId: Int,
     @DrawableRes val activeIconId: Int,
     val testTag: String
 ) {
     PickUpPlayer(
-        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen,
+        destinationScreen = PickUpPlayerScreen,
         title = R.string.home_nav_title_pick_up_player,
         inactiveIconId = R.drawable.ic_home_nav_pick_up_player_outlined,
         activeIconId = R.drawable.ic_home_nav_pick_up_player_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PICK_UP_PLAYER
     ),
     Profile(
-        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen,
+        destinationScreen = ProfileScreen,
         title = R.string.home_nav_title_profile,
         inactiveIconId = R.drawable.ic_home_nav_profile_outlined,
         activeIconId = R.drawable.ic_home_nav_profile_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PROFILE
     ),
     History(
-        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen,
+        destinationScreen = HistoryScreen,
         title = R.string.home_nav_title_history,
         inactiveIconId = R.drawable.ic_home_nav_history_outlined,
         activeIconId = R.drawable.ic_home_nav_history_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_HISTORY
     ),
     Settings(
-        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen,
+        destinationScreen = SettingsScreen,
         title = R.string.home_nav_title_settings,
         inactiveIconId = R.drawable.ic_home_nav_settings_outlined,
         activeIconId = R.drawable.ic_home_nav_settings_filled,
@@ -71,7 +72,6 @@ enum class NavigationBarItems(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomNavigationBar(
     currentDestination: NavDestination?,
@@ -82,15 +82,17 @@ fun CustomNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier
+            .fillMaxWidth()
             .testTag(NAVIGATION_BAR)
             .semantics {
                 testTagsAsResourceId = true
             }
     ) {
         NavigationBarItems.entries.forEach { navItem ->
-            val isSelected = currentDestination?.hierarchy?.any {
-                it.hasRoute(route = navItem.screen::class)
-            } ?: false
+            val isSelected = isNavItemSelected(
+                navItem = navItem,
+                currentDestination = currentDestination
+            )
 
             NavigationBarItem(
                 enabled = !isSelected,
@@ -114,7 +116,8 @@ fun CustomNavigationBar(
                             painter = painterResource(
                                 id = if (isSelected) navItem.activeIconId else navItem.inactiveIconId
                             ),
-                            contentDescription = stringResource(id = navItem.title)
+                            contentDescription = stringResource(id = navItem.title),
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
 
@@ -127,11 +130,22 @@ fun CustomNavigationBar(
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                     )
                 },
-                onClick = {
-                    onItemClick(navItem.screen)
-                },
+                onClick = { onItemClick(navItem.destinationScreen) },
                 modifier = Modifier.testTag(navItem.testTag)
             )
         }
+    }
+}
+
+private fun isNavItemSelected(
+    navItem: NavigationBarItems,
+    currentDestination: NavDestination?
+): Boolean {
+    if (currentDestination?.hierarchy == null) {
+        return false
+    }
+
+    return currentDestination.hierarchy.any {
+        it.hasRoute(route = navItem.destinationScreen::class)
     }
 }

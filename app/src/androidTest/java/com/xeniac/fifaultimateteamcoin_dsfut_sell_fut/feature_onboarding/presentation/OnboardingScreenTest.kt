@@ -28,8 +28,8 @@ import androidx.test.espresso.intent.rule.IntentsRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.OnboardingScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.OnboardingScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants
@@ -70,7 +70,7 @@ class OnboardingScreenTest {
 
                 SetupRootNavGraph(
                     rootNavController = testNavController,
-                    startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.OnboardingScreen
+                    startDestination = OnboardingScreen
                 )
             }
         }
@@ -369,7 +369,7 @@ class OnboardingScreenTest {
 
         val backStackEntry = testNavController.currentBackStackEntry
         val isNavigatedToHomeScreen = backStackEntry?.destination?.hierarchy?.any {
-            it.hasRoute(com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen::class)
+            it.hasRoute(HomeScreen::class)
         } ?: false
         assertThat(isNavigatedToHomeScreen).isTrue()
     }

@@ -64,10 +64,10 @@ fun HomeScreen(
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
-    LaunchedEffect(currentDestination) {
+    LaunchedEffect(key1 = currentDestination) {
         isBottomAppBarVisible = NavigationBarItems.entries.find { navItem ->
             currentDestination?.hierarchy?.any {
-                it.hasRoute(route = navItem.screen::class)
+                it.hasRoute(route = navItem.destinationScreen::class)
             } ?: false
         } != null
     }
@@ -160,8 +160,7 @@ fun HomeScreen(
                              */
                             popUpTo(id = homeNavController.graph.startDestinationId)
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }
                 )
             }
         },
