@@ -5,9 +5,9 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
@@ -17,7 +17,10 @@ plugins {
     alias(libs.plugins.baselineprofile)
 }
 
-val properties = gradleLocalProperties(rootDir, providers)
+val properties = gradleLocalProperties(
+    projectRootDir = rootDir,
+    providers = providers
+)
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
