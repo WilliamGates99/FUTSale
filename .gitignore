@@ -8,9 +8,9 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/debug
 /app/release
 /app/dev
-/app/debug
 /app/playStore
 /app/gitHub
 /app/cafeBazaar
