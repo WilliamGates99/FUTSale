@@ -3,7 +3,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_firebase_cloud_me
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Build
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -32,8 +31,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             /* context = */ this,
             /* requestCode = */ 0,
             /* intent = */ Intent(/* action = */ ""),
-            /* flags = */ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                PendingIntent.FLAG_IMMUTABLE else 0
+            /* flags = */ PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(

@@ -13,6 +13,7 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
@@ -68,9 +69,7 @@ internal object AppModule {
     @Singleton
     fun provideNotificationManager(
         @ApplicationContext context: Context
-    ): NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.getSystemService(NotificationManager::class.java)
-    } else context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    ): NotificationManager = context.getSystemService(NotificationManager::class.java)
 
     @RequiresApi(Build.VERSION_CODES.S)
     @Provides
@@ -86,20 +85,13 @@ internal object AppModule {
         vibratorManager: Lazy<VibratorManager>
     ): Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         vibratorManager.get().defaultVibrator
-    } else {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            context.getSystemService(Vibrator::class.java)
-        } else context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    }
+    } else context.getSystemService(Vibrator::class.java)
 
     @Provides
     @Singleton
     fun provideConnectivityManager(
         @ApplicationContext context: Context
-    ): ConnectivityManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.getSystemService(ConnectivityManager::class.java)
-    } else context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    ): ConnectivityManager = context.getSystemService(ConnectivityManager::class.java)
 
     @Provides
     @Singleton
@@ -119,12 +111,12 @@ internal object AppModule {
 
         install(Logging) {
             logger = Logger.ANDROID
-            level = LogLevel.INFO
+            level = if (BuildConfig.DEBUG) LogLevel.INFO else LogLevel.NONE
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
         install(HttpCache) {
             val cacheDir = context.cacheDir.resolve(relative = "ktor_cache")
-            privateStorage(FileStorage(cacheDir))
+            privateStorage(storage = FileStorage(directory = cacheDir))
         }
         install(ContentNegotiation) {
             json(json)
@@ -134,9 +126,9 @@ internal object AppModule {
             exponentialDelay()
         }
         install(HttpTimeout) {
-            connectTimeoutMillis = 20_000 // 20 seconds
-            requestTimeoutMillis = 20_000 // 20 seconds
-            socketTimeoutMillis = 20_000 // 20 seconds
+            connectTimeoutMillis = 30_000 // 30 seconds
+            requestTimeoutMillis = 30_000 // 30 seconds
+            socketTimeoutMillis = 30_000 // 30 seconds
         }
         install(DefaultRequest) {
             contentType(ContentType.Application.Json)
