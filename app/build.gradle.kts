@@ -28,11 +28,6 @@ android {
     compileSdk = 36
     buildToolsVersion = "36.0.0"
 
-    androidResources {
-        // Keeps language resources for only the locales specified below.
-        localeFilters.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
-    }
-
     defaultConfig {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 21
@@ -61,6 +56,9 @@ android {
 
     androidResources {
         generateLocaleConfig = true
+
+        // Keeps language resources for only the locales specified below.
+        localeFilters.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
     }
 
     signingConfigs {
@@ -372,7 +370,7 @@ val obfuscationDestDir: String = properties.getProperty("OBFUSCATION_DESTINATION
 val versionName = "${android.defaultConfig.versionName}"
 val renamedFileName = "FUTSale $versionName"
 
-tasks.register<Copy>("copyDevPreviewBundle") {
+tasks.register<Copy>(name = "copyDevPreviewBundle") {
     val bundleFile = "app-playStore-dev.aab"
     val bundleSourceDir = "${releaseRootDir}/playStore/dev/${bundleFile}"
 
@@ -392,7 +390,7 @@ tasks.register<Copy>("copyDevPreviewApk") {
     rename(apkFile, "$renamedFileName (Developer Preview).aab")
 }
 
-tasks.register<Copy>("copyReleaseApk") {
+tasks.register<Copy>(name = "copyReleaseApk") {
     val gitHubApkFile = "app-gitHub-release.apk"
     val cafeBazaarApkFile = "app-cafeBazaar-release.apk"
     val myketApkFile = "app-myket-release.apk"
@@ -415,7 +413,7 @@ tasks.register<Copy>("copyReleaseApk") {
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
 
-tasks.register<Copy>("copyReleaseBundle") {
+tasks.register<Copy>(name = "copyReleaseBundle") {
     val playStoreBundleFile = "app-playStore-release.aab"
     val playStoreBundleSourceDir = "${releaseRootDir}/playStore/release/${playStoreBundleFile}"
 
@@ -425,7 +423,7 @@ tasks.register<Copy>("copyReleaseBundle") {
     rename(playStoreBundleFile, "${renamedFileName}.aab")
 }
 
-tasks.register<Copy>("copyObfuscationFolder") {
+tasks.register<Copy>(name = "copyObfuscationFolder") {
     val obfuscationSourceDir = "${rootDir}/app/obfuscation"
 
     from(obfuscationSourceDir)
