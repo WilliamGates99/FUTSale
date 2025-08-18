@@ -30,6 +30,10 @@ fun getFontFamilyForLocale(): FontFamily {
             AppLocale.Default, AppLocale.EnglishGB, AppLocale.EnglishUS -> FontFamily(
                 listOf(
                     Font(
+                        resId = R.font.nunito_thin,
+                        weight = FontWeight.Thin
+                    ),
+                    Font(
                         resId = R.font.nunito_extra_light,
                         weight = FontWeight.ExtraLight
                     ),
@@ -65,6 +69,10 @@ fun getFontFamilyForLocale(): FontFamily {
             )
             AppLocale.FarsiIR -> FontFamily(
                 listOf(
+                    Font(
+                        resId = R.font.vazirmatn_rd_fd_thin,
+                        weight = FontWeight.Thin
+                    ),
                     Font(
                         resId = R.font.vazirmatn_rd_fd_extra_light,
                         weight = FontWeight.ExtraLight
