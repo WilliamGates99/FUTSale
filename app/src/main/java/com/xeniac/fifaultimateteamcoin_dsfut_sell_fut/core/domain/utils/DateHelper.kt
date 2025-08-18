@@ -1,10 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 typealias UnixTimeInMillis = Long
 typealias UnixTimeInSeconds = Long
 
+@OptIn(ExperimentalTime::class)
 object DateHelper {
     fun getCurrentTimeInMillis(): UnixTimeInMillis = Clock.System.now().toEpochMilliseconds()
 

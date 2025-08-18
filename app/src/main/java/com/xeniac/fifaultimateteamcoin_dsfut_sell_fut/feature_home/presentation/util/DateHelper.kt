@@ -1,10 +1,12 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 object DateHelper {
 
     fun getDaysFromFirstInstallTime(firstInstallTimeInMs: Long): Int =

@@ -12,14 +12,16 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.todayIn
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class MiscellaneousDataStoreRepositoryImpl @Inject constructor(
     @MiscellaneousDataStoreQualifier private val dataStore: DataStore<MiscellaneousPreferences>
 ) : MiscellaneousDataStoreRepository {
@@ -78,7 +80,7 @@ class MiscellaneousDataStoreRepositoryImpl @Inject constructor(
         try {
             val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
             val todayEpochDays = todayLocalDate.toEpochDays()
-            dataStore.updateData { it.copy(appUpdateDialogShowEpochDays = todayEpochDays) }
+            dataStore.updateData { it.copy(appUpdateDialogShowEpochDays = todayEpochDays.toInt()) }
             Timber.i("App update dialog show epoch days edited to $todayEpochDays")
         } catch (e: Exception) {
             Timber.e("Store app update dialog show epoch days failed:")
