@@ -1,5 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -10,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         splashScreen()
@@ -33,6 +37,15 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val mainState by viewModel.mainState.collectAsStateWithLifecycle()
+
+            DisposableEffect(key1 = Unit) {
+                // Lock activity orientation to portrait
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+                onDispose {
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                }
+            }
 
             // Layout Orientation is changing automatically in Android 7 (24) and newer
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
