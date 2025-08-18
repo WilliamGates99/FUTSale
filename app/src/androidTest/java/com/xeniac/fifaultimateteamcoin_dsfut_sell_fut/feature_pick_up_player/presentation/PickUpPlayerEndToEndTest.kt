@@ -26,11 +26,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Fak
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HomeScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickedUpPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.ProfileScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.SettingsScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.historyNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
@@ -172,14 +172,14 @@ class PickUpPlayerEndToEndTest {
 
                 NavHost(
                     navController = rememberNavController(),
-                    startDestination = HomeScreen
+                    startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen
                 ) {
-                    composable<HomeScreen> {
+                    composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen> {
                         NavHost(
                             navController = testNavController,
-                            startDestination = PickUpPlayerScreen
+                            startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
                         ) {
-                            composable<PickUpPlayerScreen> { backStackEntry ->
+                            composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen> { backStackEntry ->
                                 PickUpPlayerScreen(
                                     viewModel = PickUpPlayerViewModel(
                                         pickUpPlayerUseCases = pickUpPlayerUseCases,
@@ -188,22 +188,24 @@ class PickUpPlayerEndToEndTest {
                                     ),
                                     bottomPadding = 0.dp,
                                     onNavigateToProfileScreen = {
-                                        testNavController.navigate(ProfileScreen) {
+                                        testNavController.navigate(com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen) {
                                             launchSingleTop = true
                                             popUpTo(testNavController.graph.startDestinationId)
                                         }
                                     },
                                     onNavigateToPickedUpPlayerInfoScreen = { playerId ->
                                         testNavController.navigate(
-                                            PickedUpPlayerInfoScreen(playerId)
+                                            com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen(
+                                                playerId
+                                            )
                                         )
                                     }
                                 )
                             }
 
-                            composable<PickedUpPlayerInfoScreen> { backStackEntry ->
+                            composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen> { backStackEntry ->
                                 backStackEntry.savedStateHandle["playerId"] = backStackEntry
-                                    .toRoute<PickedUpPlayerInfoScreen>().playerId
+                                    .toRoute<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen>().playerId
 
                                 PickedUpPlayerInfoScreen(
                                     viewModel = PickedUpPlayerInfoViewModel(
@@ -215,7 +217,7 @@ class PickUpPlayerEndToEndTest {
                                 )
                             }
 
-                            composable<ProfileScreen> { backStackEntry ->
+                            composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen> { backStackEntry ->
                                 ProfileScreen(
                                     viewModel = ProfileViewModel(
                                         profileUseCases = profileUseCases,
@@ -230,7 +232,7 @@ class PickUpPlayerEndToEndTest {
                                 bottomPadding = 0.dp
                             )
 
-                            composable<SettingsScreen> {
+                            composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen> {
                                 SettingsScreen(bottomPadding = 0.dp)
                             }
                         }

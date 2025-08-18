@@ -20,8 +20,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedUpPlayersHistoryUseCase
@@ -77,23 +77,27 @@ class HistoryScreenTest {
 
                 NavHost(
                     navController = testNavController,
-                    startDestination = HistoryScreen
+                    startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen
                 ) {
-                    composable<HistoryScreen> {
+                    composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen> {
                         HistoryScreen(
                             viewModel = HistoryViewModel(
                                 observePickedUpPlayersHistoryUseCase = { observePickedUpPlayersHistoryUseCase }
                             ),
                             bottomPadding = 0.dp,
                             onNavigateToPlayerInfoScreen = { playerId ->
-                                testNavController.navigate(HistoryPlayerInfoScreen(playerId))
+                                testNavController.navigate(
+                                    com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen(
+                                        playerId
+                                    )
+                                )
                             }
                         )
                     }
 
-                    composable<HistoryPlayerInfoScreen> { backStackEntry ->
+                    composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen> { backStackEntry ->
                         backStackEntry.savedStateHandle["playerId"] = backStackEntry
-                            .toRoute<HistoryPlayerInfoScreen>().playerId
+                            .toRoute<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen>().playerId
 
                         HistoryPlayerInfoScreen(
                             viewModel = HistoryPlayerInfoViewModel(

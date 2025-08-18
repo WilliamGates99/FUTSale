@@ -20,11 +20,11 @@ import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupRootNavGraph
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.URL_PRIVACY_POLICY
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags.NAVIGATION_BAR_ITEM_SETTINGS
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants.URL_PRIVACY_POLICY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags.NAVIGATION_BAR_ITEM_SETTINGS
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -66,7 +66,7 @@ class SettingsScreenTest {
 
                     SetupRootNavGraph(
                         rootNavController = testNavController,
-                        startDestination = HomeScreen
+                        startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HomeScreen
                     )
                 }
             }

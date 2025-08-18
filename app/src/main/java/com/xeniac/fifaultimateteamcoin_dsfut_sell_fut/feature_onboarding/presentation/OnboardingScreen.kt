@@ -14,12 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components.OnboardingPager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingUiEvent
 
@@ -37,9 +38,8 @@ fun OnboardingScreen(
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
             is OnboardingUiEvent.NavigateToHomeScreen -> onNavigateToHomeScreen()
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -56,16 +56,10 @@ fun OnboardingScreen(
             secretKeyState = onboardingState.secretKeyState,
             onAction = viewModel::onAction,
             onRegisterBtnClick = {
-                IntentHelper.openLinkInExternalBrowser(
-                    context = context,
-                    urlString = Constants.URL_DSFUT
-                )
+                context.openLinkInExternalBrowser(urlString = Constants.URL_DSFUT)
             },
             onPrivacyPolicyBtnClick = {
-                IntentHelper.openLinkInInAppBrowser(
-                    context = context,
-                    urlString = Constants.URL_PRIVACY_POLICY
-                )
+                context.openLinkInInAppBrowser(urlString = Constants.URL_PRIVACY_POLICY)
             },
             modifier = Modifier
                 .fillMaxSize()

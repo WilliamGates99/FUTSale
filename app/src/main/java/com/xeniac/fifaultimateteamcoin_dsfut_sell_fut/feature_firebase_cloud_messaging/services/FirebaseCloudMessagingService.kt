@@ -10,7 +10,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BaseApplication
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.entrypoints.requireNotificationManager
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.GreenNotificationLight
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.GreenNotificationLight
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_firebase_cloud_messaging.services.utils.getBitmapFromUrl
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber

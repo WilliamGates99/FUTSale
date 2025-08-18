@@ -27,11 +27,11 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.ProfileScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.SettingsScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.TestTags.NAVIGATION_BAR
 
 enum class NavigationBarItems(
@@ -42,28 +42,28 @@ enum class NavigationBarItems(
     val testTag: String
 ) {
     PickUpPlayer(
-        screen = PickUpPlayerScreen,
+        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen,
         title = R.string.home_nav_title_pick_up_player,
         inactiveIconId = R.drawable.ic_home_nav_pick_up_player_outlined,
         activeIconId = R.drawable.ic_home_nav_pick_up_player_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PICK_UP_PLAYER
     ),
     Profile(
-        screen = ProfileScreen,
+        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen,
         title = R.string.home_nav_title_profile,
         inactiveIconId = R.drawable.ic_home_nav_profile_outlined,
         activeIconId = R.drawable.ic_home_nav_profile_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_PROFILE
     ),
     History(
-        screen = HistoryScreen,
+        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryScreen,
         title = R.string.home_nav_title_history,
         inactiveIconId = R.drawable.ic_home_nav_history_outlined,
         activeIconId = R.drawable.ic_home_nav_history_filled,
         testTag = TestTags.NAVIGATION_BAR_ITEM_HISTORY
     ),
     Settings(
-        screen = SettingsScreen,
+        screen = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.SettingsScreen,
         title = R.string.home_nav_title_settings,
         inactiveIconId = R.drawable.ic_home_nav_settings_outlined,
         activeIconId = R.drawable.ic_home_nav_settings_filled,

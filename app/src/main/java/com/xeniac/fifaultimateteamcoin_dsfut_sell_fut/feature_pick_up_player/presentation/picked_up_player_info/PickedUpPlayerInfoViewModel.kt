@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickedUpPlayerInfoUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.events.PickedUpPlayerInfoAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     val player = pickedUpPlayerInfoUseCases.observePickedUpPlayerUseCase.get()(
-        playerId = savedStateHandle.toRoute<HistoryPlayerInfoScreen>().playerId
+        playerId = savedStateHandle.toRoute<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.HistoryPlayerInfoScreen>().playerId
     ).onEach { player ->
         startCountDownTimer(player.expiryTimeInMs)
     }.stateIn(

@@ -44,6 +44,7 @@ googleServices = "4.4.3"
 firebaseCrashlytics = "3.0.6"
 firebasePerf = "2.0.1"
 baselineprofile = "1.4.0"
+playServicesIdentityCredentials = "16.0.0-alpha08"
 
 
 [libraries]
@@ -157,7 +158,8 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 
 # Baseline Profiles Libraries
 uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" } # JUnit Macro Benchmark
+benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
+play-services-identity-credentials = { group = "com.google.android.gms", name = "play-services-identity-credentials", version.ref = "playServicesIdentityCredentials" } # JUnit Macro Benchmark
 
 
 [bundles]

@@ -30,13 +30,14 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showActionSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupHomeNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.nav_graph.SetupHomeNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppUpdatePageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
@@ -89,11 +90,10 @@ fun HomeScreen(
                     viewModel.appUpdateOptions.get()
                 )
             }
-            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> showActionSnackbar(
+            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> context.showActionSnackbar(
                 message = UiText.StringResource(R.string.home_app_update_message),
                 actionLabel = UiText.StringResource(R.string.home_app_update_action),
                 scope = scope,
-                context = context,
                 snackbarHostState = snackbarHostState,
                 onAction = {
                     viewModel.appUpdateManager.get().completeUpdate()
@@ -176,12 +176,12 @@ fun HomeScreen(
     AppUpdateBottomSheet(
         appUpdateInfo = homeState.latestAppUpdateInfo,
         onAction = viewModel::onAction,
-        openAppUpdatePageInStore = { IntentHelper.openAppUpdatePageInStore(context) }
+        openAppUpdatePageInStore = { context.openAppUpdatePageInStore() }
     )
 
     AppReviewDialog(
         isVisible = homeState.isAppReviewDialogVisible,
         onAction = viewModel::onAction,
-        openAppPageInStore = { IntentHelper.openAppPageInStore(context) }
+        openAppPageInStore = { context.openAppPageInStore() }
     )
 }

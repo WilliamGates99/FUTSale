@@ -33,14 +33,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
@@ -66,9 +68,8 @@ fun SettingsScreen(
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.RestartActivity -> activity.restartActivity()
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -78,9 +79,8 @@ fun SettingsScreen(
     ObserverAsEvent(flow = viewModel.setAppThemeEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -90,9 +90,8 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationSoundEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -102,9 +101,8 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationVibrateEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -113,12 +111,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
-        snackbarHost = {
-            SwipeableSnackbar(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = bottomPadding)
-            )
-        },
+        snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -152,21 +145,15 @@ fun SettingsScreen(
 
             MiscellaneousCard(
                 modifier = Modifier.fillMaxWidth(),
-                openAppPageInStore = { IntentHelper.openAppPageInStore(context) },
+                openAppPageInStore = { context.openAppPageInStore() },
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
-                            context = context,
-                            urlString = url
-                        )
+                        context.openLinkInInAppBrowser(urlString = url)
                     }
                 },
                 openUrlInBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInExternalBrowser(
-                            context = context,
-                            urlString = url
-                        )
+                        context.openLinkInExternalBrowser(urlString = url)
                     }
                 }
             )

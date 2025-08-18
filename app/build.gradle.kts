@@ -292,6 +292,7 @@ androidComponents {
 }
 
 dependencies {
+    implementation(libs.play.services.identity.credentials)
     "baselineProfile"(project(":baselineprofile"))
 
     // Java 8+ API Desugaring Support

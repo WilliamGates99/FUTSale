@@ -41,8 +41,8 @@ import androidx.paging.compose.LazyPagingItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.dashedBorder
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant20
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.dashedBorder
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.NeutralVariant20
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.utils.CompleteOnboardingError
 
 fun CompleteOnboardingError.asUiText(): UiText = when (this) {

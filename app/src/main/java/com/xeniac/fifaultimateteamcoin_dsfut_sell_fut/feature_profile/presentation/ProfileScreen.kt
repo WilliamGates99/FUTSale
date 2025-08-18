@@ -31,12 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.ProfileTextFields
@@ -58,9 +59,8 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -70,9 +70,8 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updateSecretKeyEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -81,12 +80,7 @@ fun ProfileScreen(
     }
 
     Scaffold(
-        snackbarHost = {
-            SwipeableSnackbar(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = bottomPadding)
-            )
-        },
+        snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -122,10 +116,7 @@ fun ProfileScreen(
             AccountLinks(
                 openUrlInBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInExternalBrowser(
-                            context = context,
-                            urlString = url
-                        )
+                        context.openLinkInExternalBrowser(urlString = url)
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -134,10 +125,7 @@ fun ProfileScreen(
             OtherLinks(
                 openUrlInInAppBrowser = { url ->
                     url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
-                            context = context,
-                            urlString = url
-                        )
+                        context.openLinkInInAppBrowser(urlString = url)
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

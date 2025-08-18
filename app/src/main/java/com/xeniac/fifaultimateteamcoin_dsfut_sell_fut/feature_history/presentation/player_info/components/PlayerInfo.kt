@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.asUiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.asUiText
 
 @Composable
 fun PlayerInfo(

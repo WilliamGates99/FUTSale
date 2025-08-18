@@ -31,9 +31,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickedUpPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
@@ -143,9 +143,9 @@ class PickUpPlayerScreenTest {
 
                 NavHost(
                     navController = testNavController,
-                    startDestination = PickUpPlayerScreen
+                    startDestination = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen
                 ) {
-                    composable<PickUpPlayerScreen> { backStackEntry ->
+                    composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickUpPlayerScreen> { backStackEntry ->
                         PickUpPlayerScreen(
                             viewModel = PickUpPlayerViewModel(
                                 pickUpPlayerUseCases = pickUpPlayerUseCases,
@@ -154,20 +154,24 @@ class PickUpPlayerScreenTest {
                             ),
                             bottomPadding = 0.dp,
                             onNavigateToProfileScreen = {
-                                testNavController.navigate(ProfileScreen) {
+                                testNavController.navigate(com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.ProfileScreen) {
                                     launchSingleTop = true
                                     popUpTo(testNavController.graph.startDestinationId)
                                 }
                             },
                             onNavigateToPickedUpPlayerInfoScreen = { playerId ->
-                                testNavController.navigate(PickedUpPlayerInfoScreen(playerId))
+                                testNavController.navigate(
+                                    com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen(
+                                        playerId
+                                    )
+                                )
                             }
                         )
                     }
 
-                    composable<PickedUpPlayerInfoScreen> { backStackEntry ->
+                    composable<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen> { backStackEntry ->
                         backStackEntry.savedStateHandle["playerId"] = backStackEntry
-                            .toRoute<PickedUpPlayerInfoScreen>().playerId
+                            .toRoute<com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen>().playerId
 
                         PickedUpPlayerInfoScreen(
                             viewModel = PickedUpPlayerInfoViewModel(
@@ -365,7 +369,7 @@ class PickUpPlayerScreenTest {
 
         val backStackEntry = testNavController.currentBackStackEntry
         val isNavigatedToPickedUpPlayerInfoScreen = backStackEntry?.destination?.hierarchy?.any {
-            it.hasRoute(PickedUpPlayerInfoScreen::class)
+            it.hasRoute(com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen::class)
         } ?: false
         assertThat(isNavigatedToPickedUpPlayerInfoScreen).isTrue()
     }
@@ -437,7 +441,7 @@ class PickUpPlayerScreenTest {
 
         val backStackEntry = testNavController.currentBackStackEntry
         val isNavigatedToPickedUpPlayerInfoScreen = backStackEntry?.destination?.hierarchy?.any {
-            it.hasRoute(PickedUpPlayerInfoScreen::class)
+            it.hasRoute(com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.PickedUpPlayerInfoScreen::class)
         } ?: false
         assertThat(isNavigatedToPickedUpPlayerInfoScreen).isTrue()
     }

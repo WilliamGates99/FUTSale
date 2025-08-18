@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupRootNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.utils.enableEdgeToEdgeWindow
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.nav_graph.SetupRootNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.utils.enableEdgeToEdgeWindow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,14 +48,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Layout Orientation is changing automatically in Android 7 (24) and newer
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                CompositionLocalProvider(
-                    value = LocalLayoutDirection provides mainState.currentAppLocale.layoutDirectionCompose
-                ) {
-                    FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination)
-                }
-            } else {
-                FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination)
+            when (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                true -> CompositionLocalProvider(
+                    value = LocalLayoutDirection provides mainState.currentAppLocale.layoutDirectionCompose,
+                    content = { FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination) }
+                )
+                else -> FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination)
             }
         }
     }
@@ -72,8 +70,8 @@ class MainActivity : AppCompatActivity() {
     ) {
         FutSaleTheme {
             Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxSize()
             ) {
                 val rootNavController = rememberNavController()
 

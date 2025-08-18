@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.StoreAppLocaleError
 
 fun StoreAppLocaleError.asUiText(): UiText = when (this) {

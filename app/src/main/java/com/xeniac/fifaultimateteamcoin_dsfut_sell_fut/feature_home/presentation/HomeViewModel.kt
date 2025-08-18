@@ -8,9 +8,9 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.hasNetworkConnection
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.NetworkObserverHelper.hasNetworkConnection
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.isAppInstalledFromPlayStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases

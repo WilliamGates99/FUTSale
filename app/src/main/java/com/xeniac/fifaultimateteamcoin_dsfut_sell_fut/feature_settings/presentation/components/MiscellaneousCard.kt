@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromMyket
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.isAppInstalledFromMyket
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 
 enum class MiscellaneousRowItems(
@@ -59,7 +59,7 @@ enum class MiscellaneousRowItems(
     PrivacyPolicy(
         icon = R.drawable.ic_settings_privacy_policy,
         title = R.string.settings_text_miscellaneous_privacy_policy,
-        url = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.URL_PRIVACY_POLICY
+        url = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants.URL_PRIVACY_POLICY
     )
 }
 
