@@ -170,6 +170,7 @@ room = ["room-runtime", "room-ktx", "room-paging"]
 paging = ["paging-runtime", "paging-compose"]
 firebase = ["firebase-analytics", "firebase-messaging", "firebase-crashlytics", "firebase-perf"]
 coil = ["coil-compose", "coil-svg", "coil-gif", "coil-network-ktor", "coil-network-cache-control"]
+google-play-inapp-apis = ["play-review-ktx", "play-app-update-ktx"]
 
 local-unit-tests = ["truth", "junit", "arch-core-testing", "kotlinx-coroutines-test", "ktor-client-mock"]
 instrumentation-tests = ["truth", "junit", "test-ext-junit", "arch-core-testing", "kotlinx-coroutines-test", "test-core", "test-runner", "test-rules", "ktor-client-mock", "room-testing", "paging-testing-android", "hilt-android-testing"]

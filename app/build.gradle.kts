@@ -345,14 +345,8 @@ dependencies {
     implementation(platform(libs.coil.bom))
     implementation(libs.bundles.coil)
 
-    // Google Play In-App Reviews API
-    implementation(libs.play.review.ktx)
-
-    // Google Play In-App Reviews API
-    implementation(libs.play.review.ktx)
-
-    // Google Play In-App Updates API
-    implementation(libs.play.app.update.ktx)
+    // Google Play In-App APIs
+    implementation(libs.bundles.google.play.inapp.apis)
 
     // Baseline Profiles
     implementation(libs.profileinstaller)
