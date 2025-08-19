@@ -166,7 +166,7 @@ internal object AppModule {
             serializer = PermissionsPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { PermissionsPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Permissions.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Permissions_2.pb") }
         )
     }
 
@@ -180,7 +180,7 @@ internal object AppModule {
             serializer = SettingsPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Settings.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Settings_2.pb") }
         )
     }
 
@@ -194,7 +194,7 @@ internal object AppModule {
             serializer = MiscellaneousPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous_2.pb") }
         )
     }
 
@@ -208,7 +208,7 @@ internal object AppModule {
             serializer = DsfutPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Dsfut.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Dsfut_2.pb") }
         )
     }
 
