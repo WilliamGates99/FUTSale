@@ -14,7 +14,7 @@ import java.util.Base64
 
 @Serializable
 data class SettingsPreferences(
-    val themeIndex: Int = AppTheme.Default.index,
+    val themeIndex: Int = AppTheme.DEFAULT.index,
     val isNotificationSoundEnabled: Boolean = true,
     val isNotificationVibrateEnabled: Boolean = true
 )

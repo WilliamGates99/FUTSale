@@ -14,20 +14,20 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLoca
 fun getFontFamilyForLocale(): FontFamily {
     val appLocaleList = AppCompatDelegate.getApplicationLocales()
     val currentAppLocale = if (appLocaleList.isEmpty) {
-        AppLocale.Default
+        AppLocale.DEFAULT
     } else {
         val localeString = appLocaleList[0].toString()
         when (localeString) {
-            AppLocale.EnglishUS.localeString -> AppLocale.EnglishUS
-            AppLocale.EnglishGB.localeString -> AppLocale.EnglishGB
-            AppLocale.FarsiIR.localeString -> AppLocale.FarsiIR
-            else -> AppLocale.Default
+            AppLocale.ENGLISH_US.localeString -> AppLocale.ENGLISH_US
+            AppLocale.ENGLISH_GB.localeString -> AppLocale.ENGLISH_GB
+            AppLocale.FARSI_IR.localeString -> AppLocale.FARSI_IR
+            else -> AppLocale.DEFAULT
         }
     }
 
     return remember(key1 = currentAppLocale) {
         when (currentAppLocale) {
-            AppLocale.Default, AppLocale.EnglishGB, AppLocale.EnglishUS -> FontFamily(
+            AppLocale.DEFAULT, AppLocale.ENGLISH_GB, AppLocale.ENGLISH_US -> FontFamily(
                 listOf(
                     Font(
                         resId = R.font.nunito_thin,
@@ -67,7 +67,7 @@ fun getFontFamilyForLocale(): FontFamily {
                     )
                 )
             )
-            AppLocale.FarsiIR -> FontFamily(
+            AppLocale.FARSI_IR -> FontFamily(
                 listOf(
                     Font(
                         resId = R.font.vazirmatn_rd_fd_thin,

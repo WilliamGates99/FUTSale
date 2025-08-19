@@ -3,7 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_ac
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 
 data class MainActivityState(
-    val currentAppLocale: AppLocale = AppLocale.Default,
+    val currentAppLocale: AppLocale = AppLocale.DEFAULT,
     val isSplashScreenLoading: Boolean = true,
     val postSplashDestination: Any? = null
 )
