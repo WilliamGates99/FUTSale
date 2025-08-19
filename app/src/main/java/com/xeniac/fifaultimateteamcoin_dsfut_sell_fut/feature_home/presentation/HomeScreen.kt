@@ -43,7 +43,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeUiEvent
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +56,7 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
-    val homeState by viewModel.homeState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
 
@@ -95,9 +94,7 @@ fun HomeScreen(
                 actionLabel = UiText.StringResource(R.string.home_app_update_action),
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.appUpdateManager.get().completeUpdate()
-                }
+                onAction = { viewModel.appUpdateManager.get().completeUpdate() }
             )
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
                 viewModel.appUpdateManager.get().completeUpdate()
@@ -108,7 +105,7 @@ fun HomeScreen(
     ObserverAsEvent(flow = viewModel.inAppReviewEventChannel) { event ->
         when (event) {
             HomeUiEvent.LaunchInAppReview -> {
-                homeState.inAppReviewInfo?.let { reviewInfo ->
+                state.inAppReviewInfo?.let { reviewInfo ->
                     viewModel.reviewManager.get().launchReviewFlow(
                         activity,
                         reviewInfo
@@ -132,8 +129,8 @@ fun HomeScreen(
     }
 
     PostNotificationPermissionHandler(
-        isPermissionDialogVisible = homeState.isPermissionDialogVisible,
-        permissionDialogQueue = homeState.permissionDialogQueue,
+        isPermissionDialogVisible = state.isPermissionDialogVisible,
+        permissionDialogQueue = state.permissionDialogQueue,
         onAction = viewModel::onAction
     )
 
@@ -173,13 +170,13 @@ fun HomeScreen(
     }
 
     AppUpdateBottomSheet(
-        appUpdateInfo = homeState.latestAppUpdateInfo,
+        appUpdateInfo = state.latestAppUpdateInfo,
         onAction = viewModel::onAction,
         openAppUpdatePageInStore = { context.openAppUpdatePageInStore() }
     )
 
     AppReviewDialog(
-        isVisible = homeState.isAppReviewDialogVisible,
+        isVisible = state.isAppReviewDialogVisible,
         onAction = viewModel::onAction,
         openAppPageInStore = { context.openAppPageInStore() }
     )

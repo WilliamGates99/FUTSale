@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdgeWindow()
 
         setContent {
-            val mainState by viewModel.mainState.collectAsStateWithLifecycle()
+            val state by viewModel.state.collectAsStateWithLifecycle()
 
             DisposableEffect(key1 = Unit) {
                 // Lock activity orientation to portrait
@@ -50,17 +50,17 @@ class MainActivity : AppCompatActivity() {
             // Layout Orientation is changing automatically in Android 7 (24) and newer
             when (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 true -> CompositionLocalProvider(
-                    value = LocalLayoutDirection provides mainState.currentAppLocale.layoutDirectionCompose,
-                    content = { FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination) }
+                    value = LocalLayoutDirection provides state.currentAppLocale.layoutDirectionCompose,
+                    content = { FutSaleRootSurface(postSplashDestination = state.postSplashDestination) }
                 )
-                else -> FutSaleRootSurface(postSplashDestination = mainState.postSplashDestination)
+                else -> FutSaleRootSurface(postSplashDestination = state.postSplashDestination)
             }
         }
     }
 
     private fun splashScreen() {
         installSplashScreen().apply {
-            setKeepOnScreenCondition { viewModel.mainState.value.isSplashScreenLoading }
+            setKeepOnScreenCondition { viewModel.state.value.isSplashScreenLoading }
         }
     }
 

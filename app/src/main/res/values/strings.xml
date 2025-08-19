@@ -40,6 +40,17 @@
     <string name="core_content_description_back">Return</string>
     <string name="core_textfield_content_description_password_toggle_show">Show Password</string>
     <string name="core_textfield_content_description_password_toggle_hide">Hide Password</string>
+    <string name="core_locale_title_default">System Default</string>
+    <string name="core_locale_title_english_us">English (US)</string>
+    <string name="core_locale_title_english_gb">English (UK)</string>
+    <string name="core_locale_title_farsi_ir">Persian</string>
+    <string name="core_locale_title_full_default">System Default</string>
+    <string name="core_locale_title_full_english_us">English (United States)</string>
+    <string name="core_locale_title_full_english_gb">English (United Kingdom)</string>
+    <string name="core_locale_title_full_farsi_ir">Persian</string>
+    <string name="core_theme_title_default">System Default</string>
+    <string name="core_theme_title_light">Light</string>
+    <string name="core_theme_title_dark">Dark</string>
     <string name="core_platform_console">Console</string>
     <string name="core_platform_pc">PC</string>
 
@@ -191,14 +202,7 @@
     <string name="settings_app_bar_title">Settings</string>
     <string name="settings_title_settings">Settings</string>
     <string name="settings_text_settings_language">Language</string>
-    <string name="settings_text_settings_language_default">System Default</string>
-    <string name="settings_text_settings_language_english_us">English (US)</string>
-    <string name="settings_text_settings_language_english_gb">English (UK)</string>
-    <string name="settings_text_settings_language_farsi_ir">Persian</string>
     <string name="settings_text_settings_theme">Theme</string>
-    <string name="settings_text_settings_theme_default">System Default</string>
-    <string name="settings_text_settings_theme_light">Light</string>
-    <string name="settings_text_settings_theme_dark">Dark</string>
     <string name="settings_text_settings_notification_sound">Notification Sound</string>
     <string name="settings_text_settings_notification_vibrate">Notification Vibrate</string>
     <string name="settings_title_miscellaneous">Miscellaneous</string>
@@ -207,14 +211,7 @@
     <string name="settings_text_miscellaneous_rate_us">Rate Us</string>
     <string name="settings_text_miscellaneous_privacy_policy">Privacy Policy</string>
     <string name="settings_bottom_sheet_title_language">Language</string>
-    <string name="settings_bottom_sheet_item_language_default">System Default</string>
-    <string name="settings_bottom_sheet_item_language_english_us">English (United States)</string>
-    <string name="settings_bottom_sheet_item_language_english_gb">English (United Kingdom)</string>
-    <string name="settings_bottom_sheet_item_language_farsi_ir">Persian</string>
     <string name="settings_bottom_sheet_title_theme">Theme</string>
-    <string name="settings_bottom_sheet_item_theme_default">System Default</string>
-    <string name="settings_bottom_sheet_item_theme_light">Light</string>
-    <string name="settings_bottom_sheet_item_theme_dark">Dark</string>
 
 
     <string name="picked_up_player_info_message">%s was picked up successfully.</string>

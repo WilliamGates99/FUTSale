@@ -4,8 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -36,8 +35,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.ProfileTextFields
@@ -55,7 +52,7 @@ fun ProfileScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val profileState by viewModel.profileState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
@@ -99,37 +96,22 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                 .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
                 .padding(
                     horizontal = horizontalPadding,
                     vertical = verticalPadding
                 )
+                .imePadding()
         ) {
             ProfileTextFields(
-                profileState = profileState,
-                onAction = viewModel::onAction,
-                modifier = Modifier.fillMaxWidth()
+                state = state,
+                onAction = viewModel::onAction
             )
 
-            AccountLinks(
-                openUrlInBrowser = { url ->
-                    url?.let {
-                        context.openLinkInExternalBrowser(urlString = url)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+            AccountLinks()
 
-            OtherLinks(
-                openUrlInInAppBrowser = { url ->
-                    url?.let {
-                        context.openLinkInInAppBrowser(urlString = url)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+            OtherLinks()
         }
     }
 }

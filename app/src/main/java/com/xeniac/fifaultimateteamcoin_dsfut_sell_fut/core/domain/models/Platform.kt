@@ -4,7 +4,9 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class Platform(val value: String) : Parcelable {
+enum class Platform(
+    val value: String
+) : Parcelable {
     CONSOLE(value = "cons"),
     PC(value = "pc")
 }

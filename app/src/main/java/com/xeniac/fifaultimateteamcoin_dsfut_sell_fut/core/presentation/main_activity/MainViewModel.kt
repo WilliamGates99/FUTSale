@@ -3,9 +3,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_ac
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.MainUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.states.MainActivityState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HomeScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.OnboardingScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.states.MainActivityState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,36 +24,36 @@ class MainViewModel @Inject constructor(
     private val mainUseCases: MainUseCases
 ) : ViewModel() {
 
-    private val _mainState = MutableStateFlow(MainActivityState())
-    val mainState = _mainState.onStart {
+    private val _state = MutableStateFlow(MainActivityState())
+    val state = _state.onStart {
         getMainStateData()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = MainActivityState()
+        initialValue = _state.value
     )
 
     private fun getMainStateData() {
         mainUseCases.getCurrentAppLocaleUseCase.get()().zip(
             other = mainUseCases.getIsOnboardingCompletedUseCase.get()(),
             transform = { currentAppLocale, isOnboardingCompleted ->
-                _mainState.update { state ->
-                    state.copy(
+                _state.update {
+                    it.copy(
                         currentAppLocale = currentAppLocale,
                         postSplashDestination = getPostSplashDestination(isOnboardingCompleted)
                     )
                 }
             }
         ).onCompletion {
-            _mainState.update { state ->
-                state.copy(
-                    isSplashScreenLoading = false
-                )
+            _state.update {
+                it.copy(isSplashScreenLoading = false)
             }
         }.launchIn(scope = viewModelScope)
     }
 
-    private fun getPostSplashDestination(isOnboardingCompleted: Boolean): Any {
+    private fun getPostSplashDestination(
+        isOnboardingCompleted: Boolean
+    ): Any {
         return if (isOnboardingCompleted) HomeScreen
         else OnboardingScreen
     }

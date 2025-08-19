@@ -8,29 +8,21 @@ typealias IsActivityRestartNeeded = Boolean
 
 interface SettingsDataStoreRepository {
 
-    suspend fun isOnboardingCompleted(): Boolean
-
-    fun getNotificationPermissionCount(): Flow<Int>
-
     fun getCurrentAppThemeSynchronously(): AppTheme
 
     fun getCurrentAppTheme(): Flow<AppTheme>
 
-    fun getCurrentAppLocale(): AppLocale
-
-    fun isNotificationSoundEnabled(): Flow<Boolean>
-
-    fun isNotificationVibrateEnabled(): Flow<Boolean>
-
-    suspend fun isOnboardingCompleted(isCompleted: Boolean)
-
-    suspend fun storeNotificationPermissionCount(count: Int)
-
     suspend fun storeCurrentAppTheme(appTheme: AppTheme)
+
+    fun getCurrentAppLocale(): AppLocale
 
     suspend fun storeCurrentAppLocale(newAppLocale: AppLocale): IsActivityRestartNeeded
 
+    fun isNotificationSoundEnabled(): Flow<Boolean>
+
     suspend fun isNotificationSoundEnabled(isEnabled: Boolean)
+
+    fun isNotificationVibrateEnabled(): Flow<Boolean>
 
     suspend fun isNotificationVibrateEnabled(isEnabled: Boolean)
 }

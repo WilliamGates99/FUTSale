@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,29 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
-
-enum class LocaleItems(
-    val locale: AppLocale,
-    @StringRes val title: Int
-) {
-    Default(
-        locale = AppLocale.Default,
-        title = R.string.settings_bottom_sheet_item_language_default
-    ),
-    EnglishUS(
-        locale = AppLocale.EnglishUS,
-        title = R.string.settings_bottom_sheet_item_language_english_us
-    ),
-    EnglishGB(
-        locale = AppLocale.EnglishGB,
-        title = R.string.settings_bottom_sheet_item_language_english_gb
-    ),
-    FarsiIR(
-        locale = AppLocale.FarsiIR,
-        title = R.string.settings_bottom_sheet_item_language_farsi_ir
-    )
-}
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,9 +63,7 @@ fun LocaleBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = {
-                onAction(SettingsAction.DismissLocaleBottomSheet)
-            },
+            onDismissRequest = { onAction(SettingsAction.DismissLocaleBottomSheet) },
             modifier = modifier
         ) {
             Column(
@@ -111,8 +86,8 @@ fun LocaleBottomSheet(
                         .padding(vertical = 12.dp)
                         .selectableGroup()
                 ) {
-                    LocaleItems.entries.forEach { localeItem ->
-                        val isSelected = currentAppLocale == localeItem.locale
+                    AppLocale.entries.forEach { localeItem ->
+                        val isSelected = currentAppLocale == localeItem
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -127,7 +102,9 @@ fun LocaleBottomSheet(
                                     role = Role.RadioButton,
                                     onClick = {
                                         onAction(SettingsAction.DismissLocaleBottomSheet)
-                                        onAction(SettingsAction.SetCurrentAppLocale(localeItem.locale))
+                                        onAction(
+                                            SettingsAction.SetCurrentAppLocale(newAppLocale = localeItem)
+                                        )
                                     }
                                 )
                                 .padding(
@@ -141,7 +118,7 @@ fun LocaleBottomSheet(
                             )
 
                             Text(
-                                text = stringResource(id = localeItem.title),
+                                text = stringResource(id = localeItem.fullTitleId),
                                 fontSize = titleFontSize,
                                 lineHeight = titleLineHeight,
                                 fontWeight = titleFontWeight,

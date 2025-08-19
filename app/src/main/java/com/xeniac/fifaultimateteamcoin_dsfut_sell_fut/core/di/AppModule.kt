@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
@@ -23,6 +22,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPr
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
@@ -58,7 +59,6 @@ import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -159,7 +159,20 @@ internal object AppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @SettingsDataStoreQualifier
+    fun providePermissionDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<PermissionsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = PermissionsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { PermissionsPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Permissions.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
     ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -174,22 +187,6 @@ internal object AppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @DsfutDataStoreQualifier
-    fun provideDsfutDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
-        DataStoreFactory.create(
-            serializer = DsfutPreferencesSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
-            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.dataStoreFile(fileName = "Dsfut.pb") }
-        )
-    }
-
-    @OptIn(InternalCoroutinesApi::class)
-    @Provides
-    @Singleton
-    @MiscellaneousDataStoreQualifier
     fun provideMiscellaneousDataStore(
         @ApplicationContext context: Context
     ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -198,6 +195,20 @@ internal object AppModule {
             corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Dsfut.pb") }
         )
     }
 
@@ -219,15 +230,3 @@ internal object AppModule {
         /* algorithm = */ "MD5"
     )
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class SettingsDataStoreQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class DsfutDataStoreQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class MiscellaneousDataStoreQualifier

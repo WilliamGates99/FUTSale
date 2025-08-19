@@ -5,8 +5,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -46,8 +45,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpPlayerSection
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,13 +64,13 @@ fun PickUpPlayerScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = pickUpPlayerState.isAutoPickUpLoading) {
+    LaunchedEffect(key1 = state.isAutoPickUpLoading) {
         val window = activity.window
 
-        when (pickUpPlayerState.isAutoPickUpLoading) {
+        when (state.isAutoPickUpLoading) {
             true -> window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             false -> window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
@@ -123,19 +120,15 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.ShowErrorNotification -> {
                 notificationService.showFailedPickUpPlayerNotification(
                     message = event.message.asString(context),
-                    isNotificationSoundEnabled = pickUpPlayerState
-                        .isNotificationSoundEnabled ?: true,
-                    isNotificationVibrateEnabled = pickUpPlayerState
-                        .isNotificationVibrateEnabled ?: true
+                    isNotificationSoundEnabled = state.isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = state.isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.ShowSuccessNotification -> {
                 notificationService.showSuccessfulPickUpPlayerNotification(
                     playerName = event.playerName,
-                    isNotificationSoundEnabled = pickUpPlayerState
-                        .isNotificationSoundEnabled ?: true,
-                    isNotificationVibrateEnabled = pickUpPlayerState
-                        .isNotificationVibrateEnabled ?: true
+                    isNotificationSoundEnabled = state.isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = state.isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
@@ -149,9 +142,7 @@ fun PickUpPlayerScreen(
             UiEvent.ShowOfflineSnackbar -> context.showOfflineSnackbar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
-                }
+                onAction = { viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer) }
             )
         }
     }
@@ -197,9 +188,7 @@ fun PickUpPlayerScreen(
             UiEvent.ShowOfflineSnackbar -> context.showOfflineSnackbar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
-                }
+                onAction = { viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce) }
             )
         }
     }
@@ -223,25 +212,22 @@ fun PickUpPlayerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                 .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
                 .padding(vertical = verticalPadding)
+                .imePadding()
         ) {
             LatestPlayersPagers(
-                latestPickedPlayers = pickUpPlayerState.latestPickedUpPlayers,
+                latestPickedPlayers = state.latestPickedUpPlayers,
                 timerText = timerText,
                 onAction = viewModel::onAction,
-                onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
-                modifier = Modifier.fillMaxWidth()
+                onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen
             )
 
             PickUpPlayerSection(
-                pickUpPlayerState = pickUpPlayerState,
+                state = state,
                 onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = horizontalPadding)
+                modifier = Modifier.padding(horizontal = horizontalPadding)
             )
         }
     }

@@ -1,70 +1,39 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.datastore.core.DataStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.MiscellaneousDataStoreQualifier
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppUpdateDialogShowCount
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PreviousRateAppRequestDateTime
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.AppUpdateDialogShowCount
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsAppUpdateDialogShownToday
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PreviousRateAppRequestTimeInMs
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.periodUntil
-import kotlinx.datetime.todayIn
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.parse
+import kotlinx.datetime.toLocalDateTime
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
 class MiscellaneousDataStoreRepositoryImpl @Inject constructor(
-    @MiscellaneousDataStoreQualifier private val dataStore: DataStore<MiscellaneousPreferences>
+    private val dataStore: DataStore<MiscellaneousPreferences>
 ) : MiscellaneousDataStoreRepository {
 
-    override fun getAppUpdateDialogShowCount(): Flow<AppUpdateDialogShowCount> =
-        dataStore.data.map {
-            it.appUpdateDialogShowCount
-        }.catch { e ->
-            Timber.e("Get app update dialog show count failed:")
-            e.printStackTrace()
-        }
-
-    override fun isAppUpdateDialogShownToday(): Flow<IsAppUpdateDialogShownToday> =
-        dataStore.data.map {
-            val dialogShowEpochDays = it.appUpdateDialogShowEpochDays
-
-            dialogShowEpochDays?.let { epochDays ->
-                val todayDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
-                val dialogShowLocalDate = LocalDate.fromEpochDays(epochDays)
-
-                val isShownToday = dialogShowLocalDate.periodUntil(todayDate).days == 0
-
-                isShownToday
-            } ?: false
-        }.catch { e ->
-            Timber.e("Get is app update dialog shown today failed:")
-            e.printStackTrace()
-        }
-
-    override fun getSelectedRateAppOption(): Flow<RateAppOption> = dataStore.data.map {
-        it.selectedRateAppOption
+    override fun getAppUpdateDialogShowCount(
+    ): Flow<AppUpdateDialogShowCount> = dataStore.data.map {
+        it.appUpdateDialogShowCount
     }.catch { e ->
-        Timber.e("Get selected rate app option failed:")
+        Timber.e("Get app update dialog show count failed:")
         e.printStackTrace()
     }
-
-    override fun getPreviousRateAppRequestTimeInMs(): Flow<PreviousRateAppRequestTimeInMs?> =
-        dataStore.data.map {
-            it.previousRateAppRequestTimeInMs
-        }.catch { e ->
-            Timber.e("Get previous rate app request time in ms failed:")
-            e.printStackTrace()
-        }
 
     override suspend fun storeAppUpdateDialogShowCount(count: Int) {
         try {
@@ -76,45 +45,92 @@ class MiscellaneousDataStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun storeAppUpdateDialogShowEpochDays() {
+    override fun isAppUpdateDialogShownToday(
+        timeZone: TimeZone,
+        dateTimeFormat: DateTimeFormat<DateTimeComponents>
+    ): Flow<IsAppUpdateDialogShownToday> = dataStore.data.map { preferences ->
+        preferences.appUpdateDialogShowDateTime?.let { dialogShowDateTime ->
+            val today = Clock.System.now().toLocalDateTime(
+                timeZone = timeZone
+            ).date
+
+            val dialogShowLocaleDate = Instant.parse(
+                input = dialogShowDateTime,
+                format = dateTimeFormat
+            ).toLocalDateTime(timeZone = timeZone).date
+
+            val isShownToday = today == dialogShowLocaleDate
+
+            isShownToday
+        } ?: false
+    }.catch { e ->
+        Timber.e("Get app update dialog show date failed:")
+        e.printStackTrace()
+    }
+
+    override suspend fun storeAppUpdateDialogShowDateTime(
+        dateTimeFormat: DateTimeFormat<DateTimeComponents>
+    ) {
         try {
-            val todayLocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
-            val todayEpochDays = todayLocalDate.toEpochDays()
-            dataStore.updateData { it.copy(appUpdateDialogShowEpochDays = todayEpochDays.toInt()) }
-            Timber.i("App update dialog show epoch days edited to $todayEpochDays")
+            val now = Clock.System.now()
+            dataStore.updateData {
+                it.copy(appUpdateDialogShowDateTime = now.format(format = dateTimeFormat))
+            }
+            Timber.i("App update dialog show date time stored.")
         } catch (e: Exception) {
-            Timber.e("Store app update dialog show epoch days failed:")
+            Timber.e("Store app update dialog show date time failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun removeAppUpdateDialogShowEpochDays() {
+    override suspend fun removeAppUpdateDialogShowDateTime() {
         try {
-            dataStore.updateData { it.copy(appUpdateDialogShowEpochDays = null) }
-            Timber.i("App update dialog show epoch days removed")
+            dataStore.updateData { it.copy(appUpdateDialogShowDateTime = null) }
+            Timber.i("App update dialog show date time removed")
         } catch (e: Exception) {
-            Timber.e("Remove App update dialog show epoch days failed:")
+            Timber.e("Remove app update dialog show date time failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun storeSelectedRateAppOption(rateAppOption: RateAppOption) {
+    override fun getSelectedRateAppOption(): Flow<RateAppOption> = dataStore.data.map {
+        it.selectedRateAppOption
+    }.catch { e ->
+        Timber.e("Get selected rate app option failed:")
+        e.printStackTrace()
+    }
+
+    override suspend fun storeSelectedRateAppOption(
+        rateAppOption: RateAppOption
+    ) {
         try {
             dataStore.updateData { it.copy(selectedRateAppOption = rateAppOption) }
-            Timber.i("Selected rate app option edited to ${rateAppOption.value}")
+            Timber.i("Selected rate app option edited to $rateAppOption")
         } catch (e: Exception) {
             Timber.e("Store selected rate app option failed:")
             e.printStackTrace()
         }
     }
 
-    override suspend fun storePreviousRateAppRequestTimeInMs() {
+    override fun getPreviousRateAppRequestDateTime(
+    ): Flow<PreviousRateAppRequestDateTime?> = dataStore.data.map {
+        it.previousRateAppRequestDateTime
+    }.catch { e ->
+        Timber.e("Get previous rate app request date time failed:")
+        e.printStackTrace()
+    }
+
+    override suspend fun storePreviousRateAppRequestDateTime(
+        dateTimeFormat: DateTimeFormat<DateTimeComponents>
+    ) {
         try {
-            val currentTimeInMs = DateHelper.getCurrentTimeInMillis()
-            dataStore.updateData { it.copy(previousRateAppRequestTimeInMs = currentTimeInMs) }
-            Timber.i("Previous rate app request time in ms edited to $currentTimeInMs")
+            val now = Clock.System.now()
+            dataStore.updateData {
+                it.copy(previousRateAppRequestDateTime = now.format(format = dateTimeFormat))
+            }
+            Timber.i("Previous rate app request date time stored.")
         } catch (e: Exception) {
-            Timber.e("Store previous rate app request time in ms failed:")
+            Timber.e("Store previous rate app request date time failed:")
             e.printStackTrace()
         }
     }

@@ -10,7 +10,7 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PermissionsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppReviewRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
@@ -20,12 +20,12 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_ca
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.CheckIsImmediateUpdateStalledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetLatestAppVersionUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetNotificationPermissionCountUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestTimeInMsUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetPreviousRateAppRequestDateTimeUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.GetSelectedRateAppOptionUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.RequestInAppReviewsUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StoreNotificationPermissionCountUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StorePreviousRateAppRequestTimeInMsUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StorePreviousRateAppRequestDateTimeUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.StoreSelectedRateAppOptionUseCase
 import dagger.Module
 import dagger.Provides
@@ -125,17 +125,17 @@ internal object HomeModule {
     @Provides
     @ViewModelScoped
     fun provideGetNotificationPermissionCountUseCase(
-        settingsDataStoreRepository: SettingsDataStoreRepository
+        permissionsDataStoreRepository: PermissionsDataStoreRepository
     ): GetNotificationPermissionCountUseCase = GetNotificationPermissionCountUseCase(
-        settingsDataStoreRepository
+        permissionsDataStoreRepository
     )
 
     @Provides
     @ViewModelScoped
     fun provideStoreNotificationPermissionCountUseCase(
-        settingsDataStoreRepository: SettingsDataStoreRepository
+        permissionsDataStoreRepository: PermissionsDataStoreRepository
     ): StoreNotificationPermissionCountUseCase = StoreNotificationPermissionCountUseCase(
-        settingsDataStoreRepository
+        permissionsDataStoreRepository
     )
 
     @Provides
@@ -156,17 +156,17 @@ internal object HomeModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetPreviousRateAppRequestTimeInMsUseCase(
+    fun provideGetPreviousRateAppRequestDateTimeUseCase(
         miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
-    ): GetPreviousRateAppRequestTimeInMsUseCase = GetPreviousRateAppRequestTimeInMsUseCase(
+    ): GetPreviousRateAppRequestDateTimeUseCase = GetPreviousRateAppRequestDateTimeUseCase(
         miscellaneousDataStoreRepository
     )
 
     @Provides
     @ViewModelScoped
-    fun provideStorePreviousRateAppRequestTimeInMsUseCase(
+    fun provideStorePreviousRateAppRequestDateTimeUseCase(
         miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
-    ): StorePreviousRateAppRequestTimeInMsUseCase = StorePreviousRateAppRequestTimeInMsUseCase(
+    ): StorePreviousRateAppRequestDateTimeUseCase = StorePreviousRateAppRequestDateTimeUseCase(
         miscellaneousDataStoreRepository
     )
 
@@ -183,8 +183,8 @@ internal object HomeModule {
         storeNotificationPermissionCountUseCase: StoreNotificationPermissionCountUseCase,
         getSelectedRateAppOptionUseCase: GetSelectedRateAppOptionUseCase,
         storeSelectedRateAppOptionUseCase: StoreSelectedRateAppOptionUseCase,
-        getPreviousRateAppRequestTimeInMsUseCase: GetPreviousRateAppRequestTimeInMsUseCase,
-        storePreviousRateAppRequestTimeInMsUseCase: StorePreviousRateAppRequestTimeInMsUseCase
+        getPreviousRateAppRequestDateTimeUseCase: GetPreviousRateAppRequestDateTimeUseCase,
+        storePreviousRateAppRequestDateTimeUseCase: StorePreviousRateAppRequestDateTimeUseCase
     ): HomeUseCases = HomeUseCases(
         { checkFlexibleUpdateDownloadStateUseCase },
         { checkIsFlexibleUpdateStalledUseCase },
@@ -196,7 +196,7 @@ internal object HomeModule {
         { storeNotificationPermissionCountUseCase },
         { getSelectedRateAppOptionUseCase },
         { storeSelectedRateAppOptionUseCase },
-        { getPreviousRateAppRequestTimeInMsUseCase },
-        { storePreviousRateAppRequestTimeInMsUseCase }
+        { getPreviousRateAppRequestDateTimeUseCase },
+        { storePreviousRateAppRequestDateTimeUseCase }
     )
 }

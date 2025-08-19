@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.flow
 class StoreSelectedRateAppOptionUseCase(
     private val miscellaneousDataStoreRepository: MiscellaneousDataStoreRepository
 ) {
-    operator fun invoke(rateAppOption: RateAppOption): Flow<Unit> = flow {
+    operator fun invoke(
+        rateAppOption: RateAppOption
+    ): Flow<Unit> = flow {
         return@flow emit(miscellaneousDataStoreRepository.storeSelectedRateAppOption(rateAppOption))
     }
 }

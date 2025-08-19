@@ -1,10 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -66,27 +64,21 @@ fun PickedUpPlayerInfoScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Column(
+            verticalArrangement = Arrangement.spacedBy(space = 24.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = innerPadding.calculateBottomPadding() + verticalPadding
-                )
+                .padding(innerPadding)
+                .padding(vertical = verticalPadding)
         ) {
             PickedUpPlayerInfo(
                 player = player,
                 timerText = timerText,
-                horizontalPadding = horizontalPadding,
-                modifier = Modifier.fillMaxWidth()
+                horizontalPadding = horizontalPadding
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
             InstructionCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = horizontalPadding)
+                modifier = Modifier.padding(horizontal = horizontalPadding)
             )
         }
     }

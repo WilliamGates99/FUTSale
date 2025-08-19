@@ -1,6 +1,5 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,25 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
-
-enum class ThemeItems(
-    val theme: AppTheme,
-    @StringRes val title: Int
-) {
-    Default(
-        theme = AppTheme.Default,
-        title = R.string.settings_bottom_sheet_item_theme_default
-    ),
-    Light(
-        theme = AppTheme.Light,
-        title = R.string.settings_bottom_sheet_item_theme_light
-    ),
-    Dark(
-        theme = AppTheme.Dark,
-        title = R.string.settings_bottom_sheet_item_theme_dark
-    )
-}
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,9 +63,7 @@ fun ThemeBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = {
-                onAction(SettingsAction.DismissThemeBottomSheet)
-            },
+            onDismissRequest = { onAction(SettingsAction.DismissThemeBottomSheet) },
             modifier = modifier
         ) {
             Column(
@@ -107,8 +86,8 @@ fun ThemeBottomSheet(
                         .padding(vertical = 12.dp)
                         .selectableGroup()
                 ) {
-                    ThemeItems.entries.forEach { themeItem ->
-                        val isSelected = currentAppTheme == themeItem.theme
+                    AppTheme.entries.forEach { themeItem ->
+                        val isSelected = currentAppTheme == themeItem
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -123,7 +102,9 @@ fun ThemeBottomSheet(
                                     role = Role.RadioButton,
                                     onClick = {
                                         onAction(SettingsAction.DismissThemeBottomSheet)
-                                        onAction(SettingsAction.SetCurrentAppTheme(themeItem.theme))
+                                        onAction(
+                                            SettingsAction.SetCurrentAppTheme(newAppTheme = themeItem)
+                                        )
                                     }
                                 )
                                 .padding(
@@ -137,7 +118,7 @@ fun ThemeBottomSheet(
                             )
 
                             Text(
-                                text = stringResource(id = themeItem.title),
+                                text = stringResource(id = themeItem.titleId),
                                 fontSize = titleFontSize,
                                 lineHeight = titleLineHeight,
                                 fontWeight = titleFontWeight,

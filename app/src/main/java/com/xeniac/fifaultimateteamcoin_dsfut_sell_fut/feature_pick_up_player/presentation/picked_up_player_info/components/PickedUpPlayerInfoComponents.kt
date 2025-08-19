@@ -72,7 +72,7 @@ fun PickedUpPlayerInfo(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             LottieAnimation(
@@ -102,17 +102,12 @@ fun PickedUpPlayerInfo(
                 id = R.string.picked_up_player_info_message,
                 player?.name.orEmpty()
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = horizontalPadding)
+            modifier = Modifier.padding(horizontal = horizontalPadding)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        PlayerInfo(
-            player = player,
-            modifier = Modifier.fillMaxWidth()
-        )
+        PlayerInfo(player = player)
     }
 }
 
@@ -216,7 +211,7 @@ private fun PickUpMessage(
         fontWeight = fontWeight,
         textAlign = textAlign,
         color = color,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }
 
@@ -230,7 +225,9 @@ private fun PlayerInfo(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.onSizeChanged { rowHeight = it.height }
+        modifier = modifier
+            .fillMaxWidth()
+            .onSizeChanged { rowHeight = it.height }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),

@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,7 +16,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.BouncingDotIndicator
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 import kotlinx.coroutines.launch
 
@@ -25,9 +26,7 @@ fun OnboardingPager(
     partnerIdState: CustomTextFieldState,
     secretKeyState: CustomTextFieldState,
     modifier: Modifier = Modifier,
-    onAction: (action: OnboardingAction) -> Unit,
-    onRegisterBtnClick: () -> Unit,
-    onPrivacyPolicyBtnClick: () -> Unit
+    onAction: (action: OnboardingAction) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { 4 })
@@ -38,7 +37,7 @@ fun OnboardingPager(
         }
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         BouncingDotIndicator(
             count = pagerState.pageCount,
             pagerState = pagerState,
@@ -97,9 +96,7 @@ fun OnboardingPager(
                 3 -> OnboardingPageFour(
                     partnerIdState = partnerIdState,
                     secretKeyState = secretKeyState,
-                    onAction = onAction,
-                    onRegisterBtnClick = onRegisterBtnClick,
-                    onPrivacyPolicyBtnClick = onPrivacyPolicyBtnClick
+                    onAction = onAction
                 )
             }
         }

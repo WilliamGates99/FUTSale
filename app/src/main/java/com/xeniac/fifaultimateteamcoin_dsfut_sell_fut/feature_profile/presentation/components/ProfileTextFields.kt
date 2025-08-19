@@ -28,13 +28,13 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.CustomOutlinedTextField
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events.ProfileAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 
 @Composable
 fun ProfileTextFields(
-    profileState: ProfileState,
+    state: ProfileState,
     modifier: Modifier = Modifier,
     onAction: (action: ProfileAction) -> Unit
 ) {
@@ -42,30 +42,28 @@ fun ProfileTextFields(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         ProfileHeaderAnimation()
 
         Spacer(modifier = Modifier.height(24.dp))
 
         PartnerIdTextField(
-            partnerIdState = profileState.partnerIdState,
-            isPartnerIdSaved = profileState.isPartnerIdSaved,
-            isPartnerIdLoading = profileState.isPartnerIdLoading,
+            partnerIdState = state.partnerIdState,
+            isPartnerIdSaved = state.isPartnerIdSaved,
+            isPartnerIdLoading = state.isPartnerIdLoading,
             onAction = onAction,
-            keyboardAction = { focusManager.clearFocus() },
-            modifier = Modifier.fillMaxWidth()
+            keyboardAction = { focusManager.clearFocus() }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         SecretKeyTextField(
-            secretKeyState = profileState.secretKeyState,
-            isSecretKeySaved = profileState.isSecretKeySaved,
-            isSecretKeyLoading = profileState.isSecretKeyLoading,
+            secretKeyState = state.secretKeyState,
+            isSecretKeySaved = state.isSecretKeySaved,
+            isSecretKeyLoading = state.isSecretKeyLoading,
             onAction = onAction,
-            keyboardAction = { focusManager.clearFocus() },
-            modifier = Modifier.fillMaxWidth()
+            keyboardAction = { focusManager.clearFocus() }
         )
     }
 }
@@ -166,7 +164,7 @@ private fun PartnerIdTextField(
         imeAction = imeAction,
         keyboardAction = keyboardAction,
         testTag = TestTags.PARTNER_ID_TEXT_FIELD,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }
 
@@ -235,6 +233,6 @@ private fun SecretKeyTextField(
         imeAction = imeAction,
         keyboardAction = keyboardAction,
         testTag = TestTags.SECRET_KEY_TEXT_FIELD,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }

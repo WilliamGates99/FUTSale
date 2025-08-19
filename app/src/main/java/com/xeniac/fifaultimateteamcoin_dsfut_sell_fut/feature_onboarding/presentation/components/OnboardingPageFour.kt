@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -59,10 +60,13 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.s
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.CustomOutlinedTextField
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Neutral30
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Neutral70
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.OnboardingAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.TestTags
 
-@OptIn(ExperimentalStdlibApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingPageFour(
     partnerIdState: CustomTextFieldState,
@@ -84,10 +88,9 @@ fun OnboardingPageFour(
         .toHexString(HexFormat.UpperCase)
         .removeRange(0, 2),
     textBtnNeutralColor: Color = if (isSystemInDarkTheme) Neutral70 else Neutral30,
-    onAction: (action: OnboardingAction) -> Unit,
-    onRegisterBtnClick: () -> Unit,
-    onPrivacyPolicyBtnClick: () -> Unit
+    onAction: (action: OnboardingAction) -> Unit
 ) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     var columnHeight by remember { mutableIntStateOf(IntSize.Zero.height) }
@@ -98,7 +101,6 @@ fun OnboardingPageFour(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.ime)
             .verticalScroll(rememberScrollState())
             .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
             .padding(
@@ -106,6 +108,7 @@ fun OnboardingPageFour(
                 end = 16.dp,
                 top = 20.dp
             )
+            .imePadding()
             .onSizeChanged { columnHeight = it.height }
     ) {
         LottieAnimation(
@@ -135,7 +138,9 @@ fun OnboardingPageFour(
         )
 
         TextButton(
-            onClick = onRegisterBtnClick,
+            onClick = {
+                context.openLinkInExternalBrowser(urlString = Constants.URL_DSFUT)
+            },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(all = 8.dp),
             modifier = Modifier
@@ -225,7 +230,9 @@ fun OnboardingPageFour(
         Spacer(modifier = Modifier.height(4.dp))
 
         TextButton(
-            onClick = onPrivacyPolicyBtnClick,
+            onClick = {
+                context.openLinkInInAppBrowser(urlString = Constants.URL_PRIVACY_POLICY)
+            },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(all = 8.dp),
             modifier = Modifier

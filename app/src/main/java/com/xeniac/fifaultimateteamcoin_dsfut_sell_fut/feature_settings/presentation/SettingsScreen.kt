@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -39,15 +38,11 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeBottomSheet
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +58,7 @@ fun SettingsScreen(
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
@@ -130,45 +125,31 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
                 .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
                 .padding(
                     horizontal = horizontalPadding,
                     vertical = verticalPadding
                 )
         ) {
             SettingsCard(
-                settingsState = settingsState,
-                onAction = viewModel::onAction,
-                modifier = Modifier.fillMaxWidth()
+                state = state,
+                onAction = viewModel::onAction
             )
 
-            MiscellaneousCard(
-                modifier = Modifier.fillMaxWidth(),
-                openAppPageInStore = { context.openAppPageInStore() },
-                openUrlInInAppBrowser = { url ->
-                    url?.let {
-                        context.openLinkInInAppBrowser(urlString = url)
-                    }
-                },
-                openUrlInBrowser = { url ->
-                    url?.let {
-                        context.openLinkInExternalBrowser(urlString = url)
-                    }
-                }
-            )
+            MiscellaneousCard()
         }
     }
 
     LocaleBottomSheet(
-        isVisible = settingsState.isLocaleBottomSheetVisible,
-        currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
+        isVisible = state.isLocaleBottomSheetVisible,
+        currentAppLocale = state.currentAppLocale ?: AppLocale.DEFAULT,
         onAction = viewModel::onAction
     )
 
     ThemeBottomSheet(
-        isVisible = settingsState.isThemeBottomSheetVisible,
-        currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
+        isVisible = state.isThemeBottomSheetVisible,
+        currentAppTheme = state.currentAppTheme ?: AppTheme.DEFAULT,
         onAction = viewModel::onAction
     )
 }

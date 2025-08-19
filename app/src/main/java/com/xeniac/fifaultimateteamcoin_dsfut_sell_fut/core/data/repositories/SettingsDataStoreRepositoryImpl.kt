@@ -3,7 +3,6 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.SettingsDataStoreQualifier
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
@@ -18,23 +17,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsDataStoreRepositoryImpl @Inject constructor(
-    @SettingsDataStoreQualifier private val dataStore: DataStore<SettingsPreferences>
+    private val dataStore: DataStore<SettingsPreferences>
 ) : SettingsDataStoreRepository {
-
-    override suspend fun isOnboardingCompleted(): Boolean = try {
-        dataStore.data.first().isOnboardingCompleted
-    } catch (e: Exception) {
-        Timber.e("Get is onboarding completed failed:")
-        e.printStackTrace()
-        false
-    }
-
-    override fun getNotificationPermissionCount(): Flow<Int> = dataStore.data.map {
-        it.notificationPermissionCount
-    }.catch { e ->
-        Timber.e("Get notification permission count failed:")
-        e.printStackTrace()
-    }
 
     override fun getCurrentAppThemeSynchronously(): AppTheme = try {
         val appThemeIndex = runBlocking {
@@ -42,95 +26,65 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
         }
 
         when (appThemeIndex) {
-            AppTheme.Default.index -> AppTheme.Default
-            AppTheme.Light.index -> AppTheme.Light
-            AppTheme.Dark.index -> AppTheme.Dark
-            else -> AppTheme.Default
+            AppTheme.DEFAULT.index -> AppTheme.DEFAULT
+            AppTheme.LIGHT.index -> AppTheme.LIGHT
+            AppTheme.DARK.index -> AppTheme.DARK
+            else -> AppTheme.DEFAULT
         }
     } catch (e: Exception) {
         Timber.e("Get current app theme synchronously failed:")
         e.printStackTrace()
-        AppTheme.Default
+        AppTheme.DEFAULT
     }
 
     override fun getCurrentAppTheme(): Flow<AppTheme> = dataStore.data.map {
         val appThemeIndex = it.themeIndex
 
         when (appThemeIndex) {
-            AppTheme.Default.index -> AppTheme.Default
-            AppTheme.Light.index -> AppTheme.Light
-            AppTheme.Dark.index -> AppTheme.Dark
-            else -> AppTheme.Default
+            AppTheme.DEFAULT.index -> AppTheme.DEFAULT
+            AppTheme.LIGHT.index -> AppTheme.LIGHT
+            AppTheme.DARK.index -> AppTheme.DARK
+            else -> AppTheme.DEFAULT
         }
     }.catch { e ->
         Timber.e("Get current app theme failed:")
         e.printStackTrace()
     }
 
-    override fun getCurrentAppLocale(): AppLocale = try {
-        val appLocaleList = AppCompatDelegate.getApplicationLocales()
-
-        if (appLocaleList.isEmpty) {
-            Timber.i("App locale list is Empty.")
-            AppLocale.Default
-        } else {
-            val localeString = appLocaleList[0].toString()
-            Timber.i("Current app locale string is $localeString")
-
-            when (localeString) {
-                AppLocale.EnglishUS.localeString -> AppLocale.EnglishUS
-                AppLocale.EnglishGB.localeString -> AppLocale.EnglishGB
-                AppLocale.FarsiIR.localeString -> AppLocale.FarsiIR
-                else -> AppLocale.Default
-            }
-        }
-    } catch (e: Exception) {
-        Timber.e("Get current app locale failed:")
-        e.printStackTrace()
-        AppLocale.Default
-    }
-
-    override fun isNotificationSoundEnabled(): Flow<Boolean> = dataStore.data.map {
-        it.isNotificationSoundEnabled
-    }.catch { e ->
-        Timber.e("Get is notification sound enabled failed:")
-        e.printStackTrace()
-    }
-
-    override fun isNotificationVibrateEnabled(): Flow<Boolean> = dataStore.data.map {
-        it.isNotificationVibrateEnabled
-    }.catch { e ->
-        Timber.e("Get is notification vibrate enabled failed:")
-        e.printStackTrace()
-    }
-
-    override suspend fun isOnboardingCompleted(isCompleted: Boolean) {
-        try {
-            dataStore.updateData { it.copy(isOnboardingCompleted = isCompleted) }
-            Timber.i("Is onboarding completed edited to $isCompleted")
-        } catch (e: Exception) {
-            Timber.e("Store is onboarding completed failed:")
-            e.printStackTrace()
-        }
-    }
-
-    override suspend fun storeNotificationPermissionCount(count: Int) {
-        try {
-            dataStore.updateData { it.copy(notificationPermissionCount = count) }
-            Timber.i("Notification permission count edited to $count")
-        } catch (e: Exception) {
-            Timber.e("Store notification permission count failed:")
-            e.printStackTrace()
-        }
-    }
-
-    override suspend fun storeCurrentAppTheme(appTheme: AppTheme) {
+    override suspend fun storeCurrentAppTheme(
+        appTheme: AppTheme
+    ) {
         try {
             dataStore.updateData { it.copy(themeIndex = appTheme.index) }
             Timber.i("Current app theme edited to ${appTheme.index}")
         } catch (e: Exception) {
             Timber.e("Store current app theme failed:")
             e.printStackTrace()
+        }
+    }
+
+    override fun getCurrentAppLocale(): AppLocale {
+        return try {
+            val appLocaleList = AppCompatDelegate.getApplicationLocales()
+
+            if (appLocaleList.isEmpty) {
+                Timber.i("App locale list is Empty.")
+                return AppLocale.DEFAULT
+            }
+
+            val localeString = appLocaleList[0].toString()
+            Timber.i("Current app locale string is $localeString")
+
+            when (localeString) {
+                AppLocale.ENGLISH_US.localeString -> AppLocale.ENGLISH_US
+                AppLocale.ENGLISH_GB.localeString -> AppLocale.ENGLISH_GB
+                AppLocale.FARSI_IR.localeString -> AppLocale.FARSI_IR
+                else -> AppLocale.DEFAULT
+            }
+        } catch (e: Exception) {
+            Timber.e("Get current app locale failed:")
+            e.printStackTrace()
+            AppLocale.DEFAULT
         }
     }
 
@@ -150,6 +104,13 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
         false
     }
 
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = dataStore.data.map {
+        it.isNotificationSoundEnabled
+    }.catch { e ->
+        Timber.e("Get is notification sound enabled failed:")
+        e.printStackTrace()
+    }
+
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
         try {
             dataStore.updateData { it.copy(isNotificationSoundEnabled = isEnabled) }
@@ -158,6 +119,13 @@ class SettingsDataStoreRepositoryImpl @Inject constructor(
             Timber.e("Store is notification sound enabled failed:")
             e.printStackTrace()
         }
+    }
+
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = dataStore.data.map {
+        it.isNotificationVibrateEnabled
+    }.catch { e ->
+        Timber.e("Get is notification vibrate enabled failed:")
+        e.printStackTrace()
     }
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {

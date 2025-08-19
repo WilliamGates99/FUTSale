@@ -16,13 +16,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.components.OnboardingPager
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingUiEvent
 
 @Composable
 fun OnboardingScreen(
@@ -33,7 +29,7 @@ fun OnboardingScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserverAsEvent(flow = viewModel.completeOnboardingEventChannel) { event ->
         when (event) {
@@ -52,18 +48,12 @@ fun OnboardingScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         OnboardingPager(
-            partnerIdState = onboardingState.partnerIdState,
-            secretKeyState = onboardingState.secretKeyState,
+            partnerIdState = state.partnerIdState,
+            secretKeyState = state.secretKeyState,
             onAction = viewModel::onAction,
-            onRegisterBtnClick = {
-                context.openLinkInExternalBrowser(urlString = Constants.URL_DSFUT)
-            },
-            onPrivacyPolicyBtnClick = {
-                context.openLinkInInAppBrowser(urlString = Constants.URL_PRIVACY_POLICY)
-            },
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+            modifier = Modifier.windowInsetsPadding(
+                insets = WindowInsets(top = innerPadding.calculateTopPadding())
+            )
         )
     }
 }

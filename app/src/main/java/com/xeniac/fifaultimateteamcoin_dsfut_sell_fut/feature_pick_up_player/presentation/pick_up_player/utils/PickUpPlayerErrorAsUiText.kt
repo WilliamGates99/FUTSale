@@ -2,7 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.errors.PickUpPlayerError
 
 fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.BlankPartnerId -> UiText.StringResource(R.string.pick_up_player_error_blank_partner_id)
@@ -16,15 +16,17 @@ fun PickUpPlayerError.asUiText(): UiText = when (this) {
     PickUpPlayerError.Network.ConnectTimeoutException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.HttpRequestTimeoutException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.SocketTimeoutException -> UiText.StringResource(R.string.error_network_failure)
-    PickUpPlayerError.Network.RedirectResponseException -> UiText.StringResource(R.string.error_network_failure)
-    PickUpPlayerError.Network.ClientRequestException -> UiText.StringResource(R.string.error_network_failure)
-    PickUpPlayerError.Network.ServerResponseException -> UiText.StringResource(R.string.error_network_failure)
     PickUpPlayerError.Network.SerializationException -> UiText.StringResource(R.string.error_network_serialization)
     PickUpPlayerError.Network.JsonConvertException -> UiText.StringResource(R.string.error_network_json_conversion)
     PickUpPlayerError.Network.SSLHandshakeException -> UiText.StringResource(R.string.error_network_ssl_handshake)
     PickUpPlayerError.Network.CertPathValidatorException -> UiText.StringResource(R.string.error_network_cert_path_validator)
 
+    PickUpPlayerError.Network.RedirectResponseException -> UiText.StringResource(R.string.error_network_failure)
+
     PickUpPlayerError.Network.TooManyRequests -> UiText.StringResource(R.string.error_network_too_many_requests)
+    PickUpPlayerError.Network.ClientRequestException -> UiText.StringResource(R.string.error_network_failure)
+
+    PickUpPlayerError.Network.ServerResponseException -> UiText.StringResource(R.string.error_network_failure)
 
     is PickUpPlayerError.Network.DsfutBlock -> UiText.PluralStringResource(
         R.plurals.pick_up_player_error_dsfut_block,

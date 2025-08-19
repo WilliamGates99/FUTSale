@@ -8,71 +8,64 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.states.PickUpPlayerState
 
 @Composable
 fun PickUpPlayerSection(
-    pickUpPlayerState: PickUpPlayerState,
+    state: PickUpPlayerState,
     modifier: Modifier = Modifier,
     onAction: (action: PickUpPlayerAction) -> Unit
 ) {
-    Column(modifier = modifier) {
-        InstructionTexts(modifier = Modifier.fillMaxWidth())
+    Column(modifier = modifier.fillMaxWidth()) {
+        InstructionTexts()
 
         Spacer(modifier = Modifier.height(24.dp))
 
         PlatformSelector(
-            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
-            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
-            selectedPlatform = pickUpPlayerState.selectedPlatform,
-            onAction = onAction,
-            modifier = Modifier.fillMaxWidth()
+            isAutoPickUpLoading = state.isAutoPickUpLoading,
+            isPickUpOnceLoading = state.isPickUpOnceLoading,
+            selectedPlatform = state.selectedPlatform,
+            onAction = onAction
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         PriceTextFields(
-            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
-            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
-            minPriceState = pickUpPlayerState.minPriceState,
-            maxPriceState = pickUpPlayerState.maxPriceState,
-            onAction = onAction,
-            modifier = Modifier.fillMaxWidth()
+            isAutoPickUpLoading = state.isAutoPickUpLoading,
+            isPickUpOnceLoading = state.isPickUpOnceLoading,
+            minPriceState = state.minPriceState,
+            maxPriceState = state.maxPriceState,
+            onAction = onAction
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
         TakeAfterSlider(
-            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
-            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
-            isTakeAfterChecked = pickUpPlayerState.isTakeAfterChecked,
-            takeAfterDelayInSeconds = pickUpPlayerState.takeAfterDelayInSeconds,
-            takeAfterErrorText = pickUpPlayerState.takeAfterErrorText,
-            modifier = Modifier.fillMaxWidth(),
+            isAutoPickUpLoading = state.isAutoPickUpLoading,
+            isPickUpOnceLoading = state.isPickUpOnceLoading,
+            isTakeAfterChecked = state.isTakeAfterChecked,
+            takeAfterDelayInSeconds = state.takeAfterDelayInSeconds,
+            takeAfterErrorText = state.takeAfterErrorText,
             onAction = onAction
         )
 
         Spacer(modifier = Modifier.height(40.dp))
 
         AutoPickUpButton(
-            isAutoPickUpLoading = pickUpPlayerState.isAutoPickUpLoading,
+            isAutoPickUpLoading = state.isAutoPickUpLoading,
             onAction = onAction,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PickUpOnceButton(
-            isPickUpOnceLoading = pickUpPlayerState.isPickUpOnceLoading,
+            isPickUpOnceLoading = state.isPickUpOnceLoading,
             onClick = {
                 onAction(PickUpPlayerAction.PickUpPlayerOnce)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
+            modifier = Modifier.padding(horizontal = 32.dp)
         )
     }
 }

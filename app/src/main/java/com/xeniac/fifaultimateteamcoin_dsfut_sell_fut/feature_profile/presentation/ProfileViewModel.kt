@@ -4,13 +4,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,30 +23,27 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val mutex: Mutex = Mutex()
-
-    private val _profileState = savedStateHandle.getStateFlow(
+    private val _state = savedStateHandle.getMutableStateFlow(
         key = "profileState",
         initialValue = ProfileState()
     )
-    val profileState = _profileState.onStart {
+    val state = _state.onStart {
         getProfile()
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = ProfileState()
+        started = SharingStarted.WhileSubscribed(stopTimeout = 30.seconds),
+        initialValue = _state.value
     )
 
     private val _updatePartnerIdEventChannel = Channel<UiEvent>()
@@ -77,8 +73,8 @@ class ProfileViewModel @Inject constructor(
         profileUseCases.getPartnerIdUseCase.get()().zip(
             other = profileUseCases.getSecretKeyUseCase.get()(),
             transform = { partnerId, secretKey ->
-                mutex.withLock {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
+                _state.update {
+                    it.copy(
                         partnerIdState = CustomTextFieldState(
                             value = TextFieldValue(text = partnerId.orEmpty())
                         ),
@@ -93,7 +89,9 @@ class ProfileViewModel @Inject constructor(
         ).launchIn(scope = viewModelScope)
     }
 
-    private fun updatePartnerId(newValue: TextFieldValue) {
+    private fun updatePartnerId(
+        newValue: TextFieldValue
+    ) {
         updatePartnerIdJob?.cancel()
 
         val newPartnerIdValue = newValue.copy(text = newValue.text.toEnglishDigits())
@@ -101,9 +99,9 @@ class ProfileViewModel @Inject constructor(
         updatePartnerIdJob = profileUseCases.updatePartnerIdUseCase.get()(
             partnerId = newPartnerIdValue.text
         ).onStart {
-            mutex.withLock {
-                savedStateHandle["profileState"] = _profileState.value.copy(
-                    partnerIdState = _profileState.value.partnerIdState.copy(
+            _state.update {
+                it.copy(
+                    partnerIdState = it.partnerIdState.copy(
                         value = newPartnerIdValue,
                         errorText = null
                     ),
@@ -111,12 +109,11 @@ class ProfileViewModel @Inject constructor(
                 )
             }
         }.onEach { updatePartnerIdResult ->
-            val hasUpdatePartnerIdError = updatePartnerIdResult.updatePartnerIdError != null
-            if (hasUpdatePartnerIdError) {
-                mutex.withLock {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        partnerIdState = _profileState.value.partnerIdState.copy(
-                            errorText = updatePartnerIdResult.updatePartnerIdError!!.asUiText()
+            updatePartnerIdResult.updatePartnerIdError?.let { updatePartnerIdError ->
+                _state.update {
+                    it.copy(
+                        partnerIdState = it.partnerIdState.copy(
+                            errorText = updatePartnerIdError.asUiText()
                         ),
                         isPartnerIdSaved = false
                     )
@@ -124,16 +121,14 @@ class ProfileViewModel @Inject constructor(
             }
 
             when (val result = updatePartnerIdResult.result) {
-                is Result.Success -> mutex.withLock {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isPartnerIdSaved = true
-                    )
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(isPartnerIdSaved = true)
+                    }
                 }
                 is Result.Error -> {
-                    mutex.withLock {
-                        savedStateHandle["profileState"] = _profileState.value.copy(
-                            isPartnerIdSaved = false
-                        )
+                    _state.update {
+                        it.copy(isPartnerIdSaved = false)
                     }
 
                     _updatePartnerIdEventChannel.send(
@@ -143,15 +138,15 @@ class ProfileViewModel @Inject constructor(
                 null -> Unit
             }
         }.onCompletion {
-            mutex.withLock {
-                savedStateHandle["profileState"] = _profileState.value.copy(
-                    isPartnerIdLoading = false
-                )
+            _state.update {
+                it.copy(isPartnerIdLoading = false)
             }
         }.launchIn(scope = viewModelScope)
     }
 
-    private fun updateSecretKey(newValue: TextFieldValue) {
+    private fun updateSecretKey(
+        newValue: TextFieldValue
+    ) {
         updateSecretKeyJob?.cancel()
 
         val newSecretKeyValue = newValue.copy(text = newValue.text.convertDigitsToEnglish())
@@ -159,9 +154,9 @@ class ProfileViewModel @Inject constructor(
         updateSecretKeyJob = profileUseCases.updateSecretKeyUseCase.get()(
             secretKey = newSecretKeyValue.text
         ).onStart {
-            mutex.withLock {
-                savedStateHandle["profileState"] = _profileState.value.copy(
-                    secretKeyState = _profileState.value.secretKeyState.copy(
+            _state.update {
+                it.copy(
+                    secretKeyState = it.secretKeyState.copy(
                         value = newSecretKeyValue,
                         errorText = null
                     ),
@@ -169,12 +164,11 @@ class ProfileViewModel @Inject constructor(
                 )
             }
         }.onEach { updateSecretKeyResult ->
-            val hasUpdateSecretKeyError = updateSecretKeyResult.updateSecretKeyError != null
-            if (hasUpdateSecretKeyError) {
-                mutex.withLock {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        secretKeyState = _profileState.value.secretKeyState.copy(
-                            errorText = updateSecretKeyResult.updateSecretKeyError!!.asUiText()
+            updateSecretKeyResult.updateSecretKeyError?.let { updateSecretKeyError ->
+                _state.update {
+                    it.copy(
+                        secretKeyState = it.secretKeyState.copy(
+                            errorText = updateSecretKeyError.asUiText()
                         ),
                         isSecretKeySaved = false
                     )
@@ -183,15 +177,13 @@ class ProfileViewModel @Inject constructor(
 
             when (val result = updateSecretKeyResult.result) {
                 is Result.Success -> {
-                    savedStateHandle["profileState"] = _profileState.value.copy(
-                        isSecretKeySaved = true
-                    )
+                    _state.update {
+                        it.copy(isSecretKeySaved = true)
+                    }
                 }
                 is Result.Error -> {
-                    mutex.withLock {
-                        savedStateHandle["profileState"] = _profileState.value.copy(
-                            isSecretKeySaved = false
-                        )
+                    _state.update {
+                        it.copy(isSecretKeySaved = false)
                     }
 
                     _updateSecretKeyEventChannel.send(
@@ -201,10 +193,8 @@ class ProfileViewModel @Inject constructor(
                 null -> Unit
             }
         }.onCompletion {
-            mutex.withLock {
-                savedStateHandle["profileState"] = _profileState.value.copy(
-                    isSecretKeyLoading = false
-                )
+            _state.update {
+                it.copy(isSecretKeyLoading = false)
             }
         }.launchIn(scope = viewModelScope)
     }

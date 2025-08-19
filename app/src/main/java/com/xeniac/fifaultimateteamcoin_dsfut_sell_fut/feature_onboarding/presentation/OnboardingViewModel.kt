@@ -4,14 +4,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.convertDigitsToEnglish
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.toEnglishDigits
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Event
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.domain.use_case.CompleteOnboardingUseCase
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.events.OnboardingUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.states.OnboardingState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_onboarding.presentation.utils.asUiText
 import dagger.Lazy
@@ -25,28 +23,25 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val completeOnboardingUseCase: Lazy<CompleteOnboardingUseCase>,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val mutex: Mutex = Mutex()
-
-    private val _onboardingState = savedStateHandle.getStateFlow(
+    private val _state = savedStateHandle.getMutableStateFlow(
         key = "onboardingState",
         initialValue = OnboardingState()
     )
-    val onboardingState = _onboardingState.stateIn(
+    val state = _state.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = OnboardingState()
+        initialValue = _state.value
     )
 
     private val _completeOnboardingEventChannel = Channel<Event>()
@@ -60,10 +55,12 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun partnerIdChanged(newValue: TextFieldValue) = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                partnerIdState = _onboardingState.value.partnerIdState.copy(
+    private fun partnerIdChanged(
+        newValue: TextFieldValue
+    ) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                partnerIdState = it.partnerIdState.copy(
                     value = newValue.copy(text = newValue.text.toEnglishDigits()),
                     errorText = null
                 )
@@ -71,10 +68,12 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun secretKeyChanged(newValue: TextFieldValue) = viewModelScope.launch {
-        mutex.withLock {
-            savedStateHandle["onboardingState"] = _onboardingState.value.copy(
-                secretKeyState = _onboardingState.value.secretKeyState.copy(
+    private fun secretKeyChanged(
+        newValue: TextFieldValue
+    ) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                secretKeyState = it.secretKeyState.copy(
                     value = newValue.copy(text = newValue.text.convertDigitsToEnglish()),
                     errorText = null
                 )
@@ -84,13 +83,11 @@ class OnboardingViewModel @Inject constructor(
 
     private fun saveUserData() {
         completeOnboardingUseCase.get()(
-            partnerId = _onboardingState.value.partnerIdState.value.text,
-            secretKey = _onboardingState.value.secretKeyState.value.text
+            partnerId = _state.value.partnerIdState.value.text,
+            secretKey = _state.value.secretKeyState.value.text
         ).onStart {
-            mutex.withLock {
-                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
-                    isCompleteLoading = true
-                )
+            _state.update {
+                it.copy(isCompleteLoading = true)
             }
         }.onEach { result ->
             when (result) {
@@ -104,10 +101,8 @@ class OnboardingViewModel @Inject constructor(
                 }
             }
         }.onCompletion {
-            mutex.withLock {
-                savedStateHandle["secretKeyState"] = _onboardingState.value.copy(
-                    isCompleteLoading = false
-                )
+            _state.update {
+                it.copy(isCompleteLoading = false)
             }
         }.launchIn(scope = viewModelScope)
     }

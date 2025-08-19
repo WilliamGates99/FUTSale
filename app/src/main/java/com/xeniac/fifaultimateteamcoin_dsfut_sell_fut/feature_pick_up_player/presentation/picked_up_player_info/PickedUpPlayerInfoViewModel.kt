@@ -8,7 +8,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HistoryPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickedUpPlayerInfoUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.events.PickedUpPlayerInfoAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,11 +48,7 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
     val timerText = _timerText.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = UiText.StringResource(
-            R.string.picked_up_player_info_timer,
-            decimalFormat.format(0),
-            decimalFormat.format(0)
-        )
+        initialValue = _timerText.value
     )
 
     private var countDownTimerJob: Job? = null
@@ -69,8 +64,11 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
         }
     }
 
-    private fun startCountDownTimer(expiryTimeInMs: Long) {
+    private fun startCountDownTimer(
+        expiryTimeInMs: Long
+    ) {
         countDownTimerJob?.cancel()
+
         countDownTimerJob = pickedUpPlayerInfoUseCases.startCountDownTimerUseCase.get()(
             expiryTimeInMs = expiryTimeInMs
         ).onEach { timerValueInSeconds ->
@@ -84,7 +82,7 @@ class PickedUpPlayerInfoViewModel @Inject constructor(
                 val seconds = decimalFormat.format(timerValueInSeconds % 60)
 
                 UiText.StringResource(
-                    R.string.picked_up_player_info_timer,
+                    resId = R.string.picked_up_player_info_timer,
                     minutes,
                     seconds
                 )

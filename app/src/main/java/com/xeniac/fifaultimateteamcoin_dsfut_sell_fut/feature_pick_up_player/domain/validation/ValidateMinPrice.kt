@@ -1,9 +1,11 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation
 
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.utils.PickUpPlayerError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.errors.PickUpPlayerError
 
 class ValidateMinPrice {
-    operator fun invoke(minPrice: String?): PickUpPlayerError? {
+    operator fun invoke(
+        minPrice: String?
+    ): PickUpPlayerError? {
         val isMinPriceBlank = minPrice.isNullOrBlank()
         val doesMinPriceContainNonDigits = !isMinPriceBlank && minPrice!!.any { !it.isDigit() }
         if (doesMinPriceContainNonDigits) {
