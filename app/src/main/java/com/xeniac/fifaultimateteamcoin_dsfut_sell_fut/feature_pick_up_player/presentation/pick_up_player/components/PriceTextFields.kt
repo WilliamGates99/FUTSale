@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
@@ -52,6 +53,7 @@ fun PriceTextFields(
             supportingText = supportingText,
             errorText = minPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.MIN_PRICE_TEXT_FIELD,
@@ -70,6 +72,7 @@ fun PriceTextFields(
             supportingText = supportingText,
             errorText = maxPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
             keyboardAction = { focusManager.clearFocus() },

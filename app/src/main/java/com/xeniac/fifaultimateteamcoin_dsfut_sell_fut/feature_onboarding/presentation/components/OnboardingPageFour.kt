@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -176,6 +177,7 @@ fun OnboardingPageFour(
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_partner_id),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_partner_id),
             errorText = partnerIdState.errorText?.asString(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.PARTNER_ID_TEXT_FIELD,
@@ -196,6 +198,7 @@ fun OnboardingPageFour(
             placeholder = stringResource(id = R.string.onboarding_fourth_hint_secret_key),
             leadingIcon = painterResource(id = R.drawable.ic_core_textfield_secret_key),
             errorText = secretKeyState.errorText?.asString(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             keyboardAction = {

@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -160,6 +161,7 @@ private fun PartnerIdTextField(
                 )
             }
         },
+        textDirection = TextDirection.ContentOrLtr,
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
@@ -229,6 +231,7 @@ private fun SecretKeyTextField(
                 )
             }
         },
+        textDirection = TextDirection.ContentOrLtr,
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
