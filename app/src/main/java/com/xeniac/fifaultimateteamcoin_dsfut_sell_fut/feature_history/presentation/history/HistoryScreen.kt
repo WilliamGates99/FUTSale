@@ -38,7 +38,6 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val pickedUpPlayersHistory = viewModel.pickedUpPlayersHistory.collectAsLazyPagingItems()
@@ -59,7 +58,8 @@ fun HistoryScreen(
             .testTag(TestTags.TEST_TAG_SCREEN_HISTORY)
     ) { innerPadding ->
         AnimatedContent(
-            targetState = pickedUpPlayersHistory.loadState.refresh
+            targetState = pickedUpPlayersHistory.loadState.refresh,
+            modifier = Modifier.fillMaxSize()
         ) { loadState ->
             when (loadState) {
                 is LoadState.Loading -> {
@@ -69,33 +69,29 @@ fun HistoryScreen(
                             horizontal = 24.dp,
                             vertical = verticalPadding
                         ),
-                        modifier = Modifier.windowInsetsPadding(
-                            insets = WindowInsets(top = innerPadding.calculateTopPadding())
-                        )
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
-                else -> {
-                    if (pickedUpPlayersHistory.itemCount == 0) {
+                else -> when (pickedUpPlayersHistory.itemCount) {
+                    0 -> {
                         EmptyListAnimation(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                                .padding(innerPadding)
                                 .padding(
                                     horizontal = 24.dp,
                                     vertical = verticalPadding
                                 )
                         )
-                    } else {
+                    }
+                    else -> {
                         PlayersLazyColumn(
                             pickedUpPlayersHistory = pickedUpPlayersHistory,
                             contentPadding = PaddingValues(
                                 horizontal = 16.dp,
                                 vertical = verticalPadding
                             ),
-                            onClick = onNavigateToPlayerInfoScreen,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                            onNavigateToPlayerInfoScreen = onNavigateToPlayerInfoScreen,
+                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }

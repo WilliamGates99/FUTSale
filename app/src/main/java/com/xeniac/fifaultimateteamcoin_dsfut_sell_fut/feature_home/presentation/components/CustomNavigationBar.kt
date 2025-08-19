@@ -2,6 +2,13 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,65 +81,75 @@ enum class NavigationBarItems(
 
 @Composable
 fun CustomNavigationBar(
+    isVisible: Boolean,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
+    enterTransition: EnterTransition = fadeIn() + expandVertically(),
+    exitTransition: ExitTransition = shrinkVertically() + fadeOut(),
     alwaysShowLabel: Boolean = true,
     iconSize: Dp = 24.dp,
     onItemClick: (screen: Any) -> Unit
 ) {
-    NavigationBar(
-        modifier = modifier
-            .fillMaxWidth()
-            .testTag(NAVIGATION_BAR)
-            .semantics {
-                testTagsAsResourceId = true
-            }
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = enterTransition,
+        exit = exitTransition,
+        modifier = modifier.fillMaxWidth()
     ) {
-        NavigationBarItems.entries.forEach { navItem ->
-            val isSelected = isNavItemSelected(
-                navItem = navItem,
-                currentDestination = currentDestination
-            )
+        NavigationBar(
+            modifier = modifier
+                .fillMaxWidth()
+                .testTag(NAVIGATION_BAR)
+                .semantics {
+                    testTagsAsResourceId = true
+                }
+        ) {
+            NavigationBarItems.entries.forEach { navItem ->
+                val isSelected = isNavItemSelected(
+                    navItem = navItem,
+                    currentDestination = currentDestination
+                )
 
-            NavigationBarItem(
-                enabled = !isSelected,
-                selected = isSelected,
-                alwaysShowLabel = alwaysShowLabel,
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    disabledIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface
-                ),
-                icon = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.size(iconSize)
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (isSelected) navItem.activeIconId else navItem.inactiveIconId
-                            ),
-                            contentDescription = stringResource(id = navItem.title),
-                            modifier = Modifier.fillMaxSize()
+                NavigationBarItem(
+                    enabled = !isSelected,
+                    selected = isSelected,
+                    alwaysShowLabel = alwaysShowLabel,
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    icon = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.size(iconSize)
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (isSelected) navItem.activeIconId else navItem.inactiveIconId
+                                ),
+                                contentDescription = stringResource(id = navItem.title),
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(id = navItem.title),
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
-                    }
-
-                },
-                label = {
-                    Text(
-                        text = stringResource(id = navItem.title),
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                    )
-                },
-                onClick = { onItemClick(navItem.destinationScreen) },
-                modifier = Modifier.testTag(navItem.testTag)
-            )
+                    },
+                    onClick = { onItemClick(navItem.destinationScreen) },
+                    modifier = Modifier.testTag(navItem.testTag)
+                )
+            }
         }
     }
 }

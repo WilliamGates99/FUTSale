@@ -2,6 +2,8 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentat
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,8 @@ fun HistoryPlayerInfoScreen(
     onNavigateUp: () -> Unit,
     viewModel: HistoryPlayerInfoViewModel = hiltViewModel()
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
@@ -72,11 +77,16 @@ fun HistoryPlayerInfoScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(
-                    top = innerPadding.calculateTopPadding() + verticalPadding,
-                    bottom = innerPadding.calculateBottomPadding() + verticalPadding
+                    start = innerPadding.calculateStartPadding(layoutDirection),
+                    end = innerPadding.calculateEndPadding(layoutDirection)
                 )
+                .padding(vertical = verticalPadding)
         ) {
             PlayerAnimation(
                 modifier = Modifier.fillMaxWidth()

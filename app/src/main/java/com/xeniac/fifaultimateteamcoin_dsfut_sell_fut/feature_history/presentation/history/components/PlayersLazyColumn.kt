@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -53,12 +54,14 @@ fun PlayersLazyColumn(
     pickedUpPlayersHistory: LazyPagingItems<Player>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    onClick: (playerId: Long) -> Unit
+    onNavigateToPlayerInfoScreen: (playerId: Long) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding,
-        modifier = modifier.testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
     ) {
         items(
             items = pickedUpPlayersHistory.itemSnapshotList,
@@ -69,7 +72,7 @@ fun PlayersLazyColumn(
                     player = player,
                     onClick = {
                         player.id?.let { playerId ->
-                            onClick(playerId)
+                            onNavigateToPlayerInfoScreen(playerId)
                         }
                     },
                     modifier = Modifier

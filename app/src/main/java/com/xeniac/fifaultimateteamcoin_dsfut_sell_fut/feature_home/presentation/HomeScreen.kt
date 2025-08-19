@@ -4,13 +4,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -137,29 +131,23 @@ fun HomeScreen(
     Scaffold(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         bottomBar = {
-            AnimatedVisibility(
-                visible = isBottomAppBarVisible,
-                enter = fadeIn() + expandVertically(),
-                exit = shrinkVertically() + fadeOut(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CustomNavigationBar(
-                    currentDestination = currentDestination,
-                    onItemClick = { screen ->
-                        homeNavController.navigate(screen) {
-                            // Avoid multiple copies of the same destination when re-selecting the same item
-                            launchSingleTop = true
+            CustomNavigationBar(
+                isVisible = isBottomAppBarVisible,
+                currentDestination = currentDestination,
+                onItemClick = { screen ->
+                    homeNavController.navigate(screen) {
+                        // Avoid multiple copies of the same destination when re-selecting the same item
+                        launchSingleTop = true
 
-                            /*
-                            Pop up to the start destination of the graph to
-                            avoid building up a large stack of destinations
-                            on the back stack as user selects items
-                             */
-                            popUpTo(id = homeNavController.graph.startDestinationId)
-                        }
+                        /*
+                        Pop up to the start destination of the graph to
+                        avoid building up a large stack of destinations
+                        on the back stack as user selects items
+                         */
+                        popUpTo(id = homeNavController.graph.startDestinationId)
                     }
-                )
-            }
+                }
+            )
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
