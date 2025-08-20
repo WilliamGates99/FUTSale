@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun Modifier.addTestTag(
@@ -29,6 +32,15 @@ fun Modifier.addBorder(
         border = border,
         shape = shape
     ).padding(all = border.width)
+} ?: this
+
+@Composable
+fun Modifier.addTextFieldContentType(
+    contentType: ContentType?
+): Modifier = contentType?.let {
+    this.semantics {
+        this.contentType = it
+    }
 } ?: this
 
 @Composable

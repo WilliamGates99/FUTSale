@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
@@ -110,6 +111,7 @@ fun CustomOutlinedTextField(
         capitalization = keyboardCapitalization,
         autoCorrectEnabled = autoCorrectEnabled
     ),
+    contentType: ContentType? = null,
     spaceBetweenTitleAndTextField: Dp = 4.dp,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
@@ -138,9 +140,6 @@ fun CustomOutlinedTextField(
         }
 
         OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .addTestTag(tag = testTag),
             value = value,
             onValueChange = onValueChange,
             enabled = enabled && !isLoading,
@@ -239,7 +238,11 @@ fun CustomOutlinedTextField(
             keyboardActions = KeyboardActions {
                 defaultKeyboardAction(imeAction)
                 keyboardAction()
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .addTextFieldContentType(contentType = contentType)
+                .addTestTag(tag = testTag)
         )
     }
 }

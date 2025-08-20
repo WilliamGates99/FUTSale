@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
@@ -180,6 +181,7 @@ fun OnboardingPageFour(
             textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
+            contentType = ContentType.Username,
             testTag = TestTags.PARTNER_ID_TEXT_FIELD,
             modifier = Modifier
                 .fillMaxWidth()
@@ -205,6 +207,7 @@ fun OnboardingPageFour(
                 focusManager.clearFocus()
                 onAction(OnboardingAction.SaveUserData)
             },
+            contentType = ContentType.Password,
             testTag = TestTags.SECRET_KEY_TEXT_FIELD,
             modifier = Modifier
                 .fillMaxWidth()

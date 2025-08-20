@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
@@ -165,6 +166,7 @@ private fun PartnerIdTextField(
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
+        contentType = ContentType.Username,
         testTag = TestTags.PARTNER_ID_TEXT_FIELD,
         modifier = modifier.fillMaxWidth()
     )
@@ -235,6 +237,7 @@ private fun SecretKeyTextField(
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
+        contentType = ContentType.Password,
         testTag = TestTags.SECRET_KEY_TEXT_FIELD,
         modifier = modifier.fillMaxWidth()
     )
