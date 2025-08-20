@@ -66,8 +66,6 @@ class StartupBenchmarks {
         startupMode = StartupMode.COLD,
         iterations = 10,
         setupBlock = {
-            device.executeShellCommand("pm clear $packageName") // Clear app data before each run
-            device.waitForIdle()
             pressHome()
         },
         measureBlock = {
@@ -85,8 +83,6 @@ class StartupBenchmarks {
         startupMode = StartupMode.WARM,
         iterations = 10,
         setupBlock = {
-            device.executeShellCommand("pm clear $packageName") // Clear app data before each run
-            device.waitForIdle()
             pressHome()
         },
         measureBlock = {
