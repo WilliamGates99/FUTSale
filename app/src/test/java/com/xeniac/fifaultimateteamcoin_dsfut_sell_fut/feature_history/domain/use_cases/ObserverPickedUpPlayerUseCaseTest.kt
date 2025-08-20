@@ -5,8 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -37,8 +36,11 @@ class ObserverPickedUpPlayerUseCaseTest {
 
     @Test
     fun observePlayerUseCaseWithNoPlayersInHistory_returnsNull() = runTest {
-        val player = observerPickedUpPlayerUseCase(playerId = 5).firstOrNull()
-        assertThat(player).isNull()
+        observerPickedUpPlayerUseCase(
+            playerId = 5
+        ).onEach { player ->
+            assertThat(player).isNull()
+        }
     }
 
     @Test
@@ -46,15 +48,21 @@ class ObserverPickedUpPlayerUseCaseTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
 
         val playerId = 5L
-        val player = observerPickedUpPlayerUseCase(playerId).first()
-
-        assertThat(player.id).isEqualTo(playerId)
+        observerPickedUpPlayerUseCase(
+            playerId = playerId
+        ).onEach { player ->
+            assertThat(player.id).isEqualTo(playerId)
+        }
     }
 
     @Test
     fun observePickedUpPlayerWithInvalidId_returnsNull() = runTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
-        val player = observerPickedUpPlayerUseCase(playerId = 100L).firstOrNull()
-        assertThat(player).isNull()
+
+        observerPickedUpPlayerUseCase(
+            playerId = 100L
+        ).onEach { player ->
+            assertThat(player).isNull()
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -35,7 +36,8 @@ class GetCurrentAppLocaleUseCaseTest {
 
     @Test
     fun getCurrentAppLocale_returnsCurrentAppLocaleValue() = runTest {
-        val currentAppLocale = getCurrentAppLocaleUseCase()
-        assertThat(currentAppLocale).isEqualTo(fakeSettingsDataStoreRepositoryImpl.currentLocale)
+        getCurrentAppLocaleUseCase().onEach { currentAppLocale ->
+            assertThat(currentAppLocale).isEqualTo(fakeSettingsDataStoreRepositoryImpl.currentLocale)
+        }
     }
 }

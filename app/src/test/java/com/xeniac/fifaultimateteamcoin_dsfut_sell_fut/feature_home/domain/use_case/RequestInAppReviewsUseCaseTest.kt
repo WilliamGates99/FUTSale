@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppReviewRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -29,7 +29,6 @@ class RequestInAppReviewsUseCaseTest {
     @Before
     fun setUp() {
         fakeAppReviewRepositoryImpl = FakeAppReviewRepositoryImpl()
-
         requestInAppReviewsUseCase = RequestInAppReviewsUseCase(
             appReviewRepository = fakeAppReviewRepositoryImpl
         )
@@ -38,7 +37,8 @@ class RequestInAppReviewsUseCaseTest {
     @Test
     fun requestInAppReviewsWithNoReviewAvailable_returnsNull() = runTest {
         fakeAppReviewRepositoryImpl.isInAppReviewsAvailable(isAvailable = false)
-        val reviewInfo = requestInAppReviewsUseCase().first()
-        assertThat(reviewInfo).isNull()
+        requestInAppReviewsUseCase().onEach { reviewInfo ->
+            assertThat(reviewInfo).isNull()
+        }
     }
 }

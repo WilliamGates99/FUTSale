@@ -4,10 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,31 +24,25 @@ class CompleteOnboardingUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
     private lateinit var completeOnboardingUseCase: CompleteOnboardingUseCase
 
     @Before
     fun setUp() {
-        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
         fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
         completeOnboardingUseCase = CompleteOnboardingUseCase(
-            settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl,
             dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
     }
 
     @Test
     fun completeOnboarding_returnsSuccess() = runTest {
-        val partnerId = "123"
-        val secretKey = "abc123"
-
-        val result = completeOnboardingUseCase(
-            partnerId = partnerId,
-            secretKey = secretKey
-        ).first()
-
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+        completeOnboardingUseCase(
+            partnerId = "123",
+            secretKey = "abc123"
+        ).onEach { result ->
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
@@ -58,19 +51,19 @@ class CompleteOnboardingUseCaseTest {
             val partnerId = "123"
             val secretKey = "abc123"
 
-            val result = completeOnboardingUseCase(
+            completeOnboardingUseCase(
                 partnerId = partnerId,
                 secretKey = secretKey
-            ).first()
+            ).onEach { result ->
+                val isOnBoardingCompleted = fakeDsfutDataStoreRepositoryImpl.isOnboardingCompleted()
+                val storedPartnerId = fakeDsfutDataStoreRepositoryImpl.getPartnerId()
+                val storedSecretKey = fakeDsfutDataStoreRepositoryImpl.getSecretKey()
 
-            val isOnBoardingCompleted = fakeSettingsDataStoreRepositoryImpl.isOnboardingCompleted()
-            val storedPartnerId = fakeDsfutDataStoreRepositoryImpl.getPartnerId().first()
-            val storedSecretKey = fakeDsfutDataStoreRepositoryImpl.getSecretKey().first()
-
-            assertThat(result).isInstanceOf(Result.Success::class.java)
-            assertThat(isOnBoardingCompleted).isTrue()
-            assertThat(storedPartnerId).isEqualTo(partnerId)
-            assertThat(storedSecretKey).isEqualTo(secretKey)
+                assertThat(result).isInstanceOf(Result.Success::class.java)
+                assertThat(isOnBoardingCompleted).isTrue()
+                assertThat(storedPartnerId).isEqualTo(partnerId)
+                assertThat(storedSecretKey).isEqualTo(secretKey)
+            }
         }
     }
 }

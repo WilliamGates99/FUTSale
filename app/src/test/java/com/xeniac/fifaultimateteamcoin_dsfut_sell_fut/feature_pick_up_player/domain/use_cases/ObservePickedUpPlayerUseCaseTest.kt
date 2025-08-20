@@ -3,10 +3,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickedUpPlayersRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -24,14 +24,14 @@ class ObservePickedUpPlayerUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
+    private lateinit var fakePickedUpPlayersRepositoryImpl: FakePickedUpPlayersRepositoryImpl
     private lateinit var observePickedUpPlayerUseCase: ObservePickedUpPlayerUseCase
 
     @Before
     fun setUp() {
-        fakePickUpPlayerRepositoryImpl = FakePickUpPlayerRepositoryImpl()
+        fakePickedUpPlayersRepositoryImpl = FakePickedUpPlayersRepositoryImpl()
         observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepositoryImpl
+            pickedUpPlayersRepository = fakePickedUpPlayersRepositoryImpl
         )
     }
 
@@ -43,18 +43,25 @@ class ObservePickedUpPlayerUseCaseTest {
 
     @Test
     fun observePickedUpPlayer_returnsPlayerWithTheSameId() = runTest {
-        fakePickUpPlayerRepositoryImpl.addDummyPlayersToLatestPlayers()
+        fakePickedUpPlayersRepositoryImpl.addDummyPlayersToLatestPlayers()
 
         val playerId = 5L
-        val pickedUpPlayer = observePickedUpPlayerUseCase(playerId).first()
 
-        assertThat(pickedUpPlayer.id).isEqualTo(playerId)
+        observePickedUpPlayerUseCase(
+            playerId = playerId
+        ).onEach { pickedUpPlayer ->
+            assertThat(pickedUpPlayer.id).isEqualTo(playerId)
+        }
     }
 
     @Test
     fun observePickedUpPlayerWithInvalidId_returnsNull() = runTest {
-        fakePickUpPlayerRepositoryImpl.addDummyPlayersToLatestPlayers()
-        val pickedUpPlayer = observePickedUpPlayerUseCase(playerId = 100L).firstOrNull()
+        fakePickedUpPlayersRepositoryImpl.addDummyPlayersToLatestPlayers()
+
+        val pickedUpPlayer = observePickedUpPlayerUseCase(
+            playerId = 100L
+        ).firstOrNull()
+
         assertThat(pickedUpPlayer).isNull()
     }
 }

@@ -37,10 +37,9 @@ class GetPreviousRateAppRequestDateTimeUseCaseTest {
     @Test
     fun getPreviousRateAppRequestTimeInMs_returnsCurrentPreviousRateAppRequestTimeValue() {
         runTest {
-            val currentPreviousRateAppRequestTime =
-                getPreviousRateAppRequestDateTimeUseCase().first()
-            assertThat(currentPreviousRateAppRequestTime).isEqualTo(
-                fakeMiscellaneousDataStoreRepositoryImpl.previousRateAppRequestTime
+            val currentPreviousRequestDateTime = getPreviousRateAppRequestDateTimeUseCase().first()
+            assertThat(currentPreviousRequestDateTime).isEqualTo(
+                fakeMiscellaneousDataStoreRepositoryImpl.previousRateAppRequestDateTime.first()
             )
         }
     }

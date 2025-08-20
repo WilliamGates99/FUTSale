@@ -10,14 +10,15 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 fun createKtorTestClient(
-    mockEngine: MockEngine
+    mockEngine: MockEngine,
+    json: Json = Json {
+        ignoreUnknownKeys = true
+        prettyPrint = true
+        coerceInputValues = true
+    }
 ): HttpClient = HttpClient(engine = mockEngine) {
     install(ContentNegotiation) {
-        json(Json {
-            ignoreUnknownKeys = true
-            prettyPrint = true
-            coerceInputValues = true
-        })
+        json(json)
     }
     install(DefaultRequest) {
         contentType(ContentType.Application.Json)

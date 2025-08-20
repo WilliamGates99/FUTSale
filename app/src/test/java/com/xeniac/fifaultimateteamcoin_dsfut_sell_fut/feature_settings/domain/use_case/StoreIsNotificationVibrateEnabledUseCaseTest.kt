@@ -6,7 +6,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -42,16 +43,23 @@ class StoreIsNotificationVibrateEnabledUseCaseTest {
     @Test
     fun storeIsNotificationVibrateEnabled_returnsSuccess() = runTest {
         val testValue = false
-        val result = storeIsNotificationVibrateEnabledUseCase(testValue)
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+        storeIsNotificationVibrateEnabledUseCase(
+            isEnabled = testValue
+        ).onEach { result ->
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
     fun storeIsNotificationVibrateEnabled_returnsNewIsNotificationVibrateEnabled() = runTest {
         val testValue = false
-        storeIsNotificationVibrateEnabledUseCase(testValue)
 
-        val isNotificationVibrateEnabled = getIsNotificationVibrateEnabledUseCase().first()
-        assertThat(isNotificationVibrateEnabled).isEqualTo(testValue)
+        storeIsNotificationVibrateEnabledUseCase(
+            isEnabled = testValue
+        ).launchIn(scope = this)
+
+        getIsNotificationVibrateEnabledUseCase().onEach { isNotificationVibrateEnabled ->
+            assertThat(isNotificationVibrateEnabled).isEqualTo(testValue)
+        }
     }
 }

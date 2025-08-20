@@ -6,8 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppUpdateRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -26,32 +25,33 @@ class CheckFlexibleUpdateDownloadStateUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    private lateinit var fakeAppUpdateRepository: FakeAppUpdateRepositoryImpl
+    private lateinit var fakeAppUpdateRepositoryImpl: FakeAppUpdateRepositoryImpl
     private lateinit var checkFlexibleUpdateDownloadStateUseCase: CheckFlexibleUpdateDownloadStateUseCase
 
     @Before
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
-        fakeAppUpdateRepository = FakeAppUpdateRepositoryImpl(
+        fakeAppUpdateRepositoryImpl = FakeAppUpdateRepositoryImpl(
             miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
-
         checkFlexibleUpdateDownloadStateUseCase = CheckFlexibleUpdateDownloadStateUseCase(
-            appUpdateRepository = fakeAppUpdateRepository
+            appUpdateRepository = fakeAppUpdateRepositoryImpl
         )
     }
 
     @Test
     fun checkFlexibleUpdateDownloadStateWithNoUpdateDownloaded_returnsNothing() = runTest {
-        fakeAppUpdateRepository.isFlexibleUpdateDownloaded(isDownloaded = false)
-        val isUpdateDownloaded = checkFlexibleUpdateDownloadStateUseCase().firstOrNull()
-        assertThat(isUpdateDownloaded).isNull()
+        fakeAppUpdateRepositoryImpl.isFlexibleUpdateDownloaded(isDownloaded = false)
+        checkFlexibleUpdateDownloadStateUseCase().onEach { isUpdateDownloaded ->
+            assertThat(isUpdateDownloaded).isNull()
+        }
     }
 
     @Test
     fun checkFlexibleUpdateDownloadStateWithUpdateDownloaded_returnsTrue() = runTest {
-        fakeAppUpdateRepository.isFlexibleUpdateDownloaded(isDownloaded = true)
-        val isUpdateDownloaded = checkFlexibleUpdateDownloadStateUseCase().first()
-        assertThat(isUpdateDownloaded).isTrue()
+        fakeAppUpdateRepositoryImpl.isFlexibleUpdateDownloaded(isDownloaded = true)
+        checkFlexibleUpdateDownloadStateUseCase().onEach { isUpdateDownloaded ->
+            assertThat(isUpdateDownloaded).isTrue()
+        }
     }
 }

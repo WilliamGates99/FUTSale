@@ -3,9 +3,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakeCountDownTimerRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -23,22 +23,23 @@ class StartCountDownTimerUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
+    private lateinit var fakeCountDownTimerRepositoryImpl: FakeCountDownTimerRepositoryImpl
     private lateinit var startCountDownTimerUseCase: StartCountDownTimerUseCase
 
     @Before
     fun setUp() {
-        fakePickUpPlayerRepositoryImpl = FakePickUpPlayerRepositoryImpl()
+        fakeCountDownTimerRepositoryImpl = FakeCountDownTimerRepositoryImpl()
         startCountDownTimerUseCase = StartCountDownTimerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepositoryImpl
+            countDownTimerRepository = fakeCountDownTimerRepositoryImpl
         )
     }
 
     @Test
     fun startCountDownTimerWithExpiredPlayer_returnsZero() = runTest {
         val expiryTime = -10000L // -10 seconds
-        val timerValueInSeconds = startCountDownTimerUseCase(expiryTime).first()
-        assertThat(timerValueInSeconds).isEqualTo(0)
+        startCountDownTimerUseCase(expiryTimeInMs = expiryTime).onEach { timerValueInSeconds ->
+            assertThat(timerValueInSeconds).isEqualTo(0)
+        }
     }
 
     @Test
@@ -46,7 +47,8 @@ class StartCountDownTimerUseCaseTest {
         val expiryTimeInMs = 10000L // 10 seconds
         val expiryTimeInSeconds = expiryTimeInMs / 1000
 
-        val timerValueInSeconds = startCountDownTimerUseCase(expiryTimeInMs).first()
-        assertThat(timerValueInSeconds).isEqualTo(expiryTimeInSeconds)
+        startCountDownTimerUseCase(expiryTimeInMs = expiryTimeInMs).onEach { timerValueInSeconds ->
+            assertThat(timerValueInSeconds).isEqualTo(expiryTimeInSeconds)
+        }
     }
 }

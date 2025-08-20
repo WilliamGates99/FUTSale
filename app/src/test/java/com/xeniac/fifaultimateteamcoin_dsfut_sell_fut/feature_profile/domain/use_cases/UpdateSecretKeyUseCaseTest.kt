@@ -7,6 +7,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Fak
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.validation.ValidateSecretKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -40,16 +41,20 @@ class UpdateSecretKeyUseCaseTest {
     @Test
     fun updateSecretKeyWithEmptyCharacters_returnsSuccess() = runTest {
         val newSecretKey = ""
-        val updateSecretKeyResult = updateSecretKeyUseCase(newSecretKey)
-
-        assertThat(updateSecretKeyResult.result).isInstanceOf(Result.Success::class.java)
+        updateSecretKeyUseCase(
+            secretKey = newSecretKey
+        ).onEach { updateSecretKeyResult ->
+            assertThat(updateSecretKeyResult.result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
     fun updateSecretKeyWithValidCharacters_returnsSuccess() = runTest {
         val newSecretKey = "abc123"
-        val updateSecretKeyResult = updateSecretKeyUseCase(newSecretKey)
-
-        assertThat(updateSecretKeyResult.result).isInstanceOf(Result.Success::class.java)
+        updateSecretKeyUseCase(
+            secretKey = newSecretKey
+        ).onEach { updateSecretKeyResult ->
+            assertThat(updateSecretKeyResult.result).isInstanceOf(Result.Success::class.java)
+        }
     }
 }

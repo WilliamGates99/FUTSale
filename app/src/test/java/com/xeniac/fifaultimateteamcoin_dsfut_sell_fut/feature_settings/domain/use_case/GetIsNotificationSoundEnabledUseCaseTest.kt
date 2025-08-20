@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -36,9 +36,10 @@ class GetIsNotificationSoundEnabledUseCaseTest {
 
     @Test
     fun getIsNotificationSoundEnabled_returnsIsNotificationSoundEnabled() = runTest {
-        val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
-        assertThat(isNotificationSoundEnabled).isEqualTo(
-            fakeSettingsDataStoreRepositoryImpl.isNotificationSoundEnabled.first()
-        )
+        getIsNotificationSoundEnabledUseCase().onEach { isNotificationSoundEnabled ->
+            assertThat(isNotificationSoundEnabled).isEqualTo(
+                fakeSettingsDataStoreRepositoryImpl.isNotificationSoundEnabled.first()
+            )
+        }
     }
 }

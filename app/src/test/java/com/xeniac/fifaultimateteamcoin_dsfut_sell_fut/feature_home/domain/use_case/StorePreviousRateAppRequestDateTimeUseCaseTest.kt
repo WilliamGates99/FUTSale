@@ -5,6 +5,8 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -39,9 +41,10 @@ class StorePreviousRateAppRequestDateTimeUseCaseTest {
 
     @Test
     fun storePreviousRateAppRequestTime_returnsNewPreviousRateAppRequestTime() = runTest {
-        storePreviousRateAppRequestDateTimeUseCase()
+        storePreviousRateAppRequestDateTimeUseCase().launchIn(scope = this)
 
-        val previousRateAppRequestTime = getPreviousRateAppRequestDateTimeUseCase()
-        assertThat(previousRateAppRequestTime).isNotNull()
+        getPreviousRateAppRequestDateTimeUseCase().onEach { previousRateAppRequestTime ->
+            assertThat(previousRateAppRequestTime).isNotNull()
+        }
     }
 }

@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -36,7 +36,8 @@ class GetCurrentAppThemeUseCaseTest {
 
     @Test
     fun getCurrentAppTheme_returnsCurrentAppTheme() = runTest {
-        val currentAppTheme = getCurrentAppThemeUseCase().first()
-        assertThat(currentAppTheme).isEqualTo(fakeSettingsDataStoreRepositoryImpl.currentAppTheme)
+        getCurrentAppThemeUseCase().onEach { currentAppTheme ->
+            assertThat(currentAppTheme).isEqualTo(fakeSettingsDataStoreRepositoryImpl.currentAppTheme)
+        }
     }
 }

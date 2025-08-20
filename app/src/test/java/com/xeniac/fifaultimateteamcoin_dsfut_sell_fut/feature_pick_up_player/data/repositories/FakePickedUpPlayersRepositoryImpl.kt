@@ -1,24 +1,20 @@
-package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories
+package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories
 
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.PagingData
-import androidx.paging.map
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mappers.toPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.repositories.PickedUpPlayersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.random.Random
 
-class FakeHistoryRepositoryImpl : HistoryRepository {
+class FakePickedUpPlayersRepositoryImpl : PickedUpPlayersRepository {
 
-    var playerEntitiesHistory = mutableListOf<PlayerEntity>()
+    private var latestPlayerEntities = mutableListOf<PlayerEntity>()
 
-    fun addDummyPlayersToHistory() {
+    fun addDummyPlayersToLatestPlayers() {
         val playersToInsert = ('a'..'z').mapIndexed { index, char ->
             PlayerEntity(
                 id = index.toLong(),
@@ -48,27 +44,29 @@ class FakeHistoryRepositoryImpl : HistoryRepository {
             )
         }
 
-        playersToInsert.forEach { playerEntitiesHistory.add(it) }
+        playersToInsert.shuffled().forEach { latestPlayerEntities.add(it) }
     }
 
-    override fun observePickedUpPlayersHistory(): Flow<PagingData<Player>> = flow {
-        val sortedPlayerEntitiesHistory = playerEntitiesHistory.toMutableList()
-        sortedPlayerEntitiesHistory.sortByDescending { it.pickUpTimeInSeconds }
-        val playersPagingData = PagingData.from(
-            data = sortedPlayerEntitiesHistory,
-            sourceLoadStates = LoadStates(
-                refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                append = LoadState.NotLoading(endOfPaginationReached = true)
-            )
-        ).map { it.toPlayer() }
-        emit(playersPagingData)
+    override fun observeLatestPickedUpPlayers(): Flow<List<Player>> = flow {
+        val notExpiredLatestPlayerEntities = latestPlayerEntities.filter { playerEntity ->
+            val currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
+            val isNotExpired = currentTimeInSeconds <= playerEntity.expiryTimeInSeconds
+            isNotExpired
+        }
+
+        val sortedLatestPlayerEntities = notExpiredLatestPlayerEntities.toMutableList()
+        sortedLatestPlayerEntities.sortByDescending { it.pickUpTimeInSeconds }
+
+        emit(sortedLatestPlayerEntities.map { it.toPlayer() })
     }
 
-    override fun observerPickedUpPlayer(playerId: Long): Flow<Player> = flow {
-        val player = playerEntitiesHistory.find { playerEntity ->
+    override fun observePickedUpPlayer(
+        playerId: Long
+    ): Flow<Player> = flow {
+        val player = latestPlayerEntities.find { playerEntity ->
             playerEntity.id == playerId
         }?.toPlayer()
+
         player?.let { emit(it) }
     }
 }

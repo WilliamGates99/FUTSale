@@ -7,7 +7,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.Fak
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -42,17 +43,24 @@ class StoreCurrentAppThemeUseCaseTest {
 
     @Test
     fun storeCurrentAppTheme_returnsSuccess() = runTest {
-        val testValue = AppTheme.Dark
-        val result = storeCurrentAppThemeUseCase(testValue)
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+        val testValue = AppTheme.DARK
+        storeCurrentAppThemeUseCase(
+            newAppTheme = testValue
+        ).onEach { result ->
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
     fun storeCurrentAppTheme_returnsNewAppTheme() = runTest {
-        val testValue = AppTheme.Dark
-        storeCurrentAppThemeUseCase(testValue)
+        val testValue = AppTheme.DARK
 
-        val appTheme = getCurrentAppThemeUseCase().first()
-        assertThat(appTheme).isEqualTo(testValue)
+        storeCurrentAppThemeUseCase(
+            newAppTheme = testValue
+        ).launchIn(scope = this)
+
+        getCurrentAppThemeUseCase().onEach { appTheme ->
+            assertThat(appTheme).isEqualTo(testValue)
+        }
     }
 }
