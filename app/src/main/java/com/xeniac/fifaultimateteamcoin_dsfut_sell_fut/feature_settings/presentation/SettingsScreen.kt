@@ -4,8 +4,9 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -33,19 +35,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.restartActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.restartActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.LocaleBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.MiscellaneousCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.SettingsCard
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.components.ThemeBottomSheet
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,20 +55,21 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current ?: context.findActivity()
+    val layoutDirection = LocalLayoutDirection.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserverAsEvent(flow = viewModel.setAppLocaleEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.RestartActivity -> activity.restartActivity()
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -78,9 +79,8 @@ fun SettingsScreen(
     ObserverAsEvent(flow = viewModel.setAppThemeEventChannel) { event ->
         when (event) {
             is SettingsUiEvent.UpdateAppTheme -> event.newAppTheme.setAppTheme()
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -90,9 +90,8 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationSoundEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -102,9 +101,8 @@ fun SettingsScreen(
 
     ObserverAsEvent(flow = viewModel.setNotificationVibrateEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -113,12 +111,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
-        snackbarHost = {
-            SwipeableSnackbar(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = bottomPadding)
-            )
-        },
+        snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -137,51 +130,38 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
                 .verticalScroll(rememberScrollState())
+                .padding(
+                    start = innerPadding.calculateStartPadding(layoutDirection),
+                    end = innerPadding.calculateEndPadding(layoutDirection)
+                )
                 .padding(
                     horizontal = horizontalPadding,
                     vertical = verticalPadding
                 )
         ) {
             SettingsCard(
-                settingsState = settingsState,
-                onAction = viewModel::onAction,
-                modifier = Modifier.fillMaxWidth()
+                state = state,
+                onAction = viewModel::onAction
             )
 
-            MiscellaneousCard(
-                modifier = Modifier.fillMaxWidth(),
-                openAppPageInStore = { IntentHelper.openAppPageInStore(context) },
-                openUrlInInAppBrowser = { url ->
-                    url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
-                            context = context,
-                            urlString = url
-                        )
-                    }
-                },
-                openUrlInBrowser = { url ->
-                    url?.let {
-                        IntentHelper.openLinkInExternalBrowser(
-                            context = context,
-                            urlString = url
-                        )
-                    }
-                }
-            )
+            MiscellaneousCard()
         }
     }
 
     LocaleBottomSheet(
-        isVisible = settingsState.isLocaleBottomSheetVisible,
-        currentAppLocale = settingsState.currentAppLocale ?: AppLocale.Default,
+        isVisible = state.isLocaleBottomSheetVisible,
+        currentAppLocale = state.currentAppLocale ?: AppLocale.DEFAULT,
         onAction = viewModel::onAction
     )
 
     ThemeBottomSheet(
-        isVisible = settingsState.isThemeBottomSheetVisible,
-        currentAppTheme = settingsState.currentAppTheme ?: AppTheme.Default,
+        isVisible = state.isThemeBottomSheetVisible,
+        currentAppTheme = state.currentAppTheme ?: AppTheme.DEFAULT,
         onAction = viewModel::onAction
     )
 }

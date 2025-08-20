@@ -12,7 +12,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AppReviewRepositoryImpl @Inject constructor(
-    private val reviewManager: Lazy<ReviewManager>,
+    private val reviewManager: Lazy<ReviewManager>
 ) : AppReviewRepository {
 
     override fun requestInAppReviews(): Flow<ReviewInfo?> = callbackFlow {

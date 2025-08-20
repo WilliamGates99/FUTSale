@@ -1,5 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di
 
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetCurrentAppLocaleUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.use_case.GetIsOnboardingCompletedUseCase
@@ -23,10 +24,8 @@ internal object CoreModule {
     @Provides
     @ViewModelScoped
     fun provideGetIsOnboardingCompletedUseCase(
-        settingsDataStoreRepository: SettingsDataStoreRepository
-    ): GetIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(
-        settingsDataStoreRepository
-    )
+        dsfutDataStoreRepository: DsfutDataStoreRepository
+    ): GetIsOnboardingCompletedUseCase = GetIsOnboardingCompletedUseCase(dsfutDataStoreRepository)
 
     @Provides
     @ViewModelScoped

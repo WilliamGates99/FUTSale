@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Red
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Red
 
 @Composable
 fun InstructionCard(
@@ -29,7 +29,7 @@ fun InstructionCard(
 ) {
     OutlinedCard(
         shape = shape,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(space = 20.dp),
@@ -40,9 +40,8 @@ fun InstructionCard(
                     vertical = 14.dp
                 )
         ) {
-            InstructionText(modifier = Modifier.fillMaxWidth())
-
-            AttentionText(modifier = Modifier.fillMaxWidth())
+            InstructionText()
+            AttentionText()
         }
     }
 }
@@ -63,7 +62,7 @@ private fun InstructionText(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 4.dp),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title,
@@ -100,6 +99,6 @@ private fun AttentionText(
         lineHeight = lineHeight,
         fontWeight = fontWeight,
         color = color,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }

@@ -3,6 +3,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonColors
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 enum class PlatformItems(
@@ -81,7 +82,7 @@ fun PlatformSelector(
     Row(
         horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title,

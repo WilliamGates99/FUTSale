@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun InstructionTexts(
     modifier: Modifier = Modifier,
@@ -41,7 +40,7 @@ fun InstructionTexts(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 4.dp),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title,

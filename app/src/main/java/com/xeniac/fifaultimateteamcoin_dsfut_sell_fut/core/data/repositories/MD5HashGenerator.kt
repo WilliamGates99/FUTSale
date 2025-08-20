@@ -10,7 +10,6 @@ class MD5HashGenerator @Inject constructor(
     private val md5MessageDigest: Lazy<MessageDigest>
 ) : HashGenerator {
 
-    @OptIn(ExperimentalStdlibApi::class)
     override fun generateHash(
         input: String
     ): HashedString {

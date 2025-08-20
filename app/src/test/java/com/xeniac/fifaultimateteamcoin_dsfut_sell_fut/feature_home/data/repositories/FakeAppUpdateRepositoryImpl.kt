@@ -2,26 +2,22 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.createKtorTestClient
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.errors.GetLatestAppVersionError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
 import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -120,38 +116,33 @@ class FakeAppUpdateRepositoryImpl(
             )
         }
 
-        val testClient = HttpClient(engine = mockEngine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    coerceInputValues = true
-                })
-            }
-            install(DefaultRequest) {
-                contentType(ContentType.Application.Json)
-            }
-        }
-
-        val response = testClient.get(
+        val httpResponse = createKtorTestClient(mockEngine = mockEngine).get(
             urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
         )
 
-        return when (response.status) {
-            HttpStatusCode.OK -> {
-                val getLatestAppVersionResponse = Json
-                    .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
-                    .toGetLatestAppVersionResponse()
+        return when (httpResponse.status) {
+            HttpStatusCode.OK -> { // Code: 200
+                val responseDto = Json.decodeFromString<GetLatestAppVersionResponseDto>(
+                    httpResponse.bodyAsText()
+                )
 
                 val currentVersionCode = BuildConfig.VERSION_CODE
-                val latestVersionCode = getLatestAppVersionResponse.versionCode
+                val latestVersionCode = responseDto.versionCode
 
-                val isAppOutdated = currentVersionCode < latestVersionCode
-                if (isAppOutdated) {
-                    val updateDialogShowCount = miscellaneousDataStoreRepository
-                        .getAppUpdateDialogShowCount().first()
-                    val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository
-                        .isAppUpdateDialogShownToday().first()
+                val isAppUpdated = currentVersionCode >= latestVersionCode
+
+                if (isAppUpdated) {
+                    with(miscellaneousDataStoreRepository) {
+                        storeAppUpdateDialogShowCount(count = 0)
+                        removeAppUpdateDialogShowDateTime()
+                    }
+
+                    return Result.Success(null)
+                }
+
+                with(miscellaneousDataStoreRepository) {
+                    val updateDialogShowCount = getAppUpdateDialogShowCount().first()
+                    val isAppUpdateDialogShownToday = isAppUpdateDialogShownToday().first()
 
                     val shouldShowAppUpdateDialog = when {
                         isAppUpdateDialogShownToday && updateDialogShowCount < 2 -> true
@@ -160,28 +151,25 @@ class FakeAppUpdateRepositoryImpl(
                     }
 
                     if (shouldShowAppUpdateDialog) {
-                        miscellaneousDataStoreRepository.apply {
-                            storeAppUpdateDialogShowCount(
-                                if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
-                                else 0
-                            )
-                            storeAppUpdateDialogShowEpochDays()
-                        }
+                        storeAppUpdateDialogShowCount(
+                            count = when {
+                                isAppUpdateDialogShownToday -> updateDialogShowCount + 1
+                                else -> 0
+                            }
+                        )
+                        storeAppUpdateDialogShowDateTime()
 
-                        Result.Success(
+                        return@with com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result.Success(
                             LatestAppUpdateInfo(
-                                versionCode = latestAppVersionCode,
-                                versionName = getLatestAppVersionResponse.versionName
+                                versionCode = latestVersionCode,
+                                versionName = responseDto.versionName
                             )
                         )
-                    } else Result.Success(null)
-                } else {
-                    miscellaneousDataStoreRepository.apply {
-                        storeAppUpdateDialogShowCount(0)
-                        removeAppUpdateDialogShowEpochDays()
                     }
 
-                    Result.Success(null)
+                    com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result.Success(
+                        null
+                    )
                 }
             }
             else -> Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)

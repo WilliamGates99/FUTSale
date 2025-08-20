@@ -3,9 +3,9 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.do
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickedUpPlayersRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -23,34 +23,35 @@ class ObserveLatestPickedUpPlayersUseCaseTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePickUpPlayerRepositoryImpl: FakePickUpPlayerRepositoryImpl
+    private lateinit var fakePickedUpPlayersRepositoryImpl: FakePickedUpPlayersRepositoryImpl
     private lateinit var observeLatestPickedUpPlayersUseCase: ObserveLatestPickedUpPlayersUseCase
 
     @Before
     fun setUp() {
-        fakePickUpPlayerRepositoryImpl = FakePickUpPlayerRepositoryImpl()
+        fakePickedUpPlayersRepositoryImpl = FakePickedUpPlayersRepositoryImpl()
         observeLatestPickedUpPlayersUseCase = ObserveLatestPickedUpPlayersUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepositoryImpl
+            pickedUpPlayersRepository = fakePickedUpPlayersRepositoryImpl
         )
     }
 
     @Test
     fun observeLatestPickedPlayersWithNoPlayers_returnsEmptyPlayersList() = runTest {
-        val latestPickedPlayers = observeLatestPickedUpPlayersUseCase().first()
-        assertThat(latestPickedPlayers).isEmpty()
+        observeLatestPickedUpPlayersUseCase().onEach { latestPickedPlayers ->
+            assertThat(latestPickedPlayers).isEmpty()
+        }
     }
 
     @Test
     fun observeLatestPickedPlayers_returnsPlayersListInDescendingOrder() = runTest {
-        fakePickUpPlayerRepositoryImpl.addDummyPlayersToLatestPlayers()
+        fakePickedUpPlayersRepositoryImpl.addDummyPlayersToLatestPlayers()
 
-        val latestPickedPlayers = observeLatestPickedUpPlayersUseCase().first()
+        observeLatestPickedUpPlayersUseCase().onEach { latestPickedPlayers ->
+            assertThat(latestPickedPlayers).isNotEmpty()
 
-        assertThat(latestPickedPlayers).isNotEmpty()
-
-        for (i in 0..latestPickedPlayers.size - 2) {
-            assertThat(latestPickedPlayers[i].pickUpTimeInMs)
-                .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInMs)
+            for (i in 0..latestPickedPlayers.size - 2) {
+                assertThat(latestPickedPlayers[i].pickUpTimeInMs)
+                    .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInMs)
+            }
         }
     }
 }

@@ -10,9 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
@@ -22,6 +22,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPr
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
@@ -57,7 +59,6 @@ import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -68,9 +69,7 @@ internal object AppModule {
     @Singleton
     fun provideNotificationManager(
         @ApplicationContext context: Context
-    ): NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.getSystemService(NotificationManager::class.java)
-    } else context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    ): NotificationManager = context.getSystemService(NotificationManager::class.java)
 
     @RequiresApi(Build.VERSION_CODES.S)
     @Provides
@@ -86,20 +85,13 @@ internal object AppModule {
         vibratorManager: Lazy<VibratorManager>
     ): Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         vibratorManager.get().defaultVibrator
-    } else {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            context.getSystemService(Vibrator::class.java)
-        } else context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    }
+    } else context.getSystemService(Vibrator::class.java)
 
     @Provides
     @Singleton
     fun provideConnectivityManager(
         @ApplicationContext context: Context
-    ): ConnectivityManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.getSystemService(ConnectivityManager::class.java)
-    } else context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    ): ConnectivityManager = context.getSystemService(ConnectivityManager::class.java)
 
     @Provides
     @Singleton
@@ -119,12 +111,12 @@ internal object AppModule {
 
         install(Logging) {
             logger = Logger.ANDROID
-            level = LogLevel.INFO
+            level = if (BuildConfig.DEBUG) LogLevel.INFO else LogLevel.NONE
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
         install(HttpCache) {
             val cacheDir = context.cacheDir.resolve(relative = "ktor_cache")
-            privateStorage(FileStorage(cacheDir))
+            privateStorage(storage = FileStorage(directory = cacheDir))
         }
         install(ContentNegotiation) {
             json(json)
@@ -134,9 +126,9 @@ internal object AppModule {
             exponentialDelay()
         }
         install(HttpTimeout) {
-            connectTimeoutMillis = 20_000 // 20 seconds
-            requestTimeoutMillis = 20_000 // 20 seconds
-            socketTimeoutMillis = 20_000 // 20 seconds
+            connectTimeoutMillis = 30_000 // 30 seconds
+            requestTimeoutMillis = 30_000 // 30 seconds
+            socketTimeoutMillis = 30_000 // 30 seconds
         }
         install(DefaultRequest) {
             contentType(ContentType.Application.Json)
@@ -167,7 +159,20 @@ internal object AppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @SettingsDataStoreQualifier
+    fun providePermissionDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<PermissionsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = PermissionsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { PermissionsPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Permissions_2.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
     ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -175,29 +180,13 @@ internal object AppModule {
             serializer = SettingsPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Settings.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Settings_2.pb") }
         )
     }
 
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @DsfutDataStoreQualifier
-    fun provideDsfutDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
-        DataStoreFactory.create(
-            serializer = DsfutPreferencesSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
-            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.dataStoreFile(fileName = "Dsfut.pb") }
-        )
-    }
-
-    @OptIn(InternalCoroutinesApi::class)
-    @Provides
-    @Singleton
-    @MiscellaneousDataStoreQualifier
     fun provideMiscellaneousDataStore(
         @ApplicationContext context: Context
     ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -205,7 +194,21 @@ internal object AppModule {
             serializer = MiscellaneousPreferencesSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous.pb") }
+            produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous_2.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Dsfut_2.pb") }
         )
     }
 
@@ -227,15 +230,3 @@ internal object AppModule {
         /* algorithm = */ "MD5"
     )
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class SettingsDataStoreQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class DsfutDataStoreQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class MiscellaneousDataStoreQualifier

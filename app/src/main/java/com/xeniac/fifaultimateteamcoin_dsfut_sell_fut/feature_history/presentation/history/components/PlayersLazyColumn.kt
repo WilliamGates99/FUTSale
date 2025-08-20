@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,8 +42,8 @@ import androidx.paging.compose.LazyPagingItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.dashedBorder
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant20
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.dashedBorder
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.NeutralVariant20
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.utils.TestTags
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -53,12 +54,14 @@ fun PlayersLazyColumn(
     pickedUpPlayersHistory: LazyPagingItems<Player>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    onClick: (playerId: Long) -> Unit
+    onNavigateToPlayerInfoScreen: (playerId: Long) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding,
-        modifier = modifier.testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(tag = TestTags.HISTORY_LAZY_COLUMN)
     ) {
         items(
             items = pickedUpPlayersHistory.itemSnapshotList,
@@ -69,7 +72,7 @@ fun PlayersLazyColumn(
                     player = player,
                     onClick = {
                         player.id?.let { playerId ->
-                            onClick(playerId)
+                            onNavigateToPlayerInfoScreen(playerId)
                         }
                     },
                     modifier = Modifier

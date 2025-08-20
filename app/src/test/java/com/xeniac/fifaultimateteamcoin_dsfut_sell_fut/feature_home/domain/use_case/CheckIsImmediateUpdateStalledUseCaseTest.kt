@@ -6,7 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppUpdateRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,32 +25,33 @@ class CheckIsImmediateUpdateStalledUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    private lateinit var fakeAppUpdateRepository: FakeAppUpdateRepositoryImpl
+    private lateinit var fakeAppUpdateRepositoryImpl: FakeAppUpdateRepositoryImpl
     private lateinit var checkIsImmediateUpdateStalledUseCase: CheckIsImmediateUpdateStalledUseCase
 
     @Before
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
-        fakeAppUpdateRepository = FakeAppUpdateRepositoryImpl(
+        fakeAppUpdateRepositoryImpl = FakeAppUpdateRepositoryImpl(
             miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
-
         checkIsImmediateUpdateStalledUseCase = CheckIsImmediateUpdateStalledUseCase(
-            appUpdateRepository = fakeAppUpdateRepository
+            appUpdateRepository = fakeAppUpdateRepositoryImpl
         )
     }
 
     @Test
     fun checkIsImmediateUpdateStalledWithNoUpdateDownloaded_returnsNull() = runTest {
-        fakeAppUpdateRepository.isImmediateUpdateStalled(isStalled = false)
-        val appUpdateInfo = checkIsImmediateUpdateStalledUseCase().first()
-        assertThat(appUpdateInfo).isNull()
+        fakeAppUpdateRepositoryImpl.isImmediateUpdateStalled(isStalled = false)
+        checkIsImmediateUpdateStalledUseCase().onEach { appUpdateInfo ->
+            assertThat(appUpdateInfo).isNull()
+        }
     }
 
     @Test
     fun checkIsFlexibleUpdateStalledWithUpdateDownloaded_returnsAppUpdateInfo() = runTest {
-        fakeAppUpdateRepository.isImmediateUpdateStalled(isStalled = true)
-        val appUpdateInfo = checkIsImmediateUpdateStalledUseCase().first()
-        assertThat(appUpdateInfo).isNotNull()
+        fakeAppUpdateRepositoryImpl.isImmediateUpdateStalled(isStalled = true)
+        checkIsImmediateUpdateStalledUseCase().onEach { appUpdateInfo ->
+            assertThat(appUpdateInfo).isNotNull()
+        }
     }
 }

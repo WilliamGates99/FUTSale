@@ -40,7 +40,7 @@ class ObservePickedUpPlayersHistoryUseCaseTest {
 
     @Test
     fun observePickedPlayersHistoryWithNoPlayers_returnsEmptyPlayersList() = runTest {
-        val pickedPlayersHistory = fakeHistoryRepositoryImpl.observePickedPlayersHistory()
+        val pickedPlayersHistory = fakeHistoryRepositoryImpl.observePickedUpPlayersHistory()
         assertThat(pickedPlayersHistory.asSnapshot()).isEmpty()
     }
 
@@ -48,7 +48,8 @@ class ObservePickedUpPlayersHistoryUseCaseTest {
     fun observePickedPlayersHistory_returnsEntirePlayersListInDescendingOrder() = runTest {
         fakeHistoryRepositoryImpl.addDummyPlayersToHistory()
 
-        val pickedPlayersHistoryPagingData = fakeHistoryRepositoryImpl.observePickedPlayersHistory()
+        val pickedPlayersHistoryPagingData = fakeHistoryRepositoryImpl
+            .observePickedUpPlayersHistory()
         val pickedPlayersHistory = pickedPlayersHistoryPagingData.asSnapshot()
 
         assertThat(pickedPlayersHistory).isNotEmpty()

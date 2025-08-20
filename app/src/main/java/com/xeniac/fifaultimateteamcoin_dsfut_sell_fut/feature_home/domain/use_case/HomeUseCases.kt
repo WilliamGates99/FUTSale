@@ -13,6 +13,6 @@ data class HomeUseCases(
     val storeNotificationPermissionCountUseCase: Lazy<StoreNotificationPermissionCountUseCase>,
     val getSelectedRateAppOptionUseCase: Lazy<GetSelectedRateAppOptionUseCase>,
     val storeSelectedRateAppOptionUseCase: Lazy<StoreSelectedRateAppOptionUseCase>,
-    val getPreviousRateAppRequestTimeInMsUseCase: Lazy<GetPreviousRateAppRequestTimeInMsUseCase>,
-    val storePreviousRateAppRequestTimeInMsUseCase: Lazy<StorePreviousRateAppRequestTimeInMsUseCase>
+    val getPreviousRateAppRequestDateTimeUseCase: Lazy<GetPreviousRateAppRequestDateTimeUseCase>,
+    val storePreviousRateAppRequestDateTimeUseCase: Lazy<StorePreviousRateAppRequestDateTimeUseCase>
 )

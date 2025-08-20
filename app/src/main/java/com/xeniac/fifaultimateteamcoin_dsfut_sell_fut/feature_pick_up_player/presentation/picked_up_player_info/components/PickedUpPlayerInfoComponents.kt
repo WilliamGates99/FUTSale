@@ -51,11 +51,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Red
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.RedAlpha20
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.asUiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Red
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.RedAlpha20
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.asUiText
 
 @Composable
 fun PickedUpPlayerInfo(
@@ -72,7 +72,7 @@ fun PickedUpPlayerInfo(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             LottieAnimation(
@@ -102,17 +102,12 @@ fun PickedUpPlayerInfo(
                 id = R.string.picked_up_player_info_message,
                 player?.name.orEmpty()
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = horizontalPadding)
+            modifier = Modifier.padding(horizontal = horizontalPadding)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        PlayerInfo(
-            player = player,
-            modifier = Modifier.fillMaxWidth()
-        )
+        PlayerInfo(player = player)
     }
 }
 
@@ -216,7 +211,7 @@ private fun PickUpMessage(
         fontWeight = fontWeight,
         textAlign = textAlign,
         color = color,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }
 
@@ -230,7 +225,9 @@ private fun PlayerInfo(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.onSizeChanged { rowHeight = it.height }
+        modifier = modifier
+            .fillMaxWidth()
+            .onSizeChanged { rowHeight = it.height }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),

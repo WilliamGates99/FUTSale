@@ -34,18 +34,16 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.addTestTag
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.NeutralVariant60
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.addTestTag
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.NeutralVariant40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.NeutralVariant60
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.SettingsAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.TestTags
 
 @Composable
 fun SettingsCard(
-    settingsState: SettingsState,
+    state: SettingsState,
     modifier: Modifier = Modifier,
     titlePadding: PaddingValues = PaddingValues(horizontal = 8.dp),
     title: String = stringResource(id = R.string.settings_title_settings),
@@ -57,7 +55,7 @@ fun SettingsCard(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title.uppercase(),
@@ -76,16 +74,10 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_language),
                 title = stringResource(id = R.string.settings_text_settings_language),
-                currentValue = when (settingsState.currentAppLocale) {
-                    AppLocale.Default -> stringResource(id = R.string.settings_text_settings_language_default)
-                    AppLocale.EnglishUS -> stringResource(id = R.string.settings_text_settings_language_english_us)
-                    AppLocale.EnglishGB -> stringResource(id = R.string.settings_text_settings_language_english_gb)
-                    AppLocale.FarsiIR -> stringResource(id = R.string.settings_text_settings_language_farsi_ir)
-                    null -> null
+                currentValue = state.currentAppLocale?.titleId?.let { titleId ->
+                    stringResource(id = titleId)
                 },
-                onClick = {
-                    onAction(SettingsAction.ShowLocaleBottomSheet)
-                }
+                onClick = { onAction(SettingsAction.ShowLocaleBottomSheet) }
             )
 
             HorizontalDivider()
@@ -93,15 +85,10 @@ fun SettingsCard(
             CardTextRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_theme),
                 title = stringResource(id = R.string.settings_text_settings_theme),
-                currentValue = when (settingsState.currentAppTheme) {
-                    AppTheme.Default -> stringResource(id = R.string.settings_text_settings_theme_default)
-                    AppTheme.Light -> stringResource(id = R.string.settings_text_settings_theme_light)
-                    AppTheme.Dark -> stringResource(id = R.string.settings_text_settings_theme_dark)
-                    null -> null
+                currentValue = state.currentAppTheme?.titleId?.let { titleId ->
+                    stringResource(id = titleId)
                 },
-                onClick = {
-                    onAction(SettingsAction.ShowThemeBottomSheet)
-                }
+                onClick = { onAction(SettingsAction.ShowThemeBottomSheet) }
             )
 
             HorizontalDivider()
@@ -109,7 +96,7 @@ fun SettingsCard(
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_sound),
                 title = stringResource(id = R.string.settings_text_settings_notification_sound),
-                isChecked = settingsState.isNotificationSoundEnabled,
+                isChecked = state.isNotificationSoundEnabled,
                 testTag = TestTags.NOTIFICATION_SOUND_SWITCH,
                 onCheckedChange = { isChecked ->
                     onAction(SettingsAction.SetNotificationSoundSwitch(isChecked))
@@ -121,7 +108,7 @@ fun SettingsCard(
             CardSwitchRowItem(
                 icon = painterResource(id = R.drawable.ic_settings_notification_vibrate),
                 title = stringResource(id = R.string.settings_text_settings_notification_vibrate),
-                isChecked = settingsState.isNotificationVibrateEnabled,
+                isChecked = state.isNotificationVibrateEnabled,
                 testTag = TestTags.NOTIFICATION_VIBRATE_SWITCH,
                 onCheckedChange = { isChecked ->
                     onAction(SettingsAction.SetNotificationVibrateSwitch(isChecked))

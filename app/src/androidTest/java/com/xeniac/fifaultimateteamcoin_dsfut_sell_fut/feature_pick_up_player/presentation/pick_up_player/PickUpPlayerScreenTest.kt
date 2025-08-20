@@ -30,12 +30,20 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.MD5HashGeneratorQualifier
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.HashGenerator
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickedUpPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.ProfileScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.mappers.toPlayer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakeCountDownTimerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickedUpPlayersRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DummyPlayersHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
@@ -43,6 +51,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickedUpPlayerInfoUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
@@ -79,15 +88,24 @@ class PickUpPlayerScreenTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
+
+    @Inject
     lateinit var decimalFormat: DecimalFormat
+
+    @Inject
+    @MD5HashGeneratorQualifier
+    lateinit var md5HashGenerator: HashGenerator
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
-    private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
-    private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
+    private lateinit var fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
+    private lateinit var fakeDsfutDataStoreRepositoryImpl: FakeDsfutDataStoreRepositoryImpl
+    private lateinit var fakePickUpPlayerRepository: FakePickUpPlayerRepositoryImpl
+    private lateinit var fakePickedUpPlayersRepository: FakePickedUpPlayersRepositoryImpl
+    private lateinit var fakeCountDownTimerRepository: FakeCountDownTimerRepositoryImpl
 
-    private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
+    private val testPlayer = DummyPlayersHelper.dummyPlayerDto.toPlayer()
 
     private lateinit var testNavController: NavHostController
 
@@ -95,11 +113,22 @@ class PickUpPlayerScreenTest {
     fun setUp() {
         hiltRule.inject()
 
+        DummyPlayersHelper.resetLatestPlayers()
+        NetworkObserverHelper.observeNetworkConnection(connectivityObserver)
+
+        fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
+        fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
+        fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl(
+            md5HashGenerator = { md5HashGenerator }
+        )
+        fakePickedUpPlayersRepository = FakePickedUpPlayersRepositoryImpl()
+        fakeCountDownTimerRepository = FakeCountDownTimerRepositoryImpl()
+
         val observeLatestPickedUpPlayersUseCaseUseCase = ObserveLatestPickedUpPlayersUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            pickedUpPlayersRepository = fakePickedUpPlayersRepository
         )
         val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            pickedUpPlayersRepository = fakePickedUpPlayersRepository
         )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
@@ -123,17 +152,21 @@ class PickUpPlayerScreenTest {
             validateTakeAfter = ValidateTakeAfter()
         )
         val startCountDownTimerUseCase = StartCountDownTimerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            countDownTimerRepository = fakeCountDownTimerRepository
         )
 
         val pickUpPlayerUseCases = PickUpPlayerUseCases(
             { observeLatestPickedUpPlayersUseCaseUseCase },
-            { observePickedUpPlayerUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
             { storeSelectedPlatformUseCase },
             { pickUpPlayerUseCase },
+            { startCountDownTimerUseCase }
+        )
+
+        val pickedUpPlayerInfoUseCases = PickedUpPlayerInfoUseCases(
+            { observePickedUpPlayerUseCase },
             { startCountDownTimerUseCase }
         )
 
@@ -160,7 +193,11 @@ class PickUpPlayerScreenTest {
                                 }
                             },
                             onNavigateToPickedUpPlayerInfoScreen = { playerId ->
-                                testNavController.navigate(PickedUpPlayerInfoScreen(playerId))
+                                testNavController.navigate(
+                                    PickedUpPlayerInfoScreen(
+                                        playerId
+                                    )
+                                )
                             }
                         )
                     }
@@ -171,7 +208,7 @@ class PickUpPlayerScreenTest {
 
                         PickedUpPlayerInfoScreen(
                             viewModel = PickedUpPlayerInfoViewModel(
-                                pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                pickedUpPlayerInfoUseCases = pickedUpPlayerInfoUseCases,
                                 decimalFormat = decimalFormat,
                                 savedStateHandle = backStackEntry.savedStateHandle
                             ),
@@ -186,47 +223,65 @@ class PickUpPlayerScreenTest {
     @Test
     fun launchingPickUpPlayerScreen_showsPickUpPlayerScreenItems() {
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_title_instruction)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_title_instruction)
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.PC_SEGMENTED_BTN).apply {
+            onNodeWithTag(
+                testTag = TestTags.PC_SEGMENTED_BTN
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.CONSOLE_SEGMENTED_BTN).apply {
+            onNodeWithTag(
+                testTag = TestTags.CONSOLE_SEGMENTED_BTN
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.MIN_PRICE_TEXT_FIELD).apply {
+            onNodeWithTag(
+                testTag = TestTags.MIN_PRICE_TEXT_FIELD
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.MAX_PRICE_TEXT_FIELD).apply {
+            onNodeWithTag(
+                testTag = TestTags.MAX_PRICE_TEXT_FIELD
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.TAKE_AFTER_CHECK_BOX).apply {
+            onNodeWithTag(
+                testTag = TestTags.TAKE_AFTER_CHECK_BOX
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithTag(TestTags.TAKE_AFTER_SLIDER).apply {
+            onNodeWithTag(
+                testTag = TestTags.TAKE_AFTER_SLIDER
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_auto)
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
 
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -237,13 +292,17 @@ class PickUpPlayerScreenTest {
     fun clickOnPcSegmentedBtn_selectsPcPlatform() {
         composeTestRule.apply {
             composeTestRule.apply {
-                onNodeWithTag(TestTags.CONSOLE_SEGMENTED_BTN).apply {
+                onNodeWithTag(
+                    testTag = TestTags.CONSOLE_SEGMENTED_BTN
+                ).apply {
                     assertExists()
                     assertIsDisplayed()
                     performClick()
                 }
 
-                onNodeWithTag(testTag = TestTags.PC_SEGMENTED_BTN).apply {
+                onNodeWithTag(
+                    testTag = TestTags.PC_SEGMENTED_BTN
+                ).apply {
                     assertExists()
                     assertIsDisplayed()
                     assertIsNotSelected()
@@ -257,13 +316,17 @@ class PickUpPlayerScreenTest {
     @Test
     fun clickOnConsoleSegmentedBtn_selectsConsolePlatform() {
         composeTestRule.apply {
-            onNodeWithTag(TestTags.PC_SEGMENTED_BTN).apply {
+            onNodeWithTag(
+                testTag = TestTags.PC_SEGMENTED_BTN
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNodeWithTag(testTag = TestTags.CONSOLE_SEGMENTED_BTN).apply {
+            onNodeWithTag(
+                testTag = TestTags.CONSOLE_SEGMENTED_BTN
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 assertIsNotSelected()
@@ -276,23 +339,27 @@ class PickUpPlayerScreenTest {
     @Test
     fun clickOnTakeAfterDelay_enablesTakeAfterSlider() {
         composeTestRule.apply {
-            onNodeWithTag(testTag = TestTags.TAKE_AFTER_SLIDER).apply {
+            onNodeWithTag(
+                testTag = TestTags.TAKE_AFTER_SLIDER
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 assertIsNotEnabled()
             }
 
-            onNodeWithTag(TestTags.TAKE_AFTER_CHECK_BOX).apply {
+            onNodeWithTag(
+                testTag = TestTags.TAKE_AFTER_CHECK_BOX
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 assertIsNotSelected()
-
                 performClick()
-
                 assertIsSelected()
             }
 
-            onNodeWithTag(testTag = TestTags.TAKE_AFTER_SLIDER).apply {
+            onNodeWithTag(
+                testTag = TestTags.TAKE_AFTER_SLIDER
+            ).apply {
                 assertIsEnabled()
             }
         }
@@ -303,14 +370,20 @@ class PickUpPlayerScreenTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.pick_up_player_error_btn_open_profile))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.pick_up_player_error_btn_open_profile)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -321,18 +394,24 @@ class PickUpPlayerScreenTest {
     fun clickOnPickOnceBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.error_network_connection_unavailable))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.error_network_connection_unavailable)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -341,11 +420,13 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -375,14 +456,20 @@ class PickUpPlayerScreenTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_auto)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.pick_up_player_error_btn_open_profile))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.pick_up_player_error_btn_open_profile)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -393,18 +480,24 @@ class PickUpPlayerScreenTest {
     fun clickOnAutoPickUpBtnWithUnavailableNetwork_showsNetworkUnavailableSnackbar() = runTest {
         fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = false)
 
-        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_auto)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.error_network_connection_unavailable))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.error_network_connection_unavailable)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -413,11 +506,13 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnAutoPickUpBtnWithAvailableNetwork_navigatesToPickedUpPlayerInfoScreen() = runTest {
-        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_auto)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -444,11 +539,13 @@ class PickUpPlayerScreenTest {
 
     @Test
     fun clickOnPickOnceBtnThenPressBackBtn_showsLatestPickedUpPlayersPager() = runTest {
-        fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-        fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+        fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+        fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
         composeTestRule.apply {
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -457,7 +554,9 @@ class PickUpPlayerScreenTest {
 
             Espresso.pressBackUnconditionally()
 
-            onNodeWithTag(testTag = TestTags.LATEST_PICKED_UP_PLAYER_CARD).apply {
+            onNodeWithTag(
+                testTag = TestTags.LATEST_PICKED_UP_PLAYER_CARD
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }
@@ -471,12 +570,14 @@ class PickUpPlayerScreenTest {
 
             fakePickUpPlayerRepository.isNetworkAvailable(isAvailable = true)
 
-            fakeDsfutDataStoreRepositoryImpl.storePartnerId("123")
-            fakeDsfutDataStoreRepositoryImpl.storeSecretKey("abc123")
+            fakeDsfutDataStoreRepositoryImpl.storePartnerId(partnerId = "123")
+            fakeDsfutDataStoreRepositoryImpl.storeSecretKey(secretKey = "abc123")
 
             composeTestRule.apply {
-                repeat(repeatTimes) {
-                    onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+                repeat(times = repeatTimes) {
+                    onNodeWithText(
+                        text = context.getString(R.string.pick_up_player_btn_pick_once)
+                    ).apply {
                         assertExists()
                         performScrollTo()
                         assertIsDisplayed()
@@ -488,15 +589,18 @@ class PickUpPlayerScreenTest {
                     Espresso.pressBackUnconditionally()
                 }
 
-                onAllNodesWithTag(testTag = TestTags.LATEST_PICKED_UP_PLAYER_CARD).apply {
-                    for (i in 0..1)
-                        this[i].apply {
+                onAllNodesWithTag(
+                    testTag = TestTags.LATEST_PICKED_UP_PLAYER_CARD
+                ).apply {
+                    for (index in 1..2) {
+                        this[index].apply {
                             assertExists()
                             assertIsDisplayed()
                         }
+                    }
 
-                    for (i in 2..4) {
-                        this[i].apply {
+                    for (index in 3..repeatTimes) {
+                        this[index].apply {
                             assertIsNotDisplayed()
                         }
                     }

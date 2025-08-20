@@ -13,15 +13,15 @@ import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.google.android.play.core.ktx.totalBytesToDownload
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.utils.Constants
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.errors.GetLatestAppVersionError
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.utils.GetLatestAppVersionError
 import dagger.Lazy
 import io.ktor.client.HttpClient
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -156,27 +156,35 @@ class AppUpdateRepositoryImpl @Inject constructor(
 
     override suspend fun getLatestAppVersion(): Result<LatestAppUpdateInfo?, GetLatestAppVersionError> {
         return try {
-            val response = httpClient.get().get(
+            val httpResponse = httpClient.get().get(
                 urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
             )
 
-            Timber.i("Get latest app version response call = ${response.request.call}")
+            Timber.i("Get latest app version response call = ${httpResponse.request.call}")
 
-            return when (response.status) {
+            return when (httpResponse.status) {
                 HttpStatusCode.OK -> { // Code: 200
-                    val getLatestAppVersionResponse = Json
-                        .decodeFromString<GetLatestAppVersionResponseDto>(response.bodyAsText())
-                        .toGetLatestAppVersionResponse()
+                    val responseDto = Json.decodeFromString<GetLatestAppVersionResponseDto>(
+                        httpResponse.bodyAsText()
+                    )
 
                     val currentVersionCode = BuildConfig.VERSION_CODE
-                    val latestVersionCode = getLatestAppVersionResponse.versionCode
+                    val latestVersionCode = responseDto.versionCode
 
-                    val isAppOutdated = currentVersionCode < latestVersionCode
-                    if (isAppOutdated) {
-                        val updateDialogShowCount = miscellaneousDataStoreRepository.get()
-                            .getAppUpdateDialogShowCount().first()
-                        val isAppUpdateDialogShownToday = miscellaneousDataStoreRepository.get()
-                            .isAppUpdateDialogShownToday().first()
+                    val isAppUpdated = currentVersionCode >= latestVersionCode
+
+                    if (isAppUpdated) {
+                        with(miscellaneousDataStoreRepository.get()) {
+                            storeAppUpdateDialogShowCount(count = 0)
+                            removeAppUpdateDialogShowDateTime()
+                        }
+
+                        return Result.Success(null)
+                    }
+
+                    with(miscellaneousDataStoreRepository.get()) {
+                        val updateDialogShowCount = getAppUpdateDialogShowCount().first()
+                        val isAppUpdateDialogShownToday = isAppUpdateDialogShownToday().first()
 
                         val shouldShowAppUpdateDialog = when {
                             isAppUpdateDialogShownToday && updateDialogShowCount < 2 -> true
@@ -185,25 +193,20 @@ class AppUpdateRepositoryImpl @Inject constructor(
                         }
 
                         if (shouldShowAppUpdateDialog) {
-                            miscellaneousDataStoreRepository.get().apply {
-                                storeAppUpdateDialogShowCount(
-                                    if (isAppUpdateDialogShownToday) updateDialogShowCount + 1
-                                    else 0
-                                )
-                                storeAppUpdateDialogShowEpochDays()
-                            }
+                            storeAppUpdateDialogShowCount(
+                                count = when {
+                                    isAppUpdateDialogShownToday -> updateDialogShowCount + 1
+                                    else -> 0
+                                }
+                            )
+                            storeAppUpdateDialogShowDateTime()
 
-                            Result.Success(
+                            return@with Result.Success(
                                 LatestAppUpdateInfo(
                                     versionCode = latestVersionCode,
-                                    versionName = getLatestAppVersionResponse.versionName
+                                    versionName = responseDto.versionName
                                 )
                             )
-                        } else Result.Success(null)
-                    } else {
-                        miscellaneousDataStoreRepository.get().apply {
-                            storeAppUpdateDialogShowCount(0)
-                            removeAppUpdateDialogShowEpochDays()
                         }
 
                         Result.Success(null)
@@ -264,7 +267,6 @@ class AppUpdateRepositoryImpl @Inject constructor(
             Result.Error(GetLatestAppVersionError.Network.CertPathValidatorException)
         } catch (e: Exception) {
             coroutineContext.ensureActive()
-
             Timber.e("Get latest app version Exception:")
             e.printStackTrace()
             Result.Error(GetLatestAppVersionError.Network.SomethingWentWrong)

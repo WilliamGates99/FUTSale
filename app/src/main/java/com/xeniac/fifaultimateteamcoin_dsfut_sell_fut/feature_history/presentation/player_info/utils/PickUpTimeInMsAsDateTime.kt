@@ -8,13 +8,16 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.entrypoints.requireDecimalFormat
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import java.text.DecimalFormat
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 typealias PickUpTimeInMs = Long
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun PickUpTimeInMs.asDateTime(
     decimalFormat: DecimalFormat = requireDecimalFormat()
@@ -28,11 +31,11 @@ fun PickUpTimeInMs.asDateTime(
 
     val dayWithSuffix = stringArrayResource(
         id = R.array.history_player_info_pick_up_date_day_with_suffix
-    )[localDateTime.dayOfMonth - 1] // -1 due to array index starting at 0
+    )[localDateTime.day - 1] // -1 due to array index starting at 0
 
     val monthName = stringArrayResource(
         id = R.array.history_player_info_pick_up_date_month_name
-    )[localDateTime.monthNumber - 1] // -1 due to array index starting at 0
+    )[localDateTime.month.number - 1] // -1 due to array index starting at 0
 
     return stringResource(
         R.string.history_player_info_pick_up_date_time,

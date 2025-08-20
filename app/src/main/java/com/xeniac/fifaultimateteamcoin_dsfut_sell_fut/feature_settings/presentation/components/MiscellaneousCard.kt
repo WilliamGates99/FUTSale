@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,33 +34,37 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromMyket
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Constants.URL_PRIVACY_POLICY
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.isAppInstalledFromMyket
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInExternalBrowser
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openLinkInInAppBrowser
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 
 enum class MiscellaneousRowItems(
-    @DrawableRes val icon: Int,
-    @StringRes val title: Int,
+    @DrawableRes val iconId: Int,
+    @StringRes val titleId: Int,
     val url: String?
 ) {
     Donate(
-        icon = R.drawable.ic_settings_donate,
-        title = R.string.settings_text_miscellaneous_donate,
+        iconId = R.drawable.ic_settings_donate,
+        titleId = R.string.settings_text_miscellaneous_donate,
         url = Constants.URL_DONATE
     ),
     ImproveTranslations(
-        icon = R.drawable.ic_settings_improve_translations,
-        title = R.string.settings_text_miscellaneous_improve_translations,
+        iconId = R.drawable.ic_settings_improve_translations,
+        titleId = R.string.settings_text_miscellaneous_improve_translations,
         url = Constants.URL_CROWDIN
     ),
     RateUs(
-        icon = R.drawable.ic_settings_rate_us,
-        title = R.string.settings_text_miscellaneous_rate_us,
+        iconId = R.drawable.ic_settings_rate_us,
+        titleId = R.string.settings_text_miscellaneous_rate_us,
         url = null
     ),
     PrivacyPolicy(
-        icon = R.drawable.ic_settings_privacy_policy,
-        title = R.string.settings_text_miscellaneous_privacy_policy,
-        url = com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Constants.URL_PRIVACY_POLICY
+        iconId = R.drawable.ic_settings_privacy_policy,
+        titleId = R.string.settings_text_miscellaneous_privacy_policy,
+        url = URL_PRIVACY_POLICY
     )
 }
 
@@ -71,14 +76,13 @@ fun MiscellaneousCard(
     titleFontSize: TextUnit = 16.sp,
     titleFontWeight: FontWeight = FontWeight.ExtraBold,
     titleColor: Color = MaterialTheme.colorScheme.onBackground,
-    cardShape: Shape = RoundedCornerShape(12.dp),
-    openAppPageInStore: () -> Unit,
-    openUrlInInAppBrowser: (url: String?) -> Unit,
-    openUrlInBrowser: (url: String?) -> Unit
+    cardShape: Shape = RoundedCornerShape(12.dp)
 ) {
+    val context = LocalContext.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title.uppercase(),
@@ -101,21 +105,27 @@ fun MiscellaneousCard(
 
                 if (shouldShowItem) {
                     CardClickableLinkRowItem(
-                        icon = painterResource(id = miscellaneousItem.icon),
-                        title = stringResource(id = miscellaneousItem.title),
+                        icon = painterResource(id = miscellaneousItem.iconId),
+                        title = stringResource(id = miscellaneousItem.titleId),
                         onClick = {
                             when (miscellaneousItem) {
-                                MiscellaneousRowItems.RateUs -> openAppPageInStore()
-                                MiscellaneousRowItems.PrivacyPolicy -> openUrlInInAppBrowser(
-                                    miscellaneousItem.url
-                                )
-                                else -> openUrlInBrowser(miscellaneousItem.url)
+                                MiscellaneousRowItems.RateUs -> context.openAppPageInStore()
+                                MiscellaneousRowItems.PrivacyPolicy -> {
+                                    miscellaneousItem.url?.let { url ->
+                                        context.openLinkInInAppBrowser(urlString = url)
+                                    }
+                                }
+                                else -> {
+                                    miscellaneousItem.url?.let { url ->
+                                        context.openLinkInExternalBrowser(urlString = url)
+                                    }
+                                }
                             }
                         }
                     )
                 }
 
-                val isNotLastItem = index != MiscellaneousRowItems.entries.size - 1
+                val isNotLastItem = index != MiscellaneousRowItems.entries.lastIndex
                 if (isNotLastItem) {
                     HorizontalDivider()
                 }

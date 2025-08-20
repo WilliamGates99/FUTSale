@@ -1,7 +1,7 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states
 
 import android.os.Parcelable
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -3,9 +3,10 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -31,12 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.AccountLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.OtherLinks
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.components.ProfileTextFields
@@ -48,19 +49,20 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val profileState by viewModel.profileState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserverAsEvent(flow = viewModel.updatePartnerIdEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -70,9 +72,8 @@ fun ProfileScreen(
 
     ObserverAsEvent(flow = viewModel.updateSecretKeyEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -81,12 +82,7 @@ fun ProfileScreen(
     }
 
     Scaffold(
-        snackbarHost = {
-            SwipeableSnackbar(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = bottomPadding)
-            )
-        },
+        snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -105,43 +101,29 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(space = 28.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
                 .verticalScroll(rememberScrollState())
+                .padding(
+                    start = innerPadding.calculateStartPadding(layoutDirection),
+                    end = innerPadding.calculateEndPadding(layoutDirection)
+                )
                 .padding(
                     horizontal = horizontalPadding,
                     vertical = verticalPadding
                 )
+                .imePadding()
         ) {
             ProfileTextFields(
-                profileState = profileState,
-                onAction = viewModel::onAction,
-                modifier = Modifier.fillMaxWidth()
+                state = state,
+                onAction = viewModel::onAction
             )
 
-            AccountLinks(
-                openUrlInBrowser = { url ->
-                    url?.let {
-                        IntentHelper.openLinkInExternalBrowser(
-                            context = context,
-                            urlString = url
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+            AccountLinks()
 
-            OtherLinks(
-                openUrlInInAppBrowser = { url ->
-                    url?.let {
-                        IntentHelper.openLinkInInAppBrowser(
-                            context = context,
-                            urlString = url
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+            OtherLinks()
         }
     }
 }

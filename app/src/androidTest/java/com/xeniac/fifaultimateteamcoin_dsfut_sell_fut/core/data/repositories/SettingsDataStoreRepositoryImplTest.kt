@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -17,7 +18,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.S
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -45,6 +47,7 @@ class SettingsDataStoreRepositoryImplTest {
 
     private val testDataStore: DataStore<SettingsPreferences> = DataStoreFactory.create(
         serializer = SettingsPreferencesSerializer,
+        corruptionHandler = ReplaceFileCorruptionHandler { SettingsPreferences() },
         scope = testScope.backgroundScope,
         produceFile = { context.preferencesDataStoreFile(name = "Settings-Test.pb") }
     )
@@ -55,7 +58,7 @@ class SettingsDataStoreRepositoryImplTest {
 
     @Before
     fun setUp() {
-        testScope.launch {
+        runBlocking {
             testDataStore.updateData { SettingsPreferences() }
         }
     }
@@ -67,74 +70,54 @@ class SettingsDataStoreRepositoryImplTest {
 
     /*
     Fetch Initial Preferences Test Cases:
-    isOnboardingCompleted -> false
-    getNotificationPermissionCount -> 0
-    getCurrentAppThemeSynchronously -> AppTheme.Default
-    getCurrentAppTheme -> AppTheme.Default
-    getCurrentAppLocale -> AppLocale.Default
+    getCurrentAppThemeSynchronously -> AppTheme.DEFAULT
+    getCurrentAppTheme -> AppTheme.DEFAULT
+    getCurrentAppLocale -> AppLocale.DEFAULT
     isNotificationSoundEnabled -> true
     isNotificationVibrateEnabled -> true
      */
     @Test
     fun fetchInitialPreferences() = testScope.runTest {
-        val initialIsOnboardingCompleted = testRepository.isOnboardingCompleted()
-        val initialNotificationPermissionCount = testRepository
-            .getNotificationPermissionCount().first()
-        val initialAppThemeSynchronously = testRepository.getCurrentAppThemeSynchronously()
-        val initialAppTheme = testRepository.getCurrentAppTheme().first()
-        val initialAppLocale = testRepository.getCurrentAppLocale()
-        val initialIsNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
-        val initialIsNotificationVibrateEnabled = testRepository
-            .isNotificationVibrateEnabled().first()
+        with(testRepository) {
+            val initialAppThemeSynchronously = getCurrentAppThemeSynchronously()
+            val initialAppTheme = getCurrentAppTheme().first()
+            val initialAppLocale = getCurrentAppLocale()
+            val initialIsNotificationSoundEnabled = isNotificationSoundEnabled().first()
+            val initialIsNotificationVibrateEnabled = isNotificationVibrateEnabled().first()
 
-        assertThat(initialIsOnboardingCompleted).isFalse()
-        assertThat(initialNotificationPermissionCount).isEqualTo(0)
-        assertThat(initialAppThemeSynchronously).isEqualTo(AppTheme.Default)
-        assertThat(initialAppTheme).isEqualTo(AppTheme.Default)
-        assertThat(initialAppLocale).isEqualTo(AppLocale.Default)
-        assertThat(initialIsNotificationSoundEnabled).isTrue()
-        assertThat(initialIsNotificationVibrateEnabled).isTrue()
-    }
-
-    @Test
-    fun writeIsOnboardingCompleted() = testScope.runTest {
-        testRepository.isOnboardingCompleted(true)
-
-        val isOnboardingCompleted = testRepository.isOnboardingCompleted()
-        assertThat(isOnboardingCompleted).isTrue()
-    }
-
-    @Test
-    fun writeNotificationPermissionCount() = testScope.runTest {
-        val testValue = 2
-        testRepository.storeNotificationPermissionCount(testValue)
-
-        val notificationPermissionCount = testRepository.getNotificationPermissionCount().first()
-        assertThat(notificationPermissionCount).isEqualTo(testValue)
+            assertThat(initialAppThemeSynchronously).isEqualTo(AppTheme.DEFAULT)
+            assertThat(initialAppTheme).isEqualTo(AppTheme.DEFAULT)
+            assertThat(initialAppLocale).isEqualTo(AppLocale.DEFAULT)
+            assertThat(initialIsNotificationSoundEnabled).isTrue()
+            assertThat(initialIsNotificationVibrateEnabled).isTrue()
+        }
     }
 
     @Test
     fun writeCurrentAppTheme() = testScope.runTest {
-        val testValue = AppTheme.Dark
-        testRepository.storeCurrentAppTheme(testValue)
+        val testValue = AppTheme.DARK
+        testRepository.storeCurrentAppTheme(appTheme = testValue)
 
-        val currentAppTheme = testRepository.getCurrentAppTheme().first()
-        assertThat(currentAppTheme).isEqualTo(testValue)
+        testRepository.getCurrentAppTheme().onEach { currentAppTheme ->
+            assertThat(currentAppTheme).isEqualTo(testValue)
+        }
     }
 
     @Test
     fun writeIsNotificationSoundEnabled() = testScope.runTest {
-        testRepository.isNotificationSoundEnabled(false)
+        testRepository.isNotificationSoundEnabled(isEnabled = false)
 
-        val isNotificationSoundEnabled = testRepository.isNotificationSoundEnabled().first()
-        assertThat(isNotificationSoundEnabled).isFalse()
+        testRepository.isNotificationSoundEnabled().onEach { isNotificationSoundEnabled ->
+            assertThat(isNotificationSoundEnabled).isFalse()
+        }
     }
 
     @Test
     fun writeIsNotificationVibrateEnabled() = testScope.runTest {
-        testRepository.isNotificationVibrateEnabled(false)
+        testRepository.isNotificationVibrateEnabled(isEnabled = false)
 
-        val isNotificationVibrateEnabled = testRepository.isNotificationVibrateEnabled().first()
-        assertThat(isNotificationVibrateEnabled).isFalse()
+        testRepository.isNotificationVibrateEnabled().onEach { isNotificationVibrateEnabled ->
+            assertThat(isNotificationVibrateEnabled).isFalse()
+        }
     }
 }

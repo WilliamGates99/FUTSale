@@ -1,8 +1,8 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util
 
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.utils.StoreAppThemeError
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.errors.StoreAppThemeError
 
 fun StoreAppThemeError.asUiText(): UiText = when (this) {
     StoreAppThemeError.SomethingWentWrong -> UiText.StringResource(R.string.error_something_went_wrong)

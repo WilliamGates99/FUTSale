@@ -1,7 +1,6 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories
 
 import androidx.datastore.core.DataStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.DsfutDataStoreQualifier
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
@@ -13,8 +12,26 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DsfutDataStoreRepositoryImpl @Inject constructor(
-    @DsfutDataStoreQualifier private val dataStore: DataStore<DsfutPreferences>
+    private val dataStore: DataStore<DsfutPreferences>
 ) : DsfutDataStoreRepository {
+
+    override suspend fun isOnboardingCompleted(): Boolean = try {
+        dataStore.data.first().isOnboardingCompleted
+    } catch (e: Exception) {
+        Timber.e("Get is onboarding completed failed:")
+        e.printStackTrace()
+        false
+    }
+
+    override suspend fun isOnboardingCompleted(isCompleted: Boolean) {
+        try {
+            dataStore.updateData { it.copy(isOnboardingCompleted = isCompleted) }
+            Timber.i("Is onboarding completed edited to $isCompleted")
+        } catch (e: Exception) {
+            Timber.e("Store is onboarding completed failed:")
+            e.printStackTrace()
+        }
+    }
 
     override suspend fun getPartnerId(): String? = try {
         dataStore.data.first().partnerId

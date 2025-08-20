@@ -56,18 +56,18 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.Neutral40
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.Neutral40
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.utils.calculateCurrentPageOffset
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.calculateCurrentPageOffset
 
 @Composable
 fun LatestPlayersPagers(
     latestPickedPlayers: List<Player>,
     timerText: UiText,
     modifier: Modifier = Modifier,
-    enterTransition: EnterTransition = expandVertically() + fadeIn(),
+    enterTransition: EnterTransition = fadeIn() + expandVertically(),
     exitTransition: ExitTransition = shrinkVertically() + fadeOut(),
     contentPadding: PaddingValues = PaddingValues(
         start = if (latestPickedPlayers.size > 1) 24.dp else 12.dp,
@@ -83,7 +83,7 @@ fun LatestPlayersPagers(
         visible = latestPickedPlayers.isNotEmpty(),
         enter = enterTransition,
         exit = exitTransition,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         val pagerState = rememberPagerState(pageCount = { latestPickedPlayers.size })
 
@@ -93,7 +93,7 @@ fun LatestPlayersPagers(
         }
 
         Box(
-            modifier = modifier
+            modifier = modifier.fillMaxWidth()
         ) {
             HorizontalPager(
                 state = pagerState,
@@ -128,8 +128,6 @@ fun LatestPlayersPagers(
                                 scaleY = scale.y.value
                             }
                         }
-                        .fillMaxWidth()
-                        .testTag(tag = TestTags.LATEST_PICKED_UP_PLAYER_CARD)
                 )
             }
         }
@@ -154,6 +152,8 @@ private fun PlayerCard(
         shape = shape,
         colors = colors,
         modifier = modifier
+            .fillMaxWidth()
+            .testTag(tag = TestTags.LATEST_PICKED_UP_PLAYER_CARD)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
@@ -187,20 +187,17 @@ private fun PlayerCard(
             ) {
                 PlayerTextInfo(
                     title = stringResource(id = R.string.pick_up_player_latest_player_title_chemistry_style),
-                    value = player.chemistryStyle,
-                    modifier = Modifier.fillMaxWidth()
+                    value = player.chemistryStyle
                 )
 
                 PlayerTextInfo(
                     title = stringResource(id = R.string.pick_up_player_latest_player_title_start_price),
-                    value = player.startPrice,
-                    modifier = Modifier.fillMaxWidth()
+                    value = player.startPrice
                 )
 
                 PlayerTextInfo(
                     title = stringResource(id = R.string.pick_up_player_latest_player_title_buy_now_price),
-                    value = player.buyNowPrice,
-                    modifier = Modifier.fillMaxWidth()
+                    value = player.buyNowPrice
                 )
             }
         }
@@ -385,7 +382,7 @@ private fun PlayerTextInfo(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = title,

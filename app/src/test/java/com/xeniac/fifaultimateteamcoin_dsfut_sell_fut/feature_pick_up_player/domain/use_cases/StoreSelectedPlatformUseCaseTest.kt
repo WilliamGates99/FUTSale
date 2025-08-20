@@ -5,8 +5,9 @@ import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -38,7 +39,10 @@ class StoreSelectedPlatformUseCaseTest {
     @Test
     fun storeSelectedPlatform_returnsSuccess() = runTest {
         val newPlatform = Platform.PC
-        val result = storeSelectedPlatformUseCase(platform = newPlatform)
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+        storeSelectedPlatformUseCase(
+            platform = newPlatform
+        ).onEach { result ->
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 }

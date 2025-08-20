@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin)
@@ -25,12 +27,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_23
-        targetCompatibility = JavaVersion.VERSION_23
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "23"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(target = "17")
+
+            // Enable Context-Sensitive Resolution in Kotlin 2.2
+            freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+        }
     }
 }
 

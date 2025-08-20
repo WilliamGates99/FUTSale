@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BaseApplication
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.GreenNotificationLight
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.GreenNotificationLight
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -31,8 +31,7 @@ class PickUpPlayerNotificationService @Inject constructor(
         /* context = */ context,
         /* requestCode = */ 0,
         /* intent = */ Intent(/* action = */ ""),
-        /* flags = */ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            PendingIntent.FLAG_IMMUTABLE else 0
+        /* flags = */ PendingIntent.FLAG_IMMUTABLE
     )
 
     private val defaultPickUpPlayerNotificationBuilder = NotificationCompat.Builder(

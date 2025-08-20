@@ -19,10 +19,10 @@ import androidx.navigation.toRoute
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HistoryPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HistoryScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HistoryScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.data.repositories.FakeHistoryRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObservePickedUpPlayersHistoryUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.use_cases.ObserverPickedUpPlayerUseCase
@@ -86,7 +86,11 @@ class HistoryScreenTest {
                             ),
                             bottomPadding = 0.dp,
                             onNavigateToPlayerInfoScreen = { playerId ->
-                                testNavController.navigate(HistoryPlayerInfoScreen(playerId))
+                                testNavController.navigate(
+                                    HistoryPlayerInfoScreen(
+                                        playerId
+                                    )
+                                )
                             }
                         )
                     }

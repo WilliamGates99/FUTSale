@@ -6,6 +6,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -40,22 +42,29 @@ class StoreCurrentAppLocaleUseCaseTest {
 
     @Test
     fun storeCurrentAppLocale_returnsIsActivityRestartNeeded() = runTest {
-        val testValue = AppLocale.FarsiIR
+        val testValue = AppLocale.FARSI_IR
 
         val isActivityRestartNeeded = fakeSettingsDataStoreRepositoryImpl.isActivityRestartNeeded(
             newLocale = testValue
         )
 
-        val result = storeCurrentAppLocaleUseCase(testValue)
-        assertThat(result).isEqualTo(isActivityRestartNeeded)
+        storeCurrentAppLocaleUseCase(
+            newAppLocale = testValue
+        ).onEach { result ->
+            assertThat(result).isEqualTo(isActivityRestartNeeded)
+        }
     }
 
     @Test
     fun storeCurrentAppLocale_returnsNewAppLocale() = runTest {
-        val testValue = AppLocale.FarsiIR
-        storeCurrentAppLocaleUseCase(testValue)
+        val testValue = AppLocale.FARSI_IR
 
-        val appLocale = getCurrentAppLocaleUseCase()
-        assertThat(appLocale).isEqualTo(testValue)
+        storeCurrentAppLocaleUseCase(
+            newAppLocale = testValue
+        ).launchIn(scope = this)
+
+        getCurrentAppLocaleUseCase().onEach { appLocale ->
+            assertThat(appLocale).isEqualTo(testValue)
+        }
     }
 }

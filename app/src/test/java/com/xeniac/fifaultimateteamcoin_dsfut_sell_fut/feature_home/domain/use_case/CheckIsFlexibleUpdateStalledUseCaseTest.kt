@@ -6,7 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.repositories.FakeAppUpdateRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,32 +25,33 @@ class CheckIsFlexibleUpdateStalledUseCaseTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    private lateinit var fakeAppUpdateRepository: FakeAppUpdateRepositoryImpl
+    private lateinit var fakeAppUpdateRepositoryImpl: FakeAppUpdateRepositoryImpl
     private lateinit var checkIsFlexibleUpdateStalledUseCase: CheckIsFlexibleUpdateStalledUseCase
 
     @Before
     fun setUp() {
         fakeMiscellaneousDataStoreRepositoryImpl = FakeMiscellaneousDataStoreRepositoryImpl()
-        fakeAppUpdateRepository = FakeAppUpdateRepositoryImpl(
+        fakeAppUpdateRepositoryImpl = FakeAppUpdateRepositoryImpl(
             miscellaneousDataStoreRepository = fakeMiscellaneousDataStoreRepositoryImpl
         )
-
         checkIsFlexibleUpdateStalledUseCase = CheckIsFlexibleUpdateStalledUseCase(
-            appUpdateRepository = fakeAppUpdateRepository
+            appUpdateRepository = fakeAppUpdateRepositoryImpl
         )
     }
 
     @Test
     fun checkIsFlexibleUpdateStalledWithNoUpdateDownloaded_returnsFalse() = runTest {
-        fakeAppUpdateRepository.isFlexibleUpdateStalled(isStalled = false)
-        val isUpdateDownloaded = checkIsFlexibleUpdateStalledUseCase().first()
-        assertThat(isUpdateDownloaded).isFalse()
+        fakeAppUpdateRepositoryImpl.isFlexibleUpdateStalled(isStalled = false)
+        checkIsFlexibleUpdateStalledUseCase().onEach { isUpdateDownloaded ->
+            assertThat(isUpdateDownloaded).isFalse()
+        }
     }
 
     @Test
     fun checkIsFlexibleUpdateStalledWithUpdateDownloaded_returnsTrue() = runTest {
-        fakeAppUpdateRepository.isFlexibleUpdateStalled(isStalled = true)
-        val isUpdateDownloaded = checkIsFlexibleUpdateStalledUseCase().first()
-        assertThat(isUpdateDownloaded).isTrue()
+        fakeAppUpdateRepositoryImpl.isFlexibleUpdateStalled(isStalled = true)
+        checkIsFlexibleUpdateStalledUseCase().onEach { isUpdateDownloaded ->
+            assertThat(isUpdateDownloaded).isTrue()
+        }
     }
 }

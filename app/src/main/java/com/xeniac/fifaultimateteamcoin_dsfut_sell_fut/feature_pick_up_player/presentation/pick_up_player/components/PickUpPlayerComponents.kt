@@ -5,6 +5,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,8 +22,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.GradientButton
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.GradientButton
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 
 @Composable
 fun AutoPickUpButton(
@@ -35,42 +36,45 @@ fun AutoPickUpButton(
     textFontWeight: FontWeight = FontWeight.Bold,
     onAction: (action: PickUpPlayerAction) -> Unit
 ) {
-    if (isAutoPickUpLoading) {
-        GradientButton(
-            onClick = {
-                onAction(PickUpPlayerAction.CancelAutoPickUpPlayer)
-            },
-            gradientColors = listOf(
-                MaterialTheme.colorScheme.secondaryContainer,
-                MaterialTheme.colorScheme.secondaryContainer,
-                MaterialTheme.colorScheme.primary
-            ),
-            contentPadding = contentPadding,
-            modifier = modifier
-        ) {
-            Text(
-                text = stringResource(id = R.string.pick_up_player_btn_pick_auto_cancel),
-                fontSize = textFontSize,
-                lineHeight = textLineHeight,
-                fontWeight = textFontWeight,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+    when {
+        isAutoPickUpLoading -> {
+            GradientButton(
+                onClick = {
+                    onAction(PickUpPlayerAction.CancelAutoPickUpPlayer)
+                },
+                gradientColors = listOf(
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    MaterialTheme.colorScheme.primary
+                ),
+                contentPadding = contentPadding,
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.pick_up_player_btn_pick_auto_cancel),
+                    fontSize = textFontSize,
+                    lineHeight = textLineHeight,
+                    fontWeight = textFontWeight,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
         }
-    } else {
-        Button(
-            onClick = {
-                onAction(PickUpPlayerAction.AutoPickUpPlayer)
-            },
-            enabled = isEnabled,
-            contentPadding = contentPadding,
-            modifier = modifier
-        ) {
-            Text(
-                text = stringResource(id = R.string.pick_up_player_btn_pick_auto),
-                fontSize = textFontSize,
-                lineHeight = textLineHeight,
-                fontWeight = textFontWeight
-            )
+        else -> {
+            Button(
+                onClick = {
+                    onAction(PickUpPlayerAction.AutoPickUpPlayer)
+                },
+                enabled = isEnabled,
+                contentPadding = contentPadding,
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.pick_up_player_btn_pick_auto),
+                    fontSize = textFontSize,
+                    lineHeight = textLineHeight,
+                    fontWeight = textFontWeight
+                )
+            }
         }
     }
 }
@@ -89,26 +93,29 @@ fun PickUpOnceButton(
         onClick = onClick,
         enabled = !isPickUpOnceLoading,
         contentPadding = contentPadding,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         AnimatedContent(
             targetState = isPickUpOnceLoading,
             transitionSpec = { scaleIn().togetherWith(scaleOut()) },
             label = "PickUpOnceButton"
         ) { isLoading ->
-            if (isLoading) {
-                CircularProgressIndicator(
-                    strokeWidth = 3.dp,
-                    strokeCap = StrokeCap.Round,
-                    modifier = Modifier.size(LocalDensity.current.run { (textFontSize * 1.5).toDp() })
-                )
-            } else {
-                Text(
-                    text = stringResource(id = R.string.pick_up_player_btn_pick_once),
-                    fontSize = textFontSize,
-                    lineHeight = textLineHeight,
-                    fontWeight = textFontWeight
-                )
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        strokeWidth = 3.dp,
+                        strokeCap = StrokeCap.Round,
+                        modifier = Modifier.size(LocalDensity.current.run { (textFontSize * 1.5).toDp() })
+                    )
+                }
+                else -> {
+                    Text(
+                        text = stringResource(id = R.string.pick_up_player_btn_pick_once),
+                        fontSize = textFontSize,
+                        lineHeight = textLineHeight,
+                        fontWeight = textFontWeight
+                    )
+                }
             }
         }
     }

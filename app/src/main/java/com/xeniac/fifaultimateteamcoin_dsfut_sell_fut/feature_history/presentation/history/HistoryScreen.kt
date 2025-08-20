@@ -25,8 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.LoadingAnimation
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.LoadingAnimation
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.EmptyListAnimation
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentation.history.components.PlayersLazyColumn
 
@@ -38,7 +38,6 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
     val pickedUpPlayersHistory = viewModel.pickedUpPlayersHistory.collectAsLazyPagingItems()
@@ -59,7 +58,8 @@ fun HistoryScreen(
             .testTag(TestTags.TEST_TAG_SCREEN_HISTORY)
     ) { innerPadding ->
         AnimatedContent(
-            targetState = pickedUpPlayersHistory.loadState.refresh
+            targetState = pickedUpPlayersHistory.loadState.refresh,
+            modifier = Modifier.fillMaxSize()
         ) { loadState ->
             when (loadState) {
                 is LoadState.Loading -> {
@@ -69,33 +69,29 @@ fun HistoryScreen(
                             horizontal = 24.dp,
                             vertical = verticalPadding
                         ),
-                        modifier = Modifier.windowInsetsPadding(
-                            insets = WindowInsets(top = innerPadding.calculateTopPadding())
-                        )
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
-                else -> {
-                    if (pickedUpPlayersHistory.itemCount == 0) {
+                else -> when (pickedUpPlayersHistory.itemCount) {
+                    0 -> {
                         EmptyListAnimation(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                                .padding(innerPadding)
                                 .padding(
                                     horizontal = 24.dp,
                                     vertical = verticalPadding
                                 )
                         )
-                    } else {
+                    }
+                    else -> {
                         PlayersLazyColumn(
                             pickedUpPlayersHistory = pickedUpPlayersHistory,
                             contentPadding = PaddingValues(
                                 horizontal = 16.dp,
                                 vertical = verticalPadding
                             ),
-                            onClick = onNavigateToPlayerInfoScreen,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                            onNavigateToPlayerInfoScreen = onNavigateToPlayerInfoScreen,
+                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }

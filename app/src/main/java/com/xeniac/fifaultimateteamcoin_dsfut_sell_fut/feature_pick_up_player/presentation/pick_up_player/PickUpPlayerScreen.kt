@@ -4,9 +4,10 @@ import android.view.WindowManager
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -33,21 +35,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showActionSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showLongSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showOfflineSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showShortSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.TestTags
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showLongSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showOfflineSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showShortSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.TestTags
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.di.entrypoints.requirePickUpPlayerNotificationService
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.LatestPlayersPagers
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.components.PickUpPlayerSection
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.services.PickUpPlayerNotificationService
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,20 +60,22 @@ fun PickUpPlayerScreen(
     notificationService: PickUpPlayerNotificationService = requirePickUpPlayerNotificationService()
 ) {
     val context = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     val activity = LocalActivity.current ?: context.findActivity()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val horizontalPadding by remember { derivedStateOf { 16.dp } }
     val verticalPadding by remember { derivedStateOf { 16.dp } }
 
-    val pickUpPlayerState by viewModel.pickUpPlayerState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val timerText by viewModel.timerText.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = pickUpPlayerState.isAutoPickUpLoading) {
+    LaunchedEffect(key1 = state.isAutoPickUpLoading) {
         val window = activity.window
 
-        when (pickUpPlayerState.isAutoPickUpLoading) {
+        when (state.isAutoPickUpLoading) {
             true -> window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             false -> window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
@@ -81,9 +83,8 @@ fun PickUpPlayerScreen(
 
     ObserverAsEvent(flow = viewModel.changePlatformEventChannel) { event ->
         when (event) {
-            is UiEvent.ShowShortSnackbar -> showShortSnackbar(
+            is UiEvent.ShowShortSnackbar -> context.showShortSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
@@ -93,34 +94,30 @@ fun PickUpPlayerScreen(
 
     ObserverAsEvent(flow = viewModel.autoPickUpPlayerEventChannel) { event ->
         when (event) {
-            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> showActionSnackbar(
+            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> context.showActionSnackbar(
                 message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
@@ -128,71 +125,59 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.ShowErrorNotification -> {
                 notificationService.showFailedPickUpPlayerNotification(
                     message = event.message.asString(context),
-                    isNotificationSoundEnabled = pickUpPlayerState
-                        .isNotificationSoundEnabled ?: true,
-                    isNotificationVibrateEnabled = pickUpPlayerState
-                        .isNotificationVibrateEnabled ?: true
+                    isNotificationSoundEnabled = state.isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = state.isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.ShowSuccessNotification -> {
                 notificationService.showSuccessfulPickUpPlayerNotification(
                     playerName = event.playerName,
-                    isNotificationSoundEnabled = pickUpPlayerState
-                        .isNotificationSoundEnabled ?: true,
-                    isNotificationVibrateEnabled = pickUpPlayerState
-                        .isNotificationVibrateEnabled ?: true
+                    isNotificationSoundEnabled = state.isNotificationSoundEnabled ?: true,
+                    isNotificationVibrateEnabled = state.isNotificationVibrateEnabled ?: true
                 )
             }
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
-            is UiEvent.ShowLongSnackbar -> showLongSnackbar(
+            is UiEvent.ShowLongSnackbar -> context.showLongSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
-            UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
-                context = context,
+            UiEvent.ShowOfflineSnackbar -> context.showOfflineSnackbar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer)
-                }
+                onAction = { viewModel.onAction(PickUpPlayerAction.AutoPickUpPlayer) }
             )
         }
     }
 
     ObserverAsEvent(flow = viewModel.pickUpPlayerOnceEventChannel) { event ->
         when (event) {
-            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowPartnerIdSnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowSecretKeySnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> showActionSnackbar(
+            PickUpPlayerUiEvent.ShowPartnerIdAndSecretKeySnackbar -> context.showActionSnackbar(
                 message = UiText.StringResource(R.string.pick_up_player_error_blank_partner_id_and_secret_key),
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
             )
-            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> showActionSnackbar(
+            is PickUpPlayerUiEvent.ShowSignatureSnackbar -> context.showActionSnackbar(
                 message = event.message,
                 actionLabel = UiText.StringResource(R.string.pick_up_player_error_btn_open_profile),
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onAction = onNavigateToProfileScreen
@@ -200,30 +185,21 @@ fun PickUpPlayerScreen(
             is PickUpPlayerUiEvent.NavigateToPickedUpPlayerInfoScreen -> {
                 onNavigateToPickedUpPlayerInfoScreen(event.playerId)
             }
-            is UiEvent.ShowLongSnackbar -> showLongSnackbar(
+            is UiEvent.ShowLongSnackbar -> context.showLongSnackbar(
                 message = event.message,
-                context = context,
                 scope = scope,
                 snackbarHostState = snackbarHostState
             )
-            UiEvent.ShowOfflineSnackbar -> showOfflineSnackbar(
-                context = context,
+            UiEvent.ShowOfflineSnackbar -> context.showOfflineSnackbar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce)
-                }
+                onAction = { viewModel.onAction(PickUpPlayerAction.PickUpPlayerOnce) }
             )
         }
     }
 
     Scaffold(
-        snackbarHost = {
-            SwipeableSnackbar(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = bottomPadding)
-            )
-        },
+        snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 scrollBehavior = scrollBehavior,
@@ -241,25 +217,29 @@ fun PickUpPlayerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
-                .windowInsetsPadding(WindowInsets(top = innerPadding.calculateTopPadding()))
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
                 .verticalScroll(rememberScrollState())
+                .padding(
+                    start = innerPadding.calculateStartPadding(layoutDirection),
+                    end = innerPadding.calculateEndPadding(layoutDirection)
+                )
                 .padding(vertical = verticalPadding)
+                .imePadding()
         ) {
             LatestPlayersPagers(
-                latestPickedPlayers = pickUpPlayerState.latestPickedUpPlayers,
+                latestPickedPlayers = state.latestPickedUpPlayers,
                 timerText = timerText,
                 onAction = viewModel::onAction,
-                onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen,
-                modifier = Modifier.fillMaxWidth()
+                onPlayerCardClick = onNavigateToPickedUpPlayerInfoScreen
             )
 
             PickUpPlayerSection(
-                pickUpPlayerState = pickUpPlayerState,
+                state = state,
                 onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = horizontalPadding)
+                modifier = Modifier.padding(horizontal = horizontalPadding)
             )
         }
     }

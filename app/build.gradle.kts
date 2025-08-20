@@ -1,13 +1,14 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
@@ -17,24 +18,22 @@ plugins {
     alias(libs.plugins.baselineprofile)
 }
 
-val properties = gradleLocalProperties(rootDir, providers)
+val properties = gradleLocalProperties(
+    projectRootDir = rootDir,
+    providers = providers
+)
 
 android {
     namespace = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
     compileSdk = 36
     buildToolsVersion = "36.0.0"
 
-    androidResources {
-        // Keeps language resources for only the locales specified below.
-        localeFilters.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
-    }
-
     defaultConfig {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
-        versionCode = 30
-        versionName = "2.1.3"
+        versionCode = 31
+        versionName = "2.1.4"
 
         testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
 
@@ -57,6 +56,9 @@ android {
 
     androidResources {
         generateLocaleConfig = true
+
+        // Keeps language resources for only the locales specified below.
+        localeFilters.addAll(listOf("en-rUS", "en-rGB", "fa-rIR"))
     }
 
     signingConfigs {
@@ -197,12 +199,17 @@ android {
         // Java 8+ API Desugaring Support
         isCoreLibraryDesugaringEnabled = true
 
-        sourceCompatibility = JavaVersion.VERSION_23
-        targetCompatibility = JavaVersion.VERSION_23
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "23"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(target = "17")
+
+            // Enable Context-Sensitive Resolution in Kotlin 2.2
+            freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+        }
     }
 
     room {
@@ -285,6 +292,7 @@ androidComponents {
 }
 
 dependencies {
+    implementation(libs.play.services.identity.credentials)
     "baselineProfile"(project(":baselineprofile"))
 
     // Java 8+ API Desugaring Support
@@ -336,14 +344,8 @@ dependencies {
     implementation(platform(libs.coil.bom))
     implementation(libs.bundles.coil)
 
-    // Google Play In-App Reviews API
-    implementation(libs.play.review.ktx)
-
-    // Google Play In-App Reviews API
-    implementation(libs.play.review.ktx)
-
-    // Google Play In-App Updates API
-    implementation(libs.play.app.update.ktx)
+    // Google Play In-App APIs
+    implementation(libs.bundles.google.play.inapp.apis)
 
     // Baseline Profiles
     implementation(libs.profileinstaller)
@@ -369,7 +371,7 @@ val obfuscationDestDir: String = properties.getProperty("OBFUSCATION_DESTINATION
 val versionName = "${android.defaultConfig.versionName}"
 val renamedFileName = "FUTSale $versionName"
 
-tasks.register<Copy>("copyDevPreviewBundle") {
+tasks.register<Copy>(name = "copyDevPreviewBundle") {
     val bundleFile = "app-playStore-dev.aab"
     val bundleSourceDir = "${releaseRootDir}/playStore/dev/${bundleFile}"
 
@@ -389,7 +391,7 @@ tasks.register<Copy>("copyDevPreviewApk") {
     rename(apkFile, "$renamedFileName (Developer Preview).aab")
 }
 
-tasks.register<Copy>("copyReleaseApk") {
+tasks.register<Copy>(name = "copyReleaseApk") {
     val gitHubApkFile = "app-gitHub-release.apk"
     val cafeBazaarApkFile = "app-cafeBazaar-release.apk"
     val myketApkFile = "app-myket-release.apk"
@@ -412,7 +414,7 @@ tasks.register<Copy>("copyReleaseApk") {
     rename(myketApkFile, "$renamedFileName - Myket.apk")
 }
 
-tasks.register<Copy>("copyReleaseBundle") {
+tasks.register<Copy>(name = "copyReleaseBundle") {
     val playStoreBundleFile = "app-playStore-release.aab"
     val playStoreBundleSourceDir = "${releaseRootDir}/playStore/release/${playStoreBundleFile}"
 
@@ -422,7 +424,7 @@ tasks.register<Copy>("copyReleaseBundle") {
     rename(playStoreBundleFile, "${renamedFileName}.aab")
 }
 
-tasks.register<Copy>("copyObfuscationFolder") {
+tasks.register<Copy>(name = "copyObfuscationFolder") {
     val obfuscationSourceDir = "${rootDir}/app/obfuscation"
 
     from(obfuscationSourceDir)

@@ -54,6 +54,8 @@ class BaselineProfileGenerator {
             ?: throw Exception("targetAppId not passed as instrumentation runner arg"),
         includeInStartupProfile = false
     ) {
+        device.executeShellCommand("pm clear $packageName") // Clear app data before each run
+        device.waitForIdle()
         pressHome()
         startActivityAndWait()
         completeOnboarding()

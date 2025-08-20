@@ -4,9 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -42,16 +43,23 @@ class StoreIsNotificationSoundEnabledUseCaseTest {
     @Test
     fun storeIsNotificationSoundEnabled_returnsSuccess() = runTest {
         val testValue = false
-        val result = storeIsNotificationSoundEnabledUseCase(testValue)
-        assertThat(result).isInstanceOf(Result.Success::class.java)
+        storeIsNotificationSoundEnabledUseCase(
+            isEnabled = testValue
+        ).onEach { result ->
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+        }
     }
 
     @Test
     fun storeIsNotificationSoundEnabled_returnsNewIsNotificationSoundEnabled() = runTest {
         val testValue = false
-        storeIsNotificationSoundEnabledUseCase(testValue)
 
-        val isNotificationSoundEnabled = getIsNotificationSoundEnabledUseCase().first()
-        assertThat(isNotificationSoundEnabled).isEqualTo(testValue)
+        storeIsNotificationSoundEnabledUseCase(
+            isEnabled = testValue
+        ).launchIn(scope = this)
+
+        getIsNotificationSoundEnabledUseCase().onEach { isNotificationSoundEnabled ->
+            assertThat(isNotificationSoundEnabled).isEqualTo(testValue)
+        }
     }
 }

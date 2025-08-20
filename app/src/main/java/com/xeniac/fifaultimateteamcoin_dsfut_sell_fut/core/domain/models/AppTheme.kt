@@ -1,26 +1,27 @@
 package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models
 
-import android.os.Parcelable
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import kotlinx.parcelize.Parcelize
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
-@Parcelize
-sealed class AppTheme(
+enum class AppTheme(
     val index: Int,
+    @StringRes val titleId: Int,
     val setAppTheme: () -> Unit
-) : Parcelable {
-    data object Default : AppTheme(
+) {
+    DEFAULT(
         index = 0,
+        titleId = R.string.core_theme_title_default,
         setAppTheme = { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) }
-    )
-
-    data object Light : AppTheme(
+    ),
+    LIGHT(
         index = 1,
+        titleId = R.string.core_theme_title_light,
         setAppTheme = { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
-    )
-
-    data object Dark : AppTheme(
+    ),
+    DARK(
         index = 2,
+        titleId = R.string.core_theme_title_dark,
         setAppTheme = { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
     )
 }

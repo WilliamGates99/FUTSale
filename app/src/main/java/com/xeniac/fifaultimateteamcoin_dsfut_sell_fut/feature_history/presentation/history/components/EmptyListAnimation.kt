@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.presentat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +50,7 @@ fun EmptyListAnimation(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         LottieAnimation(
             composition = animationComposition,

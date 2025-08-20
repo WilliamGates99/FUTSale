@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -10,12 +11,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomOutlinedTextField
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.NumberSeparatorVisualTransformation
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.events.PickUpPlayerAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.NumberSeparatorVisualTransformation
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 @Composable
@@ -37,7 +39,7 @@ fun PriceTextFields(
             alignment = Alignment.CenterHorizontally
         ),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         CustomOutlinedTextField(
             isLoading = isLoading,
@@ -51,6 +53,7 @@ fun PriceTextFields(
             supportingText = supportingText,
             errorText = minPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
             testTag = TestTags.MIN_PRICE_TEXT_FIELD,
@@ -69,6 +72,7 @@ fun PriceTextFields(
             supportingText = supportingText,
             errorText = maxPriceState.errorText?.asString(),
             visualTransformation = NumberSeparatorVisualTransformation(),
+            textDirection = TextDirection.ContentOrLtr,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
             keyboardAction = { focusManager.clearFocus() },

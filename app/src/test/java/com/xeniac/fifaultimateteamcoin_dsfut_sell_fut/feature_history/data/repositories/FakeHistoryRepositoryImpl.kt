@@ -5,9 +5,10 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.mappers.toPlayer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Player
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_history.domain.repositories.HistoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -50,10 +51,9 @@ class FakeHistoryRepositoryImpl : HistoryRepository {
         playersToInsert.forEach { playerEntitiesHistory.add(it) }
     }
 
-    override fun observePickedPlayersHistory(): Flow<PagingData<Player>> = flow {
+    override fun observePickedUpPlayersHistory(): Flow<PagingData<Player>> = flow {
         val sortedPlayerEntitiesHistory = playerEntitiesHistory.toMutableList()
         sortedPlayerEntitiesHistory.sortByDescending { it.pickUpTimeInSeconds }
-
         val playersPagingData = PagingData.from(
             data = sortedPlayerEntitiesHistory,
             sourceLoadStates = LoadStates(
@@ -65,11 +65,10 @@ class FakeHistoryRepositoryImpl : HistoryRepository {
         emit(playersPagingData)
     }
 
-    override fun observePlayer(playerId: Long): Flow<Player> = flow {
+    override fun observerPickedUpPlayer(playerId: Long): Flow<Player> = flow {
         val player = playerEntitiesHistory.find { playerEntity ->
             playerEntity.id == playerId
         }?.toPlayer()
-
         player?.let { emit(it) }
     }
 }

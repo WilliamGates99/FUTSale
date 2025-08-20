@@ -25,15 +25,23 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.MD5HashGeneratorQualifier
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.HashGenerator
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.nav_graph.historyNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.HomeScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.PickUpPlayerScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.PickedUpPlayerInfoScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.ProfileScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.screens.SettingsScreen
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.NetworkObserverHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.main_activity.MainActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.HomeScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickUpPlayerScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.PickedUpPlayerInfoScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.ProfileScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.SettingsScreen
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.historyNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.theme.FutSaleTheme
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.mappers.toPlayer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakeCountDownTimerRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickUpPlayerRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.repositories.FakePickedUpPlayersRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.data.utils.DummyPlayersHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationSoundEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetIsNotificationVibrateEnabledUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.GetSelectedPlatformUseCase
@@ -41,6 +49,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.dom
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.ObservePickedUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickUpPlayerUseCases
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.PickedUpPlayerInfoUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StartCountDownTimerUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.use_cases.StoreSelectedPlatformUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.domain.validation.ValidateMaxPrice
@@ -52,7 +61,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pre
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.PickUpPlayerViewModel
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoScreen
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.picked_up_player_info.PickedUpPlayerInfoViewModel
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetProfileUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetPartnerIdUseCase
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.GetSecretKeyUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.ProfileUseCases
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdatePartnerIdUseCase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.domain.use_cases.UpdateSecretKeyUseCase
@@ -88,17 +98,28 @@ class PickUpPlayerEndToEndTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
+
+    @Inject
     lateinit var decimalFormat: DecimalFormat
+
+    @Inject
+    @MD5HashGeneratorQualifier
+    lateinit var md5HashGenerator: HashGenerator
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     private val fakeSettingsDataStoreRepositoryImpl = FakeSettingsDataStoreRepositoryImpl()
     private val fakeDsfutDataStoreRepositoryImpl = FakeDsfutDataStoreRepositoryImpl()
-    private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl()
+    private val fakePickUpPlayerRepository = FakePickUpPlayerRepositoryImpl(
+        md5HashGenerator = { md5HashGenerator }
+    )
+    private val fakePickedUpPlayersRepository = FakePickedUpPlayersRepositoryImpl()
+    private val fakeCountDownTimerRepository = FakeCountDownTimerRepositoryImpl()
 
     private val testPartnerId = "123"
     private val testSecretKey = "abc123"
-    private val testPlayer = FakePickUpPlayerRepositoryImpl.dummyPlayerDto.toPlayer()
+    private val testPlayer = DummyPlayersHelper.dummyPlayerDto.toPlayer()
 
     private lateinit var testNavController: NavHostController
 
@@ -106,11 +127,14 @@ class PickUpPlayerEndToEndTest {
     fun setUp() {
         hiltRule.inject()
 
+        DummyPlayersHelper.resetLatestPlayers()
+        NetworkObserverHelper.observeNetworkConnection(connectivityObserver)
+
         val observeLatestPickedUpPlayersUseCaseUseCase = ObserveLatestPickedUpPlayersUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            pickedUpPlayersRepository = fakePickedUpPlayersRepository
         )
         val observePickedUpPlayerUseCase = ObservePickedUpPlayerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            pickedUpPlayersRepository = fakePickedUpPlayersRepository
         )
         val getIsNotificationSoundEnabledUseCase = GetIsNotificationSoundEnabledUseCase(
             settingsDataStoreRepository = fakeSettingsDataStoreRepositoryImpl
@@ -134,12 +158,11 @@ class PickUpPlayerEndToEndTest {
             validateTakeAfter = ValidateTakeAfter()
         )
         val startCountDownTimerUseCase = StartCountDownTimerUseCase(
-            pickUpPlayerRepository = fakePickUpPlayerRepository
+            countDownTimerRepository = fakeCountDownTimerRepository
         )
 
         val pickUpPlayerUseCases = PickUpPlayerUseCases(
             { observeLatestPickedUpPlayersUseCaseUseCase },
-            { observePickedUpPlayerUseCase },
             { getIsNotificationSoundEnabledUseCase },
             { getIsNotificationVibrateEnabledUseCase },
             { getSelectedPlatformUseCase },
@@ -148,7 +171,15 @@ class PickUpPlayerEndToEndTest {
             { startCountDownTimerUseCase }
         )
 
-        val getProfileUseCase = GetProfileUseCase(
+        val pickedUpPlayerInfoUseCases = PickedUpPlayerInfoUseCases(
+            { observePickedUpPlayerUseCase },
+            { startCountDownTimerUseCase }
+        )
+
+        val getPartnerIdUseCase = GetPartnerIdUseCase(
+            dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
+        )
+        val getSecretKeyUseCase = GetSecretKeyUseCase(
             dsfutDataStoreRepository = fakeDsfutDataStoreRepositoryImpl
         )
         val updatePartnerIdUseCase = UpdatePartnerIdUseCase(
@@ -161,7 +192,8 @@ class PickUpPlayerEndToEndTest {
         )
 
         val profileUseCases = ProfileUseCases(
-            { getProfileUseCase },
+            { getPartnerIdUseCase },
+            { getSecretKeyUseCase },
             { updatePartnerIdUseCase },
             { updateSecretKeyUseCase }
         )
@@ -195,7 +227,9 @@ class PickUpPlayerEndToEndTest {
                                     },
                                     onNavigateToPickedUpPlayerInfoScreen = { playerId ->
                                         testNavController.navigate(
-                                            PickedUpPlayerInfoScreen(playerId)
+                                            PickedUpPlayerInfoScreen(
+                                                playerId
+                                            )
                                         )
                                     }
                                 )
@@ -207,7 +241,7 @@ class PickUpPlayerEndToEndTest {
 
                                 PickedUpPlayerInfoScreen(
                                     viewModel = PickedUpPlayerInfoViewModel(
-                                        pickUpPlayerUseCases = pickUpPlayerUseCases,
+                                        pickedUpPlayerInfoUseCases = pickedUpPlayerInfoUseCases,
                                         decimalFormat = decimalFormat,
                                         savedStateHandle = backStackEntry.savedStateHandle
                                     ),
@@ -244,14 +278,20 @@ class PickUpPlayerEndToEndTest {
     fun openProfileScreen_setPartnerIdAndSecretKey_returnToPickUpPlayerScreen_pickUpPlayerSuccessfully() {
         composeTestRule.apply {
             // Navigate to Profile screen via open profile snackbar action button
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_once)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.pick_up_player_error_btn_open_profile))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.pick_up_player_error_btn_open_profile)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 performClick()
@@ -286,7 +326,7 @@ class PickUpPlayerEndToEndTest {
             Espresso.pressBackUnconditionally() // Navigate back
 
             // Pick up player once
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_once)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -312,7 +352,7 @@ class PickUpPlayerEndToEndTest {
 
         composeTestRule.apply {
             // Navigate to Profile screen via open profile snackbar action button
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_once)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -353,7 +393,7 @@ class PickUpPlayerEndToEndTest {
             Espresso.pressBackUnconditionally() // Navigate back
 
             // Pick up player once
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_once)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -373,7 +413,7 @@ class PickUpPlayerEndToEndTest {
     fun openProfileScreen_setPartnerIdAndSecretKey_returnToPickUpPlayerScreen_autoPickUpPlayerSuccessfully() {
         composeTestRule.apply {
             // Navigate to Profile screen via open profile snackbar action button
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_once)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -416,7 +456,7 @@ class PickUpPlayerEndToEndTest {
 
             // Auto pick up player
             fakePickUpPlayerRepository.setIsPlayersQueueEmpty(isEmpty = true)
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -453,14 +493,18 @@ class PickUpPlayerEndToEndTest {
 
         composeTestRule.apply {
             // Navigate to Profile screen via open profile snackbar action button
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_once)).apply {
+            onNodeWithText(text = context.getString(R.string.pick_up_player_btn_pick_once)).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
                 performClick()
             }
 
-            onNode(hasText(text = context.getString(R.string.pick_up_player_error_btn_open_profile))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.pick_up_player_error_btn_open_profile)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
                 performClick()
@@ -495,7 +539,9 @@ class PickUpPlayerEndToEndTest {
             Espresso.pressBackUnconditionally() // Navigate back
 
             // Auto pick up player
-            onNodeWithText(context.getString(R.string.pick_up_player_btn_pick_auto)).apply {
+            onNodeWithText(
+                text = context.getString(R.string.pick_up_player_btn_pick_auto)
+            ).apply {
                 assertExists()
                 performScrollTo()
                 assertIsDisplayed()
@@ -503,7 +549,11 @@ class PickUpPlayerEndToEndTest {
             }
 
             // Check unavailable network snackbar
-            onNode(hasText(text = context.getString(R.string.error_network_connection_unavailable))).apply {
+            onNode(
+                matcher = hasText(
+                    text = context.getString(R.string.error_network_connection_unavailable)
+                )
+            ).apply {
                 assertExists()
                 assertIsDisplayed()
             }

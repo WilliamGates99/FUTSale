@@ -4,12 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppLocale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppTheme
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.domain.use_case.SettingsUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.events.SettingsUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.states.SettingsState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,27 +30,27 @@ class SettingsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases
 ) : ViewModel() {
 
-    private val _settingsState = MutableStateFlow(SettingsState())
-    val settingsState = combine(
-        flow = _settingsState,
+    private val _state = MutableStateFlow(SettingsState())
+    val state = combine(
+        flow = _state,
         flow2 = settingsUseCases.getCurrentAppLocaleUseCase.get()(),
         flow3 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
         flow4 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
         flow5 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
-    ) { settingsState, appLocale, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
-        _settingsState.update {
-            settingsState.copy(
+    ) { state, appLocale, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
+        _state.update {
+            state.copy(
                 currentAppLocale = appLocale,
                 currentAppTheme = appTheme,
                 isNotificationSoundEnabled = isNotificationSoundEnabled,
                 isNotificationVibrateEnabled = isNotificationVibrateEnabled
             )
         }
-        _settingsState.value
+        _state.value
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = SettingsState()
+        initialValue = _state.value
     )
 
     private val _setAppLocaleEventChannel = Channel<Event>()
@@ -81,39 +79,41 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun showLocaleBottomSheet() = viewModelScope.launch {
-        _settingsState.update { state ->
-            state.copy(isLocaleBottomSheetVisible = true)
+        _state.update {
+            it.copy(isLocaleBottomSheetVisible = true)
         }
     }
 
     private fun dismissLocaleBottomSheet() = viewModelScope.launch {
-        _settingsState.update { state ->
-            state.copy(isLocaleBottomSheetVisible = false)
+        _state.update {
+            it.copy(isLocaleBottomSheetVisible = false)
         }
     }
 
     private fun showThemeBottomSheet() = viewModelScope.launch {
-        _settingsState.update { state ->
-            state.copy(isThemeBottomSheetVisible = true)
+        _state.update {
+            it.copy(isThemeBottomSheetVisible = true)
         }
     }
 
     private fun dismissThemeBottomSheet() = viewModelScope.launch {
-        _settingsState.update { state ->
-            state.copy(isThemeBottomSheetVisible = false)
+        _state.update {
+            it.copy(isThemeBottomSheetVisible = false)
         }
     }
 
-    private fun setCurrentAppLocale(newAppLocale: AppLocale) {
-        val shouldUpdateAppLocale = newAppLocale != _settingsState.value.currentAppLocale
+    private fun setCurrentAppLocale(
+        newAppLocale: AppLocale
+    ) {
+        val shouldUpdateAppLocale = newAppLocale != _state.value.currentAppLocale
         if (shouldUpdateAppLocale) {
             settingsUseCases.storeCurrentAppLocaleUseCase.get()(
                 newAppLocale = newAppLocale
             ).onEach { result ->
                 when (result) {
                     is Result.Success -> result.data.let { isActivityRestartNeeded ->
-                        _settingsState.update { state ->
-                            state.copy(currentAppLocale = newAppLocale)
+                        _state.update {
+                            it.copy(currentAppLocale = newAppLocale)
                         }
 
                         if (isActivityRestartNeeded) {
@@ -130,8 +130,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun setCurrentAppTheme(newAppTheme: AppTheme) {
-        val shouldUpdateAppTheme = newAppTheme != _settingsState.value.currentAppTheme
+    private fun setCurrentAppTheme(
+        newAppTheme: AppTheme
+    ) {
+        val shouldUpdateAppTheme = newAppTheme != _state.value.currentAppTheme
         if (shouldUpdateAppTheme) {
             settingsUseCases.storeCurrentAppThemeUseCase.get()(
                 newAppTheme = newAppTheme
@@ -150,7 +152,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun setNotificationSoundSwitch(isEnabled: Boolean) {
+    private fun setNotificationSoundSwitch(
+        isEnabled: Boolean
+    ) {
         settingsUseCases.storeIsNotificationSoundEnabledUseCase.get()(
             isEnabled = isEnabled
         ).onEach { result ->
@@ -165,7 +169,9 @@ class SettingsViewModel @Inject constructor(
         }.launchIn(scope = viewModelScope)
     }
 
-    private fun setNotificationVibrateSwitch(isEnabled: Boolean) {
+    private fun setNotificationVibrateSwitch(
+        isEnabled: Boolean
+    ) {
         settingsUseCases.storeIsNotificationVibrateEnabledUseCase.get()(
             isEnabled = isEnabled
         ).onEach { result ->

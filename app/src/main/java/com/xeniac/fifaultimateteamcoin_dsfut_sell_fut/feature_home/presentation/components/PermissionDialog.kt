@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.PermissionDialog
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.openAppSettings
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.PermissionDialog
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppSettings
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.PostNotificationsPermissionHelper
 
 @Composable
@@ -82,7 +82,7 @@ private fun NotificationPermissionDialog(
     isVisible: Boolean,
     permissionQueue: List<String>,
     modifier: Modifier = Modifier,
-    enterAnimation: EnterTransition = scaleIn() + fadeIn(),
+    enterAnimation: EnterTransition = fadeIn() + scaleIn(),
     exitAnimation: ExitTransition = scaleOut() + fadeOut(),
     onConfirmClick: () -> Unit,
     onDismiss: (permission: String) -> Unit

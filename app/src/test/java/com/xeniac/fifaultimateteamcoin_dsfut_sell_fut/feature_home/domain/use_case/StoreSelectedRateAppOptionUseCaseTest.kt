@@ -6,7 +6,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.MainCoroutineRule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -42,9 +43,12 @@ class StoreSelectedRateAppOptionUseCaseTest {
     @Test
     fun storeNotificationPermissionCount_returnsNewNotificationPermissionCount() = runTest {
         val testValue = RateAppOption.RATE_NOW
-        storeSelectedRateAppOptionUseCase(testValue).first()
+        storeSelectedRateAppOptionUseCase(
+            rateAppOption = testValue
+        ).launchIn(scope = this)
 
-        val selectedRateAppOption = getSelectedRateAppOptionUseCase().first()
-        assertThat(selectedRateAppOption).isEqualTo(testValue)
+        getSelectedRateAppOptionUseCase().onEach { selectedRateAppOption ->
+            assertThat(selectedRateAppOption).isEqualTo(testValue)
+        }
     }
 }

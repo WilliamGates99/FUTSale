@@ -4,13 +4,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -30,19 +24,19 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.SwipeableSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.showActionSnackbar
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.navigation.nav_graph.SetupHomeNavGraph
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.IntentHelper
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.ObserverAsEvent
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.UiText
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.SwipeableSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.showActionSnackbar
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.navigation.nav_graph.SetupHomeNavGraph
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppUpdatePageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.NavigationBarItems
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.PostNotificationPermissionHandler
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeUiEvent
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,17 +50,17 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val homeNavController = rememberNavController()
 
-    val homeState by viewModel.homeState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     var isBottomAppBarVisible by remember { mutableStateOf(true) }
 
     val backStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
-    LaunchedEffect(currentDestination) {
+    LaunchedEffect(key1 = currentDestination) {
         isBottomAppBarVisible = NavigationBarItems.entries.find { navItem ->
             currentDestination?.hierarchy?.any {
-                it.hasRoute(route = navItem.screen::class)
+                it.hasRoute(route = navItem.destinationScreen::class)
             } ?: false
         } != null
     }
@@ -89,15 +83,12 @@ fun HomeScreen(
                     viewModel.appUpdateOptions.get()
                 )
             }
-            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> showActionSnackbar(
+            HomeUiEvent.ShowCompleteAppUpdateSnackbar -> context.showActionSnackbar(
                 message = UiText.StringResource(R.string.home_app_update_message),
                 actionLabel = UiText.StringResource(R.string.home_app_update_action),
                 scope = scope,
-                context = context,
                 snackbarHostState = snackbarHostState,
-                onAction = {
-                    viewModel.appUpdateManager.get().completeUpdate()
-                }
+                onAction = { viewModel.appUpdateManager.get().completeUpdate() }
             )
             HomeUiEvent.CompleteFlexibleAppUpdate -> {
                 viewModel.appUpdateManager.get().completeUpdate()
@@ -108,7 +99,7 @@ fun HomeScreen(
     ObserverAsEvent(flow = viewModel.inAppReviewEventChannel) { event ->
         when (event) {
             HomeUiEvent.LaunchInAppReview -> {
-                homeState.inAppReviewInfo?.let { reviewInfo ->
+                state.inAppReviewInfo?.let { reviewInfo ->
                     viewModel.reviewManager.get().launchReviewFlow(
                         activity,
                         reviewInfo
@@ -132,38 +123,31 @@ fun HomeScreen(
     }
 
     PostNotificationPermissionHandler(
-        isPermissionDialogVisible = homeState.isPermissionDialogVisible,
-        permissionDialogQueue = homeState.permissionDialogQueue,
+        isPermissionDialogVisible = state.isPermissionDialogVisible,
+        permissionDialogQueue = state.permissionDialogQueue,
         onAction = viewModel::onAction
     )
 
     Scaffold(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         bottomBar = {
-            AnimatedVisibility(
-                visible = isBottomAppBarVisible,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CustomNavigationBar(
-                    currentDestination = currentDestination,
-                    onItemClick = { screen ->
-                        homeNavController.navigate(screen) {
-                            // Avoid multiple copies of the same destination when re-selecting the same item
-                            launchSingleTop = true
+            CustomNavigationBar(
+                isVisible = isBottomAppBarVisible,
+                currentDestination = currentDestination,
+                onItemClick = { screen ->
+                    homeNavController.navigate(screen) {
+                        // Avoid multiple copies of the same destination when re-selecting the same item
+                        launchSingleTop = true
 
-                            /*
-                            Pop up to the start destination of the graph to
-                            avoid building up a large stack of destinations
-                            on the back stack as user selects items
-                             */
-                            popUpTo(id = homeNavController.graph.startDestinationId)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+                        /*
+                        Pop up to the start destination of the graph to
+                        avoid building up a large stack of destinations
+                        on the back stack as user selects items
+                         */
+                        popUpTo(id = homeNavController.graph.startDestinationId)
+                    }
+                }
+            )
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -174,14 +158,14 @@ fun HomeScreen(
     }
 
     AppUpdateBottomSheet(
-        appUpdateInfo = homeState.latestAppUpdateInfo,
+        appUpdateInfo = state.latestAppUpdateInfo,
         onAction = viewModel::onAction,
-        openAppUpdatePageInStore = { IntentHelper.openAppUpdatePageInStore(context) }
+        openAppUpdatePageInStore = { context.openAppUpdatePageInStore() }
     )
 
     AppReviewDialog(
-        isVisible = homeState.isAppReviewDialogVisible,
+        isVisible = state.isAppReviewDialogVisible,
         onAction = viewModel::onAction,
-        openAppPageInStore = { IntentHelper.openAppPageInStore(context) }
+        openAppPageInStore = { context.openAppPageInStore() }
     )
 }

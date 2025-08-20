@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -26,15 +28,15 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.states.CustomTextFieldState
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.ui.components.CustomOutlinedTextField
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.events.ProfileAction
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.states.CustomTextFieldState
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.ui.components.CustomOutlinedTextField
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.ProfileAction
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.states.ProfileState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.TestTags
 
 @Composable
 fun ProfileTextFields(
-    profileState: ProfileState,
+    state: ProfileState,
     modifier: Modifier = Modifier,
     onAction: (action: ProfileAction) -> Unit
 ) {
@@ -42,30 +44,28 @@ fun ProfileTextFields(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         ProfileHeaderAnimation()
 
         Spacer(modifier = Modifier.height(24.dp))
 
         PartnerIdTextField(
-            partnerIdState = profileState.partnerIdState,
-            isPartnerIdSaved = profileState.isPartnerIdSaved,
-            isPartnerIdLoading = profileState.isPartnerIdLoading,
+            partnerIdState = state.partnerIdState,
+            isPartnerIdSaved = state.isPartnerIdSaved,
+            isPartnerIdLoading = state.isPartnerIdLoading,
             onAction = onAction,
-            keyboardAction = { focusManager.clearFocus() },
-            modifier = Modifier.fillMaxWidth()
+            keyboardAction = { focusManager.clearFocus() }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         SecretKeyTextField(
-            secretKeyState = profileState.secretKeyState,
-            isSecretKeySaved = profileState.isSecretKeySaved,
-            isSecretKeyLoading = profileState.isSecretKeyLoading,
+            secretKeyState = state.secretKeyState,
+            isSecretKeySaved = state.isSecretKeySaved,
+            isSecretKeyLoading = state.isSecretKeyLoading,
             onAction = onAction,
-            keyboardAction = { focusManager.clearFocus() },
-            modifier = Modifier.fillMaxWidth()
+            keyboardAction = { focusManager.clearFocus() }
         )
     }
 }
@@ -162,11 +162,13 @@ private fun PartnerIdTextField(
                 )
             }
         },
+        textDirection = TextDirection.ContentOrLtr,
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
+        contentType = ContentType.Username,
         testTag = TestTags.PARTNER_ID_TEXT_FIELD,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }
 
@@ -231,10 +233,12 @@ private fun SecretKeyTextField(
                 )
             }
         },
+        textDirection = TextDirection.ContentOrLtr,
         keyboardType = keyboardType,
         imeAction = imeAction,
         keyboardAction = keyboardAction,
+        contentType = ContentType.Password,
         testTag = TestTags.SECRET_KEY_TEXT_FIELD,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }

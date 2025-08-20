@@ -7,15 +7,13 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManager
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.RateAppOption
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.Result
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.Event
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.NetworkObserverHelper.hasNetworkConnection
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.utils.isAppInstalledFromPlayStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.Event
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.NetworkObserverHelper.hasNetworkConnection
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.isAppInstalledFromPlayStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.di.FirstInstallTimeInMs
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.UpdateType
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.use_case.HomeUseCases
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeAction
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.events.HomeUiEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.states.HomeState
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.Constants
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.util.DateHelper
@@ -50,38 +48,39 @@ class HomeViewModel @Inject constructor(
     private val firstInstallTimeInMs: Lazy<FirstInstallTimeInMs>
 ) : ViewModel() {
 
-    private val _homeState = MutableStateFlow(HomeState())
-    val homeState = combine(
-        flow = _homeState,
+    private val _state = MutableStateFlow(HomeState())
+    val state = combine(
+        flow = _state,
         flow2 = homeUseCases.getNotificationPermissionCountUseCase.get()(),
         flow3 = homeUseCases.getSelectedRateAppOptionUseCase.get()(),
-        flow4 = homeUseCases.getPreviousRateAppRequestTimeInMsUseCase.get()()
-    ) { homeState, notificationPermissionCount, selectedRateAppOption, previousRateAppRequestTimeInMs ->
-        _homeState.update {
-            homeState.copy(
+        flow4 = homeUseCases.getPreviousRateAppRequestDateTimeUseCase.get()()
+    ) { state, notificationPermissionCount, selectedRateAppOption, previousRateAppRequestDateTime ->
+        _state.update {
+            state.copy(
                 notificationPermissionCount = notificationPermissionCount,
                 selectedRateAppOption = selectedRateAppOption,
-                previousRateAppRequestTimeInMs = previousRateAppRequestTimeInMs
+                previousRateAppRequestDateTime = previousRateAppRequestDateTime
             )
         }
-        _homeState.value
+        _state.value
     }.onStart {
-        if (isAppInstalledFromPlayStore()) {
-            checkIsAppUpdateStalled()
-            checkFlexibleUpdateDownloadState()
-            checkForAppUpdates()
-            requestInAppReviews()
-        } else {
-            getLatestAppVersion()
+        when {
+            isAppInstalledFromPlayStore() -> {
+                checkIsAppUpdateStalled()
+                checkFlexibleUpdateDownloadState()
+                checkForAppUpdates()
+                requestInAppReviews()
+            }
+            else -> getLatestAppVersion()
         }
-    }.take(count = 1).onEach { state ->
+    }.take(count = 1).onEach {
         if (!isAppInstalledFromPlayStore()) {
-            checkSelectedRateAppOption(state.selectedRateAppOption)
+            checkSelectedRateAppOption(selectedRateAppOption = it.selectedRateAppOption)
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
-        initialValue = HomeState()
+        started = SharingStarted.WhileSubscribed(stopTimeout = 30.seconds),
+        initialValue = _state.value
     )
 
     private val _inAppUpdatesEventChannel = Channel<Event>()
@@ -156,8 +155,8 @@ class HomeViewModel @Inject constructor(
             homeUseCases.getLatestAppVersionUseCase.get()().onEach { result ->
                 when (result) {
                     is Result.Success -> result.data?.let { latestAppUpdateInfo ->
-                        _homeState.update { state ->
-                            state.copy(latestAppUpdateInfo = latestAppUpdateInfo)
+                        _state.update {
+                            it.copy(latestAppUpdateInfo = latestAppUpdateInfo)
                         }
                     }
                     is Result.Error -> Unit
@@ -167,18 +166,18 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun dismissAppUpdateSheet() = viewModelScope.launch {
-        _homeState.update { state ->
-            state.copy(latestAppUpdateInfo = null)
+        _state.update {
+            it.copy(latestAppUpdateInfo = null)
         }
     }
 
     private fun requestInAppReviews() {
         homeUseCases.requestInAppReviewsUseCase.get()().onEach { reviewInfo ->
-            _homeState.update { state ->
-                state.copy(inAppReviewInfo = reviewInfo)
+            _state.update {
+                it.copy(inAppReviewInfo = reviewInfo)
             }
             delay(timeMillis = 100) // Wait for the state to be updated
-            checkSelectedRateAppOption(_homeState.value.selectedRateAppOption)
+            checkSelectedRateAppOption(_state.value.selectedRateAppOption)
         }.launchIn(scope = viewModelScope)
     }
 
@@ -200,21 +199,23 @@ class HomeViewModel @Inject constructor(
         val shouldShowAppReviewDialog =
             daysFromFirstInstallTime >= Constants.IN_APP_REVIEWS_DAYS_FROM_FIRST_INSTALL_TIME
         if (shouldShowAppReviewDialog) {
-            _homeState.update { state ->
-                state.copy(isAppReviewDialogVisible = true)
+            _state.update {
+                it.copy(isAppReviewDialogVisible = true)
             }
         }
     }
 
     private fun checkDaysFromPreviousRequestTime() {
-        _homeState.value.previousRateAppRequestTimeInMs?.let {
-            val daysFromPreviousRequestTime = DateHelper.getDaysFromPreviousRequestTime(it)
+        _state.value.previousRateAppRequestDateTime?.let { previousRateAppRequestDateTime ->
+            val daysFromPreviousRequestTime = DateHelper.getDaysFromPreviousRequestTime(
+                previousRequestTime = previousRateAppRequestDateTime
+            )
 
             val shouldShowAppReviewDialog =
                 daysFromPreviousRequestTime >= Constants.IN_APP_REVIEWS_DAYS_FROM_PREVIOUS_REQUEST_TIME
             if (shouldShowAppReviewDialog) {
-                _homeState.update { state ->
-                    state.copy(isAppReviewDialogVisible = true)
+                _state.update {
+                    it.copy(isAppReviewDialogVisible = true)
                 }
             }
         }
@@ -234,14 +235,14 @@ class HomeViewModel @Inject constructor(
         homeUseCases.storeSelectedRateAppOptionUseCase.get()(
             rateAppOption = RateAppOption.REMIND_LATER
         ).zip(
-            other = homeUseCases.storePreviousRateAppRequestTimeInMsUseCase.get()(),
+            other = homeUseCases.storePreviousRateAppRequestDateTimeUseCase.get()(),
             transform = { _, _ -> }
         ).launchIn(scope = viewModelScope)
     }
 
     private fun dismissAppReviewDialog() = viewModelScope.launch {
-        _homeState.update { state ->
-            state.copy(isAppReviewDialogVisible = false)
+        _state.update {
+            it.copy(isAppReviewDialogVisible = false)
         }
     }
 
@@ -249,13 +250,13 @@ class HomeViewModel @Inject constructor(
         permission: String,
         isGranted: Boolean
     ) = viewModelScope.launch {
-        val shouldAskForPermission = _homeState.value.run {
+        val shouldAskForPermission = _state.value.run {
             notificationPermissionCount < 1 && !permissionDialogQueue.contains(permission) && !isGranted
         }
 
         if (shouldAskForPermission) {
-            _homeState.update { state ->
-                state.copy(
+            _state.update {
+                it.copy(
                     permissionDialogQueue = listOf(permission),
                     isPermissionDialogVisible = true
                 )
@@ -263,13 +264,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun dismissPermissionDialog(permission: String) {
+    private fun dismissPermissionDialog(
+        permission: String
+    ) {
         homeUseCases.storeNotificationPermissionCountUseCase.get()(
-            count = _homeState.value.notificationPermissionCount.plus(1)
+            count = _state.value.notificationPermissionCount.plus(1)
         ).onCompletion {
-            _homeState.update { state ->
-                state.copy(
-                    permissionDialogQueue = _homeState.value.permissionDialogQueue
+            _state.update {
+                it.copy(
+                    permissionDialogQueue = _state.value.permissionDialogQueue
                         .toMutableList().apply { remove(permission) }.toList(),
                     isPermissionDialogVisible = false
                 )
