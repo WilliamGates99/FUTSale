@@ -69,7 +69,7 @@ fun MacrobenchmarkScope.completeOnboarding() {
 
     device.wait(
         /* condition = */ Until.hasObject(By.res("navigationBar")),
-        /* timeout = */ 5000
+        /* timeout = */ 5_000
     )
 
     // Allow POST_NOTIFICATION Permission
