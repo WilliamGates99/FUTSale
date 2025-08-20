@@ -2,6 +2,7 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.reposit
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.utils.createKtorTestClient
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Result
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.data.remote.dto.GetLatestAppVersionResponseDto
@@ -9,19 +10,14 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.errors
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.AppUpdateRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.repositories.IsUpdateDownloaded
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
 import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -120,20 +116,7 @@ class FakeAppUpdateRepositoryImpl(
             )
         }
 
-        val testClient = HttpClient(engine = mockEngine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    coerceInputValues = true
-                })
-            }
-            install(DefaultRequest) {
-                contentType(ContentType.Application.Json)
-            }
-        }
-
-        val httpResponse = testClient.get(
+        val httpResponse = createKtorTestClient(mockEngine = mockEngine).get(
             urlString = AppUpdateRepository.EndPoints.GetLatestAppVersion.url
         )
 

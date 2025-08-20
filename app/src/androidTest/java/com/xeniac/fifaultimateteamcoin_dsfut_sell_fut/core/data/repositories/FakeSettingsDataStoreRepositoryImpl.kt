@@ -7,49 +7,29 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.AppThem
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.IsActivityRestartNeeded
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakeSettingsDataStoreRepositoryImpl @Inject constructor() : SettingsDataStoreRepository {
 
-    var isOnBoardingCompleted = false
-    var notificationPermissionCount = 0
-    var currentAppTheme: AppTheme = AppTheme.Default
-    var currentLocale: AppLocale = AppLocale.Default
+    var currentAppTheme = SnapshotStateList<AppTheme>().apply { add(AppTheme.DEFAULT) }
+    var currentLocale: AppLocale = AppLocale.DEFAULT
     var isNotificationSoundEnabled = SnapshotStateList<Boolean>().apply { add(true) }
     var isNotificationVibrateEnabled = SnapshotStateList<Boolean>().apply { add(true) }
 
-    override suspend fun isOnboardingCompleted(): Boolean = isOnBoardingCompleted
+    override fun getCurrentAppThemeSynchronously(): AppTheme = currentAppTheme.first()
 
-    override fun getNotificationPermissionCount(): Flow<Int> = flow {
-        emit(notificationPermissionCount)
-    }
-
-    override fun getCurrentAppThemeSynchronously(): AppTheme = currentAppTheme
-
-    override fun getCurrentAppTheme(): Flow<AppTheme> = flow { emit(currentAppTheme) }
-
-    override fun getCurrentAppLocale(): AppLocale = currentLocale
-
-    override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
-        isNotificationSoundEnabled.first()
-    }
-
-    override fun isNotificationVibrateEnabled(): Flow<Boolean> = snapshotFlow {
-        isNotificationVibrateEnabled.first()
-    }
-
-    override suspend fun isOnboardingCompleted(isCompleted: Boolean) {
-        isOnBoardingCompleted = isCompleted
-    }
-
-    override suspend fun storeNotificationPermissionCount(count: Int) {
-        notificationPermissionCount = count
+    override fun getCurrentAppTheme(): Flow<AppTheme> = snapshotFlow {
+        currentAppTheme.first()
     }
 
     override suspend fun storeCurrentAppTheme(appTheme: AppTheme) {
-        currentAppTheme = appTheme
+        currentAppTheme.apply {
+            clear()
+            add(appTheme)
+        }
     }
+
+    override fun getCurrentAppLocale(): AppLocale = currentLocale
 
     override suspend fun storeCurrentAppLocale(
         newAppLocale: AppLocale
@@ -61,11 +41,19 @@ class FakeSettingsDataStoreRepositoryImpl @Inject constructor() : SettingsDataSt
         return isActivityRestartNeeded
     }
 
+    override fun isNotificationSoundEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationSoundEnabled.first()
+    }
+
     override suspend fun isNotificationSoundEnabled(isEnabled: Boolean) {
         isNotificationSoundEnabled.apply {
             clear()
             add(isEnabled)
         }
+    }
+
+    override fun isNotificationVibrateEnabled(): Flow<Boolean> = snapshotFlow {
+        isNotificationVibrateEnabled.first()
     }
 
     override suspend fun isNotificationVibrateEnabled(isEnabled: Boolean) {

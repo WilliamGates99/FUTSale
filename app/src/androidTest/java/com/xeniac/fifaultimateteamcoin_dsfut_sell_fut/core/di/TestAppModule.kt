@@ -9,10 +9,10 @@ import android.os.VibratorManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import androidx.test.filters.SdkSuppress
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.BuildConfig
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.FutSaleDatabase
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.PlayersDao
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.migrations.MIGRATION_2_TO_3
@@ -22,6 +22,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPr
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.DsfutPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.MiscellaneousPreferencesSerializer
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferences
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.PermissionsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferences
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.SettingsPreferencesSerializer
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
@@ -53,6 +55,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.serialization.json.Json
+import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -120,12 +123,12 @@ internal object TestAppModule {
 
         install(Logging) {
             logger = Logger.ANDROID
-            level = LogLevel.INFO
+            level = if (BuildConfig.DEBUG) LogLevel.INFO else LogLevel.NONE
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
         install(HttpCache) {
             val cacheDir = context.cacheDir.resolve(relative = "ktor_cache")
-            privateStorage(FileStorage(cacheDir))
+            privateStorage(storage = FileStorage(directory = cacheDir))
         }
         install(ContentNegotiation) {
             json(json)
@@ -135,9 +138,9 @@ internal object TestAppModule {
             exponentialDelay()
         }
         install(HttpTimeout) {
-            connectTimeoutMillis = 20_000 // 20 seconds
-            requestTimeoutMillis = 20_000 // 20 seconds
-            socketTimeoutMillis = 20_000 // 20 seconds
+            connectTimeoutMillis = 30_000 // 30 seconds
+            requestTimeoutMillis = 30_000 // 30 seconds
+            socketTimeoutMillis = 30_000 // 30 seconds
         }
         install(DefaultRequest) {
             contentType(ContentType.Application.Json)
@@ -167,7 +170,20 @@ internal object TestAppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @SettingsDataStoreQualifier
+    fun providePermissionDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<PermissionsPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = PermissionsPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { PermissionsPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Permissions-Test.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
     fun provideSettingsDataStore(
         @ApplicationContext context: Context
     ): DataStore<SettingsPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -182,22 +198,6 @@ internal object TestAppModule {
     @OptIn(InternalCoroutinesApi::class)
     @Provides
     @Singleton
-    @DsfutDataStoreQualifier
-    fun provideDsfutDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
-        DataStoreFactory.create(
-            serializer = DsfutPreferencesSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
-            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.dataStoreFile(fileName = "Dsfut-Test.pb") }
-        )
-    }
-
-    @OptIn(InternalCoroutinesApi::class)
-    @Provides
-    @Singleton
-    @MiscellaneousDataStoreQualifier
     fun provideMiscellaneousDataStore(
         @ApplicationContext context: Context
     ): DataStore<MiscellaneousPreferences> = synchronized(lock = SynchronizedObject()) {
@@ -206,6 +206,20 @@ internal object TestAppModule {
             corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
             scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous-Test.pb") }
+        )
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    fun provideDsfutDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<DsfutPreferences> = synchronized(lock = SynchronizedObject()) {
+        DataStoreFactory.create(
+            serializer = DsfutPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { DsfutPreferences() },
+            scope = CoroutineScope(context = Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.preferencesDataStoreFile(name = "Dsfut-Test.pb") }
         )
     }
 
@@ -219,5 +233,11 @@ internal object TestAppModule {
     fun provideDecimalFormat(): DecimalFormat = DecimalFormat(
         /* pattern = */ "00",
         /* symbols = */ DecimalFormatSymbols(Locale.US)
+    )
+
+    @Provides
+    @Singleton
+    fun provideMD5MessageDigest(): MessageDigest = MessageDigest.getInstance(
+        /* algorithm = */ "MD5"
     )
 }

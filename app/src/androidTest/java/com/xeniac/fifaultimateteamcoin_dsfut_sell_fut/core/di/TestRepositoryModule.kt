@@ -3,10 +3,14 @@ package com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeConnectivityObserverImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeDsfutDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeMiscellaneousDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakePermissionsDataStoreRepositoryImpl
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.FakeSettingsDataStoreRepositoryImpl
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.repositories.MD5HashGenerator
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.ConnectivityObserver
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.DsfutDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.HashGenerator
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.MiscellaneousDataStoreRepository
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.PermissionsDataStoreRepository
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.SettingsDataStoreRepository
 import dagger.Binds
 import dagger.Module
@@ -17,9 +21,9 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [RepositorySingletonModule::class]
+    replaces = [RepositoryModule::class]
 )
-abstract class TestRepositorySingletonModule {
+abstract class TestRepositoryModule {
 
     @Binds
     @Singleton
@@ -29,9 +33,21 @@ abstract class TestRepositorySingletonModule {
 
     @Binds
     @Singleton
+    abstract fun bindPermissionsDataStoreRepository(
+        fakePermissionsDataStoreRepositoryImpl: FakePermissionsDataStoreRepositoryImpl
+    ): PermissionsDataStoreRepository
+
+    @Binds
+    @Singleton
     abstract fun bindSettingsDataStoreRepository(
         fakeSettingsDataStoreRepositoryImpl: FakeSettingsDataStoreRepositoryImpl
     ): SettingsDataStoreRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMiscellaneousDataStoreRepository(
+        fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
+    ): MiscellaneousDataStoreRepository
 
     @Binds
     @Singleton
@@ -41,7 +57,8 @@ abstract class TestRepositorySingletonModule {
 
     @Binds
     @Singleton
-    abstract fun bindMiscellaneousDataStoreRepository(
-        fakeMiscellaneousDataStoreRepositoryImpl: FakeMiscellaneousDataStoreRepositoryImpl
-    ): MiscellaneousDataStoreRepository
+    @MD5HashGeneratorQualifier
+    abstract fun bindMD5HashGenerator(
+        md5HashGenerator: MD5HashGenerator
+    ): HashGenerator
 }

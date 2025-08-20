@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -16,7 +17,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.repositories.M
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -44,6 +46,7 @@ class MiscellaneousDataStoreRepositoryImplTest {
 
     private val testDataStore: DataStore<MiscellaneousPreferences> = DataStoreFactory.create(
         serializer = MiscellaneousPreferencesSerializer,
+        corruptionHandler = ReplaceFileCorruptionHandler { MiscellaneousPreferences() },
         scope = testScope.backgroundScope,
         produceFile = { context.preferencesDataStoreFile(name = "Miscellaneous-Test.pb") }
     )
@@ -53,7 +56,7 @@ class MiscellaneousDataStoreRepositoryImplTest {
 
     @Before
     fun setUp() {
-        testScope.launch {
+        runBlocking {
             testDataStore.updateData { MiscellaneousPreferences() }
         }
     }
@@ -68,67 +71,73 @@ class MiscellaneousDataStoreRepositoryImplTest {
     getAppUpdateDialogShowCount -> 0
     isAppUpdateDialogShownToday -> false
     getSelectedRateAppOption -> RateAppOption.NOT_SHOWN_YET
-    getPreviousRateAppRequestTimeInMs -> null
+    getPreviousRateAppRequestDateTime -> null
      */
     @Test
     fun fetchInitialPreferences() = testScope.runTest {
-        val initialAppUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
-        val initialIsAppUpdateDialogShownToday = testRepository
-            .isAppUpdateDialogShownToday().first()
-        val initialSelectedRateAppOption = testRepository.getSelectedRateAppOption().first()
-        val initialPreviousRateAppRequestTime = testRepository
-            .getPreviousRateAppRequestTimeInMs().first()
+        with(testRepository) {
+            val initialAppUpdateDialogShowCount = getAppUpdateDialogShowCount().first()
+            val initialIsAppUpdateDialogShownToday = isAppUpdateDialogShownToday().first()
+            val initialSelectedRateAppOption = getSelectedRateAppOption().first()
+            val initialPreviousRateAppRequestDateTime = getPreviousRateAppRequestDateTime().first()
 
-        assertThat(initialAppUpdateDialogShowCount).isEqualTo(0)
-        assertThat(initialIsAppUpdateDialogShownToday).isFalse()
-        assertThat(initialSelectedRateAppOption).isEqualTo(RateAppOption.NOT_SHOWN_YET)
-        assertThat(initialPreviousRateAppRequestTime).isNull()
+            assertThat(initialAppUpdateDialogShowCount).isEqualTo(0)
+            assertThat(initialIsAppUpdateDialogShownToday).isFalse()
+            assertThat(initialSelectedRateAppOption).isEqualTo(RateAppOption.NOT_SHOWN_YET)
+            assertThat(initialPreviousRateAppRequestDateTime).isNull()
+        }
     }
 
     @Test
     fun writeAppUpdateDialogShowCount() = testScope.runTest {
         val testValue = 3
-        testRepository.storeAppUpdateDialogShowCount(testValue)
+        testRepository.storeAppUpdateDialogShowCount(count = testValue)
 
-        val appUpdateDialogShowCount = testRepository.getAppUpdateDialogShowCount().first()
-        assertThat(appUpdateDialogShowCount).isEqualTo(testValue)
+        testRepository.getAppUpdateDialogShowCount().onEach { appUpdateDialogShowCount ->
+            assertThat(appUpdateDialogShowCount).isEqualTo(testValue)
+        }
     }
 
     @Test
-    fun writeAppUpdateDialogShowEpochDays() = testScope.runTest {
-        testRepository.storeAppUpdateDialogShowEpochDays()
+    fun writeAppUpdateDialogShowDateTime() = testScope.runTest {
+        testRepository.storeAppUpdateDialogShowDateTime()
 
-        val isAppUpdateDialogShownTodayBefore = testRepository.isAppUpdateDialogShownToday().first()
-        assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+        testRepository.isAppUpdateDialogShownToday().onEach { isAppUpdateDialogShownTodayBefore ->
+            assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+        }
     }
 
     @Test
-    fun removeAppUpdateDialogShowEpochDays() = testScope.runTest {
-        testRepository.storeAppUpdateDialogShowEpochDays()
+    fun removeAppUpdateDialogShowDateTime() = testScope.runTest {
+        testRepository.storeAppUpdateDialogShowDateTime()
 
-        val isAppUpdateDialogShownTodayBefore = testRepository.isAppUpdateDialogShownToday().first()
-        assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+        testRepository.isAppUpdateDialogShownToday().onEach { isAppUpdateDialogShownTodayBefore ->
+            assertThat(isAppUpdateDialogShownTodayBefore).isTrue()
+        }
 
-        testRepository.removeAppUpdateDialogShowEpochDays()
+        testRepository.removeAppUpdateDialogShowDateTime()
 
-        val isAppUpdateDialogShownTodayAfter = testRepository.isAppUpdateDialogShownToday().first()
-        assertThat(isAppUpdateDialogShownTodayAfter).isFalse()
+        testRepository.isAppUpdateDialogShownToday().onEach { isAppUpdateDialogShownTodayAfter ->
+            assertThat(isAppUpdateDialogShownTodayAfter).isFalse()
+        }
     }
 
     @Test
     fun writeSelectedRateAppOption() = testScope.runTest {
         val testValue = RateAppOption.RATE_NOW
-        testRepository.storeSelectedRateAppOption(testValue)
+        testRepository.storeSelectedRateAppOption(rateAppOption = testValue)
 
-        val selectedRateAppOption = testRepository.getSelectedRateAppOption().first()
-        assertThat(selectedRateAppOption).isEqualTo(testValue)
+        testRepository.getSelectedRateAppOption().onEach { selectedRateAppOption ->
+            assertThat(selectedRateAppOption).isEqualTo(testValue)
+        }
     }
 
     @Test
-    fun writePreviousRateAppRequestTimeInMs() = testScope.runTest {
-        testRepository.storePreviousRateAppRequestTimeInMs()
+    fun writePreviousRateAppRequestDateTime() = testScope.runTest {
+        testRepository.storePreviousRateAppRequestDateTime()
 
-        val previousRateAppRequestTime = testRepository.getPreviousRateAppRequestTimeInMs().first()
-        assertThat(previousRateAppRequestTime).isNotNull()
+        testRepository.getPreviousRateAppRequestDateTime().onEach { previousRateAppRequestTime ->
+            assertThat(previousRateAppRequestTime).isNotNull()
+        }
     }
 }

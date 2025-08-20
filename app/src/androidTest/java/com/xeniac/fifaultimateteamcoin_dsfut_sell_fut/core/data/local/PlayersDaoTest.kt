@@ -6,14 +6,14 @@ import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.google.common.truth.Truth.assertThat
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.data.local.entities.PlayerEntity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.di.AppModule
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.models.Platform
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.domain.utils.DateHelper
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -197,16 +197,16 @@ class PlayersDaoTest {
             dao.insertPlayer(playerEntity)
         }
 
-        val latestPickedPlayers = dao.observeLatestPickedPlayers(
+        dao.observeLatestPickedUpPlayers(
             currentTimeInSeconds = DateHelper.getCurrentTimeInSeconds()
-        ).first()
+        ).onEach { latestPickedPlayers ->
+            assertThat(latestPickedPlayers).isNotEmpty()
+            assertThat(latestPickedPlayers).containsExactlyElementsIn(dummyPlayers)
 
-        assertThat(latestPickedPlayers).isNotEmpty()
-        assertThat(latestPickedPlayers).containsExactlyElementsIn(dummyPlayers)
-
-        for (i in 0..latestPickedPlayers.size - 2) {
-            assertThat(latestPickedPlayers[i].pickUpTimeInSeconds)
-                .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInSeconds)
+            for (i in 0..latestPickedPlayers.size - 2) {
+                assertThat(latestPickedPlayers[i].pickUpTimeInSeconds)
+                    .isAtLeast(latestPickedPlayers[i + 1].pickUpTimeInSeconds)
+            }
         }
     }
 
@@ -231,8 +231,11 @@ class PlayersDaoTest {
         )
         dao.insertPlayer(playerEntity)
 
-        val player = dao.observerPlayer(playerEntity.id!!).first()
-        assertThat(player).isEqualTo(playerEntity)
+        dao.observerPickedUpPlayer(
+            id = playerEntity.id!!
+        ).onEach { player ->
+            assertThat(player).isEqualTo(playerEntity)
+        }
     }
 
     @Test

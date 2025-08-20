@@ -145,7 +145,7 @@ class FakePickUpPlayerRepositoryImpl(
             input = partnerId.trim() + secretKey.trim() + timestampInSeconds
         )
 
-        val httpResponse = createKtorTestClient(mockEngine).get(
+        val httpResponse = createKtorTestClient(mockEngine = mockEngine).get(
             urlString = PickUpPlayerRepository.EndPoints.PickUpPlayer(
                 platform = Platform.CONSOLE.value,
                 partnerId = partnerId.trim(),
