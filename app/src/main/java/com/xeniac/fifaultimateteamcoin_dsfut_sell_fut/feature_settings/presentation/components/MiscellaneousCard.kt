@@ -42,8 +42,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_settings.presentation.util.Constants
 
 enum class MiscellaneousRowItems(
-    @DrawableRes val iconId: Int,
-    @StringRes val titleId: Int,
+    @param:DrawableRes val iconId: Int,
+    @param:StringRes val titleId: Int,
     val url: String?
 ) {
     Donate(

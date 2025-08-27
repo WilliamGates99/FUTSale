@@ -42,7 +42,7 @@ class PickUpPlayerRepositoryImpl @Inject constructor(
     private val httpClient: Lazy<HttpClient>,
     private val dsfutDataStoreRepository: Lazy<DsfutDataStoreRepository>,
     private val playersDao: Lazy<PlayersDao>,
-    @MD5HashGeneratorQualifier private val md5HashGenerator: Lazy<HashGenerator>
+    @field:MD5HashGeneratorQualifier private val md5HashGenerator: Lazy<HashGenerator>
 ) : PickUpPlayerRepository {
 
     override suspend fun pickUpPlayer(

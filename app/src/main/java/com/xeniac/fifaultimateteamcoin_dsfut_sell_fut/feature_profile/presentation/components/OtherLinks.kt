@@ -28,8 +28,8 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_profile.presentation.utils.Constants
 
 enum class OtherLinkRowItems(
-    @DrawableRes val iconId: Int,
-    @StringRes val titleId: Int,
+    @param:DrawableRes val iconId: Int,
+    @param:StringRes val titleId: Int,
     val url: String?
 ) {
     DsfutNews(
