@@ -18,7 +18,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class PickUpPlayerNotificationService @Inject constructor(
-    @field:ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context,
     private val notificationManager: NotificationManager,
     private val vibrator: Lazy<Vibrator>
 ) {

@@ -28,7 +28,7 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class FakePickUpPlayerRepositoryImpl @Inject constructor(
-    @field:MD5HashGeneratorQualifier private val md5HashGenerator: Lazy<HashGenerator>
+    @MD5HashGeneratorQualifier private val md5HashGenerator: Lazy<HashGenerator>
 ) : PickUpPlayerRepository {
 
     private var isNetworkAvailable = true
