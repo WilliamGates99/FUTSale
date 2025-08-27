@@ -32,8 +32,8 @@ android {
         applicationId = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut"
         minSdk = 23
         targetSdk = 36
-        versionCode = 31
-        versionName = "2.1.4"
+        versionCode = 32
+        versionName = "2.1.5"
 
         testInstrumentationRunner = "com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.HiltTestRunner"
 
