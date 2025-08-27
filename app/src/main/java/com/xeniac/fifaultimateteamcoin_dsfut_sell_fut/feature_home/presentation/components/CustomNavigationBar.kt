@@ -44,9 +44,9 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.
 
 enum class NavigationBarItems(
     val destinationScreen: Any,
-    @StringRes val title: Int,
-    @DrawableRes val inactiveIconId: Int,
-    @DrawableRes val activeIconId: Int,
+    @param:StringRes val title: Int,
+    @param:DrawableRes val inactiveIconId: Int,
+    @param:DrawableRes val activeIconId: Int,
     val testTag: String
 ) {
     PickUpPlayer(

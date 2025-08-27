@@ -29,7 +29,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.pre
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_pick_up_player.presentation.pick_up_player.utils.TestTags
 
 enum class PlatformItems(
-    @StringRes val title: Int,
+    @param:StringRes val title: Int,
     val platform: Platform,
     val testTag: String
 ) {
