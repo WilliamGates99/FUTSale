@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -33,23 +34,23 @@ class SettingsViewModel @Inject constructor(
     private val _state = MutableStateFlow(SettingsState())
     val state = combine(
         flow = _state,
-        flow2 = settingsUseCases.getCurrentAppLocaleUseCase.get()(),
-        flow3 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
-        flow4 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
-        flow5 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
-    ) { state, appLocale, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
+        flow2 = settingsUseCases.getCurrentAppThemeUseCase.get()(),
+        flow3 = settingsUseCases.getIsNotificationSoundEnabledUseCase.get()(),
+        flow4 = settingsUseCases.getIsNotificationVibrateEnabledUseCase.get()()
+    ) { state, appTheme, isNotificationSoundEnabled, isNotificationVibrateEnabled ->
         _state.update {
             state.copy(
-                currentAppLocale = appLocale,
                 currentAppTheme = appTheme,
                 isNotificationSoundEnabled = isNotificationSoundEnabled,
                 isNotificationVibrateEnabled = isNotificationVibrateEnabled
             )
         }
         _state.value
+    }.onStart {
+        getCurrentAppLocaleUseCase()
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout = 5.seconds),
+        started = SharingStarted.WhileSubscribed(stopTimeout = 30.seconds),
         initialValue = _state.value
     )
 
@@ -76,6 +77,14 @@ class SettingsViewModel @Inject constructor(
             is SettingsAction.SetNotificationSoundSwitch -> setNotificationSoundSwitch(action.isEnabled)
             is SettingsAction.SetNotificationVibrateSwitch -> setNotificationVibrateSwitch(action.isEnabled)
         }
+    }
+
+    private fun getCurrentAppLocaleUseCase() {
+        settingsUseCases.getCurrentAppLocaleUseCase.get()().onEach { currentAppLocale ->
+            _state.update {
+                it.copy(currentAppLocale = currentAppLocale)
+            }
+        }.launchIn(scope = viewModelScope)
     }
 
     private fun showLocaleBottomSheet() = viewModelScope.launch {
