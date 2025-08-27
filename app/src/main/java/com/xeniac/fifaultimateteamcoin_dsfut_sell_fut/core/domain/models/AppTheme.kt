@@ -6,7 +6,7 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 
 enum class AppTheme(
     val index: Int,
-    @StringRes val titleId: Int,
+    @param:StringRes val titleId: Int,
     val setAppTheme: () -> Unit
 ) {
     DEFAULT(
