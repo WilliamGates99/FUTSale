@@ -37,7 +37,7 @@ uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.0"
 
 # Plugins
-agp = "8.12.1"
+agp = "8.13.0"
 kotlin = "2.2.10"
 ksp = "2.2.10-2.0.2"
 googleServices = "4.4.3"
