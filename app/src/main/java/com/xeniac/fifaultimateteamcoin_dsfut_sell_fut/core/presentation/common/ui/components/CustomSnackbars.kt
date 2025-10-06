@@ -24,7 +24,9 @@ fun SwipeableSnackbar(
 ) {
     val dismissSnackbarState = rememberSwipeToDismissBoxState()
 
-    LaunchedEffect(key1 = dismissSnackbarState.currentValue) {
+    LaunchedEffect(
+        key1 = hostState.currentSnackbarData
+    ) {
         if (dismissSnackbarState.currentValue != SwipeToDismissBoxValue.Settled) {
             dismissSnackbarState.reset()
         }
