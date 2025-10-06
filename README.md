@@ -1,4 +1,4 @@
-# FUTSale 25: Sell FC Coins
+# FUTSale 26: Sell FC Coins
 ![platform](https://img.shields.io/badge/platform-android-success)&nbsp;![GitHub release (latest by date)](https://img.shields.io/github/v/release/WilliamGates99/FUTSale)&nbsp;![GitHub](https://img.shields.io/github/license/WilliamGates99/FUTSale)
 
 ## Download
@@ -11,7 +11,7 @@
 ## Description
 ![Feature Cover](/resources/feature_graphic.jpg)
 <br><br>
-Do you want to play FC Ultimate Team 25 and make money at the same time?
+Do you want to play FC Ultimate Team 26 and make money at the same time?
 <br><br>
 **FUTSale** is a free and user-friendly application to sell your FC Ultimate Team coins on any platform.<br>
 Whether you play on your gaming console or a PC, you can use this app to sell your coins.
