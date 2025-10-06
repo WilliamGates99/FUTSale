@@ -17,7 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,8 +30,6 @@ import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.u
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.ObserverAsEvent
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.UiText
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.findActivity
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppUpdatePageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppReviewDialog
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.AppUpdateBottomSheet
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.components.CustomNavigationBar
@@ -122,12 +120,6 @@ fun HomeScreen(
         }
     }
 
-    PostNotificationPermissionHandler(
-        isPermissionDialogVisible = state.isPermissionDialogVisible,
-        permissionDialogQueue = state.permissionDialogQueue,
-        onAction = viewModel::onAction
-    )
-
     Scaffold(
         snackbarHost = { SwipeableSnackbar(hostState = snackbarHostState) },
         bottomBar = {
@@ -157,15 +149,19 @@ fun HomeScreen(
         )
     }
 
+    PostNotificationPermissionHandler(
+        isPermissionDialogVisible = state.isPermissionDialogVisible,
+        permissionDialogQueue = state.permissionDialogQueue,
+        onAction = viewModel::onAction
+    )
+
     AppUpdateBottomSheet(
-        appUpdateInfo = state.latestAppUpdateInfo,
-        onAction = viewModel::onAction,
-        openAppUpdatePageInStore = { context.openAppUpdatePageInStore() }
+        isVisible = state.latestAppUpdateInfo != null,
+        onAction = viewModel::onAction
     )
 
     AppReviewDialog(
         isVisible = state.isAppReviewDialogVisible,
-        onAction = viewModel::onAction,
-        openAppPageInStore = { context.openAppPageInStore() }
+        onAction = viewModel::onAction
     )
 }

@@ -31,12 +31,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -71,15 +70,14 @@ class HomeViewModel @Inject constructor(
                 checkForAppUpdates()
                 requestInAppReviews()
             }
-            else -> getLatestAppVersion()
-        }
-    }.take(count = 1).onEach {
-        if (!isAppInstalledFromPlayStore()) {
-            checkSelectedRateAppOption(selectedRateAppOption = it.selectedRateAppOption)
+            else -> {
+                getLatestAppVersion()
+                checkSelectedRateAppOption()
+            }
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout = 30.seconds),
+        started = SharingStarted.WhileSubscribed(stopTimeout = 2.minutes),
         initialValue = _state.value
     )
 
@@ -97,7 +95,6 @@ class HomeViewModel @Inject constructor(
             HomeAction.GetLatestAppVersion -> getLatestAppVersion()
             HomeAction.DismissAppUpdateSheet -> dismissAppUpdateSheet()
             HomeAction.RequestInAppReviews -> requestInAppReviews()
-            is HomeAction.CheckSelectedRateAppOption -> checkSelectedRateAppOption(action.selectedRateAppOption)
             HomeAction.LaunchInAppReview -> launchInAppReview()
             HomeAction.SetSelectedRateAppOptionToNever -> setSelectedRateAppOptionToNever()
             HomeAction.SetSelectedRateAppOptionToRemindLater -> setSelectedRateAppOptionToRemindLater()
@@ -176,15 +173,14 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 it.copy(inAppReviewInfo = reviewInfo)
             }
-            delay(timeMillis = 100) // Wait for the state to be updated
-            checkSelectedRateAppOption(_state.value.selectedRateAppOption)
+            checkSelectedRateAppOption()
         }.launchIn(scope = viewModelScope)
     }
 
-    private fun checkSelectedRateAppOption(
-        selectedRateAppOption: RateAppOption?
-    ) = viewModelScope.launch {
-        when (selectedRateAppOption) {
+    private fun checkSelectedRateAppOption() = viewModelScope.launch {
+        delay(timeMillis = 100) // Wait for the state to be updated
+
+        when (_state.value.selectedRateAppOption) {
             RateAppOption.NOT_SHOWN_YET, RateAppOption.RATE_NOW -> checkDaysFromFirstInstallTime()
             RateAppOption.REMIND_LATER -> checkDaysFromPreviousRequestTime()
             RateAppOption.NEVER, null -> Unit

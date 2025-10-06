@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -27,6 +28,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.isAppInstalledFromPlayStore
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppPageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,14 +62,13 @@ fun AppReviewDialog(
     rateNowButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_rate_now),
     askLaterButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_remind_later),
     noThanksButtonText: String = stringResource(id = R.string.home_app_review_dialog_btn_never),
-    onAction: (action: HomeAction) -> Unit,
-    openAppPageInStore: () -> Unit
+    onAction: (action: HomeAction) -> Unit
 ) {
     if (isVisible) {
+        val context = LocalContext.current
+
         BasicAlertDialog(
-            onDismissRequest = {
-                onAction(HomeAction.DismissAppReviewDialog)
-            },
+            onDismissRequest = { onAction(HomeAction.DismissAppReviewDialog) },
             properties = dialogProperties,
             modifier = modifier
         ) {
@@ -107,10 +108,9 @@ fun AppReviewDialog(
                         confirmButton = {
                             TextButton(
                                 onClick = {
-                                    if (isAppInstalledFromPlayStore()) {
-                                        onAction(HomeAction.LaunchInAppReview)
-                                    } else {
-                                        openAppPageInStore()
+                                    when {
+                                        isAppInstalledFromPlayStore() -> onAction(HomeAction.LaunchInAppReview)
+                                        else -> context.openAppPageInStore()
                                     }
                                     onAction(HomeAction.SetSelectedRateAppOptionToNever)
                                     onAction(HomeAction.DismissAppReviewDialog)
