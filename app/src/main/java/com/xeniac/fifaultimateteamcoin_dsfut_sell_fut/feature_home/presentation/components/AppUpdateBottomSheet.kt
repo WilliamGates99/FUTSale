@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,16 +36,15 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.R
-import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.domain.models.LatestAppUpdateInfo
+import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.core.presentation.common.utils.openAppUpdatePageInStore
 import com.xeniac.fifaultimateteamcoin_dsfut_sell_fut.feature_home.presentation.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppUpdateBottomSheet(
-    appUpdateInfo: LatestAppUpdateInfo?,
+    isVisible: Boolean,
     modifier: Modifier = Modifier,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
-    isVisible: Boolean = appUpdateInfo != null,
     dismissOnBackPress: Boolean = true,
     securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
     sheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
@@ -75,18 +75,16 @@ fun AppUpdateBottomSheet(
     messageFontWeight: FontWeight = FontWeight.Medium,
     messageTextAlign: TextAlign = TextAlign.Center,
     messageColor: Color = MaterialTheme.colorScheme.onSurface,
-    onAction: (action: HomeAction) -> Unit,
-    openAppUpdatePageInStore: () -> Unit
+    onAction: (action: HomeAction) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
     if (isVisible) {
+        val context = LocalContext.current
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
         ModalBottomSheet(
             sheetState = sheetState,
             properties = sheetProperties,
-            onDismissRequest = {
-                onAction(HomeAction.DismissAppUpdateSheet)
-            },
+            onDismissRequest = { onAction(HomeAction.DismissAppUpdateSheet) },
             modifier = modifier
         ) {
             Column(
@@ -138,7 +136,7 @@ fun AppUpdateBottomSheet(
                 UpdateButton(
                     onClick = {
                         onAction(HomeAction.DismissAppUpdateSheet)
-                        openAppUpdatePageInStore()
+                        context.openAppUpdatePageInStore()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,9 +146,7 @@ fun AppUpdateBottomSheet(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 DismissButton(
-                    onClick = {
-                        onAction(HomeAction.DismissAppUpdateSheet)
-                    },
+                    onClick = { onAction(HomeAction.DismissAppUpdateSheet) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 28.dp)
